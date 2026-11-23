@@ -1,0 +1,50 @@
+import { describe, expect, it } from 'vitest';
+import { CaseFile } from '@shared/caseSchema.ts';
+import { buildSuspectPrompt, buildUserTurn, MAX_PLAYER_MESSAGE_CHARS } from '@shared/suspectPrompt.ts';
+import { miniCase } from './fixtures/miniCase.ts';
+
+const c = CaseFile.parse(miniCase());
+const ctx = { patienceUsedBefore: 0, shownEvidenceNow: null, shownEvidenceBefore: [], alreadyRevealed: [] };
+
+describe('suspect prompt', () => {
+  it('never contains the solution, hidden events or private data of other suspects', () => {
+    for (const s of c.suspects) {
+      const prompt = buildSuspectPrompt({ caseFile: c, suspectId: s.id, ctx, mood: 'calm', shownEvidence: null });
+      expect(prompt).not.toContain(c.solution.motive);
+      expect(prompt).not.toContain(c.solution.method);
+      expect(prompt).not.toContain(c.solution.reveal);
+      for (const e of c.timeline.filter((t) => t.visibility === 'hidden')) expect(prompt).not.toContain(e.what);
+      for (const other of c.suspects.filter((o) => o.id !== s.id)) {
+        for (const secret of [...other.private_knowledge, ...other.secrets, ...other.never_reveal]) expect(prompt).not.toContain(secret);
+        for (const lie of other.lies) expect(prompt).not.toContain(lie.truth);
+        for (const clue of other.revealable_clues) expect(prompt).not.toContain(clue.text);
+      }
+      for (const e of c.timeline.filter((t) => t.visibility === 'private' && !t.who.includes(s.id))) {
+        expect(prompt).not.toContain(e.what);
+      }
+      expect(prompt).not.toContain(s.alibi_verification.note);
+    }
+  });
+
+  it('only lists clues whose condition is met', () => {
+    const calm = buildSuspectPrompt({ caseFile: c, suspectId: 'nora', ctx, mood: 'calm', shownEvidence: null });
+    expect(calm).not.toContain('nora-debts');
+    expect(calm).not.toContain('nora-return');
+    const shown = c.evidence.find((e) => e.id === 'ben-note')!;
+    const confronted = buildSuspectPrompt({
+      caseFile: c,
+      suspectId: 'nora',
+      ctx: { ...ctx, shownEvidenceNow: 'ben-note' },
+      mood: 'calm',
+      shownEvidence: shown,
+    });
+    expect(confronted).toContain('MUST reveal');
+    expect(confronted).toContain('nora-return');
+  });
+
+  it('wraps and truncates the detective message', () => {
+    const turn = buildUserTurn('x'.repeat(2000), null);
+    expect(turn).toContain('<detective_says>');
+    expect(turn.length).toBeLessThan(MAX_PLAYER_MESSAGE_CHARS + 60);
+  });
+});

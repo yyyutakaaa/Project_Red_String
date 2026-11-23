@@ -1,0 +1,11 @@
+node_modules/
+dist/
+web/.env.local
+.env
+*.local
+playwright-report/
+test-results/
+tools/eval/results/
+.DS_Store
+supabase/.temp/
+supabase/.branches/
