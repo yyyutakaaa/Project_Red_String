@@ -46,11 +46,11 @@ export function rawStoryCases(): Map<string, unknown> {
 
 /** Keys used in saves: story cases use their id, generated cases are prefixed. */
 export function caseKeyFor(source: 'story' | 'generated', id: string): string {
-  return source === 'story' ? id : `gen:${id}`;
+  return source === 'story' ? id : `gen-${id}`;
 }
 
 export function parseCaseKey(key: string): { source: 'story' | 'generated'; id: string } {
-  return key.startsWith('gen:') ? { source: 'generated', id: key.slice(4) } : { source: 'story', id: key };
+  return key.startsWith('gen-') ? { source: 'generated', id: key.slice(4) } : { source: 'story', id: key };
 }
 
 export function isStoryUnlocked(index: number, completed: (id: string) => boolean): boolean {
