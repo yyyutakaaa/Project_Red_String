@@ -12,11 +12,13 @@ import {
   type FontSize,
   type MotionPref,
   type ThemePref,
+  type DiscordPref,
   systemPrefersLight,
   type Settings,
   type TextSpeed,
 } from '../store/settings.ts';
 import { sfx } from '../audio/audio.ts';
+import { desktop } from '../desktop/bridge.ts';
 import styles from './Settings.module.css';
 
 const PREVIEW_LINE = 'The rain had not stopped since Tuesday, and nobody in Calder City was telling the truth.';
@@ -167,6 +169,9 @@ export function SettingsScreen() {
   const [systemReduced] = useState(() => systemPrefersReducedMotion());
   const [systemLight] = useState(() => systemPrefersLight());
   const themeNoteId = useId();
+  const discordNoteId = useId();
+  // Only desktop shells with presence support (v1.0.5 and later) can talk to Discord.
+  const [hasDiscord] = useState(() => Boolean(desktop()?.setPresence));
 
   useEffect(() => {
     document.title = 'Settings - Project Red String';
@@ -183,6 +188,12 @@ export function SettingsScreen() {
     { value: 'dark', label: 'Night shift', note: 'Dark streets, lamp light. The way it was made.' },
     { value: 'light', label: 'Day shift', note: 'Bright and warm, easier in a sunny room.' },
     { value: 'system', label: 'Follow system', note: `Your device is in ${systemLight ? 'light' : 'dark'} mode now.` },
+  ];
+
+  const discordOptions: Array<{ value: DiscordPref; label: string; note: string }> = [
+    { value: 'full', label: 'Show the case', note: 'Friends see the case and who you are questioning.' },
+    { value: 'minimal', label: 'Just playing', note: 'Only that you are playing Red String.' },
+    { value: 'off', label: 'Hidden', note: 'Nothing on Discord.' },
   ];
 
   const motionOptions: Array<{ value: MotionPref; label: string; note: string }> = [
@@ -277,6 +288,26 @@ export function SettingsScreen() {
               stack
             />
           </section>
+
+          {hasDiscord && (
+            <section className={styles.panel} aria-labelledby="discord-heading">
+              <h2 id="discord-heading" className={styles.panelTitle}>
+                Discord
+              </h2>
+              <p id={discordNoteId} className={styles.panelNote}>
+                What your friends see on your Discord profile while you play. Never the culprit.
+              </p>
+              <RadioCards
+                legend="Discord status"
+                name="discord"
+                value={settings.discordPresence}
+                options={discordOptions}
+                onChange={(discordPresence) => patch({ discordPresence })}
+                describedBy={discordNoteId}
+                stack
+              />
+            </section>
+          )}
 
           <section className={styles.panel} aria-labelledby="motion-heading">
             <h2 id="motion-heading" className={styles.panelTitle}>

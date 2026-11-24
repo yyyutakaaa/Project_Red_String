@@ -23,6 +23,7 @@
       "main.cjs",
       "preload.cjs",
       "updater.cjs",
+      "discord.cjs",
       "build/icon.png",
       "renderer/**/*",
       "package.json"

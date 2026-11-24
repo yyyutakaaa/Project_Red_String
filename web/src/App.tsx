@@ -5,6 +5,7 @@ import { Boot } from './boot/Boot.tsx';
 import { LaunchOverlay } from './boot/LaunchOverlay.tsx';
 import { desktop } from './desktop/bridge.ts';
 import { TitleBar } from './desktop/TitleBar.tsx';
+import { usePresence } from './desktop/usePresence.ts';
 import { audio } from './audio/audio.ts';
 import { applySettingsToDocument, useSettings } from './store/settings.ts';
 import { MainMenu } from './screens/MainMenu.tsx';
@@ -21,6 +22,7 @@ const page = (node: ReactNode) => <Suspense fallback={<div className="route-load
 
 function Root() {
   const navigate = useNavigate();
+  usePresence();
   const fontSize = useSettings((s) => s.fontSize);
   const reducedMotion = useSettings((s) => s.reducedMotion);
   const theme = useSettings((s) => s.theme);

@@ -6,6 +6,7 @@ export type FontSize = 'small' | 'medium' | 'large' | 'xlarge';
 export type MotionPref = 'system' | 'reduced' | 'full';
 export type ThemePref = 'dark' | 'light' | 'system';
 export type Theme = 'dark' | 'light';
+export type DiscordPref = 'full' | 'minimal' | 'off';
 
 export interface Settings {
   masterVolume: number;
@@ -15,6 +16,8 @@ export interface Settings {
   fontSize: FontSize;
   reducedMotion: MotionPref;
   theme: ThemePref;
+  /** Desktop app only: what Discord friends see. */
+  discordPresence: DiscordPref;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -25,6 +28,7 @@ export const DEFAULT_SETTINGS: Settings = {
   fontSize: 'medium',
   reducedMotion: 'system',
   theme: 'dark',
+  discordPresence: 'full',
 };
 
 const KEY = 'redstring.settings';
@@ -54,6 +58,9 @@ export function parseSettings(raw: string | null): Settings {
         ? (d.reducedMotion as MotionPref)
         : DEFAULT_SETTINGS.reducedMotion,
       theme: (['dark', 'light', 'system'] as const).includes(d.theme as ThemePref) ? (d.theme as ThemePref) : DEFAULT_SETTINGS.theme,
+      discordPresence: (['full', 'minimal', 'off'] as const).includes(d.discordPresence as DiscordPref)
+        ? (d.discordPresence as DiscordPref)
+        : DEFAULT_SETTINGS.discordPresence,
     };
   } catch {
     return { ...DEFAULT_SETTINGS };
@@ -94,6 +101,7 @@ function persist(s: Settings): void {
     fontSize: s.fontSize,
     reducedMotion: s.reducedMotion,
     theme: s.theme,
+    discordPresence: s.discordPresence,
   };
   try {
     globalThis.localStorage?.setItem(KEY, JSON.stringify(data));
