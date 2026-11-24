@@ -21,7 +21,7 @@ import { config, env, envNumber } from '../_shared/env.ts';
 const MAX_ATTEMPTS = 3;
 const GENERATIONS_PER_DAY = 5;
 // Sized so a complete case can finish inside the provider timeout.
-const MAX_OUTPUT_TOKENS = 16_000;
+const MAX_OUTPUT_TOKENS = 9_000;
 const IP_LIMITS = { perMinute: 3, perDay: 15 };
 const globalGenerationsPerDay = () => envNumber('GLOBAL_GENERATIONS_PER_DAY', 60);
 const PROVIDER_TIMEOUT_MS = 140_000;
@@ -108,6 +108,7 @@ async function runAttempt(job: JobRow, remainingToday: number): Promise<AttemptR
   let draft = extractJson(text);
   if (draft === undefined) {
     // Parse failure: count as a failed attempt with a parse error the model can fix.
+    console.error(`generator output not parseable (${text.length} chars); head: ${JSON.stringify(text.slice(0, 200))}; tail: ${JSON.stringify(text.slice(-200))}`);
     draft = job.draft_json ?? null;
     const errors = ['Your answer did not contain a parseable JSON object in a ```json block.'];
     return saveRepairOrFail(job, attempt, draft, errors, remainingToday);

@@ -30,7 +30,7 @@ export const VALIDATOR_RULES = [
   'The timeline is in chronological order and includes at least one event tagged "crime" with visibility "hidden" whose who includes the culprit (opportunity).',
   'Every suspect has alibi_verification with status confirmed or broken and at least one obtainable evidence id or clue id. The culprit\'s alibi must be "broken" by at least one obtainable evidence id. An alibi cannot be confirmed only by the suspect\'s own clue.',
   'No suspect field may contain the exact text of solution.motive, solution.method or solution.reveal; write the culprit\'s guilty knowledge in different words inside lies[].truth and never_reveal.',
-  'Hotspot rectangles are percentages: x + width <= 100 and y + height <= 100, no two hotspots in a room overlap, 3 to 5 hotspots per room.',
+  'Hotspot rectangles are percentages: x + width <= 100 and y + height <= 100, no two hotspots in a room overlap.',
   'Every revealable clue must be reachable (a shown_evidence clue needs obtainable evidence).',
 ];
 
@@ -55,7 +55,7 @@ export function buildGeneratorSystemPrompt(): string {
     VALIDATOR_RULES.map((r, i) => `${i + 1}. ${r}`).join('\n'),
     `Allowed room background keys: ${BACKGROUND_KEYS.join(', ')}.`,
     `Allowed portrait keys: ${PORTRAIT_KEYS.join(', ')}. Suspect color is a dark-to-mid hex colour like #6b7f99.`,
-    'Size and style: 3 or 4 suspects, 4 rooms, 7 to 9 evidence items (2 red herrings), 10 to 16 timeline events, 5 hints from gentle to explicit, intro_briefing of 3 short paragraphs. Keep every description to 1 or 2 sentences. Patience 10 to 14 per suspect, 3 deflections per suspect (short in-character lines for when they refuse to talk), 2 or 3 revealable clues per suspect mixing free, pressed and shown_evidence conditions. Hotspot labels are 1 to 3 concrete words (desk, coat, decanter, ledger, window ...). Noir voice, no emojis, no graphic gore. The player is an unnamed police detective.',
+    'Size and style: keep the case compact, because the whole file must be written in under two minutes: exactly 3 suspects, 3 rooms with 3 hotspots each, 6 evidence items (1 or 2 red herrings), 8 to 10 timeline events, 4 hints from gentle to explicit, intro_briefing of 2 short paragraphs. Every description, clue text, fact and ending is ONE sentence of at most 30 words; solution.reveal is at most 90 words. Per suspect: 2 public_facts, 2 private_knowledge items, 1 lie, 1 secret, 1 never_reveal item, 2 deflections, 2 or 3 revealable clues mixing free, pressed and shown_evidence conditions, patience 10 to 14. Hotspot labels are 1 to 3 concrete words (desk, coat, decanter, ledger, window ...). Noir voice, no emojis, no graphic gore. The player is an unnamed police detective. Output valid JSON only: escape double quotes inside strings, no comments, no trailing commas.',
     WRITING_STYLE,
     'Design for fairness: there must be a moment where the evidence clicks; each lie must be breakable by an evidence item in that suspect\'s breaks_on; red herrings must have innocent explanations that interrogation can reveal.',
   ].join('\n\n');
