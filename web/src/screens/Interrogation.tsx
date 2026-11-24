@@ -587,7 +587,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
             onScroll={onLogScroll}
             data-testid="chat-log"
           >
-            <div ref={contentRef} className={styles.logContent}>
+            <div ref={contentRef} className={`selectable ${styles.logContent}`}>
               {messages.length === 0 && (
                 <p className={styles.opening}>
                   {suspect.name} sits under the lamp, waiting. Ask about the night. Show what you found. Watch for the lie.

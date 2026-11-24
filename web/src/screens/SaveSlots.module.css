@@ -39,7 +39,7 @@
   box-shadow: var(--shadow-2);
 }
 .empty {
-  background: rgba(16, 21, 31, 0.82);
+  background: var(--glass-bg);
   border: 1px dashed var(--ink-400);
   color: var(--text-muted);
 }
@@ -64,7 +64,7 @@
   color: var(--paper-ink-muted);
 }
 .empty .tab {
-  background: rgba(16, 21, 31, 0.82);
+  background: var(--glass-bg);
   border: 1px dashed var(--ink-400);
   border-bottom: 0;
   color: var(--text-faint);

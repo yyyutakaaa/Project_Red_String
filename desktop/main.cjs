@@ -4,13 +4,15 @@
 // real origin (http://127.0.0.1:<port>), which the edge functions already accept for CORS, keeps
 // client-side routing working, and keeps localStorage saves stable between launches because the
 // port stays the same.
-const { app, BrowserWindow, Menu, shell } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, nativeTheme, screen, shell } = require('electron');
 const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
 const { pickGameRoot, startUpdates } = require('./updater.cjs');
 
 app.setName('Red String');
+// Development only: run a second copy next to an installed one, with its own data folder.
+if (!app.isPackaged && process.env.RED_STRING_USER_DATA) app.setPath('userData', process.env.RED_STRING_USER_DATA);
 
 const BUNDLED_ROOT = path.join(__dirname, 'renderer');
 const ICON = path.join(__dirname, 'build', 'icon.png');
@@ -102,16 +104,115 @@ function listen(port, attemptsLeft) {
 
 let mainWindow = null;
 
+// ---------------------------------------------------------------------------
+// Window chrome. The game draws its own title bar (TitleBar.tsx): on macOS the traffic lights sit
+// inside it, on Windows the system paints the minimise/maximise/close buttons over its right end in
+// the game's colours. TITLEBAR_HEIGHT must match --titlebar-h in the game's tokens.css.
+const TITLEBAR_HEIGHT = 32;
+const CHROME = {
+  dark: { background: '#0b0f17', bar: '#0b0f17', symbol: '#ebe5d8' },
+  light: { background: '#ebe4d6', bar: '#e9e2d4', symbol: '#2a2620' },
+};
+
+// ---------------------------------------------------------------------------
+// Window memory: size, position, maximised/full screen, and the last theme (so the first frame
+// already has the right background).
+const STATE_FILE = () => path.join(app.getPath('userData'), 'window-state.json');
+const DEFAULT_STATE = { width: 1440, height: 900, maximized: false, fullscreen: false, theme: 'dark' };
+
+function readWindowState() {
+  try {
+    const s = { ...DEFAULT_STATE, ...JSON.parse(fs.readFileSync(STATE_FILE(), 'utf8')) };
+    if (s.theme !== 'light') s.theme = 'dark';
+    // Forget the position if that screen is gone (an unplugged monitor).
+    if (typeof s.x === 'number' && typeof s.y === 'number') {
+      const area = screen.getDisplayMatching({ x: s.x, y: s.y, width: s.width, height: s.height }).workArea;
+      const visible = s.x < area.x + area.width - 100 && s.x + s.width > area.x + 100 && s.y >= area.y - 10 && s.y < area.y + area.height - 100;
+      if (!visible) {
+        delete s.x;
+        delete s.y;
+      }
+    }
+    return s;
+  } catch {
+    return { ...DEFAULT_STATE };
+  }
+}
+
+let windowState = DEFAULT_STATE;
+
+function saveWindowState() {
+  if (!mainWindow || mainWindow.isDestroyed()) return;
+  const maximized = mainWindow.isMaximized();
+  const fullscreen = mainWindow.isFullScreen();
+  // Keep the normal size while maximised or full screen, so un-maximising goes back to it.
+  const bounds = maximized || fullscreen ? windowState : mainWindow.getBounds();
+  windowState = { ...windowState, x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height, maximized, fullscreen };
+  try {
+    fs.writeFileSync(STATE_FILE(), JSON.stringify(windowState));
+  } catch {
+    // Not fatal: the window just opens at the default size next time.
+  }
+}
+
+function applyTheme(theme) {
+  const t = theme === 'light' ? 'light' : 'dark';
+  windowState = { ...windowState, theme: t };
+  nativeTheme.themeSource = t; // dialogs, menus and the context menu follow the game
+  if (!mainWindow || mainWindow.isDestroyed()) return;
+  mainWindow.setBackgroundColor(CHROME[t].background);
+  if (process.platform === 'win32') {
+    mainWindow.setTitleBarOverlay({ color: CHROME[t].bar, symbolColor: CHROME[t].symbol, height: TITLEBAR_HEIGHT });
+  }
+}
+
+function chromeOptions(theme) {
+  if (process.platform === 'darwin') {
+    return { titleBarStyle: 'hidden', trafficLightPosition: { x: 14, y: 10 } };
+  }
+  if (process.platform === 'win32') {
+    return {
+      titleBarStyle: 'hidden',
+      titleBarOverlay: { color: CHROME[theme].bar, symbolColor: CHROME[theme].symbol, height: TITLEBAR_HEIGHT },
+    };
+  }
+  return {};
+}
+
+// Native right-click menu: editing commands in text fields, Copy on a selection, nothing else.
+function contextMenu(params) {
+  if (params.isEditable) {
+    return Menu.buildFromTemplate([
+      { role: 'undo' },
+      { role: 'redo' },
+      { type: 'separator' },
+      { role: 'cut' },
+      { role: 'copy' },
+      { role: 'paste' },
+      { type: 'separator' },
+      { role: 'selectAll' },
+    ]);
+  }
+  if (params.selectionText.trim()) return Menu.buildFromTemplate([{ role: 'copy' }]);
+  return null;
+}
+
 function createWindow(origin) {
+  windowState = readWindowState();
+  const theme = windowState.theme;
+  nativeTheme.themeSource = theme;
   mainWindow = new BrowserWindow({
-    width: 1440,
-    height: 900,
+    x: windowState.x,
+    y: windowState.y,
+    width: windowState.width,
+    height: windowState.height,
     minWidth: 960,
     minHeight: 600,
-    backgroundColor: '#0b0b0d',
+    backgroundColor: CHROME[theme].background,
     title: 'Red String',
     icon: ICON,
     show: false,
+    ...chromeOptions(theme),
     webPreferences: {
       preload: path.join(__dirname, 'preload.cjs'),
       contextIsolation: true,
@@ -119,15 +220,39 @@ function createWindow(origin) {
       sandbox: true,
     },
   });
+  if (windowState.maximized) mainWindow.maximize();
+  if (windowState.fullscreen) mainWindow.setFullScreen(true);
 
   mainWindow.once('ready-to-show', () => mainWindow.show());
+  for (const event of ['resize', 'move']) {
+    let t = null;
+    mainWindow.on(event, () => {
+      clearTimeout(t);
+      t = setTimeout(saveWindowState, 400);
+    });
+  }
+  mainWindow.on('close', saveWindowState);
+
+  const sendFullscreen = (on) => mainWindow.webContents.send('red-string:fullscreen', on);
+  mainWindow.on('enter-full-screen', () => sendFullscreen(true));
+  mainWindow.on('leave-full-screen', () => sendFullscreen(false));
+  mainWindow.webContents.on('did-finish-load', () => sendFullscreen(mainWindow.isFullScreen()));
+
+  const contents = mainWindow.webContents;
+  // A game, not a web page: no pinch or keyboard zoom.
+  contents.setVisualZoomLevelLimits(1, 1);
+  contents.on('before-input-event', (event, input) => {
+    const mod = process.platform === 'darwin' ? input.meta : input.control;
+    if (input.type === 'keyDown' && mod && ['=', '+', '-', '_', '0'].includes(input.key)) event.preventDefault();
+  });
+  contents.on('context-menu', (_event, params) => contextMenu(params)?.popup({ window: mainWindow }));
 
   // Links that leave the game open in the system browser instead of inside the app.
-  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+  contents.setWindowOpenHandler(({ url }) => {
     if (/^https?:\/\//.test(url)) shell.openExternal(url);
     return { action: 'deny' };
   });
-  mainWindow.webContents.on('will-navigate', (event, url) => {
+  contents.on('will-navigate', (event, url) => {
     if (!url.startsWith(origin)) {
       event.preventDefault();
       if (/^https?:\/\//.test(url)) shell.openExternal(url);
@@ -140,9 +265,19 @@ function createWindow(origin) {
   });
 }
 
+/** Ask the game to open one of its own screens (Settings, Account). */
+function openScreen(route) {
+  if (!mainWindow) return;
+  if (mainWindow.isMinimized()) mainWindow.restore();
+  mainWindow.focus();
+  mainWindow.webContents.send('red-string:navigate', route);
+}
+
 function buildMenu(checkForUpdates) {
   const isMac = process.platform === 'darwin';
   const updateItem = { label: 'Check for Updates…', click: () => checkForUpdates(true) };
+  const settingsItem = { label: 'Settings…', accelerator: 'CmdOrCtrl+,', click: () => openScreen('/settings') };
+  const accountItem = { label: 'Account…', click: () => openScreen('/account') };
   const template = [
     ...(isMac
       ? [
@@ -152,6 +287,9 @@ function buildMenu(checkForUpdates) {
               { role: 'about' },
               updateItem,
               { type: 'separator' },
+              settingsItem,
+              accountItem,
+              { type: 'separator' },
               { role: 'hide' },
               { role: 'hideOthers' },
               { role: 'unhide' },
@@ -160,24 +298,21 @@ function buildMenu(checkForUpdates) {
             ],
           },
         ]
-      : [{ label: 'File', submenu: [updateItem, { type: 'separator' }, { role: 'quit' }] }]),
+      : [{ label: 'Game', submenu: [settingsItem, accountItem, updateItem, { type: 'separator' }, { role: 'quit' }] }]),
     { role: 'editMenu' },
     {
       label: 'View',
       submenu: [
-        { role: 'reload' },
-        { role: 'togglefullscreen' },
-        { type: 'separator' },
-        { role: 'resetZoom' },
-        { role: 'zoomIn' },
-        { role: 'zoomOut' },
-        ...(app.isPackaged ? [] : [{ type: 'separator' }, { role: 'toggleDevTools' }]),
+        { role: 'togglefullscreen', accelerator: isMac ? 'Ctrl+Cmd+F' : 'F11' },
+        ...(app.isPackaged ? [] : [{ type: 'separator' }, { role: 'reload' }, { role: 'toggleDevTools' }]),
       ],
     },
     { role: 'windowMenu' },
   ];
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
+
+ipcMain.on('red-string:theme', (_event, theme) => applyTheme(theme));
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();
@@ -206,6 +341,13 @@ if (!app.requestSingleInstanceLock()) {
       },
     });
 
+    app.setAboutPanelOptions({
+      applicationName: 'Red String',
+      applicationVersion: app.getVersion(),
+      version: game.manifest ? `game ${game.manifest.commit.slice(0, 7)}` : '',
+      copyright: 'A noir detective game. You question suspects in your own words.',
+      iconPath: ICON,
+    });
     buildMenu(checkForUpdates);
     createWindow(origin);
 

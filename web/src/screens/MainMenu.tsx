@@ -5,6 +5,7 @@ import { useAmbience } from '../hooks/useAmbience.ts';
 import { casePath, resolveCase } from '../hooks/useCase.ts';
 import { continueSlot, type KeyValueStorage } from '../engine/save.ts';
 import { useGame } from '../store/game.ts';
+import { resolveTheme, useSettings } from '../store/settings.ts';
 import { useAccount } from '../store/account.ts';
 import { useLaunch } from '../boot/launch.ts';
 import { SyncBadge } from './Account.tsx';
@@ -44,6 +45,7 @@ export function MainMenu() {
   const user = useAccount((s) => s.user);
   const sync = useAccount((s) => s.sync);
   const launch = useLaunch();
+  const theme = resolveTheme(useSettings((s) => s.theme));
   const listRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
@@ -145,7 +147,7 @@ export function MainMenu() {
       </Link>
       <main id="main" tabIndex={-1} className={styles.main}>
         <header className={styles.masthead}>
-          <p className={styles.kicker}>Calder City. Night shift.</p>
+          <p className={styles.kicker}>Calder City. {theme === 'light' ? 'Day shift.' : 'Night shift.'}</p>
           <h1 className={styles.title}>
             <span className={styles.titleSmall}>Project</span>
             <span className={styles.titleBig}>Red String</span>

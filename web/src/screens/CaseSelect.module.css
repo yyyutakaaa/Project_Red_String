@@ -61,7 +61,7 @@
 
 .locked,
 .missing {
-  background: rgba(16, 21, 31, 0.88);
+  background: var(--glass-strong-bg);
   border: 1px solid var(--ink-500);
   color: var(--text-muted);
   box-shadow: var(--shadow-1);
@@ -235,7 +235,7 @@
   padding: var(--space-5);
   border: 1px dashed var(--ink-400);
   border-radius: var(--radius-md);
-  background: rgba(16, 21, 31, 0.8);
+  background: var(--glass-bg);
 }
 .emptyShelf p {
   margin: 0;
@@ -258,7 +258,7 @@
   justify-content: space-between;
   gap: var(--space-3) var(--space-5);
   padding: var(--space-4) var(--space-5);
-  background: rgba(16, 21, 31, 0.9);
+  background: var(--glass-strong-bg);
   border: var(--border);
   border-left: 3px solid var(--lamp-500);
   border-radius: var(--radius-md);

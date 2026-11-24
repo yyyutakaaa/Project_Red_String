@@ -278,6 +278,8 @@ npm run dist:mac   # release/Red String-<version>-universal.dmg
 npm run dist:win   # release/Red String Setup <version>.exe
 ```
 
+**Native window.** The app hides the system title bar and the game draws its own ([`TitleBar.tsx`](web/src/desktop/TitleBar.tsx)): the macOS traffic lights sit inside it, and on Windows the system buttons are painted over it in the game's colours. The window remembers its size, position and full screen. Text selection, zooming and dragging images are off (typed text and case text stay selectable), right-click gives the native Cut/Copy/Paste menu in text fields, and the menu has Settings… (Cmd/Ctrl+,), Account… and Check for Updates…. Older installed apps pick up new game files but keep their own window until you install a new release.
+
 The builds are not code-signed, so macOS Gatekeeper and Windows SmartScreen will warn the first time you open them.
 
 **Updates.** The app stays installed and updates the game by itself. Each web build writes `version.json` (commit, build time, and every file with its sha256). The app compares its own copy with the one on the live site. When the live one is newer it asks, downloads the new files into its data folder, checks every hash, and reloads. Saves are kept. You can also pick *Check for Updates…* from the menu.
@@ -285,6 +287,10 @@ The builds are not code-signed, so macOS Gatekeeper and Windows SmartScreen will
 **Releases.** Every commit on `main` runs [`desktop-release.yml`](.github/workflows/desktop-release.yml), which builds both installers and publishes them as a GitHub release (`v1.0.<run>`). You only need a new installer for a first install or when the shell in `desktop/` changes.
 
 **Logo.** The app icon is `desktop/build/icon.svg`; the website uses the same drawing as `web/public/favicon.svg`. After editing it, run `npm run icon` in `desktop/` to re-render `icon.png`.
+
+## Light mode
+
+Settings → Lighting switches between **Night shift** (dark, the default), **Day shift** (light) and **Follow system**. The light theme redefines the colour tokens in [`tokens.css`](web/src/styles/tokens.css) (`:root[data-theme='light']`). Screens and components use those tokens, and the few with their own surfaces have a light override. Room illustrations, props, the cork board and portraits keep their colours in both themes. The menu backdrop becomes an overcast rainy afternoon with the street lamp switched off.
 
 ## Your own art and sound
 

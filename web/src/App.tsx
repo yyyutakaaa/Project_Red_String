@@ -1,8 +1,10 @@
 import { lazy, Suspense, useEffect, type ComponentType, type ReactNode } from 'react';
-import { createBrowserRouter, Outlet, RouterProvider, ScrollRestoration } from 'react-router-dom';
+import { createBrowserRouter, Outlet, RouterProvider, ScrollRestoration, useNavigate } from 'react-router-dom';
 import { ToastHost } from './components/ToastHost.tsx';
 import { Boot } from './boot/Boot.tsx';
 import { LaunchOverlay } from './boot/LaunchOverlay.tsx';
+import { desktop } from './desktop/bridge.ts';
+import { TitleBar } from './desktop/TitleBar.tsx';
 import { audio } from './audio/audio.ts';
 import { applySettingsToDocument, useSettings } from './store/settings.ts';
 import { MainMenu } from './screens/MainMenu.tsx';
@@ -18,19 +20,30 @@ function screen<K extends string>(load: () => Promise<Record<K, ComponentType>>,
 const page = (node: ReactNode) => <Suspense fallback={<div className="route-loading" role="status" aria-live="polite">Opening the file...</div>}>{node}</Suspense>;
 
 function Root() {
+  const navigate = useNavigate();
   const fontSize = useSettings((s) => s.fontSize);
   const reducedMotion = useSettings((s) => s.reducedMotion);
+  const theme = useSettings((s) => s.theme);
   const masterVolume = useSettings((s) => s.masterVolume);
   const musicVolume = useSettings((s) => s.musicVolume);
   const sfxVolume = useSettings((s) => s.sfxVolume);
 
   useEffect(() => {
-    applySettingsToDocument({ fontSize, reducedMotion });
-  }, [fontSize, reducedMotion]);
+    applySettingsToDocument({ fontSize, reducedMotion, theme });
+    if (theme !== 'system') return;
+    // Follow the system when it switches between light and dark.
+    const media = window.matchMedia?.('(prefers-color-scheme: light)');
+    const onChange = () => applySettingsToDocument({ fontSize, reducedMotion, theme });
+    media?.addEventListener('change', onChange);
+    return () => media?.removeEventListener('change', onChange);
+  }, [fontSize, reducedMotion, theme]);
 
   useEffect(() => {
     audio.setVolumes(masterVolume, musicVolume, sfxVolume);
   }, [masterVolume, musicVolume, sfxVolume]);
+
+  // The desktop app's menu (Settings…, Account…) opens game screens.
+  useEffect(() => desktop()?.onNavigate?.((route) => navigate(route)), [navigate]);
 
   useEffect(() => {
     // Browsers only allow audio after a user gesture.
@@ -87,8 +100,11 @@ const router = createBrowserRouter([
 
 export function App() {
   return (
-    <Boot>
-      <RouterProvider router={router} />
-    </Boot>
+    <>
+      <TitleBar />
+      <Boot>
+        <RouterProvider router={router} />
+      </Boot>
+    </>
   );
 }

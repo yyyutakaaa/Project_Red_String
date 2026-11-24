@@ -1,13 +1,13 @@
 .screen {
   position: relative;
   min-height: 100vh;
-  min-height: 100dvh;
+  min-height: var(--app-h);
 }
 
 .main {
   position: relative;
   min-height: 100vh;
-  min-height: 100dvh;
+  min-height: var(--app-h);
   width: 100%;
   max-width: var(--content-max);
   margin: 0 auto;
@@ -95,7 +95,7 @@
   color: var(--text);
   max-width: 40ch;
   margin: 0;
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
+  text-shadow: var(--text-halo);
 }
 .pitchTail {
   display: inline-block;
@@ -221,7 +221,7 @@
   padding: var(--space-2) var(--space-3);
   border: 1px solid var(--ink-500);
   border-radius: var(--radius-md);
-  background: rgba(8, 11, 18, 0.72);
+  background: var(--glass-bg);
   backdrop-filter: blur(6px);
   color: var(--text);
   text-decoration: none;
@@ -243,4 +243,10 @@
 .chipNote {
   font-size: var(--fs-xs);
   color: var(--text-muted);
+}
+
+/* Day shift: ink title with a faint warm halo instead of a lamp glow. */
+:global([data-theme='light']) .title {
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6), 0 0 22px rgba(173, 116, 20, 0.18);
+  animation: none;
 }

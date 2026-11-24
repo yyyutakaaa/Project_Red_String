@@ -49,6 +49,7 @@
   inset: 0;
   width: 100%;
   height: 100%;
+  color: #04060a;
 }
 .bulb {
   fill: var(--lamp-200);
@@ -126,4 +127,42 @@
   .backdrop[data-lamp='left'] .lamp {
     left: -4%;
   }
+}
+
+/* Day shift: an overcast, rainy afternoon. The sky is pale, the city fades into the haze, the lamp
+   is switched off and the rain is grey instead of lit. */
+:global([data-theme='light']) .backdrop {
+  background:
+    radial-gradient(ellipse 90% 60% at 50% 0%, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 70%),
+    linear-gradient(180deg, #c7cfd6 0%, #dcdcd6 40%, var(--ink-900) 75%, var(--ink-950) 100%);
+}
+:global([data-theme='light']) .cityFar {
+  fill: #b9bec4;
+  opacity: 0.75;
+}
+:global([data-theme='light']) .cityNear {
+  fill: #8f959d;
+}
+:global([data-theme='light']) .windows rect {
+  fill: #5f666f;
+}
+:global([data-theme='light']) .post {
+  color: #3d424a;
+}
+:global([data-theme='light']) .bulb {
+  fill: #e4ddcd;
+  animation: none;
+}
+:global([data-theme='light']) .glow,
+:global([data-theme='light']) .cone {
+  display: none;
+}
+:global([data-theme='light']) .drop {
+  background: linear-gradient(180deg, rgba(70, 84, 104, 0), rgba(70, 84, 104, calc(var(--op) * 0.75)));
+}
+:global([data-theme='light']) .fog {
+  background: linear-gradient(0deg, rgba(235, 228, 214, 0.75), rgba(235, 228, 214, 0));
+}
+:global([data-theme='light']) .vignette {
+  background: radial-gradient(ellipse at 50% 40%, transparent 50%, rgba(110, 90, 55, 0.18) 100%);
 }

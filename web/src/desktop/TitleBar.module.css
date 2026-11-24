@@ -1,0 +1,33 @@
+.bar {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 2000;
+  height: var(--titlebar-h);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--titlebar-bg);
+  border-bottom: 1px solid var(--titlebar-border);
+  -webkit-app-region: drag;
+  user-select: none;
+}
+:global(html[data-fullscreen]) .bar {
+  display: none;
+}
+
+.title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-type);
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.pin {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ffd3d6, var(--red-500) 55%, var(--red-700));
+}

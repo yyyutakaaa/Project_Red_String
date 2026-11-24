@@ -98,7 +98,7 @@
   position: relative;
   width: 100%;
   /* Keep the whole board on screen on short displays so pins can be dragged anywhere without scrolling. */
-  max-width: max(720px, calc((100svh - var(--hud-height) - 2.5rem) * 1.58 + 36px));
+  max-width: max(720px, calc((100svh - var(--titlebar-h) - var(--hud-height) - 2.5rem) * 1.58 + 36px));
   margin: 0 auto;
   padding: clamp(10px, 1.5vw, 18px);
   border-radius: 8px;
