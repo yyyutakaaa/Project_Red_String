@@ -1,4 +1,4 @@
 {
-  "//": "Files that make up the desktop shell. Their fingerprint tells the game whether this app needs a new installer (see shellFingerprint in main.cjs and web/vite.config.ts). Add new shell files here.",
-  "files": ["main.cjs", "preload.cjs", "updater.cjs", "discord.cjs", "shell-files.json"]
+  "//": "Files that make up the desktop shell. Their fingerprint tells the game whether this app needs a new installer (see fingerprint.cjs and web/vite.config.ts). Add new shell files here.",
+  "files": ["main.cjs", "preload.cjs", "updater.cjs", "discord.cjs", "fingerprint.cjs", "installer.cjs", "shell-files.json"]
 }

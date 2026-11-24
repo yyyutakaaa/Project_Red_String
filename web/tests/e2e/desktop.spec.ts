@@ -40,6 +40,19 @@ async function asDesktop(page: Page, bridge: Record<string, unknown>) {
       };
       full.answerUpdate = (choice: string) => answers.push(choice);
     }
+    if (b.withInstaller) {
+      // The shell installs the new app itself: the page asks, the test plays the shell's answers.
+      const asked: string[] = [];
+      let send: ((m: unknown) => void) | null = null;
+      const w = window as unknown as { __installAsked: string[]; __sendInstall: (m: unknown) => void };
+      w.__installAsked = asked;
+      w.__sendInstall = (m) => send?.(m);
+      full.installShell = (fp: string) => asked.push(fp);
+      full.onShellInstall = (cb: (m: unknown) => void) => {
+        send = cb;
+        return () => undefined;
+      };
+    }
     if (b.withDisplay) {
       // A shell with a fixed window: full screen goes through the shell and comes back as an event.
       let listener: ((on: boolean) => void) | null = null;
@@ -128,4 +141,30 @@ test('the updater speaks through the game popup: ready, update now, downloading,
   await expect(popup).toContainText('hash mismatch');
   await popup.getByRole('button', { name: 'Keep playing' }).click();
   await expect(popup).toHaveCount(0);
+});
+
+test('an app that can install itself downloads the new one in the game, with a progress bar', async ({ page }) => {
+  await asDesktop(page, { platform: 'win32', withInstaller: true, shell: { fingerprint: 'oldshell00000000', version: '1.0.7' } });
+  await page.goto('/');
+  const notice = page.getByTestId('shell-notice');
+  await expect(notice).toBeVisible();
+  const send = (m: unknown) => page.evaluate((msg) => (window as unknown as { __sendInstall: (x: unknown) => void }).__sendInstall(msg), m);
+
+  await notice.getByTestId('shell-install').click();
+  const asked = await page.evaluate(() => (window as unknown as { __installAsked: string[] }).__installAsked);
+  expect(asked).toEqual([currentShellFingerprint()]);
+  await expect(notice.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '0');
+  await send({ state: 'downloading', progress: 0.42 });
+  await expect(notice.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '42');
+  await expect(notice.getByRole('button')).toHaveCount(0);
+
+  await send({ state: 'notReady', detail: 'The new app is still being built.' });
+  await expect(notice).toContainText('still on its way');
+  await notice.getByTestId('shell-install').click();
+  await send({ state: 'failed', detail: 'Download failed (502)' });
+  await expect(notice).toContainText('Download failed (502)');
+  await send({ state: 'manual', detail: 'Move Red String to Applications first.' });
+  await expect(notice.getByRole('button', { name: 'Open download page' })).toBeVisible();
+  await send({ state: 'installing' });
+  await expect(notice.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '100');
 });

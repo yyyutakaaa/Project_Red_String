@@ -30,6 +30,15 @@ contextBridge.exposeInMainWorld('redStringDesktop', {
     return () => ipcRenderer.removeListener('red-string:update', listener);
   },
   answerUpdate: (choice) => ipcRenderer.send('red-string:update-answer', choice === 'now' ? 'now' : 'later'),
+  /** Install the new app from inside the game; progress comes back through onShellInstall. */
+  installShell: (fingerprint) => ipcRenderer.send('red-string:install-shell', String(fingerprint || '')),
+  onShellInstall: (callback) => {
+    const listener = (_event, message) => {
+      if (message && typeof message === 'object') callback(message);
+    };
+    ipcRenderer.on('red-string:shell-install', listener);
+    return () => ipcRenderer.removeListener('red-string:shell-install', listener);
+  },
   onNavigate: (callback) => {
     const listener = (_event, route) => {
       if (typeof route === 'string' && route.startsWith('/')) callback(route);

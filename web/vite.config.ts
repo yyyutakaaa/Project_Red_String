@@ -53,7 +53,7 @@ function versionFile(): Plugin {
 
 /**
  * Fingerprint of the desktop shell this game build belongs to. Same recipe as shellFingerprint() in
- * desktop/main.cjs. Empty when the desktop folder is not there; the game then never asks for a
+ * desktop/fingerprint.cjs. Empty when the desktop folder is not there; the game then never asks for a
  * new installer.
  */
 function shellFingerprint(): string {

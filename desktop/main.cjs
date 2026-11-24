@@ -10,27 +10,10 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { pickGameRoot, startUpdates } = require('./updater.cjs');
 const { createPresence } = require('./discord.cjs');
-const crypto = require('node:crypto');
+const { shellFingerprint } = require('./fingerprint.cjs');
+const { createInstaller } = require('./installer.cjs');
 
-/**
- * Fingerprint of this shell's own files. The game is built with the fingerprint of the shell next to
- * it; when an in-app update brings game files for a newer shell, the two differ and the game asks
- * the player to install the new app. Must match shellFingerprint() in web/vite.config.ts.
- */
-function shellFingerprint() {
-  try {
-    const { files } = JSON.parse(fs.readFileSync(path.join(__dirname, 'shell-files.json'), 'utf8'));
-    const hash = crypto.createHash('sha256');
-    for (const name of files) {
-      hash.update(`${name}\n`);
-      hash.update(fs.readFileSync(path.join(__dirname, name), 'utf8').replace(/\r/g, ''));
-      hash.update('\n');
-    }
-    return hash.digest('hex').slice(0, 16);
-  } catch {
-    return '';
-  }
-}
+// Fingerprint of this shell's own files; the game compares it with the shell it was built for.
 const SHELL_FINGERPRINT = shellFingerprint();
 
 app.setName('Red String');
@@ -388,6 +371,15 @@ function updatePopup() {
 // Settings → Display: a window of the fixed size, or full screen.
 ipcMain.on('red-string:fullscreen', (_event, on) => {
   if (mainWindow && !mainWindow.isDestroyed()) mainWindow.setFullScreen(Boolean(on));
+});
+// A new app, installed from the game: download with progress in the game's popup, then restart.
+const installShell = createInstaller();
+ipcMain.on('red-string:install-shell', (event, fingerprint) => {
+  if (!mainWindow || mainWindow.isDestroyed() || event.sender !== mainWindow.webContents) return;
+  const wanted = typeof fingerprint === 'string' && /^[0-9a-f]{16}$/.test(fingerprint) ? fingerprint : '';
+  installShell(wanted, (message) => {
+    if (mainWindow && !mainWindow.isDestroyed()) mainWindow.webContents.send('red-string:shell-install', message);
+  });
 });
 ipcMain.on('red-string:shell', (event) => {
   event.returnValue = { fingerprint: SHELL_FINGERPRINT, version: app.getVersion() };

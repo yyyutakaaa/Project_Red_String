@@ -69,10 +69,20 @@ jobs:
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: desktop
       - uses: actions/download-artifact@v4
         with:
           path: installers
           merge-multiple: true
+      # Which shell these installers are: the app checks it before it installs one from the game.
+      - name: Write shell.json
+        run: |
+          fp="$(node desktop/fingerprint.cjs)"
+          test -n "$fp"
+          printf '{"fingerprint":"%s","version":"%s"}\n' "$fp" "$APP_VERSION" > installers/shell.json
+          cat installers/shell.json
       - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -82,4 +92,4 @@ jobs:
           gh release create "v${APP_VERSION}" installers/* \
             --target "$GITHUB_SHA" \
             --title "Red String ${APP_VERSION}" \
-            --notes "Desktop installers for macOS and Windows, built from commit ${short}. The builds are not code-signed. Installed apps update the game by themselves; you only need a new installer for a first install."
+            --notes "Desktop installers for macOS and Windows, built from commit ${short}. The builds are not code-signed. Installed apps update the game by themselves; new versions of the app install from the game too. You only need an installer for a first install."

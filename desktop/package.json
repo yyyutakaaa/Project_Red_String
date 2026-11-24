@@ -24,6 +24,8 @@
       "preload.cjs",
       "updater.cjs",
       "discord.cjs",
+      "fingerprint.cjs",
+      "installer.cjs",
       "shell-files.json",
       "build/icon.png",
       "renderer/**/*",

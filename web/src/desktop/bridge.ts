@@ -20,6 +20,17 @@ export interface DesktopBridge {
   /** The in-app updater's messages, shown in the game's popup (shells with a fixed window and later). */
   onUpdate?: (callback: (message: UpdateMessage) => void) => () => void;
   answerUpdate?: (choice: 'now' | 'later') => void;
+  /** Install the new app from the game (shells from the in-game installer on). */
+  installShell?: (fingerprint: string) => void;
+  onShellInstall?: (callback: (message: ShellInstallMessage) => void) => () => void;
+}
+
+export interface ShellInstallMessage {
+  /** manual: this app cannot replace itself; notReady: the new installer is still being built. */
+  state: 'downloading' | 'installing' | 'failed' | 'manual' | 'notReady';
+  /** 0..1 while downloading. */
+  progress?: number;
+  detail?: string;
 }
 
 export interface UpdateMessage {
