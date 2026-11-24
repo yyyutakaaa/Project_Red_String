@@ -121,7 +121,7 @@
 
 .layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(17rem, 21rem);
+  grid-template-columns: minmax(0, 1fr) minmax(17rem, 22rem);
   gap: var(--space-5);
   align-items: start;
 }

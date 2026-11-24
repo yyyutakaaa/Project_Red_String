@@ -532,9 +532,20 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
           // On wide screens the dossier scrolls on its own; make it reachable from the keyboard.
           tabIndex={narrow ? undefined : 0}
         >
-          <div className={styles.lamp} aria-hidden="true" />
-          <div className={styles.portraitSlot}>
-            <Portrait suspect={suspect} size={narrow ? 128 : 236} mood={conv.mood} />
+          <div className={styles.lamp} data-mood={conv.mood} aria-hidden="true" />
+          <div className={styles.portraitSlot} data-mood={conv.mood}>
+            <Portrait suspect={suspect} size={narrow ? 128 : 300} mood={conv.mood} />
+            {/* The lamp over the table: it swings, and its light takes the colour of the mood. */}
+            <div className={styles.hanging} aria-hidden="true">
+              <span className={styles.cord} />
+              <span className={styles.shade} />
+              <span className={styles.beam} />
+            </div>
+            <div className={styles.wisps} aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </div>
           </div>
           <div className={styles.identity}>
             <p className={styles.kicker}>Interview room</p>

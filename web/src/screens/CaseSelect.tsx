@@ -6,6 +6,8 @@ import { RainBackdrop } from '../components/RainBackdrop.tsx';
 import { ScreenFrame } from '../components/ScreenFrame.tsx';
 import { useAmbience } from '../hooks/useAmbience.ts';
 import { casePath, resolveCase } from '../hooks/useCase.ts';
+import { RoomScene } from '../components/RoomScene.tsx';
+import type { CaseFile } from '@shared/caseSchema.ts';
 import { useLaunch } from '../boot/launch.ts';
 import { STORY_ORDER, getStoryCase, isStoryUnlocked } from '../engine/caseLoader.ts';
 import type { CaseProgress, CaseSource, CompletionRecord } from '../engine/types.ts';
@@ -57,6 +59,24 @@ function CaseActions({ caseKey, source, status, title, onOpen, onVerdict, onRepl
     >
       {openLabel}
     </Button>
+  );
+}
+
+/** The crime scene photograph clipped to the file: the room where the body was found. */
+function ScenePhoto({ caseFile, sealed = false }: { caseFile: CaseFile; sealed?: boolean }) {
+  const room = caseFile.rooms.find((r) => r.id === caseFile.victim.found_in) ?? caseFile.rooms[0];
+  if (!room) return null;
+  return (
+    <div className={`${styles.photo} ${sealed ? styles.photoSealed : ''}`} aria-hidden="true">
+      <RoomScene background={room.background} hotspots={room.hotspots} thumbnail />
+      {sealed && (
+        <>
+          <span className={styles.tape}>Sealed · Sealed · Sealed · Sealed · Sealed</span>
+          <span className={`${styles.tape} ${styles.tapeB}`}>Sealed · Sealed · Sealed · Sealed · Sealed</span>
+        </>
+      )}
+      {!sealed && <span className={styles.clip} />}
+    </div>
   );
 }
 
@@ -174,6 +194,7 @@ export function CaseSelect() {
                 return (
                   <li key={id} className={styles.storyCell}>
                     <article className={`${styles.file} ${styles.locked}`} aria-labelledby={headingId} data-testid={`case-card-${id}`}>
+                      <ScenePhoto caseFile={c} sealed />
                       <p className={styles.number}>{number}</p>
                       <h3 id={headingId} className={styles.fileTitle}>
                         {c.title}
@@ -193,6 +214,7 @@ export function CaseSelect() {
               return (
                 <li key={id} className={styles.storyCell}>
                   <article className={`paper ${styles.file} ${styles.unlocked}`} aria-labelledby={headingId} data-testid={`case-card-${id}`}>
+                    <ScenePhoto caseFile={c} />
                     <div className={styles.fileHead}>
                       <p className={styles.number}>{number}</p>
                       <p className={`${styles.status} ${styles[`status-${status}`] ?? ''}`}>{STATUS_LABEL[status]}</p>

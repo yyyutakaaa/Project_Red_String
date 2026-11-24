@@ -23,7 +23,7 @@
 
 /* Title */
 .masthead {
-  max-width: 40rem;
+  max-width: 52rem;
   animation: global(fade-in) 1.2s var(--ease-out) both;
 }
 .kicker {
@@ -47,19 +47,19 @@
   animation: global(lamp-flicker) 7s linear infinite;
 }
 .titleSmall {
-  font-size: clamp(1.4rem, 3vw, 2rem);
-  letter-spacing: 0.32em;
+  font-size: clamp(1.4rem, 3.4vw, 2.5rem);
+  letter-spacing: 0.36em;
   text-transform: uppercase;
   margin-left: 0.12em;
 }
 .titleBig {
-  font-size: clamp(3rem, 9vw, 5.6rem);
+  font-size: clamp(3.2rem, 10.5vw, 7.4rem);
   letter-spacing: 0.02em;
 }
 
 .string {
   display: block;
-  width: min(32rem, 100%);
+  width: min(42rem, 100%);
   aspect-ratio: 520 / 60;
   height: auto;
   margin: var(--space-1) 0 var(--space-3);
@@ -103,7 +103,7 @@
 
 /* Menu */
 .nav {
-  width: min(26rem, 100%);
+  width: min(30rem, 100%);
 }
 .menu {
   list-style: none;
@@ -176,9 +176,42 @@
 }
 .item:hover:not(:disabled)::before,
 .item:focus-visible::before {
-  width: 1.6rem;
-  background: var(--red-500);
-  box-shadow: 0 0 6px var(--red-glow);
+  /* the dash becomes a pin */
+  left: 0.75rem;
+  top: 0.95rem;
+  width: 0.62rem;
+  height: 0.62rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ffc1c5, var(--red-500) 55%, var(--red-700));
+  box-shadow: 0 0 10px var(--red-glow), 0 2px 3px rgba(0, 0, 0, 0.5);
+}
+/* ...and a red thread runs from it under the words */
+.item::after {
+  content: '';
+  position: absolute;
+  left: 1.05rem;
+  right: 1rem;
+  top: 2.34rem;
+  height: 2px;
+  border-radius: 1px;
+  background: linear-gradient(90deg, var(--red-500), var(--red-400) 60%, rgba(224, 74, 83, 0));
+  box-shadow: 0 0 8px var(--red-glow);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 420ms var(--ease-out);
+  pointer-events: none;
+}
+.item:hover:not(:disabled)::after,
+.item:focus-visible::after {
+  transform: scaleX(1);
+}
+.item:hover:not(:disabled) .itemLabel,
+.item:focus-visible .itemLabel {
+  transform: translateX(0.35rem);
+}
+.itemLabel,
+.itemSub {
+  transition: transform var(--dur-med) var(--ease-out), color var(--dur-fast);
 }
 .item:disabled {
   cursor: not-allowed;
@@ -249,4 +282,17 @@
 :global([data-theme='light']) .title {
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6), 0 0 22px rgba(173, 116, 20, 0.18);
   animation: none;
+}
+
+/* A soft shadow down the left side, so the menu stays readable over the lit city. */
+.main::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(4, 6, 11, 0.62) 0%, rgba(4, 6, 11, 0.34) 32%, rgba(4, 6, 11, 0) 58%);
+}
+:global([data-theme='light']) .main::before {
+  background: linear-gradient(90deg, rgba(243, 238, 228, 0.7) 0%, rgba(243, 238, 228, 0.4) 32%, rgba(243, 238, 228, 0) 58%);
 }

@@ -1,9 +1,11 @@
 .notice {
   position: fixed;
-  left: 50%;
+  /* Centred with margins, not a transform: the fade-up animation owns the transform. */
+  left: 0;
+  right: 0;
+  margin-inline: auto;
   bottom: clamp(1rem, 4vh, 2rem);
   z-index: 50;
-  transform: translateX(-50%);
   width: min(40rem, calc(100vw - 2rem));
   display: flex;
   align-items: center;

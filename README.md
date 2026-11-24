@@ -60,6 +60,7 @@ The server decides what a suspect is allowed to reveal, so you can't talk the an
 - [Deploying](#deploying)
 - [Accounts and cloud saves](#accounts-and-cloud-saves)
 - [Loading screens](#loading-screens)
+- [The film look](#the-film-look)
 - [Desktop app](#desktop-app-macos-and-windows)
 - [Your own art and sound](#your-own-art-and-sound)
 - [Accessibility](#accessibility)
@@ -289,6 +290,19 @@ The builds are not code-signed, so macOS Gatekeeper and Windows SmartScreen will
 **Releases.** Every commit on `main` runs [`desktop-release.yml`](.github/workflows/desktop-release.yml), which builds both installers and publishes them as a GitHub release (`v1.0.<run>`). You only need a new installer for a first install or when the shell in `desktop/` changes.
 
 **Logo.** The app icon is `desktop/build/icon.svg`; the website uses the same drawing as `web/public/favicon.svg`. After editing it, run `npm run icon` in `desktop/` to re-render `icon.png`.
+
+## The film look
+
+The game is staged like a film noir picture. All of it is code: no image files.
+
+- **The city** behind the menus ([`RainBackdrop.tsx`](web/src/components/RainBackdrop.tsx)): three skylines with lit windows, an elevated train, a flickering HOTEL sign, lightning, fog, and a detective smoking under the street lamp. Rain is drawn on a canvas in three depths, with splashes on the street. The layers shift with the pointer.
+- **Between screens** ([`Cinema.tsx`](web/src/cinema/Cinema.tsx)): venetian blinds open onto each new scene, and film grain moves over everything.
+- **Crime scenes**: the room dims and a torch follows the pointer (or the hotspot with keyboard focus). Dust hangs in the air, and a flashbulb fires when evidence turns up.
+- **Interview room**: a lamp swings over the suspect, and its light takes the colour of their mood.
+- **Case files**: each file carries a photograph of its crime scene. Sealed files are taped shut.
+- **The verdict**: a newspaper front page spins in, and the stamp lands on it.
+
+With reduced motion everything stands still: one frame of rain, no lightning, no train, no blinds. The light theme turns the city into an overcast afternoon.
 
 ## Light mode
 

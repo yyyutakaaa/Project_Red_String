@@ -70,6 +70,7 @@ function RoomView({ room, caseFile, caseKey, progress }: RoomViewProps) {
 
   return (
     <ScreenFrame
+      wide
       kicker={`Scene ${index + 1} of ${caseFile.rooms.length}`}
       title={room.name}
       actions={
@@ -104,6 +105,7 @@ function RoomView({ room, caseFile, caseKey, progress }: RoomViewProps) {
 /** Scene and field notes for one room. Keyed by room id, so the open note resets per room. */
 function RoomSearch({ room, caseFile, caseKey, progress }: RoomViewProps) {
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [flashKey, setFlashKey] = useState(0);
   const panelRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
   const examined = useMemo(() => examinedIn(progress.examinedHotspots, room.id), [progress.examinedHotspots, room.id]);
@@ -115,7 +117,8 @@ function RoomSearch({ room, caseFile, caseKey, progress }: RoomViewProps) {
   const onExamine = (h: Hotspot) => {
     setActiveId(h.id);
     const found = examineHotspot(caseFile, caseKey, room.id, h);
-    if (!found) sfx('page');
+    if (found) setFlashKey((k) => k + 1);
+    else sfx('page');
     // On narrow screens the notes sit under the scene; bring them into view without moving focus.
     if (typeof window !== 'undefined' && window.matchMedia?.('(max-width: 899px)').matches) {
       panelRef.current?.scrollIntoView({ block: 'nearest', behavior: reducedMotion ? 'auto' : 'smooth' });
@@ -136,6 +139,7 @@ function RoomSearch({ room, caseFile, caseKey, progress }: RoomViewProps) {
           onExamine={onExamine}
           controlsId={DESCRIPTION_ID}
           label={`${room.name}: places to search`}
+          flashKey={flashKey}
         />
         <p className={styles.help}>
           <span>Tab</span> through the room. <span>Enter</span> or <span>Space</span> to look closer.

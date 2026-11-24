@@ -26,7 +26,14 @@ const HEADLINE: Record<AccusationOutcome, string> = {
 };
 
 /** Delay so the sound lands with the stamp rather than on top of the accusation's own thump. */
-const STAMP_SOUND_DELAY_MS = 420;
+// The stamp lands after the front page has spun in.
+const STAMP_SOUND_DELAY_MS = 1350;
+
+const DECK: Record<AccusationOutcome, string> = {
+  correct: 'Detective names the guilty party. District attorney to bring charges at once.',
+  weak_proof: 'Detective names a suspect, but the proof falls short. Counsel expects to walk.',
+  wrong_culprit: 'Detective names the wrong party. The guilty one is still at large.',
+};
 
 /**
  * The tally as it stood when the accusation was made. Older saves have no frozen breakdown, so it is
@@ -116,24 +123,44 @@ export function Ending() {
   return (
     <ScreenFrame title="The verdict" kicker={caseFile.title}>
       <section className={`${styles.outcome} ${styles[outcome] ?? ''}`} data-testid="ending-outcome" data-outcome={outcome} aria-labelledby="outcome-heading">
-        <div className={styles.stampWrap}>
-          <p className={`stamp ${styles.bigStamp}`}>{STAMP[outcome]}</p>
-        </div>
-        <h2 id="outcome-heading" className={styles.headline}>
-          {HEADLINE[outcome]}
-        </h2>
-        <p className={styles.accusedLine}>
-          You named <strong>{accused?.name ?? 'nobody'}</strong>
-          {accusation.evidenceIds.length > 0 && (
-            <>
-              {' '}
-              on the strength of {accusation.evidenceIds.map((id) => evidenceName(caseFile, id)).join(', ')}.
-            </>
-          )}
-        </p>
-        <div className={`paper ${styles.endingText}`}>
-          <p>{caseFile.endings[outcome]}</p>
-        </div>
+        {/* The verdict arrives the way it does in the pictures: a front page spinning out of the dark. */}
+        <article className={`paper selectable ${styles.frontPage}`}>
+          <header className={styles.masthead}>
+            <p className={styles.edition}>
+              <span>Late city edition</span>
+              <span>{caseFile.era}</span>
+              <span>Five cents</span>
+            </p>
+            <p className={styles.paperName}>The Calder City Ledger</p>
+          </header>
+          <h2 id="outcome-heading" className={styles.headline}>
+            {HEADLINE[outcome]}
+          </h2>
+          <p className={styles.deck}>{DECK[outcome]}</p>
+          <div className={styles.story}>
+            {accused && (
+              <figure className={styles.photo}>
+                <Portrait suspect={accused} size={190} decorative showInitials={false} />
+                <figcaption>{accused.name}, named by the detective.</figcaption>
+              </figure>
+            )}
+            <div className={styles.storyText}>
+              <p className={styles.accusedLine}>
+                You named <strong>{accused?.name ?? 'nobody'}</strong>
+                {accusation.evidenceIds.length > 0 && (
+                  <>
+                    {' '}
+                    on the strength of {accusation.evidenceIds.map((id) => evidenceName(caseFile, id)).join(', ')}.
+                  </>
+                )}
+              </p>
+              <p className={styles.endingText}>{caseFile.endings[outcome]}</p>
+            </div>
+          </div>
+          <div className={styles.stampWrap}>
+            <p className={`stamp ${styles.bigStamp}`}>{STAMP[outcome]}</p>
+          </div>
+        </article>
       </section>
 
       <div className={styles.columns}>

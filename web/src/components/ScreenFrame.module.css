@@ -11,6 +11,11 @@
   flex: 1;
 }
 .inner:focus { outline: none; }
+.wide {
+  max-width: min(1720px, 100%);
+  padding-left: clamp(1rem, 2.5vw, 2.5rem);
+  padding-right: clamp(1rem, 2.5vw, 2.5rem);
+}
 .header {
   display: flex;
   align-items: center;
