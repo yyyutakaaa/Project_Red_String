@@ -21,10 +21,10 @@ import { config, envNumber } from '../_shared/env.ts';
 const MAX_ATTEMPTS = 3;
 const GENERATIONS_PER_DAY = 5;
 // Sized so a complete case can finish inside the provider timeout.
-const MAX_OUTPUT_TOKENS = 10_000;
+const MAX_OUTPUT_TOKENS = 16_000;
 const IP_LIMITS = { perMinute: 3, perDay: 15 };
 const globalGenerationsPerDay = () => envNumber('GLOBAL_GENERATIONS_PER_DAY', 60);
-const PROVIDER_TIMEOUT_MS = 135_000;
+const PROVIDER_TIMEOUT_MS = 140_000;
 
 const Body = z.object({
   device_id: z.string().refine(isUuid, 'device_id must be a uuid'),
@@ -84,7 +84,10 @@ async function runAttempt(job: JobRow, remainingToday: number): Promise<AttemptR
 
   let text: string;
   try {
-    const result = await streamChat({ model, messages, maxTokens: MAX_OUTPUT_TOKENS, temperature: 0.9, timeoutMs: PROVIDER_TIMEOUT_MS }, () => {});
+    const result = await streamChat(
+      { model, messages, maxTokens: MAX_OUTPUT_TOKENS, temperature: 0.9, reasoningEffort: config.generatorReasoningEffort(), timeoutMs: PROVIDER_TIMEOUT_MS },
+      () => {},
+    );
     text = result.text;
     await settleSpend(reservation, 'generate-case', model, [result.usage]);
   } catch (err) {

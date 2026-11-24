@@ -269,5 +269,5 @@ for (const r of results.filter((x) => x.leak || x.named_culprit || x.out_of_char
 }
 const md = lines.join('\n');
 writeFileSync(path.join(OUT, `eval-${stamp}.md`), md);
-console.log('\n' + lines.slice(0, 5 + MODELS.length).join('\n'));
+console.log('\n' + lines.slice(0, 6 + MODELS.length).join('\n'));
 console.log(`\nFull report: ${path.relative(process.cwd(), path.join(OUT, `eval-${stamp}.md`))}`);

@@ -17,6 +17,12 @@ export interface ChatOptions {
   messages: ChatMessage[];
   maxTokens: number;
   temperature?: number;
+  /**
+   * OpenAI-compatible reasoning effort ("low" | "medium" | "high"). Models with adaptive thinking
+   * (e.g. claude-opus-5-5) stream reasoning as `reasoning_content` and can spend the whole token budget
+   * on it; a low effort leaves room for the answer. Dropped automatically if the gateway rejects it.
+   */
+  reasoningEffort?: string;
   timeoutMs: number;
   signal?: AbortSignal;
 }
@@ -155,6 +161,7 @@ function buildBody(opts: ChatOptions, stream: boolean, minimal: boolean): string
   };
   if (!minimal) {
     if (opts.temperature !== undefined && env('OMNIAKEY_SEND_TEMPERATURE') === '1') body.temperature = opts.temperature;
+    if (opts.reasoningEffort) body.reasoning_effort = opts.reasoningEffort;
     if (stream) body.stream_options = { include_usage: true };
   }
   return JSON.stringify(body);
@@ -162,13 +169,17 @@ function buildBody(opts: ChatOptions, stream: boolean, minimal: boolean): string
 
 /** A 400 that names a request parameter: worth one retry with the minimal body. */
 function isParameterError(status: number, detail: string): boolean {
-  return status === 400 && /(temperature|stream_options|include_usage|unsupported|not support|unknown parameter|unrecognized)/i.test(detail);
+  return status === 400 && /(temperature|stream_options|include_usage|reasoning|unsupported|not support|unknown parameter|unrecognized)/i.test(detail);
 }
+
+/** Models that rejected an optional parameter in this function instance: send them the minimal body. */
+const needsMinimalBody = new Set<string>();
 
 async function post(opts: ChatOptions, stream: boolean, controller: AbortController): Promise<Response> {
   const key = config.omniakeyKey();
   if (!key) throw new ProviderError('OMNIAKEY_API_KEY is not set', 0, 'config');
-  for (const minimal of [false, true]) {
+  const variants = needsMinimalBody.has(opts.model) ? [true] : [false, true];
+  for (const minimal of variants) {
     let res: Response;
     try {
       res = await fetch(`${config.omniakeyBaseUrl()}/chat/completions`, {
@@ -193,7 +204,8 @@ async function post(opts: ChatOptions, stream: boolean, controller: AbortControl
       /* ignore */
     }
     if (!minimal && isParameterError(res.status, detail)) {
-      console.warn('provider rejected a parameter, retrying with the minimal body:', detail.slice(0, 160));
+      console.warn(`provider rejected a parameter for ${opts.model}, using the minimal body from now on:`, detail.slice(0, 160));
+      needsMinimalBody.add(opts.model);
       continue;
     }
     throw new ProviderError(`Provider HTTP ${res.status}: ${detail}`, res.status, 'http');

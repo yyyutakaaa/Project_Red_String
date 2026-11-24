@@ -165,7 +165,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
     const started = performance.now();
     try {
       const result = await streamChat(
-        { model, messages, maxTokens: MAX_OUTPUT_TOKENS, temperature: 0.8, timeoutMs: PROVIDER_TIMEOUT_MS },
+        { model, messages, maxTokens: MAX_OUTPUT_TOKENS, temperature: 0.8, reasoningEffort: config.suspectReasoningEffort(), timeoutMs: PROVIDER_TIMEOUT_MS },
         (piece) => {
           if (firstTokenMs === null) firstTokenMs = performance.now() - started;
           full += piece;

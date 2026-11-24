@@ -12,11 +12,22 @@ export function envNumber(name: string, fallback: number): number {
   return Number.isFinite(n) ? n : fallback;
 }
 
+function effort(value: string): string | undefined {
+  const v = value.trim().toLowerCase();
+  return v === '' || v === 'none' ? undefined : v;
+}
+
 export const config = {
   omniakeyBaseUrl: () => env('OMNIAKEY_BASE_URL', 'https://api.omniakey.com/v1').replace(/\/$/, ''),
   omniakeyKey: () => env('OMNIAKEY_API_KEY'),
   suspectModel: () => env('SUSPECT_MODEL', 'claude-haiku-5-5'),
   generatorModel: () => env('GENERATOR_MODEL', 'claude-opus-5-5'),
+  /**
+   * reasoning_effort sent to the models ("low" | "medium" | "high", or "none" to omit it). Thinking models
+   * otherwise spend the token budget on reasoning before writing (seen live with claude-opus-5-5).
+   */
+  generatorReasoningEffort: () => effort(env('GENERATOR_REASONING_EFFORT', 'low')),
+  suspectReasoningEffort: () => effort(env('SUSPECT_REASONING_EFFORT', 'low')),
   dailySpendLimitUsd: () => envNumber('DAILY_SPEND_LIMIT_USD', 5),
   /** Comma-separated extra origins, e.g. a custom domain. */
   allowedOrigins: () =>

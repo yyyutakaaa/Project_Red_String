@@ -29,6 +29,29 @@ function withFetch(impl: (url: string, init: RequestInit) => Promise<Response>, 
 
 const opts = { model: 'claude-haiku-5-5', messages: [{ role: 'user' as const, content: 'hello' }], maxTokens: 50, timeoutMs: 2000 };
 
+Deno.test('sends reasoning_effort, and after a rejection uses the minimal body for that model only', async () => {
+  const bodies: Record<string, unknown>[] = [];
+  await withFetch(
+    async (_url, init) => {
+      const body = JSON.parse(String(init.body));
+      bodies.push(body);
+      if (body.model === 'picky-model' && 'reasoning_effort' in body) {
+        return new Response('{"error":{"message":"Unknown parameter: reasoning_effort"}}', { status: 400 });
+      }
+      return sseResponse(['data: {"choices":[{"delta":{"content":"Ok."}}]}\n\n', 'data: [DONE]\n\n']);
+    },
+    async () => {
+      await streamChat({ ...opts, reasoningEffort: 'low' }, () => {});
+      assert(bodies[0]!.reasoning_effort === 'low', 'reasoning_effort is sent');
+      await streamChat({ ...opts, model: 'picky-model', reasoningEffort: 'low' }, () => {});
+      await streamChat({ ...opts, model: 'picky-model', reasoningEffort: 'low' }, () => {});
+      const picky = bodies.filter((b) => b.model === 'picky-model');
+      assert(picky.length === 3, `expected 1 rejected + 2 minimal requests, got ${picky.length}`);
+      assert(!('reasoning_effort' in picky[2]!), 'remembered minimal body');
+    },
+  );
+});
+
 Deno.test('streams OpenAI-style deltas and reads usage', async () => {
   await withFetch(
     async (url, init) => {
