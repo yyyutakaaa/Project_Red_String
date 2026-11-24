@@ -1,0 +1,238 @@
+.file {
+  position: relative;
+  padding: var(--space-6) clamp(1.25rem, 4vw, 3rem) var(--space-5);
+  animation: global(fade-up) var(--dur-slow) var(--ease-out) both;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding-bottom: var(--space-4);
+  margin-bottom: var(--space-5);
+  border-bottom: 2px solid rgba(42, 34, 24, 0.3);
+}
+.headLines {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  font-family: var(--font-type);
+  font-size: var(--fs-sm);
+}
+.headLines div {
+  display: grid;
+  grid-template-columns: 6rem 1fr;
+  gap: var(--space-2);
+}
+.headLines dt {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--paper-ink-muted);
+}
+.headLines dt::after {
+  content: ':';
+}
+.headLines dd {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.confidential {
+  flex-shrink: 0;
+  font-size: clamp(1rem, 2.4vw, 1.45rem);
+  color: var(--paper-ink);
+  opacity: 0.78;
+  transform: rotate(-7deg);
+  margin-top: var(--space-2);
+  mix-blend-mode: multiply;
+}
+
+.tagline {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: var(--fs-xl);
+  line-height: 1.35;
+  color: var(--paper-ink);
+  margin: 0 0 var(--space-5);
+  max-width: 40ch;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(16rem, 1fr);
+  gap: var(--space-6);
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.summary p {
+  margin: 0 0 var(--space-4);
+  line-height: 1.75;
+  max-width: 64ch;
+}
+.summary p:first-child::first-letter {
+  font-family: var(--font-display);
+  float: left;
+  font-size: 3.2em;
+  line-height: 0.85;
+  padding: 0.08em 0.1em 0 0;
+  color: var(--paper-ink);
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* The coroner's card: a smaller, whiter card clipped to the file */
+.victim {
+  position: relative;
+  padding: var(--space-4) var(--space-4) var(--space-3);
+  background: #f7f1e3;
+  border: 1px solid var(--paper-300);
+  box-shadow: 0 3px 10px rgba(42, 34, 24, 0.25);
+  transform: rotate(0.8deg);
+}
+.victim::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  right: 1.5rem;
+  width: 14px;
+  height: 40px;
+  border: 3px solid #8a93a3;
+  border-radius: 7px;
+}
+.cardLabel {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-type);
+  font-weight: 700;
+  font-size: var(--fs-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--paper-ink-muted);
+}
+.victimName {
+  margin: 0;
+  font-size: var(--fs-xl);
+  color: var(--paper-ink);
+}
+.victimAge {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-type);
+  font-size: var(--fs-sm);
+}
+.victimDesc {
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+}
+.facts {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  border-top: 1px dashed rgba(42, 34, 24, 0.35);
+  padding-top: var(--space-3);
+}
+.facts dt {
+  font-family: var(--font-type);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--paper-ink-muted);
+}
+.facts dd {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+}
+
+.scene {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid rgba(42, 34, 24, 0.3);
+  border-radius: var(--radius-sm);
+}
+.scene p {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: 1.55;
+}
+.scene .era {
+  margin-top: var(--space-1);
+  font-family: var(--font-type);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.persons {
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 2px solid rgba(42, 34, 24, 0.3);
+}
+.sectionTitle {
+  margin: 0 0 var(--space-4);
+  font-family: var(--font-type);
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--paper-ink-muted);
+}
+.personList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+  gap: var(--space-4);
+}
+.person {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.person p {
+  margin: 0;
+}
+.personName {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  line-height: 1.2;
+  color: var(--paper-ink);
+}
+.personRole {
+  font-size: var(--fs-sm);
+  line-height: 1.4;
+}
+.personAge {
+  font-family: var(--font-type);
+  font-size: var(--fs-xs);
+  color: var(--paper-ink-muted);
+}
+
+.foot {
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 2px solid rgba(42, 34, 24, 0.3);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+.signoff {
+  margin: 0;
+  font-family: var(--font-type);
+  font-style: italic;
+  color: var(--paper-ink-muted);
+}

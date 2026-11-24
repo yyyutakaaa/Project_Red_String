@@ -12,7 +12,7 @@
   background: rgba(3, 5, 9, 0.72);
   backdrop-filter: blur(2px);
 }
-.dialog[open] { animation: fade-up var(--dur-med) var(--ease-out); }
+.dialog[open] { animation: global(fade-up) var(--dur-med) var(--ease-out); }
 .wide { width: min(860px, calc(100vw - 2rem)); }
 .header {
   display: flex;

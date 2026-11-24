@@ -22,7 +22,7 @@
   box-shadow: var(--shadow-2);
   font-family: var(--font-type);
   font-size: var(--fs-sm);
-  animation: fade-up var(--dur-med) var(--ease-out);
+  animation: global(fade-up) var(--dur-med) var(--ease-out);
 }
 .evidence { border-left-color: var(--lamp-400); }
 .clue { border-left-color: var(--red-400); }
