@@ -5,6 +5,32 @@
 Build date: 24 November 2026. Repository: `C:/Users/User/Documents/project-red-string` (local git only, nothing pushed). Supabase project `hbwvybkpdqliusxheiyg` (eu-central-1): 5 migrations applied, story cases seeded,
 `interrogate` v6 and `generate-case` v8 deployed and live.
 
+## Update, later on 24 November: ten hand-written cases, no case generation
+
+This section replaces anything below about "New Case" and the case generator.
+
+- New Case is gone from the game: no menu item, no route, no generated-case shelf, no client code.
+  `generate-case` is deployed as a stub that answers 410 Gone and makes no model calls. Old saves that
+  mention a generated case still load; that case shows as "a retired case file".
+- Seven new story cases follow the first three, in this order: The Night Express (June 1949), Hollis Garden,
+  Studio Nine, The Regent, The Reading Room, Mercer's Pharmacy, and Vance and Pryor (June 1950). Leonard
+  Vance and Clara Ashgrove return in The Regent, and the last case closes the Ashgrove trust story. Every
+  case passes the validator and the authoring checks (`npm run validate:cases`), is seeded in
+  `public.story_cases`, and reports `valid` and `hash_ok` on the deployed function.
+- The new case text was written against the humanizer patterns: no dashes, no not-X-but-Y lines, no stock
+  AI words, and evidence descriptions state facts without a closing sentence that explains the clue.
+- Suspects now run on `deepseek-flash` with thinking on at `high` effort (`SUSPECT_MODEL`,
+  `SUSPECT_THINKING`, `SUSPECT_REASONING_EFFORT`). A thinking suspect gets a 3,000 token budget and a
+  50 second timeout; the browser waits 60 seconds. Measured live: replies in 2.3 to 3.5 seconds, about
+  $0.0008 per question. The suspect prompt carries one more style rule (no staged openers, no explaining
+  a fact after saying it, no stock AI words).
+- Checked: 107 Vitest tests, Deno tests, typecheck, lint and 6 Playwright runs pass. Live: interrogations
+  in Night Express, Vance and Pryor (in Dutch) and Studio Nine (an "ignore your instructions" probe) stayed
+  in character, and the Vercel site lists all ten cases with no console errors.
+- Not checked: nobody has played the seven new cases from start to finish with a real model. Each one is
+  solvable on paper (the validator proves the required evidence can be found by search and by showing
+  evidence), but the difficulty and the wording of hints are untested with players.
+
 ## What was built, per system
 
 ### Case format and validator (shared)

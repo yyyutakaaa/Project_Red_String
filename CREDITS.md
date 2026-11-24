@@ -7,14 +7,13 @@ original work created for this project, or a font or library under the license l
 
 | Content | Source | License |
 |---|---|---|
-| Story cases "Ashgrove House", "The Blue Lantern", "Pier Seventeen" (`web/src/cases/*.json`) | Written for this project | Same as the project |
+| The ten story cases, from "Ashgrove House" to "Vance and Pryor" (`web/src/cases/*.json`) | Written for this project | Same as the project |
 | Room scenes, prop drawings, suspect silhouettes, board and UI graphics | Procedural SVG and CSS drawn in code (`web/src/components`) | Same as the project |
 | Music pad, rain ambience and all sound effects | Synthesised at runtime with the Web Audio API (`web/src/audio/audio.ts`) | Same as the project |
 | Favicon | Hand-written SVG (`web/public/favicon.svg`) | Same as the project |
 
 Suspect dialogue in interrogations is generated at play time by an AI language model through the
-OmniaKey API, constrained by the hand-written suspect sheets. Cases in "New Case" mode are written by an
-AI model and checked by the game's validator before play.
+DeepSeek API, constrained by the hand-written suspect sheets. Every case is written by hand.
 
 ## Fonts (Google Fonts)
 
