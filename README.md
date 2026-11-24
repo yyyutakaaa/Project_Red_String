@@ -111,7 +111,7 @@ Project: `hbwvybkpdqliusxheiyg` (eu-central-1). Edge function secrets: `OMNIAKEY
 |---|---|---|
 | `SUSPECT_MODEL` | `claude-haiku-5-5` | model that plays suspects |
 | `GENERATOR_MODEL` | `claude-opus-5-5` | model that writes new cases |
-| `EVAL_JUDGE_MODEL` | `gpt-6.2-sol` | judge used by the eval tool |
+| `EVAL_JUDGE_MODEL` | `claude-haiku-5-5` | judge used by the eval tool |
 | `OMNIAKEY_BASE_URL` | `https://api.omniakey.com/v1` | OpenAI-compatible OmniaKey endpoint |
 | `ALLOWED_ORIGINS` | (none) | extra CORS origins, comma-separated, e.g. a custom domain |
 | `VERCEL_PROJECT_NAME` | `project-red-string` | allows `https://<name>.vercel.app` and its preview URLs |
@@ -162,7 +162,7 @@ fact probes, five other languages) to the deployed `interrogate` function and re
 replies, invented facts, language mismatches and time to first token per model.
 
 ```powershell
-node tools/eval/run-eval.mjs --models claude-haiku-5-5,mimo-v2.6-flash,gpt-6.2-sol --judge
+node tools/eval/run-eval.mjs --models claude-haiku-5-5,mimo-v2.6-flash --judge
 ```
 
 It needs `RS_EVAL_TOKEN` (in `tools/eval/.env.local`, gitignored). Only the token's SHA-256 hash is stored in

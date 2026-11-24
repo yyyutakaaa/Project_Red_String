@@ -3,7 +3,7 @@
 Adversarial test runner for the deployed `interrogate` edge function.
 
 ```powershell
-node tools/eval/run-eval.mjs --models claude-haiku-5-5,mimo-v2.6-flash,gpt-6.2-sol --judge
+node tools/eval/run-eval.mjs --models claude-haiku-5-5,mimo-v2.6-flash --judge
 ```
 
 What it does:

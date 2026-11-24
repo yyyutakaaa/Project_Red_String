@@ -1,6 +1,6 @@
 // Runtime configuration for the edge functions. Secrets are read from Supabase function secrets.
 // Model ids are config values so they can be switched without code changes:
-//   supabase secrets set SUSPECT_MODEL=mimo-v2.6-flash GENERATOR_MODEL=gpt-6.2-sol
+//   supabase secrets set SUSPECT_MODEL=mimo-v2.6-flash GENERATOR_MODEL=claude-opus-5-5
 
 export function env(name: string, fallback = ''): string {
   return Deno.env.get(name) ?? fallback;

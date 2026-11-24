@@ -7,7 +7,7 @@
 // invented facts, language mismatches and time to first token.
 //
 // Usage (from the repo root):
-//   node tools/eval/run-eval.mjs --models claude-haiku-5-5,mimo-v2.6-flash,gpt-6.2-sol --judge
+//   node tools/eval/run-eval.mjs --models claude-haiku-5-5,mimo-v2.6-flash --judge
 //   node tools/eval/run-eval.mjs --cases ashgrove-house --suspects simon --limit 10
 //
 // Options:

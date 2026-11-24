@@ -36,7 +36,7 @@ export interface JudgeVerdict {
 }
 
 export function judgeModel(): string {
-  return env('EVAL_JUDGE_MODEL', 'gpt-6.2-sol');
+  return env('EVAL_JUDGE_MODEL', 'claude-haiku-5-5');
 }
 
 /** Ask a second model whether a reply leaked protected data, broke character or invented facts. */
