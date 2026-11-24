@@ -27,6 +27,28 @@ async function asDesktop(page: Page, bridge: Record<string, unknown>) {
     (window as unknown as { __presence: unknown[] }).__presence = presence;
     const full = { ...b } as Record<string, unknown>;
     if (b.withPresence) full.setPresence = (s: unknown) => presence.push(s);
+    if (b.withUpdates) {
+      // The updater's side of the popup: the test sends messages, the page answers.
+      const answers: string[] = [];
+      let send: ((m: unknown) => void) | null = null;
+      const w = window as unknown as { __updateAnswers: string[]; __sendUpdate: (m: unknown) => void };
+      w.__updateAnswers = answers;
+      w.__sendUpdate = (m) => send?.(m);
+      full.onUpdate = (cb: (m: unknown) => void) => {
+        send = cb;
+        return () => undefined;
+      };
+      full.answerUpdate = (choice: string) => answers.push(choice);
+    }
+    if (b.withDisplay) {
+      // A shell with a fixed window: full screen goes through the shell and comes back as an event.
+      let listener: ((on: boolean) => void) | null = null;
+      full.onFullscreen = (cb: (on: boolean) => void) => {
+        listener = cb;
+        return () => undefined;
+      };
+      full.setFullscreen = (on: boolean) => listener?.(on);
+    }
     (window as unknown as { redStringDesktop: unknown }).redStringDesktop = full;
   }, bridge);
 }
@@ -62,8 +84,48 @@ test('a browser shows neither', async ({ page }) => {
   await page.goto('/settings');
   await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible();
   await expect(page.getByTestId('settings-tab-discord')).toHaveCount(0);
+  await expect(page.getByTestId('settings-tab-display')).toHaveCount(0);
   await expect(page.getByRole('heading', { name: 'Discord' })).toHaveCount(0);
   await page.goto('/');
   await expect(page.getByTestId('menu-story-cases')).toBeVisible();
   await expect(page.getByTestId('shell-notice')).toHaveCount(0);
+});
+
+test('a shell with a fixed window offers a window or full screen', async ({ page }) => {
+  await asDesktop(page, { platform: 'win32', withDisplay: true, shell: { fingerprint: currentShellFingerprint(), version: '1.0.7' } });
+  await page.goto('/settings');
+  await page.getByTestId('settings-tab-display').click();
+  const group = page.getByRole('group', { name: 'Display' });
+  await expect(group.getByRole('radio', { name: /Window/ })).toBeChecked();
+  await group.getByText('Full screen', { exact: true }).click();
+  await expect(group.getByRole('radio', { name: /Full screen/ })).toBeChecked();
+  await expect(page.locator('html')).toHaveAttribute('data-fullscreen', '');
+  await group.getByText('Window', { exact: true }).click();
+  await expect(group.getByRole('radio', { name: /Window/ })).toBeChecked();
+});
+
+test('the updater speaks through the game popup: ready, update now, downloading, failed', async ({ page }) => {
+  await asDesktop(page, { platform: 'darwin', withUpdates: true, shell: { fingerprint: currentShellFingerprint(), version: '1.0.7' } });
+  await page.goto('/');
+  await expect(page.getByTestId('menu-story-cases')).toBeVisible();
+  const send = (m: unknown) => page.evaluate((msg) => (window as unknown as { __sendUpdate: (x: unknown) => void }).__sendUpdate(msg), m);
+  const answers = () => page.evaluate(() => (window as unknown as { __updateAnswers: string[] }).__updateAnswers);
+
+  await send({ state: 'available' });
+  const popup = page.getByTestId('update-popup');
+  await expect(popup).toContainText('A new version is ready');
+  await page.getByTestId('update-later').click();
+  await expect(popup).toHaveCount(0);
+  expect(await answers()).toEqual(['later']);
+
+  await send({ state: 'available' });
+  await page.getByTestId('update-now').click();
+  expect(await answers()).toEqual(['later', 'now']);
+  await send({ state: 'downloading', progress: 0.5 });
+  await expect(popup.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '50');
+  await send({ state: 'failed', detail: 'index.html: hash mismatch' });
+  await expect(popup).toContainText('did not go through');
+  await expect(popup).toContainText('hash mismatch');
+  await popup.getByRole('button', { name: 'Keep playing' }).click();
+  await expect(popup).toHaveCount(0);
 });

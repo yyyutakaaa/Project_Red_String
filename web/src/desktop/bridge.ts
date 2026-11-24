@@ -2,6 +2,7 @@
 // it is missing and everything here does nothing. Older desktop shells (before the custom title
 // bar) only expose `platform`, so every extra is optional.
 import type { Theme } from '../store/settings.ts';
+import { create } from 'zustand';
 import type { PresenceStatus } from './presence.ts';
 
 export interface DesktopBridge {
@@ -12,9 +13,25 @@ export interface DesktopBridge {
   setTheme?: (theme: Theme) => void;
   /** Discord Rich Presence (desktop shells from v1.0.5). */
   setPresence?: (status: PresenceStatus | null) => void;
+  /** Settings → Display (shells with a fixed window size): full screen, or the window. */
+  setFullscreen?: (on: boolean) => void;
   onFullscreen?: (callback: (on: boolean) => void) => () => void;
   onNavigate?: (callback: (route: string) => void) => () => void;
+  /** The in-app updater's messages, shown in the game's popup (shells with a fixed window and later). */
+  onUpdate?: (callback: (message: UpdateMessage) => void) => () => void;
+  answerUpdate?: (choice: 'now' | 'later') => void;
 }
+
+export interface UpdateMessage {
+  state: 'available' | 'downloading' | 'installing' | 'failed' | 'current' | 'offline';
+  /** 0..1 while downloading. */
+  progress?: number;
+  /** Why an update failed. */
+  detail?: string;
+}
+
+/** Whether the desktop window is full screen right now (kept up to date by the shell). */
+export const useDesktopFullscreen = create<{ on: boolean }>(() => ({ on: false }));
 
 export function desktop(): DesktopBridge | null {
   return (window as unknown as { redStringDesktop?: DesktopBridge }).redStringDesktop ?? null;
@@ -33,6 +50,7 @@ export function initDesktopDocument(): void {
   bridge.onFullscreen?.((on) => {
     if (on) root.dataset.fullscreen = '';
     else delete root.dataset.fullscreen;
+    useDesktopFullscreen.setState({ on });
   });
   // Files dropped on the window would otherwise open as a page.
   window.addEventListener('dragover', (e) => e.preventDefault());

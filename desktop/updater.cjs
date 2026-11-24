@@ -2,7 +2,8 @@
 //
 // The app (the Electron shell) stays installed; only the game files change. Every deploy of the web
 // game publishes version.json: the commit, the build time, and each file with its sha256. When the
-// live build is newer than the one this app runs, the player gets a prompt. On "Update now" the app
+// live build is newer than the one this app runs, the player gets a prompt: the game's own update
+// popup when the page can show it, a system dialog otherwise. On "Update now" the app
 // downloads those files from the live site into its own data folder, checks every hash, and only
 // then switches to the new build and reloads. Nothing needs a GitHub token or a new installer.
 //
@@ -140,15 +141,23 @@ async function downloadBuild(manifest, onProgress) {
  * - getWindow(): the main window, for dialogs and the progress bar.
  * - getCurrent(): the manifest of the build being served now.
  * - applyBuild(root, manifest): switch to a downloaded build and reload.
+ * - getPopup(): the game's own update popup ({ ask(): Promise<boolean>, send(message) }), or null when
+ *   the page cannot show it (an older game build): then the system dialogs are used.
  * Returns checkNow(manual) for the "Check for Updates…" menu item.
  */
-function startUpdates({ getWindow, getCurrent, applyBuild }) {
+function startUpdates({ getWindow, getCurrent, applyBuild, getPopup = () => null }) {
   const dismissed = new Set();
   let busy = false;
 
   const show = (options) => {
     const win = getWindow();
     return win ? dialog.showMessageBox(win, options) : dialog.showMessageBox(options);
+  };
+  /** Tell the game's popup, or fall back to a system dialog. */
+  const tell = async (state, options, extra = {}) => {
+    const popup = getPopup();
+    if (popup) popup.send({ state, ...extra });
+    else if (options) await show(options);
   };
 
   async function checkNow(manual = false) {
@@ -164,41 +173,60 @@ function startUpdates({ getWindow, getCurrent, applyBuild }) {
         live = null;
       }
       if (!live) {
-        if (manual) await show({ type: 'warning', message: 'Could not check for updates.', detail: 'Check your internet connection and try again.' });
+        if (manual) await tell('offline', { type: 'warning', message: 'Could not check for updates.', detail: 'Check your internet connection and try again.' });
         return;
       }
       const newer = !current || (live.commit !== current.commit && isNewer(live, current));
       if (!newer) {
-        if (manual) await show({ type: 'info', message: 'Red String is up to date.' });
+        if (manual) await tell('current', { type: 'info', message: 'Red String is up to date.' });
         return;
       }
       if (!manual && dismissed.has(live.commit)) return;
 
-      const { response } = await show({
-        type: 'info',
-        title: 'Update available',
-        message: 'A new version of Red String is ready.',
-        detail: 'The update downloads in a few seconds and the game reloads. Your saves stay where they are.',
-        buttons: ['Update now', 'Later'],
-        defaultId: 0,
-        cancelId: 1,
-      });
-      if (response !== 0) {
+      const popup = getPopup();
+      const accepted = popup
+        ? await popup.ask()
+        : (
+            await show({
+              type: 'info',
+              title: 'Update available',
+              message: 'A new version of Red String is ready.',
+              detail: 'The update downloads in a few seconds and the game reloads. Your saves stay where they are.',
+              buttons: ['Update now', 'Later'],
+              defaultId: 0,
+              cancelId: 1,
+            })
+          ).response === 0;
+      if (!accepted) {
         dismissed.add(live.commit);
         return;
       }
 
       try {
-        const root = await downloadBuild(live, (p) => win && !win.isDestroyed() && win.setProgressBar(p));
+        let shown = -1;
+        const root = await downloadBuild(live, (p) => {
+          if (win && !win.isDestroyed()) win.setProgressBar(p);
+          // A few steps are enough for the popup's bar.
+          const step = Math.floor(p * 20);
+          if (step !== shown) {
+            shown = step;
+            getPopup()?.send({ state: 'downloading', progress: p });
+          }
+        });
+        getPopup()?.send({ state: 'installing' });
         applyBuild(root, live);
         // Drop the build we just left behind (unless it is the one shipped inside the app).
         pickGameRoot(path.join(__dirname, 'renderer'));
       } catch (err) {
-        await show({
-          type: 'error',
-          message: 'The update could not be installed.',
-          detail: `You can keep playing this version. We will try again later.\n\n${err.message}`,
-        });
+        await tell(
+          'failed',
+          {
+            type: 'error',
+            message: 'The update could not be installed.',
+            detail: `You can keep playing this version. We will try again later.\n\n${err.message}`,
+          },
+          { detail: err.message },
+        );
       } finally {
         if (win && !win.isDestroyed()) win.setProgressBar(-1);
       }

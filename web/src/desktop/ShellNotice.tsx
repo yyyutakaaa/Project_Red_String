@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button } from '../components/Button.tsx';
 import { shellOutdated } from './bridge.ts';
-import styles from './ShellNotice.module.css';
+import { Telegram } from './Telegram.tsx';
 import { t } from '../i18n/index.ts';
 
 const RELEASES_URL = 'https://github.com/yyyutakaaa/Project_Red_String/releases/latest';
@@ -33,24 +33,23 @@ export function ShellNotice() {
   };
 
   return (
-    <aside className={styles.notice} aria-labelledby="shell-notice-title" data-testid="shell-notice">
-      <div className={styles.text}>
-        <p id="shell-notice-title" className={styles.title}>
-          {t('shell.title')}
-        </p>
-        <p className={styles.sub}>
-          {t('shell.text')}
-        </p>
-      </div>
-      <div className={styles.actions}>
-        {/* The desktop app opens outside links in the system browser. */}
-        <Button variant="lamp" size="small" onClick={() => window.open(RELEASES_URL, '_blank', 'noopener')}>
-          {t('shell.download')}
-        </Button>
-        <Button variant="ghost" size="small" onClick={later}>
-          {t('shell.later')}
-        </Button>
-      </div>
-    </aside>
+    <Telegram
+      title={t('shell.title')}
+      onClose={later}
+      testId="shell-notice"
+      actions={
+        <>
+          <Button onClick={later}>
+            {t('shell.later')}
+          </Button>
+          {/* The desktop app opens outside links in the system browser. */}
+          <Button variant="primary" onClick={() => window.open(RELEASES_URL, '_blank', 'noopener')}>
+            {t('shell.download')}
+          </Button>
+        </>
+      }
+    >
+      <p>{t('shell.text')}</p>
+    </Telegram>
   );
 }

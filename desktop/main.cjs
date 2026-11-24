@@ -138,10 +138,19 @@ const CHROME = {
 };
 
 // ---------------------------------------------------------------------------
-// Window memory: size, position, maximised/full screen, and the last theme (so the first frame
-// already has the right background).
+// The window has one fixed size, the size the game is laid out for: 1440 x 900, or the largest
+// 16:10 size that fits a smaller screen. The player picks a window or full screen (Settings, or
+// F11 / Ctrl+Cmd+F). The window remembers its position, the choice and the last theme (so the first
+// frame already has the right background).
 const STATE_FILE = () => path.join(app.getPath('userData'), 'window-state.json');
-const DEFAULT_STATE = { width: 1440, height: 900, maximized: false, fullscreen: false, theme: 'dark' };
+const GAME_SIZE = { width: 1440, height: 900 };
+const DEFAULT_STATE = { fullscreen: false, theme: 'dark' };
+
+/** The fixed window size for the screen the window is on: the game size, smaller only if it must be. */
+function windowSize(area) {
+  const scale = Math.min(1, (area.width - 40) / GAME_SIZE.width, (area.height - 40) / GAME_SIZE.height);
+  return { width: Math.round(GAME_SIZE.width * scale), height: Math.round(GAME_SIZE.height * scale) };
+}
 
 function readWindowState() {
   try {
@@ -149,8 +158,9 @@ function readWindowState() {
     if (s.theme !== 'light') s.theme = 'dark';
     // Forget the position if that screen is gone (an unplugged monitor).
     if (typeof s.x === 'number' && typeof s.y === 'number') {
-      const area = screen.getDisplayMatching({ x: s.x, y: s.y, width: s.width, height: s.height }).workArea;
-      const visible = s.x < area.x + area.width - 100 && s.x + s.width > area.x + 100 && s.y >= area.y - 10 && s.y < area.y + area.height - 100;
+      const area = screen.getDisplayMatching({ x: s.x, y: s.y, width: GAME_SIZE.width, height: GAME_SIZE.height }).workArea;
+      const { width, height } = windowSize(area);
+      const visible = s.x >= area.x - 10 && s.x + width <= area.x + area.width + 10 && s.y >= area.y - 10 && s.y + height <= area.y + area.height + 10;
       if (!visible) {
         delete s.x;
         delete s.y;
@@ -166,11 +176,10 @@ let windowState = DEFAULT_STATE;
 
 function saveWindowState() {
   if (!mainWindow || mainWindow.isDestroyed()) return;
-  const maximized = mainWindow.isMaximized();
   const fullscreen = mainWindow.isFullScreen();
-  // Keep the normal size while maximised or full screen, so un-maximising goes back to it.
-  const bounds = maximized || fullscreen ? windowState : mainWindow.getBounds();
-  windowState = { ...windowState, x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height, maximized, fullscreen };
+  // Keep the window's position while full screen, so leaving it puts the window back where it was.
+  const bounds = fullscreen ? windowState : mainWindow.getBounds();
+  windowState = { ...windowState, x: bounds.x, y: bounds.y, fullscreen };
   try {
     fs.writeFileSync(STATE_FILE(), JSON.stringify(windowState));
   } catch {
@@ -224,14 +233,20 @@ function createWindow(origin) {
   windowState = readWindowState();
   const theme = windowState.theme;
   nativeTheme.themeSource = theme;
+  const area = typeof windowState.x === 'number' && typeof windowState.y === 'number'
+    ? screen.getDisplayMatching({ x: windowState.x, y: windowState.y, width: GAME_SIZE.width, height: GAME_SIZE.height }).workArea
+    : screen.getPrimaryDisplay().workArea;
+  const size = windowSize(area);
   mainWindow = new BrowserWindow({
     x: windowState.x,
     y: windowState.y,
-    width: windowState.width,
-    height: windowState.height,
-    // Smaller than the game needs is allowed: the game then covers itself with a "window too small" notice.
-    minWidth: 480,
-    minHeight: 360,
+    width: size.width,
+    height: size.height,
+    useContentSize: true,
+    // One fixed size: the game is laid out for it. Full screen is the other choice.
+    resizable: false,
+    maximizable: false,
+    fullscreenable: true,
     backgroundColor: CHROME[theme].background,
     title: 'Red String',
     icon: ICON,
@@ -244,11 +259,15 @@ function createWindow(origin) {
       sandbox: true,
     },
   });
-  if (windowState.maximized) mainWindow.maximize();
   if (windowState.fullscreen) mainWindow.setFullScreen(true);
 
   mainWindow.once('ready-to-show', () => mainWindow.show());
-  for (const event of ['resize', 'move']) {
+  // A reload takes the popup with it: the page has to say it is ready again, and an open question is "later".
+  mainWindow.webContents.on('did-start-loading', () => {
+    popupReady = false;
+    answerUpdate(false);
+  });
+  for (const event of ['move', 'enter-full-screen', 'leave-full-screen']) {
     let t = null;
     mainWindow.on(event, () => {
       clearTimeout(t);
@@ -337,6 +356,39 @@ function buildMenu(checkForUpdates) {
 }
 
 ipcMain.on('red-string:theme', (_event, theme) => applyTheme(theme));
+
+// ---------------------------------------------------------------------------
+// The game's own update popup. A game build that has it says so once its page is up; until then (or
+// with an older build) the updater uses system dialogs.
+let popupReady = false;
+let pendingAnswer = null;
+function answerUpdate(accepted) {
+  const resolve = pendingAnswer;
+  pendingAnswer = null;
+  resolve?.(accepted);
+}
+ipcMain.on('red-string:update-ready', (event) => {
+  if (mainWindow && !mainWindow.isDestroyed() && event.sender === mainWindow.webContents) popupReady = true;
+});
+ipcMain.on('red-string:update-answer', (_event, choice) => answerUpdate(choice === 'now'));
+function updatePopup() {
+  if (!popupReady || !mainWindow || mainWindow.isDestroyed()) return null;
+  const send = (message) => mainWindow.webContents.send('red-string:update', message);
+  return {
+    send,
+    ask: () =>
+      new Promise((resolve) => {
+        answerUpdate(false);
+        pendingAnswer = resolve;
+        if (mainWindow.isMinimized()) mainWindow.restore();
+        send({ state: 'available' });
+      }),
+  };
+}
+// Settings → Display: a window of the fixed size, or full screen.
+ipcMain.on('red-string:fullscreen', (_event, on) => {
+  if (mainWindow && !mainWindow.isDestroyed()) mainWindow.setFullScreen(Boolean(on));
+});
 ipcMain.on('red-string:shell', (event) => {
   event.returnValue = { fingerprint: SHELL_FINGERPRINT, version: app.getVersion() };
 });
@@ -396,6 +448,7 @@ if (!app.requestSingleInstanceLock()) {
     const checkForUpdates = startUpdates({
       getWindow: () => mainWindow,
       getCurrent: () => game.manifest,
+      getPopup: updatePopup,
       applyBuild: (root, manifest) => {
         game = { root, manifest };
         if (mainWindow) mainWindow.webContents.reloadIgnoringCache();

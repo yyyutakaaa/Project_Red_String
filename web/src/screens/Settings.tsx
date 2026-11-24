@@ -18,13 +18,13 @@ import {
   type TextSpeed,
 } from '../store/settings.ts';
 import { sfx } from '../audio/audio.ts';
-import { desktop } from '../desktop/bridge.ts';
+import { desktop, useDesktopFullscreen } from '../desktop/bridge.ts';
 import styles from './Settings.module.css';
 import { AVAILABLE_LANGUAGES, setLanguage, t, useT, type LanguageCode, type MessageKey } from '../i18n/index.ts';
 
 const PREVIEW_PAUSE_MS = 1800;
 
-type SectionId = 'language' | 'sound' | 'text' | 'theme' | 'discord' | 'motion' | 'search' | 'stats';
+type SectionId = 'language' | 'display' | 'sound' | 'text' | 'theme' | 'discord' | 'motion' | 'search' | 'stats';
 
 const TEXT_SPEEDS: Array<{ value: TextSpeed; label: MessageKey }> = [
   { value: 'slow', label: 'settings.speedSlow' },
@@ -179,9 +179,14 @@ export function SettingsScreen() {
   const searchNoteId = useId();
   // Only desktop shells with presence support (v1.0.5 and later) can talk to Discord.
   const [hasDiscord] = useState(() => Boolean(desktop()?.setPresence));
+  // Desktop shells with a fixed window size let the player pick a window or full screen.
+  const [hasDisplay] = useState(() => Boolean(desktop()?.setFullscreen));
+  const fullscreen = useDesktopFullscreen((s) => s.on);
+  const displayNoteId = useId();
   // One panel at a time, picked from the index on the left, so the whole screen fits the window.
   const tabs: Array<{ id: SectionId; label: string }> = [
     { id: 'language', label: t('settings.language') },
+    ...(hasDisplay ? [{ id: 'display' as const, label: t('settings.display') }] : []),
     { id: 'sound', label: t('settings.sound') },
     { id: 'text', label: t('settings.text') },
     { id: 'theme', label: t('settings.lighting') },
@@ -232,6 +237,11 @@ export function SettingsScreen() {
     { value: 'full', label: t('settings.discordFull'), note: t('settings.discordFullNote') },
     { value: 'minimal', label: t('settings.discordMinimal'), note: t('settings.discordMinimalNote') },
     { value: 'off', label: t('settings.discordOff'), note: t('settings.discordOffNote') },
+  ];
+
+  const displayOptions: Array<{ value: 'window' | 'fullscreen'; label: string; note: string }> = [
+    { value: 'window', label: t('settings.displayWindow'), note: t('settings.displayWindowNote') },
+    { value: 'fullscreen', label: t('settings.displayFull'), note: t('settings.displayFullNote') },
   ];
 
   const searchOptions: Array<{ value: 'hidden' | 'shown'; label: string; note: string }> = [
@@ -316,6 +326,24 @@ export function SettingsScreen() {
               stack
             />
           </section>
+
+          {hasDisplay && (
+            <section {...panelProps('display')}>
+              <h2 className={styles.panelTitle}>{t('settings.display')}</h2>
+              <p id={displayNoteId} className={styles.panelNote}>
+                {t('settings.displayNote')}
+              </p>
+              <RadioCards
+                legend={t('settings.display')}
+                name="display"
+                value={fullscreen ? 'fullscreen' : 'window'}
+                options={displayOptions}
+                onChange={(v) => desktop()?.setFullscreen?.(v === 'fullscreen')}
+                describedBy={displayNoteId}
+                stack
+              />
+            </section>
+          )}
 
           <section {...panelProps('sound')}>
             <h2 className={styles.panelTitle}>

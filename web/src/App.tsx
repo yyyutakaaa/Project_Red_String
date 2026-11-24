@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, type ComponentType, type ReactNode } from 'r
 import { createBrowserRouter, Outlet, RouterProvider, ScrollRestoration, useNavigate } from 'react-router-dom';
 import { ToastHost } from './components/ToastHost.tsx';
 import { TooSmall } from './components/TooSmall.tsx';
+import { UpdatePopup } from './desktop/UpdatePopup.tsx';
 import { Boot } from './boot/Boot.tsx';
 import { LaunchOverlay } from './boot/LaunchOverlay.tsx';
 import { Cinema } from './cinema/Cinema.tsx';
@@ -112,6 +113,7 @@ export function App() {
         <RouterProvider router={router} />
       </Boot>
       <TooSmall />
+      <UpdatePopup />
     </>
   );
 }
