@@ -5,18 +5,26 @@ import { ScreenFrame } from '../components/ScreenFrame.tsx';
 import { ButtonLink } from '../components/Button.tsx';
 import { casePath, resolveCase, type CaseContextValue } from '../hooks/useCase.ts';
 import { useGame, useProgress } from '../store/game.ts';
+import { STORY_ORDER, isStoryUnlocked, type StoryCaseId } from '../engine/caseLoader.ts';
+import { continueSlot } from '../engine/save.ts';
 
 /** Wraps every /case/:caseKey/* screen: resolves the case, ensures progress exists, renders the HUD. */
 export function CaseLayout() {
   const { caseKey = '' } = useParams();
   const resolved = useMemo(() => resolveCase(caseKey), [caseKey]);
   const ensureProgress = useGame((s) => s.ensureProgress);
+  const slot = useGame((s) => s.slot);
   const progress = useProgress(resolved ? caseKey : undefined);
   const location = useLocation();
 
+  // Story cases unlock in order: a sealed case cannot be opened by typing its URL.
+  const storyIndex = resolved?.source === 'story' ? STORY_ORDER.indexOf(resolved.caseFile.id as StoryCaseId) : -1;
+  const activeSlot = slot ?? continueSlot(useGame.getState().storage);
+  const locked = storyIndex > 0 && !isStoryUnlocked(storyIndex, (id) => Boolean(activeSlot?.completions[id]));
+
   useEffect(() => {
-    if (resolved && !progress) ensureProgress(caseKey, resolved.source);
-  }, [resolved, progress, caseKey, ensureProgress]);
+    if (resolved && !progress && !locked) ensureProgress(caseKey, resolved.source);
+  }, [resolved, progress, caseKey, ensureProgress, locked]);
 
   useEffect(() => {
     document.title = resolved ? `${resolved.caseFile.title} - Project Red String` : 'Project Red String';
@@ -27,6 +35,16 @@ export function CaseLayout() {
       <ScreenFrame title="Case not found" kicker="Records office">
         <p>This case file is missing or could not be read. Generated cases live only on the device that created them.</p>
         <ButtonLink to="/cases">Back to cases</ButtonLink>
+      </ScreenFrame>
+    );
+  }
+  if (locked) {
+    return (
+      <ScreenFrame title="Case sealed" kicker={resolved.caseFile.title}>
+        <p>This file stays sealed until you close the previous case.</p>
+        <ButtonLink to="/cases" variant="lamp">
+          Back to the case files
+        </ButtonLink>
       </ScreenFrame>
     );
   }

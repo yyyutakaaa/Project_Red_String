@@ -1,25 +1,18 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect, type ComponentType, type ReactNode } from 'react';
 import { createBrowserRouter, Outlet, RouterProvider, ScrollRestoration } from 'react-router-dom';
 import { ToastHost } from './components/ToastHost.tsx';
 import { audio } from './audio/audio.ts';
 import { applySettingsToDocument, useSettings } from './store/settings.ts';
 import { MainMenu } from './screens/MainMenu.tsx';
-import { SaveSlots } from './screens/SaveSlots.tsx';
-import { CaseSelect } from './screens/CaseSelect.tsx';
-import { NewCase } from './screens/NewCase.tsx';
-import { SettingsScreen } from './screens/Settings.tsx';
-import { Credits } from './screens/Credits.tsx';
-import { CaseLayout } from './screens/CaseLayout.tsx';
-import { Briefing } from './screens/Briefing.tsx';
-import { RoomSelect } from './screens/RoomSelect.tsx';
-import { Room } from './screens/Room.tsx';
-import { Suspects } from './screens/Suspects.tsx';
-import { Interrogation } from './screens/Interrogation.tsx';
-import { Board } from './screens/Board.tsx';
-import { Notebook } from './screens/Notebook.tsx';
-import { Accusation } from './screens/Accusation.tsx';
-import { Ending } from './screens/Ending.tsx';
 import { NotFound } from './screens/NotFound.tsx';
+
+
+// Screens load on demand so the menu appears quickly; story case data ships with the case screens.
+function screen<K extends string>(load: () => Promise<Record<K, ComponentType>>, name: K) {
+  const C: ComponentType = lazy(() => load().then((m) => ({ default: m[name] as ComponentType })));
+  return <C />;
+}
+const page = (node: ReactNode) => <Suspense fallback={<div className="route-loading" role="status" aria-live="polite">Opening the file...</div>}>{node}</Suspense>;
 
 function Root() {
   const fontSize = useSettings((s) => s.fontSize);
@@ -61,24 +54,24 @@ const router = createBrowserRouter([
     element: <Root />,
     children: [
       { path: '/', element: <MainMenu /> },
-      { path: '/slots', element: <SaveSlots /> },
-      { path: '/cases', element: <CaseSelect /> },
-      { path: '/new-case', element: <NewCase /> },
-      { path: '/settings', element: <SettingsScreen /> },
-      { path: '/credits', element: <Credits /> },
+      { path: '/slots', element: page(screen(() => import('./screens/SaveSlots.tsx'), 'SaveSlots')) },
+      { path: '/cases', element: page(screen(() => import('./screens/CaseSelect.tsx'), 'CaseSelect')) },
+      { path: '/new-case', element: page(screen(() => import('./screens/NewCase.tsx'), 'NewCase')) },
+      { path: '/settings', element: page(screen(() => import('./screens/Settings.tsx'), 'SettingsScreen')) },
+      { path: '/credits', element: page(screen(() => import('./screens/Credits.tsx'), 'Credits')) },
       {
         path: '/case/:caseKey',
-        element: <CaseLayout />,
+        element: page(screen(() => import('./screens/CaseLayout.tsx'), 'CaseLayout')),
         children: [
-          { path: 'briefing', element: <Briefing /> },
-          { path: 'rooms', element: <RoomSelect /> },
-          { path: 'room/:roomId', element: <Room /> },
-          { path: 'suspects', element: <Suspects /> },
-          { path: 'interrogate/:suspectId', element: <Interrogation /> },
-          { path: 'board', element: <Board /> },
-          { path: 'notebook', element: <Notebook /> },
-          { path: 'accuse', element: <Accusation /> },
-          { path: 'ending', element: <Ending /> },
+          { path: 'briefing', element: page(screen(() => import('./screens/Briefing.tsx'), 'Briefing')) },
+          { path: 'rooms', element: page(screen(() => import('./screens/RoomSelect.tsx'), 'RoomSelect')) },
+          { path: 'room/:roomId', element: page(screen(() => import('./screens/Room.tsx'), 'Room')) },
+          { path: 'suspects', element: page(screen(() => import('./screens/Suspects.tsx'), 'Suspects')) },
+          { path: 'interrogate/:suspectId', element: page(screen(() => import('./screens/Interrogation.tsx'), 'Interrogation')) },
+          { path: 'board', element: page(screen(() => import('./screens/Board.tsx'), 'Board')) },
+          { path: 'notebook', element: page(screen(() => import('./screens/Notebook.tsx'), 'Notebook')) },
+          { path: 'accuse', element: page(screen(() => import('./screens/Accusation.tsx'), 'Accusation')) },
+          { path: 'ending', element: page(screen(() => import('./screens/Ending.tsx'), 'Ending')) },
         ],
       },
       { path: '*', element: <NotFound /> },

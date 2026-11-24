@@ -281,7 +281,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
   useEffect(() => {
     if (!pickerOpen && refocusInput.current) {
       refocusInput.current = false;
-      inputRef.current?.focus();
+      inputRef.current?.focus({ preventScroll: true });
     }
   }, [pickerOpen]);
 
@@ -404,7 +404,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
   const submit = () => {
     if (!canSend) return;
     void ask(draft, attached, null);
-    inputRef.current?.focus();
+    inputRef.current?.focus({ preventScroll: true });
   };
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -624,7 +624,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
                     className={styles.chipRemove}
                     onClick={() => {
                       setAttached(null);
-                      inputRef.current?.focus();
+                      inputRef.current?.focus({ preventScroll: true });
                     }}
                     aria-label={`Put away ${attachedEvidence.name}`}
                     data-testid="remove-attached-evidence"

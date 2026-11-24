@@ -154,6 +154,13 @@ test('case 1 can be solved end to end with the interrogation mocked', async ({ p
   expect(saved.length).toBeGreaterThan(0);
 });
 
+test('later story cases stay sealed until the previous case is closed', async ({ page }) => {
+  await page.goto('/case/pier-seventeen/rooms');
+  await expect(page.getByRole('heading', { name: 'Case sealed' })).toBeVisible();
+  await page.goto('/cases');
+  await expect(page.getByText('Solve the previous case to unlock').first()).toBeVisible();
+});
+
 test('interrogation shows a clear message when the backend is unreachable', async ({ page }) => {
   await page.route('**/functions/v1/interrogate', (route) => route.abort('internetdisconnected'));
   await page.goto('/');

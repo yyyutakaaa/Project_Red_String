@@ -318,3 +318,10 @@ textarea {
   scrollbar-color: var(--ink-400) transparent;
   scrollbar-width: thin;
 }
+
+.route-loading {
+  padding: var(--space-6) var(--space-4);
+  font-family: var(--font-type);
+  color: var(--text-muted);
+  text-align: center;
+}
