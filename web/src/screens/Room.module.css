@@ -3,8 +3,6 @@
 .strip {
   margin: calc(var(--space-2) * -1) 0 var(--space-4);
   overflow-x: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--ink-400) transparent;
 }
 
 .strip ul {

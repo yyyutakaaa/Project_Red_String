@@ -43,7 +43,7 @@ export function Briefing() {
   const { t } = useT();
 
   return (
-    <ScreenFrame title={caseFile.title} kicker={t('briefing.kicker')} fill>
+    <ScreenFrame title={caseFile.title} kicker={t('briefing.kicker')} fill wide>
       <article className={`paper selectable scroll-area ${styles.file}`} data-testid="briefing-paper" aria-labelledby="briefing-heading">
         <header className={styles.head}>
           <dl className={styles.headLines}>
@@ -64,21 +64,40 @@ export function Briefing() {
               <dd>{t('briefing.toWho')}</dd>
             </div>
           </dl>
+          <h2 id="briefing-heading" className={styles.tagline}>
+            {caseFile.tagline}
+          </h2>
           <span className={`stamp ${styles.confidential}`}>
             {t('briefing.confidential')}
           </span>
         </header>
 
-        <h2 id="briefing-heading" className={styles.tagline}>
-          {caseFile.tagline}
-        </h2>
-
         <div className={styles.columns}>
-          <section className={styles.summary} aria-label={t('briefing.summary')}>
-            {caseFile.intro_briefing.map((para, i) => (
-              <p key={i}>{para}</p>
-            ))}
-          </section>
+          <div className={styles.main}>
+            <section className={styles.summary} aria-label={t('briefing.summary')}>
+              {caseFile.intro_briefing.map((para, i) => (
+                <p key={i}>{para}</p>
+              ))}
+            </section>
+            <section className={styles.persons} aria-labelledby="persons-heading">
+              <h3 id="persons-heading" className={styles.sectionTitle}>
+                {t('briefing.persons')}
+              </h3>
+              <ul className={styles.personList}>
+                {caseFile.suspects.map((s) => (
+                  <li key={s.id} className={styles.person}>
+                    <Portrait suspect={s} size={44} showInitials={false} decorative />
+                    <div>
+                      <p className={styles.personName}>{s.name}</p>
+                      <p className={styles.personRole}>
+                        {s.role}, {t('briefing.age', { age: s.age })}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </div>
 
           <aside className={styles.side}>
             <section className={styles.victim} aria-labelledby="victim-heading">
@@ -103,34 +122,9 @@ export function Briefing() {
                 </div>
               </dl>
             </section>
-
-            <section className={styles.scene} aria-labelledby="scene-heading">
-              <h3 id="scene-heading" className={styles.cardLabel}>
-                {t('briefing.scene')}
-              </h3>
-              <p>{caseFile.setting}</p>
-              <p className={styles.era}>{caseFile.era}</p>
-            </section>
           </aside>
         </div>
 
-        <section className={styles.persons} aria-labelledby="persons-heading">
-          <h3 id="persons-heading" className={styles.sectionTitle}>
-            {t('briefing.persons')}
-          </h3>
-          <ul className={styles.personList}>
-            {caseFile.suspects.map((s) => (
-              <li key={s.id} className={styles.person}>
-                <Portrait suspect={s} size={68} showInitials={false} decorative />
-                <div>
-                  <p className={styles.personName}>{s.name}</p>
-                  <p className={styles.personRole}>{s.role}</p>
-                  <p className={styles.personAge}>{t('briefing.age', { age: s.age })}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </section>
 
         <footer className={styles.foot}>
           <p className={styles.signoff}>{t('briefing.signoff')}</p>

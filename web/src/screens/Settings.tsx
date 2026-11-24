@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from 'react';
+import { useEffect, useId, useState, type KeyboardEvent } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '../components/Button.tsx';
 import { RainBackdrop } from '../components/RainBackdrop.tsx';
@@ -23,6 +23,8 @@ import styles from './Settings.module.css';
 import { AVAILABLE_LANGUAGES, setLanguage, t, useT, type LanguageCode, type MessageKey } from '../i18n/index.ts';
 
 const PREVIEW_PAUSE_MS = 1800;
+
+type SectionId = 'language' | 'sound' | 'text' | 'theme' | 'discord' | 'motion' | 'search' | 'stats';
 
 const TEXT_SPEEDS: Array<{ value: TextSpeed; label: MessageKey }> = [
   { value: 'slow', label: 'settings.speedSlow' },
@@ -177,6 +179,37 @@ export function SettingsScreen() {
   const searchNoteId = useId();
   // Only desktop shells with presence support (v1.0.5 and later) can talk to Discord.
   const [hasDiscord] = useState(() => Boolean(desktop()?.setPresence));
+  // One panel at a time, picked from the index on the left, so the whole screen fits the window.
+  const tabs: Array<{ id: SectionId; label: string }> = [
+    { id: 'language', label: t('settings.language') },
+    { id: 'sound', label: t('settings.sound') },
+    { id: 'text', label: t('settings.text') },
+    { id: 'theme', label: t('settings.lighting') },
+    ...(hasDiscord ? [{ id: 'discord' as const, label: 'Discord' }] : []),
+    { id: 'motion', label: t('settings.motion') },
+    { id: 'search', label: t('settings.search') },
+    { id: 'stats', label: t('settings.stats') },
+  ];
+  const [active, setActive] = useState<SectionId>('language');
+  const tabsId = useId();
+  const tabId = (id: SectionId) => `${tabsId}-tab-${id}`;
+  const panelId = (id: SectionId) => `${tabsId}-panel-${id}`;
+  const panelProps = (id: SectionId) => ({
+    id: panelId(id),
+    role: 'tabpanel' as const,
+    'aria-labelledby': tabId(id),
+    hidden: active !== id,
+    className: styles.panel,
+  });
+  const onTabKey = (e: KeyboardEvent<HTMLButtonElement>, index: number) => {
+    const step = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1 : e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? -1 : 0;
+    const to = e.key === 'Home' ? 0 : e.key === 'End' ? tabs.length - 1 : step ? (index + step + tabs.length) % tabs.length : -1;
+    if (to < 0) return;
+    e.preventDefault();
+    const next = tabs[to]!;
+    setActive(next.id);
+    document.getElementById(tabId(next.id))?.focus();
+  };
 
   useEffect(() => {
     document.title = `${t('settings.title')} - Project Red String`;
@@ -235,9 +268,32 @@ export function SettingsScreen() {
           </Button>
         }
       >
+        <div className={styles.layout}>
+          <div className={styles.tabs} role="tablist" aria-orientation="vertical" aria-label={t('settings.title')}>
+            {tabs.map((tab, i) => (
+              <button
+                key={tab.id}
+                type="button"
+                role="tab"
+                id={tabId(tab.id)}
+                aria-selected={active === tab.id}
+                aria-controls={panelId(tab.id)}
+                tabIndex={active === tab.id ? 0 : -1}
+                className={styles.tab}
+                data-testid={`settings-tab-${tab.id}`}
+                onClick={() => {
+                  sfx('click');
+                  setActive(tab.id);
+                }}
+                onKeyDown={(e) => onTabKey(e, i)}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
         <div className={styles.grid}>
-          <section className={styles.panel} aria-labelledby="language-heading">
-            <h2 id="language-heading" className={styles.panelTitle}>
+          <section {...panelProps('language')}>
+            <h2 className={styles.panelTitle}>
               {t('settings.language')}
               {/* Also in English, so a player who cannot read the current language still finds the switch. */}
               {language !== 'en' && (
@@ -261,8 +317,8 @@ export function SettingsScreen() {
             />
           </section>
 
-          <section className={styles.panel} aria-labelledby="sound-heading">
-            <h2 id="sound-heading" className={styles.panelTitle}>
+          <section {...panelProps('sound')}>
+            <h2 className={styles.panelTitle}>
               {t('settings.sound')}
             </h2>
             {VOLUMES.map((v) => (
@@ -280,8 +336,8 @@ export function SettingsScreen() {
             </Button>
           </section>
 
-          <section className={styles.panel} aria-labelledby="text-heading">
-            <h2 id="text-heading" className={styles.panelTitle}>
+          <section {...panelProps('text')}>
+            <h2 className={styles.panelTitle}>
               {t('settings.text')}
             </h2>
             <RadioCards
@@ -317,8 +373,8 @@ export function SettingsScreen() {
             />
           </section>
 
-          <section className={styles.panel} aria-labelledby="theme-heading">
-            <h2 id="theme-heading" className={styles.panelTitle}>
+          <section {...panelProps('theme')}>
+            <h2 className={styles.panelTitle}>
               {t('settings.lighting')}
             </h2>
             <p id={themeNoteId} className={styles.panelNote}>
@@ -336,8 +392,8 @@ export function SettingsScreen() {
           </section>
 
           {hasDiscord && (
-            <section className={styles.panel} aria-labelledby="discord-heading">
-              <h2 id="discord-heading" className={styles.panelTitle}>
+            <section {...panelProps('discord')}>
+              <h2 className={styles.panelTitle}>
                 Discord
               </h2>
               <p id={discordNoteId} className={styles.panelNote}>
@@ -355,8 +411,8 @@ export function SettingsScreen() {
             </section>
           )}
 
-          <section className={styles.panel} aria-labelledby="motion-heading">
-            <h2 id="motion-heading" className={styles.panelTitle}>
+          <section {...panelProps('motion')}>
+            <h2 className={styles.panelTitle}>
               {t('settings.motion')}
             </h2>
             <p id={motionNoteId} className={styles.panelNote}>
@@ -373,8 +429,8 @@ export function SettingsScreen() {
             />
           </section>
 
-          <section className={styles.panel} aria-labelledby="search-heading">
-            <h2 id="search-heading" className={styles.panelTitle}>
+          <section {...panelProps('search')}>
+            <h2 className={styles.panelTitle}>
               {t('settings.search')}
             </h2>
             <p id={searchNoteId} className={styles.panelNote}>
@@ -391,8 +447,8 @@ export function SettingsScreen() {
             />
           </section>
 
-          <section className={styles.panel} aria-labelledby="stats-heading">
-            <h2 id="stats-heading" className={styles.panelTitle}>
+          <section {...panelProps('stats')}>
+            <h2 className={styles.panelTitle}>
               {t('settings.stats')}
             </h2>
             <p id={statsNoteId} className={styles.panelNote}>
@@ -408,6 +464,7 @@ export function SettingsScreen() {
               stack
             />
           </section>
+        </div>
         </div>
 
         <div className={styles.footer}>

@@ -43,6 +43,7 @@ import { t, useT } from '../i18n/index.ts';
 const MAX_LEN = 500;
 const HISTORY_TURNS = 12;
 const NARROW_QUERY = '(max-width: 899px)';
+const SHORT_QUERY = '(max-height: 959px)';
 const PROBE_TTL_MS = 20_000;
 
 // ---------------------------------------------------------------------------
@@ -212,6 +213,8 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
   const reduced = useReducedMotion();
   const { t } = useT();
   const narrow = useMediaQuery(NARROW_QUERY);
+  // On a window of ordinary height the portrait gives up some room, so the dossier beside the talk fits.
+  const shortWindow = useMediaQuery(SHORT_QUERY);
   const nameId = useId();
   const othersId = useId();
   const questionId = useId();
@@ -235,7 +238,8 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
   const [offline, setOffline] = useState(() => typeof navigator !== 'undefined' && navigator.onLine === false);
   // Replies that arrived while this screen was open render through the typewriter; older ones are plain text.
   const [typedIds, setTypedIds] = useState<ReadonlySet<string>>(() => new Set(pending ? [pending.placeholderId] : []));
-  const [claimsOpen, setClaimsOpen] = useState(() => !narrow);
+  // Open beside the talk when there is room for it; folded on narrow or ordinary-height windows.
+  const [claimsOpen, setClaimsOpen] = useState(() => !narrow && !shortWindow);
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -598,7 +602,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
         >
           <div className={styles.lamp} data-mood={conv.mood} aria-hidden="true" />
           <div className={styles.portraitSlot} data-mood={conv.mood}>
-            <Portrait suspect={suspect} size={narrow ? 128 : 300} mood={conv.mood} />
+            <Portrait suspect={suspect} size={narrow ? 128 : shortWindow ? 190 : 300} mood={conv.mood} />
             {/* The lamp over the table: it swings, and its light takes the colour of the mood. */}
             <div className={styles.hanging} aria-hidden="true">
               <span className={styles.cord} />
