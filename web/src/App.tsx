@@ -58,7 +58,6 @@ const router = createBrowserRouter([
       { path: '/', element: <MainMenu /> },
       { path: '/slots', element: page(screen(() => import('./screens/SaveSlots.tsx'), 'SaveSlots')) },
       { path: '/cases', element: page(screen(() => import('./screens/CaseSelect.tsx'), 'CaseSelect')) },
-      { path: '/new-case', element: page(screen(() => import('./screens/NewCase.tsx'), 'NewCase')) },
       { path: '/settings', element: page(screen(() => import('./screens/Settings.tsx'), 'SettingsScreen')) },
       { path: '/credits', element: page(screen(() => import('./screens/Credits.tsx'), 'Credits')) },
       {

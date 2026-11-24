@@ -14,7 +14,6 @@ import {
   writeSlot,
 } from '../save.ts';
 import { addLink, syncPins } from '../board.ts';
-import { deleteGeneratedCase, getGeneratedCase, listGeneratedCases, saveGeneratedCase } from '../generatedCases.ts';
 import { miniCase } from './fixtures/miniCase.ts';
 
 describe('save system', () => {
@@ -80,33 +79,5 @@ describe('save system', () => {
     slot = recordCompletion(slot, 'mini', 'correct', 1300, 'A');
     slot = recordCompletion(slot, 'mini', 'wrong_culprit', 100, 'D');
     expect(slot.completions.mini).toMatchObject({ bestScore: 1300, bestRank: 'A', solved: true, lastOutcome: 'wrong_culprit' });
-  });
-
-  it('never evicts a generated case that is still being played, and deletes its progress everywhere', () => {
-    const storage = new MemoryStorage();
-    const c = CaseFile.parse(miniCase());
-    saveGeneratedCase(storage, 'old', c, 1);
-    const slot = newSlot(1);
-    slot.progress['gen-old'] = newCaseProgress('gen-old', 'generated');
-    slot.activeCaseKey = 'gen-old';
-    writeSlot(storage, slot);
-    for (let i = 0; i < 25; i++) saveGeneratedCase(storage, `g${i}`, c, 10 + i);
-    const ids = listGeneratedCases(storage).map((g) => g.id);
-    expect(ids).toContain('old');
-    expect(ids.length).toBe(20);
-    deleteGeneratedCase(storage, 'old');
-    expect(listGeneratedCases(storage).map((g) => g.id)).not.toContain('old');
-    const after = loadSlot(storage, 1)!;
-    expect(after.progress['gen-old']).toBeUndefined();
-    expect(after.activeCaseKey).toBeNull();
-  });
-
-  it('keeps generated cases for replay', () => {
-    const storage = new MemoryStorage();
-    const c = CaseFile.parse(miniCase());
-    saveGeneratedCase(storage, 'g1', c, 5);
-    saveGeneratedCase(storage, 'g2', { ...c, title: 'Second' }, 6);
-    expect(listGeneratedCases(storage).map((g) => g.id)).toEqual(['g2', 'g1']);
-    expect(getGeneratedCase(storage, 'g1')?.caseFile.title).toBe(c.title);
   });
 });

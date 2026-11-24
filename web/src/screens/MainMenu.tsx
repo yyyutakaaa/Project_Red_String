@@ -109,7 +109,6 @@ export function MainMenu() {
         navigate('/cases');
       },
     },
-    { id: 'new-case', label: 'New Case', sub: 'A fresh file, typed up tonight.', to: '/new-case' },
     { id: 'save-slots', label: 'Save Slots', sub: 'Three drawers. Pick one.', to: '/slots' },
     { id: 'settings', label: 'Settings', sub: 'Volume, text speed, type size.', to: '/settings' },
     { id: 'credits', label: 'Credits', sub: 'Who did what.', to: '/credits' },

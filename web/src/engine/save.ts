@@ -1,4 +1,4 @@
-// Save system: three slots in localStorage, plus device id and kept generated cases.
+// Save system: three slots in localStorage, plus the device id.
 // Storage is injected so it can be tested without a browser.
 import type { CaseProgress, CompletionRecord, SaveSlotData } from './types.ts';
 import { emptyBoard } from './board.ts';

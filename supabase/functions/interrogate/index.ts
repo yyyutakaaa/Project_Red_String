@@ -1,6 +1,6 @@
 // interrogate: one question to one suspect, answered in character and streamed over SSE.
 //
-// Request (POST JSON): { case_id | generated_case_id, suspect_id, save_id, conversation, message,
+// Request (POST JSON): { case_id, suspect_id, save_id, conversation, message,
 //                        shown_evidence_id?, device_id }
 // Response: text/event-stream with "delta" events ({ text }) and one "final" event:
 //   { reply, revealed_clue_ids, mood, patience_used, patience_max, silent }
@@ -23,13 +23,15 @@ import { judgeModel, judgeReply, resolveEval, type JudgeVerdict } from '../_shar
 
 const MAX_OUTPUT_TOKENS = 320;
 const PROVIDER_TIMEOUT_MS = 25_000;
+// A suspect that thinks first (DeepSeek) spends part of max_tokens on reasoning before it speaks.
+const THINKING_OUTPUT_TOKENS = 3_000;
+const THINKING_TIMEOUT_MS = 50_000;
 const HISTORY_TURNS = 12;
 const LIMITS = { devicePerMinute: 30, devicePerDay: 400, ipPerMinute: 90, ipPerDay: 2000 };
 const EVAL_LIMITS = { perMinute: 240, perDay: 5000 };
 
 const Body = z.object({
-  case_id: z.string().max(64).optional(),
-  generated_case_id: z.string().refine(isUuid, 'generated_case_id must be a uuid').optional(),
+  case_id: z.string().max(64),
   suspect_id: z.string().min(1).max(64),
   save_id: z.string().refine(isUuid, 'save_id must be a uuid'),
   conversation: z
@@ -72,13 +74,12 @@ Deno.serve(async (req: Request): Promise<Response> => {
     const msg = err instanceof z.ZodError ? err.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; ') : 'Invalid JSON body.';
     return errorResponse(req, 400, 'bad_request', msg);
   }
-  if (!body.case_id && !body.generated_case_id) return errorResponse(req, 400, 'bad_request', 'case_id or generated_case_id is required.');
 
   const message = body.message.trim().slice(0, MAX_PLAYER_MESSAGE_CHARS);
   const shownId = body.shown_evidence_id ?? null;
   if (!message && !shownId) return errorResponse(req, 400, 'bad_request', 'Ask a question or show evidence.');
 
-  const resolved = await resolveCase(body.case_id, body.generated_case_id);
+  const resolved = await resolveCase(body.case_id);
   if (!resolved) return errorResponse(req, 404, 'not_found', 'Unknown case.');
   const { caseFile, caseKey } = resolved;
   const suspect = caseFile.suspects.find((s) => s.id === body.suspect_id);
@@ -149,12 +150,14 @@ Deno.serve(async (req: Request): Promise<Response> => {
   const spokenQuestion = message || 'Take a look at this.';
   const messages: ChatMessage[] = [{ role: 'system', content: system }, ...history, { role: 'user', content: buildUserTurn(spokenQuestion, shown) }];
   const model = evalCtx?.model ?? config.suspectModel();
+  const thinking = model.startsWith('deepseek-') && config.suspectThinking();
+  const maxTokens = thinking ? THINKING_OUTPUT_TOKENS : MAX_OUTPUT_TOKENS;
   const clueIds = suspect.revealable_clues.map((c) => c.clue_id);
 
   // Reserve the worst case (the reply plus one metadata retry) against the daily ceiling before calling
   // the model, atomically, so concurrent requests cannot overshoot it.
   const inputChars = messages.reduce((n, m) => n + m.content.length, 0);
-  const reservation = await reserveSpend(body.device_id, 'interrogate', model, worstCaseCostUsd(model, inputChars, MAX_OUTPUT_TOKENS, 2));
+  const reservation = await reserveSpend(body.device_id, 'interrogate', model, worstCaseCostUsd(model, inputChars, maxTokens, 2));
   if (reservation === null) {
     await releaseQuestion(body.save_id, caseKey, suspect.id);
     return errorResponse(req, 503, 'spend_limit', 'The daily interrogation budget is used up. Try again tomorrow.');
@@ -174,7 +177,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
     const started = performance.now();
     try {
       const result = await streamChat(
-        { model, messages, maxTokens: MAX_OUTPUT_TOKENS, temperature: 0.8, reasoningEffort: config.suspectReasoningEffort(), timeoutMs: PROVIDER_TIMEOUT_MS },
+        { model, messages, maxTokens, thinking, temperature: 0.8, reasoningEffort: config.suspectReasoningEffort(), timeoutMs: thinking ? THINKING_TIMEOUT_MS : PROVIDER_TIMEOUT_MS },
         (piece) => {
           if (firstTokenMs === null) firstTokenMs = performance.now() - started;
           full += piece;

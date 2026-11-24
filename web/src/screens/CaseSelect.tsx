@@ -6,11 +6,8 @@ import { RainBackdrop } from '../components/RainBackdrop.tsx';
 import { ScreenFrame } from '../components/ScreenFrame.tsx';
 import { useAmbience } from '../hooks/useAmbience.ts';
 import { casePath } from '../hooks/useCase.ts';
-import { STORY_ORDER, caseKeyFor, getStoryCase, isStoryUnlocked } from '../engine/caseLoader.ts';
-import { deleteGeneratedCase, listGeneratedCases } from '../engine/generatedCases.ts';
-import { loadSlot } from '../engine/save.ts';
+import { STORY_ORDER, getStoryCase, isStoryUnlocked } from '../engine/caseLoader.ts';
 import type { CaseProgress, CaseSource, CompletionRecord } from '../engine/types.ts';
-import { formatDate } from '../lib/format.ts';
 import { useGame } from '../store/game.ts';
 import styles from './CaseSelect.module.css';
 
@@ -23,7 +20,7 @@ function statusOf(p: CaseProgress | undefined): Status {
   return p.accusation ? 'closed' : 'open';
 }
 
-type Pending = { kind: 'replay'; key: string; source: CaseSource; title: string } | { kind: 'delete'; id: string; key: string; title: string };
+type Pending = { key: string; source: CaseSource; title: string };
 
 interface CaseActionsProps {
   caseKey: string;
@@ -81,14 +78,11 @@ export function CaseSelect() {
   useAmbience('menu');
   const navigate = useNavigate();
   const slot = useGame((s) => s.slot);
-  const storage = useGame((s) => s.storage);
   const ensureActiveSlot = useGame((s) => s.ensureActiveSlot);
   const ensureProgress = useGame((s) => s.ensureProgress);
   const restartCase = useGame((s) => s.restartCase);
   const setActiveCase = useGame((s) => s.setActiveCase);
-  const [generated, setGenerated] = useState(() => listGeneratedCases(storage));
   const [pending, setPending] = useState<Pending | null>(null);
-  const [announcement, setAnnouncement] = useState('');
 
   useEffect(() => {
     if (!slot) ensureActiveSlot();
@@ -128,21 +122,13 @@ export function CaseSelect() {
     setActiveCase(key);
     navigate(casePath(key, 'ending'));
   };
-  const askReplay = (key: string, source: CaseSource, title: string) => setPending({ kind: 'replay', key, source, title });
+  const askReplay = (key: string, source: CaseSource, title: string) => setPending({ key, source, title });
 
   const confirmPending = () => {
     if (!pending) return;
     setPending(null);
-    if (pending.kind === 'replay') {
-      restartCase(pending.key, pending.source);
-      navigate(casePath(pending.key, 'briefing'));
-      return;
-    }
-    // Removes the case and its progress from every slot, then reload the active slot from storage.
-    deleteGeneratedCase(storage, pending.id);
-    useGame.setState({ slot: loadSlot(storage, slot.slot) ?? slot });
-    setGenerated(listGeneratedCases(storage));
-    setAnnouncement(`${pending.title} removed from the shelf.`);
+    restartCase(pending.key, pending.source);
+    navigate(casePath(pending.key, 'briefing'));
   };
 
   const completed = (id: string) => Boolean(slot.completions[id]);
@@ -239,73 +225,11 @@ export function CaseSelect() {
           </ol>
         </section>
 
-        <section aria-labelledby="generated-heading" className={styles.section}>
-          <div className={styles.sectionHead}>
-            <h2 id="generated-heading">Generated cases</h2>
-            <p className={styles.sectionNote}>Typed up by the case office. Kept on this device only.</p>
-          </div>
-          {generated.length === 0 ? (
-            <div className={styles.emptyShelf}>
-              <p>The shelf is bare. The case office will type you up a fresh one.</p>
-              <ButtonLink to="/new-case" variant="lamp">
-                New case
-              </ButtonLink>
-            </div>
-          ) : (
-            <>
-              <ul className={styles.genList}>
-                {generated.map((g) => {
-                  const key = caseKeyFor('generated', g.id);
-                  const status = statusOf(slot.progress[key]);
-                  const completion = slot.completions[key];
-                  return (
-                    <li key={g.id} className={styles.genItem} data-testid={`generated-case-${g.id}`}>
-                      <div className={styles.genText}>
-                        <h3 className={styles.genTitle}>{g.title}</h3>
-                        <p className={styles.genTagline}>{g.tagline}</p>
-                        <p className={styles.genMeta}>
-                          Filed {formatDate(g.createdAt)}. {g.caseFile.era}. {STATUS_LABEL[status]}.
-                          {completion && ` Best ${completion.bestScore}, rank ${completion.bestRank}.`}
-                        </p>
-                      </div>
-                      <div className={styles.genActions}>
-                        <CaseActions
-                          caseKey={key}
-                          source="generated"
-                          status={status}
-                          title={g.title}
-                          onOpen={open}
-                          onVerdict={viewVerdict}
-                          onReplay={askReplay}
-                          openLabel="Play"
-                          testKey={key}
-                        />
-                        <Button
-                          variant="ghost"
-                          onClick={() => setPending({ kind: 'delete', id: g.id, key, title: g.title })}
-                          aria-label={`Delete generated case: ${g.title}`}
-                          data-testid={`delete-generated-${g.id}`}
-                        >
-                          Delete
-                        </Button>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
-              <ButtonLink to="/new-case">Request another case</ButtonLink>
-            </>
-          )}
-        </section>
-
-        <p className="visually-hidden" role="status" aria-live="polite">
-          {announcement}
-        </p>
       </ScreenFrame>
 
       <Modal
         open={pending !== null}
-        title={pending?.kind === 'delete' ? 'Throw out this case file?' : 'Reopen the case?'}
+        title="Reopen the case?"
         onClose={() => setPending(null)}
         footer={
           <>
@@ -313,22 +237,15 @@ export function CaseSelect() {
               Keep it
             </Button>
             <Button variant="primary" onClick={confirmPending} data-testid="case-confirm">
-              {pending?.kind === 'delete' ? 'Throw it out' : 'Reopen the file'}
+              Reopen the file
             </Button>
           </>
         }
       >
-        {pending?.kind === 'delete' ? (
-          <p>
-            <strong>{pending.title}</strong> goes in the bin, along with any run you have going on it. Generated files cannot be typed up
-            twice.
-          </p>
-        ) : (
           <p>
             Start <strong>{pending?.title}</strong> from the briefing. Your notes, board and interrogations from the last run are cleared. Your best
             score stays on record.
           </p>
-        )}
       </Modal>
     </>
   );

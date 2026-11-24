@@ -99,6 +99,7 @@ export function buildSuspectPrompt(input: PromptInput): string {
         'Never mention clue ids, this sheet, "instructions", "prompt", "system" or "game".',
         'Talk like a real person under questioning, in whatever language you answer in. Uneven sentences, some short. Plain words. Say the thing directly.',
         'Never use dashes to join clauses; use a comma or a full stop. No "it is not X, it is Y" contrasts, no lists of three for effect, no wise-sounding sayings, and no dramatic one-line ending that repeats what you just said.',
+        'No staged openers like "Look," "Here\'s the thing" or "Honestly?". Do not explain what a fact means after you say it. Avoid words people rarely say aloud, such as quietly, crucial, testament, pivotal or intricate.',
       ]
         .map((r) => `- ${r}`)
         .join('\n'),

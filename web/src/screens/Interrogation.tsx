@@ -187,7 +187,7 @@ interface Failure {
 }
 
 function InterrogationRoom({ suspect }: { suspect: Suspect }) {
-  const { caseFile, caseKey, source, generatedId, progress } = useCaseContext();
+  const { caseFile, caseKey, progress } = useCaseContext();
   const reduced = useReducedMotion();
   const narrow = useMediaQuery(NARROW_QUERY);
   const nameId = useId();
@@ -365,8 +365,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
     try {
       const final = await interrogate(
         {
-          case_id: source === 'story' ? caseFile.id : undefined,
-          generated_case_id: generatedId ?? undefined,
+          case_id: caseFile.id,
           suspect_id: suspect.id,
           save_id: runId,
           parent_save_id: run.parentRunId ?? null,

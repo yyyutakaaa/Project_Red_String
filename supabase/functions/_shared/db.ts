@@ -1,5 +1,5 @@
 // Service-role database access for the edge functions: rate limits, spend ceiling, usage log,
-// conversation state and generated cases. The browser never talks to these tables.
+// conversation state. The browser never talks to these tables.
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { config } from './env.ts';
 import { estimateCostUsd, type Usage } from './omniakey.ts';
@@ -211,8 +211,3 @@ export async function recordTurn(
   if (error) console.error('record turn failed', error.message);
 }
 
-export async function loadGeneratedCase(id: string): Promise<unknown | null> {
-  const { data, error } = await db().from('generated_cases').select('case_json, status').eq('id', id).maybeSingle();
-  if (error || !data || data.status !== 'ready') return null;
-  return data.case_json;
-}

@@ -1,11 +1,10 @@
 // Server-side case lookup. Story cases live in public.story_cases (seeded from web/src/cases by
 // web/scripts/sync-cases.mjs); a story case is only used when its stored text matches the SHA-256 the
-// repository recorded, so a stale or corrupted row can never reach a prompt. Generated cases are read from
-// public.generated_cases. Every case is validated before use.
+// repository recorded, so a stale or corrupted row can never reach a prompt. Every case is validated before use.
 import type { CaseFile } from './core/caseSchema.ts';
 import { validateCase } from './core/validator.ts';
 import { STORY_CASE_HASHES } from './cases/index.ts';
-import { db, loadGeneratedCase } from './db.ts';
+import { db } from './db.ts';
 import { sha256Hex } from './http.ts';
 
 const cache = new Map<string, CaseFile>();
@@ -22,15 +21,13 @@ async function loadStoryCaseText(id: string): Promise<string | null> {
   return String(data.case_text);
 }
 
-export async function resolveCase(caseId: string | undefined, generatedId: string | undefined): Promise<{ caseFile: CaseFile; caseKey: string } | null> {
-  const key = generatedId ? `gen-${generatedId}` : caseId ?? '';
+export async function resolveCase(caseId: string | undefined): Promise<{ caseFile: CaseFile; caseKey: string } | null> {
+  const key = caseId ?? '';
   if (!key) return null;
   const hit = cache.get(key);
   if (hit) return { caseFile: hit, caseKey: key };
   let raw: unknown = null;
-  if (generatedId) {
-    raw = await loadGeneratedCase(generatedId);
-  } else if (caseId) {
+  if (caseId) {
     const text = await loadStoryCaseText(caseId);
     if (!text) return null;
     try {

@@ -33,7 +33,7 @@ export function CaseLayout() {
   if (!resolved) {
     return (
       <ScreenFrame title="Case not found" kicker="Records office">
-        <p>This case file is missing or could not be read. Generated cases live only on the device that created them.</p>
+        <p>This case file is missing or could not be read.</p>
         <ButtonLink to="/cases">Back to cases</ButtonLink>
       </ScreenFrame>
     );

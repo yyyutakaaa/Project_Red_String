@@ -15,14 +15,13 @@ function placeName(c: CaseFile, id: string): string {
   return c.rooms.find((r) => r.id === id)?.name ?? c.offstage_locations.find((o) => o.id === id)?.name ?? id;
 }
 
-function fileNumber(caseKey: string, generatedId: string | null): string {
-  if (generatedId) return `G-${generatedId.replace(/[^a-z0-9]/gi, '').slice(0, 6).toUpperCase()}`;
+function fileNumber(caseKey: string): string {
   const index = (STORY_ORDER as readonly string[]).indexOf(caseKey);
   return index >= 0 ? String(index + 1).padStart(3, '0') : caseKey.toUpperCase();
 }
 
 export function Briefing() {
-  const { caseFile, caseKey, progress, generatedId } = useCaseContext();
+  const { caseFile, caseKey, progress } = useCaseContext();
   const navigate = useNavigate();
   const played = useRef(false);
   useAmbience(ambienceForBackground(caseFile.rooms[0]?.background));
@@ -48,7 +47,7 @@ export function Briefing() {
           <dl className={styles.headLines}>
             <div>
               <dt>File</dt>
-              <dd>{fileNumber(caseKey, generatedId)}</dd>
+              <dd>{fileNumber(caseKey)}</dd>
             </div>
             <div>
               <dt>Date</dt>

@@ -7,8 +7,7 @@ import { ScreenFrame } from '../components/ScreenFrame.tsx';
 import { useAmbience } from '../hooks/useAmbience.ts';
 import { casePath, resolveCase } from '../hooks/useCase.ts';
 import { STORY_ORDER, getStoryCase, parseCaseKey } from '../engine/caseLoader.ts';
-import { getGeneratedCase } from '../engine/generatedCases.ts';
-import { SLOT_COUNT, continueSlot, listSlots, type KeyValueStorage } from '../engine/save.ts';
+import { SLOT_COUNT, continueSlot, listSlots } from '../engine/save.ts';
 import type { SaveSlotData } from '../engine/types.ts';
 import { formatDate } from '../lib/format.ts';
 import { useGame } from '../store/game.ts';
@@ -24,15 +23,15 @@ interface BestScore {
   solved: boolean;
 }
 
-function caseTitle(storage: KeyValueStorage, key: string): string {
+function caseTitle(key: string): string {
   const { source, id } = parseCaseKey(key);
   if (source === 'story') return getStoryCase(id)?.title ?? 'A missing file';
-  return getGeneratedCase(storage, id)?.title ?? 'A generated case';
+  return 'A retired case file';
 }
 
-function bestScores(storage: KeyValueStorage, slot: SaveSlotData): BestScore[] {
+function bestScores(slot: SaveSlotData): BestScore[] {
   return Object.entries(slot.completions)
-    .map(([key, c]) => ({ key, title: caseTitle(storage, key), score: c.bestScore, rank: c.bestRank, solved: c.solved }))
+    .map(([key, c]) => ({ key, title: caseTitle(key), score: c.bestScore, rank: c.bestRank, solved: c.solved }))
     .sort((a, b) => b.score - a.score)
     .slice(0, 4);
 }
@@ -114,8 +113,8 @@ export function SaveSlots() {
             const isCurrent = current === n && data !== null;
             const headingId = slotHeadingId(n);
             const solved = data ? STORY_ORDER.filter((id) => data.completions[id]?.solved).length : 0;
-            const scores = data ? bestScores(storage, data) : [];
-            const activeTitle = data?.activeCaseKey ? caseTitle(storage, data.activeCaseKey) : null;
+            const scores = data ? bestScores(data) : [];
+            const activeTitle = data?.activeCaseKey ? caseTitle(data.activeCaseKey) : null;
             return (
               <li key={n} className={styles.cell}>
                 <article
@@ -235,7 +234,7 @@ export function SaveSlots() {
           <p>Every case, verdict and best score in this drawer goes into the furnace. There is no getting it back.</p>
         ) : (
           <p>
-            A fresh start wipes this drawer: open cases, verdicts and best scores. Generated case files stay on the shelf. There is no getting
+            A fresh start wipes this drawer: open cases, verdicts and best scores. There is no getting
             the old game back.
           </p>
         )}

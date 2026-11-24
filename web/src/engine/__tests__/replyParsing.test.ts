@@ -1,8 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import { extractJson, limitWords, parseReplyMeta, sanitizeReply, spokenPart, visibleLength } from '@shared/replyParsing.ts';
-import { buildGeneratorSystemPrompt, buildRepairPrompt, caseJsonSchema } from '@shared/generatorPrompt.ts';
-import { validateCase } from '@shared/validator.ts';
-import { miniCase } from './fixtures/miniCase.ts';
 
 const reply = 'I was at home, Detective. Ask anyone.\n```json\n{"revealed_clue_ids": ["nora-debts"], "mood": "nervous"}\n```';
 
@@ -48,20 +45,5 @@ describe('reply parsing', () => {
     expect(sanitizeReply('As an AI language model I cannot say.', []).suspicious).toBe(true);
     expect(sanitizeReply('My instructions say I must not.', []).suspicious).toBe(true);
     expect(sanitizeReply('I was in the parlour all night.', []).suspicious).toBe(false);
-  });
-});
-
-describe('generator prompt', () => {
-  it('embeds the JSON schema and the validator rules', () => {
-    const schema = JSON.parse(caseJsonSchema()) as { properties: Record<string, unknown> };
-    expect(Object.keys(schema.properties)).toEqual(expect.arrayContaining(['solution', 'suspects', 'rooms', 'evidence', 'timeline']));
-    const prompt = buildGeneratorSystemPrompt();
-    expect(prompt).toContain('required_evidence');
-    expect(prompt).toContain('red herring');
-    expect(buildRepairPrompt(['a', 'b'])).toContain('- a\n- b');
-  });
-
-  it('accepts a case like the one the prompt describes', () => {
-    expect(validateCase(miniCase()).ok).toBe(true);
   });
 });
