@@ -1,0 +1,688 @@
+{
+  "schema_version": 1,
+  "id": "mercers-pharmacy",
+  "title": "Mercer's Pharmacy",
+  "tagline": "He took the same spoonful of tonic every night at nine. Somebody only had to wait.",
+  "setting": "Mercer's Pharmacy on Calloway Street, with Dr. Pell's surgery on the floor above",
+  "era": "April 1950",
+  "intro_briefing": [
+    "Friday, 14 April 1950. Mercer's Pharmacy has stood on Calloway Street since 1911. Half the city has had a prescription filled there, including, eighteen months ago, a bottle of digitalis drops for a shipowner on the cliffs at Ashgrove. At ten past nine tonight its owner fell down behind the dispensary counter, and he was dead before the ambulance came.",
+    "Edgar Mercer was sixty-three. The police surgeon smelled the nerve tonic Mercer took every night before he locked up, looked at the arch of his back, and said strychnine. The police chemist has already confirmed it in the bottle. The question is when it got there.",
+    "Four people had their hands near that bottle today: his son and partner, Nathan Mercer; his wife, Lucille; Helen Voss, who runs the soda fountain; and Dr. Raymond Pell, whose surgery is upstairs and whose prescriptions the shop has filled for twelve years. Dr. Pell has come over from St. Columba's Hospital, where he spent the evening delivering a baby.",
+    "Search the shop, the dispensary, the cellar and Dr. Pell's surgery. Question the four of them and show them what you find. Do not ask them where they were at nine o'clock. Ask them where they were when the poison went in."
+  ],
+  "victim": {
+    "id": "edgar",
+    "name": "Edgar Mercer",
+    "age": 63,
+    "description": "Pharmacist and owner of Mercer's Pharmacy for thirty-nine years. Upright, fussy and stubborn, a man who checked every prescription twice and never forgot a face. He took a spoonful of his own nerve tonic every evening at nine before locking up.",
+    "cause_of_death": "Strychnine poisoning, from his nightly dose of nerve tonic.",
+    "found_in": "dispensary",
+    "found_at": "at about 21:10, on the dispensary floor behind the counter, where his son found him in convulsions"
+  },
+  "solution": {
+    "culprit_id": "pell",
+    "motive": "Edgar had found that Dr. Pell was writing morphine prescriptions in the names of dead patients, and he had told Pell he would report him to the State Board on Monday.",
+    "method": "When Pell came down to the dispensary at half past five, Edgar went to the cellar for stock and left him alone for eight minutes. Pell dropped crushed strychnine tablets from his own surgery cabinet into Edgar's tonic bottle and went to the hospital, where he spent the evening in plain sight while the poison waited for nine o'clock.",
+    "required_evidence": ["prescription-notes", "day-book", "surgery-ledger"],
+    "reveal": "Dr. Raymond Pell has been taking morphine for three years, ever since a riding accident, and he got it by writing prescriptions for patients who no longer needed them because they were dead. Mercer's filled them. In March Edgar Mercer noticed a name he had read in the death notices, and then another, and this afternoon he climbed the stairs to the surgery and told Pell he would take the prescriptions to the State Board of Pharmacy on Monday. Pell knew Edgar's habits as well as anybody on Calloway Street. At five o'clock Edgar took a spoonful of his freshly mixed tonic at the fountain, and it did him no harm. At half past five Pell came down to the dispensary with an excuse about a prescription, and Edgar, who never left anyone alone at the dispensary, went down to the cellar for stock and left him there for eight minutes. Pell crushed thirty-eight strychnine tablets from his own cabinet into the tonic bottle. By seven he was at St. Columba's, scrubbing up for a delivery in front of three nurses, and he stayed there until after ten. At nine o'clock Edgar took his spoonful. Pell's alibi is perfect for the wrong hour. Edgar's notes give the motive, his day book shows the eight minutes, and Pell's own poison ledger is thirty-eight tablets short."
+  },
+  "timeline": [
+    {
+      "day": 0,
+      "time": "12:15",
+      "location": "shop",
+      "who": ["lucille", "nathan"],
+      "what": "Nathan walks his mother to the corner and puts her on the 12:15 ferry to her sister's in Eastbank. She does not come back until 21:45.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "15:00",
+      "location": "dispensary",
+      "who": ["edgar"],
+      "what": "Edgar mixes a fresh bottle of his nerve tonic and puts it on the dispensary shelf.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "16:30",
+      "location": "surgery",
+      "who": ["edgar", "pell"],
+      "what": "Edgar goes up to Pell's surgery and tells him he knows about the morphine prescriptions written for dead patients, and that he will report him to the State Board of Pharmacy on Monday.",
+      "visibility": "private",
+      "tags": ["motive"]
+    },
+    {
+      "day": 0,
+      "time": "17:00",
+      "location": "shop",
+      "who": ["edgar", "helen", "nathan"],
+      "what": "After a row with Nathan about selling the shop, Edgar takes a spoonful of the new tonic at the soda fountain 'for his nerves'. It does him no harm. Helen sees it.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "17:05",
+      "location": "shop",
+      "who": ["nathan"],
+      "what": "Nathan leaves on the evening deliveries with the bicycle and the delivery book.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "17:30",
+      "location": "dispensary",
+      "who": ["pell", "edgar", "helen"],
+      "what": "Pell comes down to the dispensary saying he wants to check a prescription. At 17:32 Edgar goes down to the cellar for stock and leaves him alone until 17:40. Helen sees it from the fountain.",
+      "visibility": "private",
+      "tags": ["alibi"]
+    },
+    {
+      "day": 0,
+      "time": "17:34",
+      "location": "dispensary",
+      "who": ["pell"],
+      "what": "Alone in the dispensary, Pell drops crushed strychnine tablets from his surgery cabinet into the tonic bottle.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "day": 0,
+      "time": "18:00",
+      "location": "shop",
+      "who": ["helen", "edgar"],
+      "what": "Helen closes the soda fountain and goes home. Edgar locks the dispensary door and keeps the key on his chain.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "19:00",
+      "location": "st-columbas",
+      "who": ["pell"],
+      "what": "Pell arrives at St. Columba's Hospital for a delivery and stays there in front of the nurses until after 22:00.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "20:30",
+      "location": "cellar",
+      "who": ["nathan"],
+      "what": "Nathan comes back from his deliveries, puts the bicycle in the cellar, and sits down to the accounts in the back room.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "21:05",
+      "location": "dispensary",
+      "who": ["edgar"],
+      "what": "Edgar unlocks the dispensary and takes his nightly spoonful of tonic before locking up.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "21:10",
+      "location": "dispensary",
+      "who": ["edgar", "nathan"],
+      "what": "Edgar collapses in convulsions. Nathan finds him and telephones for an ambulance. Edgar dies before it arrives at 21:30.",
+      "visibility": "public",
+      "tags": []
+    }
+  ],
+  "offstage_locations": [
+    { "id": "st-columbas", "name": "St. Columba's Hospital" }
+  ],
+  "rooms": [
+    {
+      "id": "shop",
+      "name": "The shop",
+      "description": "A long, bright shop with mahogany counters, jars of coloured water in the window, and a marble soda fountain along one wall. The dispensary is through a door behind the main counter, with a glass panel so the pharmacist can see the shop.",
+      "background": "lobby",
+      "hotspots": [
+        {
+          "id": "fountain",
+          "label": "Soda fountain",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The marble fountain, wiped down for the night. The fountain has its own little cash register with a paper tape.",
+          "evidence_id": "fountain-tape"
+        },
+        {
+          "id": "delivery-bag",
+          "label": "Delivery bag",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "Nathan's canvas delivery bag on a hook by the door, with the delivery book in the outside pocket.",
+          "evidence_id": "delivery-book"
+        },
+        {
+          "id": "tonic-display",
+          "label": "Tonic display",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "A pyramid of bottles of 'Mercer's Own Nerve Tonic, est. 1911'. Edgar mixed his own nightly bottle separately and kept it in the dispensary.",
+          "evidence_id": null
+        },
+        {
+          "id": "dispensary-window",
+          "label": "Dispensary window",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "The glass panel in the dispensary door. From the fountain you can see straight through it to the dispensary shelf where the tonic stood.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "dispensary",
+      "name": "Dispensary",
+      "description": "A narrow room of drawers and labelled bottles, with a scale, a mortar and pestle, and a high desk for the books. The police chemist has taken samples and left his labels on everything.",
+      "background": "office",
+      "hotspots": [
+        {
+          "id": "tonic-bottle",
+          "label": "Tonic bottle",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "Edgar's own bottle of tonic, a third gone, with a spoon beside it and a red police chemist's label tied round the neck.",
+          "evidence_id": "tonic-bottle"
+        },
+        {
+          "id": "high-desk",
+          "label": "High desk",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "Edgar's high desk, with his day book open on it. He wrote in it all day, every day.",
+          "evidence_id": "day-book"
+        },
+        {
+          "id": "prescription-file",
+          "label": "Prescription file",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "A wooden file box of filled prescriptions. One bundle at the front is held with a rubber band and has a sheet of Edgar's notes on top.",
+          "evidence_id": "prescription-notes"
+        },
+        {
+          "id": "poison-cupboard",
+          "label": "Poison cupboard",
+          "x": 10,
+          "y": 56,
+          "width": 26,
+          "height": 26,
+          "description": "A locked cupboard marked POISONS, and the shop's poison register on a shelf beside it.",
+          "evidence_id": "shop-poison-register"
+        },
+        {
+          "id": "letter-spike",
+          "label": "Letter spike",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "Letters on a spike by the desk. The top one is on the letterhead of a chain of drugstores.",
+          "evidence_id": "chain-offer"
+        }
+      ]
+    },
+    {
+      "id": "cellar",
+      "name": "Stock cellar",
+      "description": "A whitewashed cellar under the shop, full of crates of bottles and boxes of stock. Nathan's bicycle leans by the stairs. There is a smell of soap and mice.",
+      "background": "cellar",
+      "hotspots": [
+        {
+          "id": "stock-shelves",
+          "label": "Stock shelves",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "Shelves of boxed stock. A carton of cough syrup has been opened today and three bottles taken, with 'E.M. 5.35' pencilled on the lid.",
+          "evidence_id": null
+        },
+        {
+          "id": "rat-bait",
+          "label": "Rat bait",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "A paper sack of grain on the floor in the corner, dyed bright pink, with a hardware store bill pinned to it.",
+          "evidence_id": "rat-poison"
+        },
+        {
+          "id": "bicycle",
+          "label": "Bicycle",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "The delivery bicycle with a big basket. The tyres are still wet from the evening rounds.",
+          "evidence_id": null
+        },
+        {
+          "id": "stairs",
+          "label": "Cellar stairs",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "Steep wooden stairs up to the back of the dispensary. From down here you cannot see or hear anything that happens in the room above.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "surgery",
+      "name": "Dr. Pell's surgery",
+      "description": "A doctor's consulting room on the floor above the shop, with a desk, an examination couch behind a screen, and a glass-fronted cabinet of drugs. The window looks down onto Calloway Street.",
+      "background": "study",
+      "hotspots": [
+        {
+          "id": "drug-cabinet",
+          "label": "Drug cabinet",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "A locked glass cabinet of drugs, with the doctor's poison ledger in a rack on the inside of the door. The key was on Dr. Pell's ring, which he handed over without being asked.",
+          "evidence_id": "surgery-ledger"
+        },
+        {
+          "id": "desk",
+          "label": "Desk",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "A tidy desk with a prescription pad, a fountain pen and a framed diploma above it. There is a calendar with tonight circled: 'Mrs. Kovacs, St. C., 7 pm'.",
+          "evidence_id": null
+        },
+        {
+          "id": "couch",
+          "label": "Couch",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "An examination couch behind a screen. Under the pillow is a leather case holding a hypodermic syringe that has been used recently.",
+          "evidence_id": null
+        },
+        {
+          "id": "window",
+          "label": "Window",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "The window looks down on Calloway Street and the pharmacy's sign. The doctor could see who went in and out of the shop all day.",
+          "evidence_id": null
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "prescription-notes",
+      "name": "Edgar's notes on the prescriptions",
+      "description": "A sheet in Edgar's careful hand on top of a bundle of morphine prescriptions, all signed by Dr. R. Pell: 'Mrs. Hanley, filled 2 Feb. Died 9 Jan, Courier notice. Mr. Bruno, filled 1 Mar. Died 14 Feb. Mrs. Teller, filled 30 Mar. Died 1947. Told R.P. 4.30 Fri. State Board Monday.'",
+      "found_in": "dispensary",
+      "points_to": ["pell"],
+      "is_red_herring": false
+    },
+    {
+      "id": "day-book",
+      "name": "Edgar's day book",
+      "description": "Edgar's day book for 14 April, every move written down: '3.00 New tonic mixed. 5.00 Tonic at fountain, nerves, Nathan. 5.30 Dr. P. down, re script. 5.32 to cellar for cough syrup, Dr. P. waiting. 5.40 back. 6.00 Dispensary locked, H.V. gone home.'",
+      "found_in": "dispensary",
+      "points_to": ["pell"],
+      "is_red_herring": false
+    },
+    {
+      "id": "surgery-ledger",
+      "name": "Dr. Pell's poison ledger",
+      "description": "The doctor's own poison ledger from his drug cabinet: 'Strychnine sulphate, tablets of 1/30 grain. 1 March, received 100.' Two patients are entered since, three tablets each. The bottle in the cabinet holds 56 tablets. It should hold 94.",
+      "found_in": "surgery",
+      "points_to": ["pell"],
+      "is_red_herring": false
+    },
+    {
+      "id": "tonic-bottle",
+      "name": "Tonic bottle",
+      "description": "Edgar's nightly tonic, with the police chemist's label: 'Strychnine sulphate present, about 1 1/4 grains in the bottle, from crushed tablets (binder present). Not from grain bait.' A spoonful would kill a man in half an hour.",
+      "found_in": "dispensary",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "shop-poison-register",
+      "name": "Shop poison register",
+      "description": "The pharmacy's own poison register. The shop's stock of strychnine is a sealed bottle of powder, last opened in 1948 and still sealed with Edgar's wax.",
+      "found_in": "dispensary",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "fountain-tape",
+      "name": "Fountain register tape",
+      "description": "The soda fountain's register tape, timed by the machine. Sales rung up under 'H' every few minutes from 4.55 to 5.58 pm, then 'CLOSED 6.00'.",
+      "found_in": "shop",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "delivery-book",
+      "name": "Delivery book",
+      "description": "Nathan's delivery book for the evening round, with a customer's signature and the time for every call: 5.20 Ferry Street, 5.45 Ash Lane, and on across the north side of the city until 8.25 pm on Calloway Street.",
+      "found_in": "shop",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "rat-poison",
+      "name": "Rat bait and bill",
+      "description": "A sack of strychnine grain bait for rats, dyed pink, and a bill from Hagen's Hardware: 'Strychnine grain bait, 1 lb. 8 April. Mrs. L. Mercer.'",
+      "found_in": "cellar",
+      "points_to": ["lucille"],
+      "is_red_herring": true
+    },
+    {
+      "id": "chain-offer",
+      "name": "Letter from a drugstore chain",
+      "description": "A letter from the Calder Drug Company offering thirty thousand dollars for Mercer's Pharmacy, 'subject to the agreement of both partners.' Across the bottom, in Edgar's hand: 'NEVER. Tell the boy.'",
+      "found_in": "dispensary",
+      "points_to": ["nathan"],
+      "is_red_herring": true
+    }
+  ],
+  "suspects": [
+    {
+      "id": "pell",
+      "name": "Dr. Raymond Pell",
+      "role": "Physician, with a surgery above the pharmacy",
+      "age": 50,
+      "portrait": "man-hat",
+      "color": "#4a5a6a",
+      "personality": "Calm, kind and reassuring, the family doctor everyone on Calloway Street trusts. He has a doctor's way of taking charge of a room. Underneath he is tired, in pain from an old injury, and dependent on morphine, and he has been waiting three years to be found out.",
+      "speech_style": "Gentle and professional, a bedside manner. Uses medical words and explains them. Calls the victim 'poor Edgar' and the detective 'my friend'. When pressed, he gets slower and more patient, as if the detective were a nervous patient.",
+      "alibi": "At half past five I was in the dispensary for two minutes with Edgar at my elbow, about a prescription. From seven until after ten I was at St. Columba's delivering Mrs. Kovacs's twins.",
+      "public_facts": [
+        "Dr. Raymond Pell has had his surgery above Mercer's Pharmacy for twelve years.",
+        "He was at St. Columba's Hospital from seven until after ten tonight, delivering a baby.",
+        "Most of the prescriptions Mercer's filled came from his pad."
+      ],
+      "private_knowledge": [
+        "Edgar took a spoonful of his own nerve tonic every night at nine before locking up. Everyone on the street knew it.",
+        "At half past five you went down to the dispensary about a prescription.",
+        "You keep strychnine tablets in your drug cabinet for patients with weak hearts."
+      ],
+      "lies": [
+        {
+          "topic": "His visit to the dispensary",
+          "claim": "I was in the dispensary for two minutes and Edgar never left my side.",
+          "truth": "Edgar went down to the cellar for stock at 17:32 and left you alone in the dispensary until 17:40."
+        },
+        {
+          "topic": "His talk with Edgar this afternoon",
+          "claim": "Edgar came up for a chat at half past four. We often talked in the afternoons.",
+          "truth": "Edgar came up to tell you he knew about the morphine prescriptions written for dead patients and would report you to the State Board on Monday."
+        }
+      ],
+      "secrets": [
+        "You have been taking morphine every day since a riding accident three years ago."
+      ],
+      "never_reveal": [
+        "That you crushed strychnine tablets from your own cabinet into Edgar's tonic bottle while he was in the cellar."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "pell-habit",
+          "text": "Says poor Edgar took a spoonful of his own nerve tonic every night at nine before he locked up. Everybody on Calloway Street knew it.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "pell-cabinet",
+          "text": "Says he keeps strychnine tablets in his cabinet for patients with weak hearts, and that he cannot account for the shortfall without his patient cards. He thinks the ledger must be wrong.",
+          "condition": "shown_evidence:surgery-ledger"
+        }
+      ],
+      "breaks_on": ["day-book", "surgery-ledger", "prescription-notes"],
+      "patience": 13,
+      "deflections": [
+        "*gently*  My friend, you're tired. We all are. Ask me again slowly.",
+        "*rubs his hip*  Poor Edgar. Thirty-nine years behind that counter.",
+        "*patiently*  I was at St. Columba's. Three nurses and a mother of twins will tell you so."
+      ],
+      "alibi_verification": {
+        "status": "broken",
+        "evidence_ids": ["day-book"],
+        "clue_ids": ["helen-alone"],
+        "note": "His hospital alibi covers the wrong hours. Edgar's day book shows he left Pell alone in the dispensary from 17:32 to 17:40, after the tonic was last drunk safely at 17:00, and Helen saw Pell alone there from the fountain."
+      }
+    },
+    {
+      "id": "nathan",
+      "name": "Nathan Mercer",
+      "role": "Pharmacist, Edgar's son and partner",
+      "age": 34,
+      "portrait": "man-bare",
+      "color": "#6a7a5a",
+      "personality": "Restless, decent and worn out by working for his father. He wanted to sell the shop and get out from under the old man, and he said so this afternoon in front of the soda fountain. He found his father dying and he cannot stop seeing it.",
+      "speech_style": "Tired and short-tempered, with sudden bursts of guilt. Calls his father 'Dad' and then corrects himself to 'my father' for the detective. Says 'Look' at the start of sentences. Goes quiet and stares at his hands when it gets too close.",
+      "alibi": "I was out on the deliveries from five past five until half past eight. Then I did the accounts in the back until I heard him fall.",
+      "public_facts": [
+        "Nathan Mercer is Edgar's son and has been his partner in the pharmacy since 1946.",
+        "He did the evening deliveries tonight on the shop bicycle.",
+        "He found his father in convulsions at about 21:10 and telephoned for the ambulance."
+      ],
+      "private_knowledge": [
+        "Your father took a spoonful of the new tonic at the fountain at five o'clock after your row. He was fine.",
+        "You put your mother on the 12:15 ferry to Aunt Rose's in Eastbank. She did not come back until a quarter to ten.",
+        "The Calder Drug Company has offered thirty thousand dollars for the shop, and your father refused."
+      ],
+      "lies": [
+        {
+          "topic": "The chain's offer",
+          "claim": "Sell the shop? Never crossed my mind. This shop is my life too.",
+          "truth": "You have wanted to sell to the Calder Drug Company for a year, and you argued with your father about it at five o'clock in front of Helen."
+        }
+      ],
+      "secrets": [
+        "You have already told the Calder Drug Company you would sell your half if your father agreed."
+      ],
+      "never_reveal": [
+        "That at five o'clock you told your father you wished he would just retire and die somewhere warm."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "nathan-spoonful",
+          "text": "Says his father took a spoonful of the new tonic at the fountain at about five o'clock, right after their row, 'for his nerves'. He was perfectly well afterward.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "nathan-mother",
+          "text": "Says he walked his mother to the corner and put her on the 12:15 ferry to his aunt's in Eastbank. She did not get back until a quarter to ten, after the ambulance had gone.",
+          "condition": "pressed"
+        },
+        {
+          "clue_id": "nathan-offer",
+          "text": "Admits he wanted to sell to the Calder Drug Company and that he and his father argued about it at five o'clock. He says his father would have come round in time, and he would never have hurt him for it.",
+          "condition": "shown_evidence:chain-offer"
+        }
+      ],
+      "breaks_on": ["chain-offer"],
+      "patience": 12,
+      "deflections": [
+        "*stares at his hands*  Look. I just found him. I can't do this right now.",
+        "*rubs his face*  Dad. My father. Sorry.",
+        "*flat*  Ask Helen. She was there. She sees everything from that fountain."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": ["delivery-book"],
+        "clue_ids": [],
+        "note": "His delivery book has a customer's signature and time for every call from 17:20 to 20:25 across the north side of the city."
+      }
+    },
+    {
+      "id": "lucille",
+      "name": "Lucille Mercer",
+      "role": "Edgar's wife",
+      "age": 58,
+      "portrait": "elder-woman",
+      "color": "#8a6a7a",
+      "personality": "Brisk, practical and plain-spoken, married to Edgar for thirty-five years and fond of him in a worn, everyday way. She came home from her sister's to an ambulance outside the shop and has not cried yet. She is angry at the poison, at the doctor who could not save him, and at the detective for asking her about rats.",
+      "speech_style": "Short and practical. Calls her husband 'Mr. Mercer' to strangers and 'Edgar' when she forgets. Says 'Well, there it is' to close a subject. Gets sharp when she thinks she is being made a fool of.",
+      "alibi": "I was at my sister Rose's in Eastbank from the noon ferry until the eight-forty back. I walked in on the ambulance.",
+      "public_facts": [
+        "Lucille Mercer has been married to Edgar for thirty-five years.",
+        "She spent the day at her sister's in Eastbank.",
+        "She came home at about 21:45, after the ambulance had gone."
+      ],
+      "private_knowledge": [
+        "Edgar mixed his own nerve tonic and took a spoonful every night at nine. He had done it for twenty years.",
+        "There are rats in the cellar. You bought bait last Saturday because Edgar kept forgetting to.",
+        "Edgar was worried about something this week. He said 'a doctor's business' and would not tell you more."
+      ],
+      "lies": [
+        {
+          "topic": "The rat poison",
+          "claim": "I've never bought poison in my life. That's Edgar's department.",
+          "truth": "You bought a pound of strychnine grain bait at Hagen's Hardware on 8 April for the rats in the cellar."
+        }
+      ],
+      "secrets": [
+        "You have a little money of your own put by in the post office that Edgar never knew about."
+      ],
+      "never_reveal": [
+        "That you were going to ask Edgar this summer to sell the shop and retire, the same as Nathan."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "lucille-bait",
+          "text": "Admits she bought the rat bait at Hagen's Hardware last Saturday because Edgar kept forgetting. It is pink grain, she says, and anybody who knows anything knows it is no good in a tonic.",
+          "condition": "shown_evidence:rat-poison"
+        },
+        {
+          "clue_id": "lucille-worried",
+          "text": "Says Edgar was worried all week about 'a doctor's business' and was going up to see somebody about it on Friday afternoon. He would not tell her who.",
+          "condition": "pressed"
+        }
+      ],
+      "breaks_on": ["rat-poison"],
+      "patience": 12,
+      "deflections": [
+        "*folds her arms*  Well, there it is. I wasn't here.",
+        "*sharp*  I've told you once. I'll not tell you twice.",
+        "*looks at the counter*  Thirty-nine years. He never missed a day."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": [],
+        "clue_ids": ["nathan-mother"],
+        "note": "Nathan put her on the 12:15 ferry to Eastbank, and she did not come back until after the ambulance had gone. She was not on Calloway Street when the tonic was poisoned."
+      }
+    },
+    {
+      "id": "helen",
+      "name": "Helen Voss",
+      "role": "Soda fountain attendant",
+      "age": 29,
+      "portrait": "woman-bob",
+      "color": "#a07a5a",
+      "personality": "Cheerful, nosy and sharp-eyed, the kind of girl who knows everybody's order and everybody's business. Mr. Mercer told her off this morning for giving free sodas to her little brothers, and she is ashamed of how angry she was. She saw more from the fountain today than she has told anyone.",
+      "speech_style": "Quick and friendly, a lot of 'honest' and 'swear to God'. Calls the victim 'Mr. Mercer' and the doctor 'Doc'. Describes people by what they order. Gets defensive and talks faster when she thinks she is in trouble.",
+      "alibi": "I was behind the fountain from before five until I closed at six, and then I went home on the streetcar.",
+      "public_facts": [
+        "Helen Voss has run the soda fountain at Mercer's for three years.",
+        "She worked until six o'clock tonight and then went home.",
+        "From the fountain you can see through the glass panel into the dispensary."
+      ],
+      "private_knowledge": [
+        "At five o'clock Mr. Mercer took a spoonful of his new tonic at the fountain after shouting at Nathan. He was fine.",
+        "At half past five Doc Pell came down. A couple of minutes later Mr. Mercer went down the cellar stairs and Doc was left in the dispensary on his own, by the shelf where the tonic was.",
+        "Mr. Mercer came back up with cough syrup at about twenty to six."
+      ],
+      "lies": [
+        {
+          "topic": "Her quarrel with Edgar",
+          "claim": "Mr. Mercer was a swell boss. We never had a cross word.",
+          "truth": "He told you off sharply this morning for giving free sodas to your brothers and said one more time and you were through."
+        }
+      ],
+      "secrets": [
+        "You have been giving your brothers free sodas every afternoon for a year."
+      ],
+      "never_reveal": [
+        "That you said under your breath this morning that you hoped the old man choked."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "helen-alone",
+          "text": "Says at half past five Doc Pell came down to the dispensary. A couple of minutes later Mr. Mercer went down the cellar stairs for stock, and Doc was alone in there by the shelf where the tonic stood until Mr. Mercer came back up with cough syrup at about twenty to six.",
+          "condition": "shown_evidence:day-book"
+        },
+        {
+          "clue_id": "helen-spoon",
+          "text": "Says at five o'clock, right after shouting at Nathan, Mr. Mercer took a spoonful of his new tonic at the fountain, 'for his nerves'. Nothing happened to him. He went back to work.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "helen-pell-pressed",
+          "text": "Says Doc Pell looked terrible this afternoon, grey in the face, and that he had a row with Mr. Mercer upstairs at about half past four. She heard Mr. Mercer's voice through the ceiling.",
+          "condition": "pressed"
+        }
+      ],
+      "breaks_on": ["fountain-tape"],
+      "patience": 12,
+      "deflections": [
+        "*wipes the counter that is already clean*  Honest, I just make the sodas.",
+        "*quickly*  Swear to God, I went home at six. Ask the streetcar man.",
+        "*bites her lip*  Mr. Mercer gave me this job when nobody else would."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": ["fountain-tape"],
+        "clue_ids": [],
+        "note": "The fountain register tape shows her ringing up sales every few minutes from 16:55 to 17:58, and the dispensary was locked from six. She never had the bottle alone."
+      }
+    }
+  ],
+  "hints": [
+    "Edgar died at nine, but the poison went in earlier. Find out when the tonic was last drunk safely, and who was alone with it after that.",
+    "Edgar wrote down everything he did all day. Read his day book carefully.",
+    "Helen sees everything from the soda fountain. Show her what Edgar wrote down about half past five.",
+    "The police chemist says the strychnine came from crushed tablets, not grain bait. Find out who keeps tablets.",
+    "Edgar had something in his prescription file he was going to report on Monday. Read the notes on the bundle at the front.",
+    "On the board, pin Edgar's notes, his day book and the poison ledger from upstairs together, then press \"Check theory\".",
+    "Look hard at Dr. Pell. Edgar was reporting him, Edgar left him alone with the tonic, and his own cabinet is thirty-eight tablets short. His hospital alibi covers the wrong hours."
+  ],
+  "endings": {
+    "correct": "Dr. Raymond Pell asks to sit down before they take him, and he is allowed to. The State Board gets Edgar Mercer's bundle of prescriptions on Monday after all. On Tuesday morning Nathan Mercer opens the shop at eight, the same as his father did, and does not sell it.",
+    "wrong_culprit": "You arrest the wrong person and Dr. Pell signs the death certificate himself. Mercer's Pharmacy is sold to the Calder Drug Company in June. The new pharmacist fills Dr. Pell's prescriptions without reading the death notices.",
+    "weak_proof": "You named the right man and the hospital stood behind him. Three nurses saw him at nine o'clock. You needed the reason, the eight minutes and the missing tablets in front of a jury together."
+  }
+}

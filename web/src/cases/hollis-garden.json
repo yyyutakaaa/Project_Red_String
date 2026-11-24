@@ -1,0 +1,764 @@
+{
+  "schema_version": 1,
+  "id": "hollis-garden",
+  "title": "Hollis Garden",
+  "tagline": "A summer party, a printed dance card, and a judge face down in his own lily pond.",
+  "setting": "The garden of Judge Arthur Hollis's house in the Heights, above Calder City",
+  "era": "August 1949",
+  "intro_briefing": [
+    "Saturday, 13 August 1949. Every August Judge Arthur Hollis throws open his garden in the Heights for the people who matter in Calder City. There was a dance band on the terrace, champagne on the lawn, and fireworks at twenty past ten. When the first rocket went up, his daughter found him in the lily pond at the bottom of the garden.",
+    "The judge was sixty-six and the chairman of the Waterfront Commission since the hearings in June. The police surgeon says he was struck once on the back of the head and went into the water alive. He did not get out again. A croquet mallet is missing from the rack on the lawn.",
+    "The guests have been sent home with their names taken. Four people are still here: his wife, Beatrice Hollis; his daughter, Celia, who sang with the band tonight; the bandleader, Rex Danner; and the judge's nephew and law clerk, Philip Hollis. The cook, Mrs. Ortega, has given a statement to the patrolman in the kitchen.",
+    "Search the terrace, the garden, the judge's library and the kitchen. Question the four of them and show them what you find. Keep a close eye on the clock. At a party everyone remembers the music, and hardly anyone remembers the time."
+  ],
+  "victim": {
+    "id": "judge",
+    "name": "Judge Arthur Hollis",
+    "age": 66,
+    "description": "Judge of the Superior Court for thirty years and chairman of the Waterfront Commission. Upright, formal and very sure of himself. He married his second wife, Beatrice, six years ago, after Celia's mother died.",
+    "cause_of_death": "A blow to the back of the head, then drowning in the garden lily pond.",
+    "found_in": "garden",
+    "found_at": "at about 22:20, face down among the lilies at the edge of the pond"
+  },
+  "solution": {
+    "culprit_id": "beatrice",
+    "motive": "The judge had found Beatrice's letters to Rex Danner and told her that afternoon he was divorcing her, and under their marriage settlement she would leave with nothing.",
+    "method": "After the last waltz, which the band played early, Beatrice followed the judge down the garden path from the kitchen, struck him with a croquet mallet at the lily pond and pushed him into the water, then threw the mallet into the reeds and hid her muddy glove in the stone urn.",
+    "required_evidence": [
+      "divorce-letter",
+      "muddy-glove",
+      "marked-program"
+    ],
+    "reveal": "Beatrice Hollis married the judge for a house in the Heights and found it was a cage. For a year she had been writing to Rex Danner, and on Thursday the judge found the letters. This afternoon he had Philip type a letter to his lawyer starting a divorce, and at seven he told Beatrice that under the marriage settlement she would leave his house with what she brought into it, which was nothing. She danced all evening. The printed program put the last waltz at ten o'clock, but the cellist broke a string at half past nine and Rex swapped the sets, so the band played the waltz at twenty to ten. Beatrice danced it with Philip, then left the terrace by the side steps. At ten to ten the judge went down past the kitchen for ice, and she followed him toward the lily pond. She picked up a croquet mallet from the lawn as she went. She struck him once from behind and pushed him into the pond, threw the mallet into the reeds, and stuffed her wet, muddy glove into the stone urn by the path. Then she came back up to the terrace and told everyone she had been dancing the last waltz at ten. The bandleader's own program shows the waltz was over by then. The glove is hers, and the judge's letter to his lawyer gives the reason."
+  },
+  "timeline": [
+    {
+      "day": 0,
+      "time": "16:00",
+      "location": "library",
+      "who": [
+        "judge",
+        "philip"
+      ],
+      "what": "The judge has Philip type a letter to his lawyer, Mr. Crane, instructing him to begin divorce proceedings against Beatrice and to rely on clause four of the marriage settlement. The judge seals Rex Danner's letters in the envelope with it.",
+      "visibility": "private",
+      "tags": [
+        "motive"
+      ]
+    },
+    {
+      "day": 0,
+      "time": "19:00",
+      "location": "library",
+      "who": [
+        "judge",
+        "beatrice"
+      ],
+      "what": "The judge tells Beatrice he knows about Rex and is divorcing her, and that she will leave with nothing. Philip hears raised voices through the door.",
+      "visibility": "private",
+      "tags": [
+        "motive"
+      ]
+    },
+    {
+      "day": 0,
+      "time": "19:45",
+      "location": "library",
+      "who": [
+        "celia"
+      ],
+      "what": "Celia takes three hundred dollars from her father's cash box for a train ticket to New York. Her father refused to pay for singing lessons there.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "20:00",
+      "location": "terrace",
+      "who": [
+        "judge",
+        "beatrice",
+        "celia",
+        "rex",
+        "philip"
+      ],
+      "what": "The party begins. Rex Danner's band plays on the terrace and the guests spread over the lawn.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "21:30",
+      "location": "terrace",
+      "who": [
+        "rex",
+        "beatrice"
+      ],
+      "what": "The cellist breaks a string. Rex swaps the order of the sets and marks the change on his own program. Beatrice tells Rex at the bandstand that Arthur knows about them.",
+      "visibility": "private",
+      "tags": [
+        "alibi"
+      ]
+    },
+    {
+      "day": 0,
+      "time": "21:40",
+      "location": "terrace",
+      "who": [
+        "beatrice",
+        "philip"
+      ],
+      "what": "The band plays the last waltz, twenty minutes earlier than printed. Beatrice dances it with Philip. When it ends at about 21:47 she leaves the terrace by the side steps.",
+      "visibility": "private",
+      "tags": [
+        "alibi"
+      ]
+    },
+    {
+      "day": 0,
+      "time": "21:50",
+      "location": "kitchen",
+      "who": [
+        "judge",
+        "philip"
+      ],
+      "what": "The judge comes into the kitchen for more ice and goes out by the back door toward the garden path. Philip goes into the kitchen to help Mrs. Ortega pour champagne for the toast and stays there until 22:15.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "21:58",
+      "location": "garden",
+      "who": [
+        "beatrice",
+        "judge"
+      ],
+      "what": "Beatrice catches up with the judge at the lily pond, strikes him from behind with a croquet mallet taken from the lawn, and pushes him into the water.",
+      "visibility": "hidden",
+      "tags": [
+        "crime"
+      ]
+    },
+    {
+      "day": 0,
+      "time": "22:00",
+      "location": "terrace",
+      "who": [
+        "celia",
+        "rex"
+      ],
+      "what": "Celia sings 'Moonlight Quickstep' with the band while Rex conducts. The Courier's society photographer takes a flash picture of them at 22:05.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "22:02",
+      "location": "garden",
+      "who": [
+        "beatrice"
+      ],
+      "what": "Beatrice throws the mallet into the reeds and pushes her wet, muddy glove into the stone urn by the path.",
+      "visibility": "hidden",
+      "tags": [
+        "crime"
+      ]
+    },
+    {
+      "day": 0,
+      "time": "22:10",
+      "location": "terrace",
+      "who": [
+        "beatrice"
+      ],
+      "what": "Beatrice comes back up the side steps onto the terrace in time for the fireworks.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "22:20",
+      "location": "garden",
+      "who": [
+        "celia",
+        "judge"
+      ],
+      "what": "The fireworks start. Celia goes down the garden to bring her father up for the toast and finds him in the lily pond. Her screams bring everyone running.",
+      "visibility": "public",
+      "tags": []
+    }
+  ],
+  "offstage_locations": [],
+  "rooms": [
+    {
+      "id": "terrace",
+      "name": "Terrace",
+      "description": "A long stone terrace with paper lanterns strung over it and a bandstand at one end. The music stands are still up, and champagne glasses are standing on the balustrade where the guests left them. Side steps lead down to the garden path.",
+      "background": "terrace",
+      "hotspots": [
+        {
+          "id": "bandstand",
+          "label": "Music stand",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The bandleader's music stand. A program is clipped to it, scribbled over in red pencil.",
+          "evidence_id": "marked-program"
+        },
+        {
+          "id": "program-table",
+          "label": "Program table",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "A table by the door with a stack of printed programs for the guests, tied with green ribbon.",
+          "evidence_id": "printed-program"
+        },
+        {
+          "id": "photographer-case",
+          "label": "Camera case",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "The Courier society photographer left his plate case and his notebook here when the patrolman sent him home. One plate has already been developed in a hurry at the station house and sent back up with a print.",
+          "evidence_id": "society-photo"
+        },
+        {
+          "id": "side-steps",
+          "label": "Side steps",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "Narrow stone steps from the end of the terrace down into the dark of the garden, out of the lantern light. There are small, wet, muddy prints on the bottom step, the size of a woman's evening shoe.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "garden",
+      "name": "The lower garden",
+      "description": "Lawns slope down from the house between yew hedges to a round lily pond with a stone urn beside the path. A croquet lawn lies off to one side. The fireworks are over and the smell of powder hangs in the air.",
+      "background": "garden",
+      "hotspots": [
+        {
+          "id": "lily-pond",
+          "label": "Lily pond",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The lily pond where Celia found him. The edge is trampled, and the lilies on one side are torn and pushed under.",
+          "evidence_id": null
+        },
+        {
+          "id": "reeds",
+          "label": "Reeds",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "A clump of reeds at the far side of the pond. Something long and pale is lying among them, half in the water.",
+          "evidence_id": "croquet-mallet"
+        },
+        {
+          "id": "stone-urn",
+          "label": "Stone urn",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "A tall stone urn of geraniums beside the path. Something white has been pushed down between the stems.",
+          "evidence_id": "muddy-glove"
+        },
+        {
+          "id": "croquet-rack",
+          "label": "Croquet rack",
+          "x": 10,
+          "y": 56,
+          "width": 26,
+          "height": 26,
+          "description": "A wooden rack of croquet mallets beside the lawn, with one slot empty. Anyone walking down the path from the terrace or the kitchen passes within reach of it.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "library",
+      "name": "The judge's library",
+      "description": "Dark oak, law reports to the ceiling, and a desk with a green leather top. The windows are open onto the garden and you can hear the patrolmen talking down by the pond.",
+      "background": "library",
+      "hotspots": [
+        {
+          "id": "desk",
+          "label": "Desk",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The desk is clear except for a long envelope addressed to Crane and Morrow, Attorneys, sealed and stamped and waiting for Monday's post.",
+          "evidence_id": "divorce-letter"
+        },
+        {
+          "id": "bundle",
+          "label": "Bundle of letters",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "Inside the envelope to the lawyers, folded behind the judge's letter, is a bundle of notes on blue paper tied with a ribbon.",
+          "evidence_id": "love-letters"
+        },
+        {
+          "id": "cash-box",
+          "label": "Cash box",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "A steel cash box on the shelf behind the desk. The key is in the lock and the lid is up.",
+          "evidence_id": "cash-box"
+        },
+        {
+          "id": "portrait",
+          "label": "Portrait",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "A portrait of the first Mrs. Hollis, Celia's mother, over the fireplace. There is no picture of Beatrice anywhere in the room.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "kitchen",
+      "name": "Kitchen",
+      "description": "A big, hot kitchen full of empty platters and champagne crates. The back door stands open onto the path that runs down the side of the garden to the lily pond.",
+      "background": "kitchen",
+      "hotspots": [
+        {
+          "id": "statement",
+          "label": "Patrolman's notebook",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "Patrolman Kerrigan has left the cook's statement on the table, two pages in pencil, signed by Mrs. Ortega.",
+          "evidence_id": "cook-statement"
+        },
+        {
+          "id": "ice-box",
+          "label": "Ice box",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "A big zinc ice box. The ice pick is still in the block where the judge left it when he chipped some for his drink.",
+          "evidence_id": null
+        },
+        {
+          "id": "champagne",
+          "label": "Champagne trays",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "Forty glasses poured and set out on trays for the toast that never happened. The bubbles have gone.",
+          "evidence_id": null
+        },
+        {
+          "id": "back-door",
+          "label": "Back door",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "The back door opens onto a gravel path that runs down the side of the garden, past the croquet lawn, to the lily pond. From the kitchen window you can see the first few yards of it and no more.",
+          "evidence_id": null
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "divorce-letter",
+      "name": "Letter to the lawyers",
+      "description": "The judge's letter to Crane and Morrow, typed this afternoon and signed: 'Begin proceedings for divorce against my wife, Beatrice, at once, on the grounds shown by the enclosed. Rely on clause four of the settlement of 1943. She is to leave this house with the property she brought into it and nothing else.'",
+      "found_in": "library",
+      "points_to": [
+        "beatrice"
+      ],
+      "is_red_herring": false
+    },
+    {
+      "id": "love-letters",
+      "name": "Letters on blue paper",
+      "description": "A dozen notes on blue paper, signed 'R.' and addressed to 'Bea'. The latest, dated July, ends: 'When this summer is over I will take you away from that old man if I have to carry you.'",
+      "found_in": "library",
+      "points_to": [
+        "rex"
+      ],
+      "is_red_herring": true
+    },
+    {
+      "id": "cash-box",
+      "name": "Emptied cash box",
+      "description": "The judge's steel cash box. A slip inside in his hand says '$450, August household'. There is one fifty-dollar bill left in it.",
+      "found_in": "library",
+      "points_to": [
+        "celia"
+      ],
+      "is_red_herring": true
+    },
+    {
+      "id": "croquet-mallet",
+      "name": "Croquet mallet",
+      "description": "A croquet mallet from the rack on the lawn, pulled out of the reeds. The head is chipped and there is hair and blood on one face. Pond water has washed the handle clean.",
+      "found_in": "garden",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "muddy-glove",
+      "name": "Muddy evening glove",
+      "description": "A long white kid evening glove, soaked to the elbow and caked with pond mud, pushed down into the geraniums in the stone urn. It smells of lily of the valley. Inside the cuff the maker has stamped a monogram: 'B.H.'",
+      "found_in": "garden",
+      "points_to": [
+        "beatrice"
+      ],
+      "is_red_herring": false
+    },
+    {
+      "id": "printed-program",
+      "name": "Printed dance program",
+      "description": "A printed program for the evening: '9.15 Fox Trots. 9.40 Moonlight Quickstep, with Miss Celia Hollis. 10.00 The Last Waltz. 10.20 Fireworks over the lower garden.'",
+      "found_in": "terrace",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "marked-program",
+      "name": "Bandleader's program",
+      "description": "Rex Danner's own copy of the program, marked in red pencil: 'Cello string gone 9.30. SWAP.' Arrows move the Last Waltz up to 9.40 and the Moonlight Quickstep down to 10.00. Next to the waltz: 'played 9.40 to 9.47'.",
+      "found_in": "terrace",
+      "points_to": [
+        "beatrice"
+      ],
+      "is_red_herring": false
+    },
+    {
+      "id": "society-photo",
+      "name": "Society photograph",
+      "description": "A damp print from the Courier photographer's plate, with his caption slip: 'Miss Celia Hollis sings with Rex Danner and his Orchestra, 10.05 pm.' Celia is at the microphone and Rex has his baton up. The terrace clock is in the frame behind them, at five past ten.",
+      "found_in": "terrace",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "cook-statement",
+      "name": "Cook's statement",
+      "description": "Mrs. Ortega's statement to Patrolman Kerrigan: 'The Judge came in for ice at ten to ten and went out the back door down the path. Mr. Philip came in right after to help me pour for the toast and he did not leave my kitchen till a quarter past ten. I did not see anybody else on the path. I was busy.'",
+      "found_in": "kitchen",
+      "points_to": [],
+      "is_red_herring": false
+    }
+  ],
+  "suspects": [
+    {
+      "id": "beatrice",
+      "name": "Beatrice Hollis",
+      "role": "The judge's wife",
+      "age": 46,
+      "portrait": "woman-long",
+      "color": "#8a4a6a",
+      "personality": "Beautiful, gracious and very good at parties. She knows how to make a room like her, and she tries it on the detective at once. Under the charm she is cold and very frightened, and she will cry when crying helps.",
+      "speech_style": "Warm and low, with a lot of 'darling' and 'you poor thing'. Calls her husband 'Arthur'. Changes the subject to the detective's comfort when a question gets close: a chair, a drink, the cold. When she is caught out her voice goes flat.",
+      "alibi": "At ten o'clock I was dancing the last waltz with Philip on the terrace, and then we all watched the fireworks. I never went near the garden.",
+      "public_facts": [
+        "Beatrice Hollis married the judge six years ago, after his first wife died.",
+        "She was the hostess tonight and was on the terrace most of the evening.",
+        "She came running down to the pond with everyone else when Celia screamed."
+      ],
+      "private_knowledge": [
+        "The last waltz was on the program at ten o'clock. You danced it with Philip.",
+        "Arthur went down to the kitchen for ice some time before the fireworks. He always did.",
+        "Rex Danner has been a friend of yours for a year."
+      ],
+      "lies": [
+        {
+          "topic": "Where she was at ten o'clock",
+          "claim": "I was dancing the last waltz with Philip on the terrace at ten.",
+          "truth": "The waltz was played early, from 21:40 to 21:47. You left the terrace by the side steps as soon as it ended and did not come back until 22:10."
+        },
+        {
+          "topic": "Her marriage",
+          "claim": "Arthur and I were very happy. People always say things about a second wife.",
+          "truth": "At seven o'clock Arthur told you he had your letters to Rex Danner, that he was divorcing you, and that you would leave with nothing."
+        }
+      ],
+      "secrets": [
+        "You have no money of your own at all. Everything you wear was bought by Arthur."
+      ],
+      "never_reveal": [
+        "That you followed Arthur down the path to the lily pond and struck him with the croquet mallet.",
+        "That you hid your muddy glove in the stone urn."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "bea-waltz",
+          "text": "Admits the waltz was played early, before ten. She says she felt faint afterward and sat alone on a bench at the top of the garden for a while, and nobody saw her there.",
+          "condition": "shown_evidence:marked-program"
+        },
+        {
+          "clue_id": "bea-ice",
+          "text": "Says Arthur always went down to the kitchen for his own ice before the fireworks. He did not trust the waiters to chip it properly.",
+          "condition": "free"
+        }
+      ],
+      "breaks_on": [
+        "marked-program",
+        "muddy-glove",
+        "divorce-letter"
+      ],
+      "patience": 12,
+      "deflections": [
+        "*touches the detective's sleeve*  You must be frozen. Let me have someone bring you a coffee.",
+        "*dabs her eyes*  I can't, darling. Not tonight. Ask me tomorrow.",
+        "*flat*  I have told you where I was."
+      ],
+      "alibi_verification": {
+        "status": "broken",
+        "evidence_ids": [
+          "marked-program"
+        ],
+        "clue_ids": [
+          "rex-swap",
+          "philip-waltz"
+        ],
+        "note": "The bandleader's program shows the last waltz ended at 21:47. Rex confirms the swap, and Philip says she left by the side steps as soon as they finished dancing."
+      }
+    },
+    {
+      "id": "celia",
+      "name": "Celia Hollis",
+      "role": "The judge's daughter; sang with the band tonight",
+      "age": 24,
+      "portrait": "young-woman",
+      "color": "#c08a5a",
+      "personality": "Bright, impatient and in a hurry to get out of her father's house. She loved him and fought with him all the time. She found him in the pond and she is in shock, which comes out as anger at everyone, the detective included.",
+      "speech_style": "Fast and sharp, with a singer's habit of finishing on a high note. Calls her father 'Daddy' and her stepmother 'Beatrice', never 'Mother'. Swears and then apologizes. Snaps 'So what?' when she is caught out.",
+      "alibi": "I was singing with the band from ten until the fireworks. Then I went down the garden to fetch Daddy for the toast and found him.",
+      "public_facts": [
+        "Celia Hollis is the judge's only child, from his first marriage.",
+        "She sang 'Moonlight Quickstep' with the band at the party.",
+        "She found her father in the lily pond when the fireworks started."
+      ],
+      "private_knowledge": [
+        "You sang the quickstep with Rex conducting from ten o'clock. The photographer took your picture at five past ten.",
+        "Rex had to swap the sets after the cellist broke a string, so the waltz went before your number.",
+        "Beatrice was not on the terrace while you were singing. You looked for her, because she always watches you to see if you go flat."
+      ],
+      "lies": [
+        {
+          "topic": "Money",
+          "claim": "I don't need Daddy's money. I've got my own.",
+          "truth": "At 19:45 you took three hundred dollars from his cash box for a train ticket to New York, because he refused to pay for singing lessons."
+        }
+      ],
+      "secrets": [
+        "You were going to leave for New York on Monday morning without telling him."
+      ],
+      "never_reveal": [
+        "That the last words you said to him, at seven o'clock, were that you hated him."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "celia-singing",
+          "text": "Says Rex was conducting the band the whole time she sang the quickstep, from ten o'clock until the fireworks. He never left the bandstand.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "celia-bea-missing",
+          "text": "Says Beatrice was not on the terrace while she was singing. She looked for her, because Beatrice always watches to see if she goes flat. Beatrice came up the side steps just before the fireworks.",
+          "condition": "pressed"
+        },
+        {
+          "clue_id": "celia-cash",
+          "text": "Admits she took three hundred dollars from the cash box at a quarter to eight for a ticket to New York. Daddy would not pay for lessons, and she was going on Monday.",
+          "condition": "shown_evidence:cash-box"
+        }
+      ],
+      "breaks_on": [
+        "cash-box"
+      ],
+      "patience": 12,
+      "deflections": [
+        "*wipes her face with the back of her hand*  So what? Ask somebody who wasn't in that pond up to her knees.",
+        "*laughs, wrong*  You want a song? I'm all out tonight.",
+        "*turns away*  Sorry. I'm sorry. Ask me something else."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": [
+          "society-photo"
+        ],
+        "clue_ids": [
+          "rex-celia"
+        ],
+        "note": "The photographer's picture with the terrace clock shows her singing at 22:05, and Rex confirms she sang from ten until the fireworks."
+      }
+    },
+    {
+      "id": "rex",
+      "name": "Rex Danner",
+      "role": "Bandleader, Rex Danner and his Orchestra",
+      "age": 38,
+      "portrait": "man-bare",
+      "color": "#4a5a8a",
+      "personality": "Easygoing, vain and good-humored, a man who has talked his way past a lot of trouble. He is in love with Beatrice and frightened for her, and frightened for himself, and he cannot decide which comes first.",
+      "speech_style": "Bandstand talk: 'cats', 'the set', 'in the pocket'. Calls everybody 'friend'. Counts time on his fingers when he is thinking. When a question scares him he makes a joke and then answers anyway.",
+      "alibi": "I was on the bandstand all night, friend. You can't run a band from the garden.",
+      "public_facts": [
+        "Rex Danner's orchestra has played the Hollis party for three summers.",
+        "He conducted from the bandstand on the terrace all evening.",
+        "He was on the terrace when the screaming started."
+      ],
+      "private_knowledge": [
+        "The cellist broke a string at about half past nine, so you swapped the sets. The last waltz went up to twenty to ten and Celia's quickstep went back to ten.",
+        "Beatrice danced the waltz with Philip. When it ended she went down the side steps, not back to her chair.",
+        "At half past nine Beatrice told you at the bandstand that Arthur knew about the two of you."
+      ],
+      "lies": [
+        {
+          "topic": "Beatrice",
+          "claim": "Mrs. Hollis? I play her parties. That's all there is to it.",
+          "truth": "You and Beatrice have been lovers for a year, and you wrote her the letters on blue paper."
+        }
+      ],
+      "secrets": [
+        "You meant to ask Beatrice to leave with you for Chicago when the summer season ended."
+      ],
+      "never_reveal": [
+        "That you owe the musicians' union local four months of dues."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "rex-swap",
+          "text": "Says the cellist broke a string at half past nine, so he swapped the sets. The last waltz went on at twenty to ten and was over by about a quarter to. Celia's quickstep moved to ten.",
+          "condition": "shown_evidence:printed-program"
+        },
+        {
+          "clue_id": "rex-celia",
+          "text": "Says Celia sang the quickstep with the band from ten o'clock right up to the fireworks. She was in front of the microphone the whole time.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "rex-letters",
+          "text": "Admits he wrote the letters and that he and Beatrice are in love. At half past nine she came to the bandstand white as a sheet and said, 'Arthur knows.'",
+          "condition": "shown_evidence:love-letters"
+        }
+      ],
+      "breaks_on": [
+        "love-letters"
+      ],
+      "patience": 13,
+      "deflections": [
+        "*taps out a beat on his knee*  Give me a minute, friend. I'm counting.",
+        "*grins, without much in it*  I'm a bandleader. I don't see anything after the downbeat.",
+        "*shrugs*  Ask the band. They'll tell you I never left the stand."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": [
+          "society-photo"
+        ],
+        "clue_ids": [
+          "celia-singing"
+        ],
+        "note": "The photograph shows him conducting at 22:05, and Celia says he was on the bandstand from ten until the fireworks."
+      }
+    },
+    {
+      "id": "philip",
+      "name": "Philip Hollis",
+      "role": "The judge's nephew and law clerk",
+      "age": 31,
+      "portrait": "man-glasses",
+      "color": "#5a7a6a",
+      "personality": "Careful, correct and anxious to do the proper thing. He worshipped his uncle and was a little afraid of him. He knows more about the family than anyone, and his training tells him to say nothing until he is asked properly.",
+      "speech_style": "Precise and formal, a lawyer's clerk: 'to the best of my recollection', 'I would not care to say'. Calls the victim 'the Judge' and Beatrice 'Aunt Beatrice'. Asks the detective to repeat the question when he wants time.",
+      "alibi": "I danced the last waltz with Aunt Beatrice, then I helped Mrs. Ortega pour champagne in the kitchen until a quarter past ten.",
+      "public_facts": [
+        "Philip Hollis is the judge's nephew and has been his law clerk for five years.",
+        "He lives in the house and handles the judge's papers.",
+        "He was in the kitchen when Celia screamed."
+      ],
+      "private_knowledge": [
+        "This afternoon the Judge had you type a letter to his lawyers, Crane and Morrow. You know what was in it.",
+        "At seven you heard the Judge and Aunt Beatrice in the library, his voice raised, through the closed door.",
+        "You danced the last waltz with Aunt Beatrice. It was played early because of the cello. When it ended she went down the side steps into the garden."
+      ],
+      "lies": [
+        {
+          "topic": "The letter to the lawyers",
+          "claim": "I have no idea what the Judge was writing to his lawyers. I only post the letters.",
+          "truth": "You typed it at four o'clock this afternoon. It instructs Crane and Morrow to begin divorce proceedings against Beatrice."
+        }
+      ],
+      "secrets": [
+        "You are named in the Judge's will for ten thousand dollars, and you know it."
+      ],
+      "never_reveal": [
+        "That you once read Beatrice's letters before the Judge found them, and said nothing."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "philip-typed",
+          "text": "Admits he typed the letter to Crane and Morrow at four o'clock on the Judge's orders. At seven he heard the Judge and Aunt Beatrice in the library through the door. The Judge was shouting, and she came out white in the face.",
+          "condition": "shown_evidence:divorce-letter"
+        },
+        {
+          "clue_id": "philip-waltz",
+          "text": "Says the last waltz was played early because of the broken cello string. They finished dancing at about a quarter to ten, and Aunt Beatrice went straight down the side steps into the garden. He went to the kitchen.",
+          "condition": "pressed"
+        }
+      ],
+      "breaks_on": [
+        "divorce-letter"
+      ],
+      "patience": 14,
+      "deflections": [
+        "*takes off his glasses and polishes them*  Would you repeat the question, Detective?",
+        "*stiffly*  I would not care to say, not without thinking about it.",
+        "*looks toward the window and the pond*  The Judge would have known what to do. I don't."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": [
+          "cook-statement"
+        ],
+        "clue_ids": [],
+        "note": "Mrs. Ortega's statement puts Philip in her kitchen from just after 21:50 until 22:15, the whole time the judge was down at the pond."
+      }
+    }
+  ],
+  "hints": [
+    "Walk the whole garden before you start asking questions. The weapon, and the thing hidden near it, are both down by the pond.",
+    "The judge was alive at ten to ten, when the cook saw him go out for ice. Find out who could reach the lily pond in the next twenty minutes.",
+    "Everybody remembers the music. Compare the printed program with the bandleader's own copy, and ask the bandleader why they differ.",
+    "Show the letter on the judge's desk to the person who typed it. He heard something through the library door at seven o'clock.",
+    "The photograph and the cook's statement clear more than one person. Use them to rule people out before you pin anyone down.",
+    "On the board, connect the reason, the thing in the urn and the dance that ended early, then press \"Check theory\".",
+    "Look hard at Beatrice Hollis. The judge was divorcing her, the glove is hers, and the last waltz was over long before ten."
+  ],
+  "endings": {
+    "correct": "Beatrice Hollis is still in her party dress when they take her down the front steps. She asks for her wrap and nobody brings it. Celia stands at the top of the garden while the patrolmen drag the pond, and on Monday she takes the morning train to New York with her father's money.",
+    "wrong_culprit": "You arrest the wrong person on the strength of a dance card. The judge's widow wears black very well at the funeral, inherits under a will nobody changed in time, and moves to Chicago in the spring with a bandleader.",
+    "weak_proof": "You named the right woman, and her lawyer laughed. Lots of women own white gloves, people get the time of a waltz wrong, and a husband's letter is only a letter. You needed the reason, the glove and the broken alibi together."
+  }
+}

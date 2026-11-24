@@ -2,7 +2,18 @@ import type { CaseFile } from '@shared/caseSchema.ts';
 import { validateCase } from '@shared/validator.ts';
 
 /** Story cases in unlock order. Each id matches a JSON file in src/cases. */
-export const STORY_ORDER = ['ashgrove-house', 'blue-lantern', 'pier-seventeen'] as const;
+export const STORY_ORDER = [
+  'ashgrove-house',
+  'blue-lantern',
+  'pier-seventeen',
+  'night-express',
+  'hollis-garden',
+  'studio-nine',
+  'the-regent',
+  'reading-room',
+  'mercers-pharmacy',
+  'vance-and-pryor',
+] as const;
 export type StoryCaseId = (typeof STORY_ORDER)[number];
 
 const modules = import.meta.glob<unknown>('../cases/*.json', { eager: true, import: 'default' });

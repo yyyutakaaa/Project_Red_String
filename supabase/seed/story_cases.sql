@@ -1690,6 +1690,2213 @@ insert into public.story_cases (id, case_text, updated_at) values ('blue-lantern
 }$case$, now())
 on conflict (id) do update set case_text = excluded.case_text, updated_at = now();
 
+-- hollis-garden (sha256 of the minified JSON: 7134f6130a3ebdd5a55ebd99e70959c712ed697b9b4a3c0526fe44f7daf479ad)
+insert into public.story_cases (id, case_text, updated_at) values ('hollis-garden', $case${
+  "schema_version": 1,
+  "id": "hollis-garden",
+  "title": "Hollis Garden",
+  "tagline": "A summer party, a printed dance card, and a judge face down in his own lily pond.",
+  "setting": "The garden of Judge Arthur Hollis's house in the Heights, above Calder City",
+  "era": "August 1949",
+  "intro_briefing": [
+    "Saturday, 13 August 1949. Every August Judge Arthur Hollis throws open his garden in the Heights for the people who matter in Calder City. There was a dance band on the terrace, champagne on the lawn, and fireworks at twenty past ten. When the first rocket went up, his daughter found him in the lily pond at the bottom of the garden.",
+    "The judge was sixty-six and the chairman of the Waterfront Commission since the hearings in June. The police surgeon says he was struck once on the back of the head and went into the water alive. He did not get out again. A croquet mallet is missing from the rack on the lawn.",
+    "The guests have been sent home with their names taken. Four people are still here: his wife, Beatrice Hollis; his daughter, Celia, who sang with the band tonight; the bandleader, Rex Danner; and the judge's nephew and law clerk, Philip Hollis. The cook, Mrs. Ortega, has given a statement to the patrolman in the kitchen.",
+    "Search the terrace, the garden, the judge's library and the kitchen. Question the four of them and show them what you find. Keep a close eye on the clock. At a party everyone remembers the music, and hardly anyone remembers the time."
+  ],
+  "victim": {
+    "id": "judge",
+    "name": "Judge Arthur Hollis",
+    "age": 66,
+    "description": "Judge of the Superior Court for thirty years and chairman of the Waterfront Commission. Upright, formal and very sure of himself. He married his second wife, Beatrice, six years ago, after Celia's mother died.",
+    "cause_of_death": "A blow to the back of the head, then drowning in the garden lily pond.",
+    "found_in": "garden",
+    "found_at": "at about 22:20, face down among the lilies at the edge of the pond"
+  },
+  "solution": {
+    "culprit_id": "beatrice",
+    "motive": "The judge had found Beatrice's letters to Rex Danner and told her that afternoon he was divorcing her, and under their marriage settlement she would leave with nothing.",
+    "method": "After the last waltz, which the band played early, Beatrice followed the judge down the garden path from the kitchen, struck him with a croquet mallet at the lily pond and pushed him into the water, then threw the mallet into the reeds and hid her muddy glove in the stone urn.",
+    "required_evidence": [
+      "divorce-letter",
+      "muddy-glove",
+      "marked-program"
+    ],
+    "reveal": "Beatrice Hollis married the judge for a house in the Heights and found it was a cage. For a year she had been writing to Rex Danner, and on Thursday the judge found the letters. This afternoon he had Philip type a letter to his lawyer starting a divorce, and at seven he told Beatrice that under the marriage settlement she would leave his house with what she brought into it, which was nothing. She danced all evening. The printed program put the last waltz at ten o'clock, but the cellist broke a string at half past nine and Rex swapped the sets, so the band played the waltz at twenty to ten. Beatrice danced it with Philip, then left the terrace by the side steps. At ten to ten the judge went down past the kitchen for ice, and she followed him toward the lily pond. She picked up a croquet mallet from the lawn as she went. She struck him once from behind and pushed him into the pond, threw the mallet into the reeds, and stuffed her wet, muddy glove into the stone urn by the path. Then she came back up to the terrace and told everyone she had been dancing the last waltz at ten. The bandleader's own program shows the waltz was over by then. The glove is hers, and the judge's letter to his lawyer gives the reason."
+  },
+  "timeline": [
+    {
+      "day": 0,
+      "time": "16:00",
+      "location": "library",
+      "who": [
+        "judge",
+        "philip"
+      ],
+      "what": "The judge has Philip type a letter to his lawyer, Mr. Crane, instructing him to begin divorce proceedings against Beatrice and to rely on clause four of the marriage settlement. The judge seals Rex Danner's letters in the envelope with it.",
+      "visibility": "private",
+      "tags": [
+        "motive"
+      ]
+    },
+    {
+      "day": 0,
+      "time": "19:00",
+      "location": "library",
+      "who": [
+        "judge",
+        "beatrice"
+      ],
+      "what": "The judge tells Beatrice he knows about Rex and is divorcing her, and that she will leave with nothing. Philip hears raised voices through the door.",
+      "visibility": "private",
+      "tags": [
+        "motive"
+      ]
+    },
+    {
+      "day": 0,
+      "time": "19:45",
+      "location": "library",
+      "who": [
+        "celia"
+      ],
+      "what": "Celia takes three hundred dollars from her father's cash box for a train ticket to New York. Her father refused to pay for singing lessons there.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "20:00",
+      "location": "terrace",
+      "who": [
+        "judge",
+        "beatrice",
+        "celia",
+        "rex",
+        "philip"
+      ],
+      "what": "The party begins. Rex Danner's band plays on the terrace and the guests spread over the lawn.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "21:30",
+      "location": "terrace",
+      "who": [
+        "rex",
+        "beatrice"
+      ],
+      "what": "The cellist breaks a string. Rex swaps the order of the sets and marks the change on his own program. Beatrice tells Rex at the bandstand that Arthur knows about them.",
+      "visibility": "private",
+      "tags": [
+        "alibi"
+      ]
+    },
+    {
+      "day": 0,
+      "time": "21:40",
+      "location": "terrace",
+      "who": [
+        "beatrice",
+        "philip"
+      ],
+      "what": "The band plays the last waltz, twenty minutes earlier than printed. Beatrice dances it with Philip. When it ends at about 21:47 she leaves the terrace by the side steps.",
+      "visibility": "private",
+      "tags": [
+        "alibi"
+      ]
+    },
+    {
+      "day": 0,
+      "time": "21:50",
+      "location": "kitchen",
+      "who": [
+        "judge",
+        "philip"
+      ],
+      "what": "The judge comes into the kitchen for more ice and goes out by the back door toward the garden path. Philip goes into the kitchen to help Mrs. Ortega pour champagne for the toast and stays there until 22:15.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "21:58",
+      "location": "garden",
+      "who": [
+        "beatrice",
+        "judge"
+      ],
+      "what": "Beatrice catches up with the judge at the lily pond, strikes him from behind with a croquet mallet taken from the lawn, and pushes him into the water.",
+      "visibility": "hidden",
+      "tags": [
+        "crime"
+      ]
+    },
+    {
+      "day": 0,
+      "time": "22:00",
+      "location": "terrace",
+      "who": [
+        "celia",
+        "rex"
+      ],
+      "what": "Celia sings 'Moonlight Quickstep' with the band while Rex conducts. The Courier's society photographer takes a flash picture of them at 22:05.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "22:02",
+      "location": "garden",
+      "who": [
+        "beatrice"
+      ],
+      "what": "Beatrice throws the mallet into the reeds and pushes her wet, muddy glove into the stone urn by the path.",
+      "visibility": "hidden",
+      "tags": [
+        "crime"
+      ]
+    },
+    {
+      "day": 0,
+      "time": "22:10",
+      "location": "terrace",
+      "who": [
+        "beatrice"
+      ],
+      "what": "Beatrice comes back up the side steps onto the terrace in time for the fireworks.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "22:20",
+      "location": "garden",
+      "who": [
+        "celia",
+        "judge"
+      ],
+      "what": "The fireworks start. Celia goes down the garden to bring her father up for the toast and finds him in the lily pond. Her screams bring everyone running.",
+      "visibility": "public",
+      "tags": []
+    }
+  ],
+  "offstage_locations": [],
+  "rooms": [
+    {
+      "id": "terrace",
+      "name": "Terrace",
+      "description": "A long stone terrace with paper lanterns strung over it and a bandstand at one end. The music stands are still up, and champagne glasses are standing on the balustrade where the guests left them. Side steps lead down to the garden path.",
+      "background": "terrace",
+      "hotspots": [
+        {
+          "id": "bandstand",
+          "label": "Music stand",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The bandleader's music stand. A program is clipped to it, scribbled over in red pencil.",
+          "evidence_id": "marked-program"
+        },
+        {
+          "id": "program-table",
+          "label": "Program table",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "A table by the door with a stack of printed programs for the guests, tied with green ribbon.",
+          "evidence_id": "printed-program"
+        },
+        {
+          "id": "photographer-case",
+          "label": "Camera case",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "The Courier society photographer left his plate case and his notebook here when the patrolman sent him home. One plate has already been developed in a hurry at the station house and sent back up with a print.",
+          "evidence_id": "society-photo"
+        },
+        {
+          "id": "side-steps",
+          "label": "Side steps",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "Narrow stone steps from the end of the terrace down into the dark of the garden, out of the lantern light. There are small, wet, muddy prints on the bottom step, the size of a woman's evening shoe.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "garden",
+      "name": "The lower garden",
+      "description": "Lawns slope down from the house between yew hedges to a round lily pond with a stone urn beside the path. A croquet lawn lies off to one side. The fireworks are over and the smell of powder hangs in the air.",
+      "background": "garden",
+      "hotspots": [
+        {
+          "id": "lily-pond",
+          "label": "Lily pond",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The lily pond where Celia found him. The edge is trampled, and the lilies on one side are torn and pushed under.",
+          "evidence_id": null
+        },
+        {
+          "id": "reeds",
+          "label": "Reeds",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "A clump of reeds at the far side of the pond. Something long and pale is lying among them, half in the water.",
+          "evidence_id": "croquet-mallet"
+        },
+        {
+          "id": "stone-urn",
+          "label": "Stone urn",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "A tall stone urn of geraniums beside the path. Something white has been pushed down between the stems.",
+          "evidence_id": "muddy-glove"
+        },
+        {
+          "id": "croquet-rack",
+          "label": "Croquet rack",
+          "x": 10,
+          "y": 56,
+          "width": 26,
+          "height": 26,
+          "description": "A wooden rack of croquet mallets beside the lawn, with one slot empty. Anyone walking down the path from the terrace or the kitchen passes within reach of it.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "library",
+      "name": "The judge's library",
+      "description": "Dark oak, law reports to the ceiling, and a desk with a green leather top. The windows are open onto the garden and you can hear the patrolmen talking down by the pond.",
+      "background": "library",
+      "hotspots": [
+        {
+          "id": "desk",
+          "label": "Desk",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The desk is clear except for a long envelope addressed to Crane and Morrow, Attorneys, sealed and stamped and waiting for Monday's post.",
+          "evidence_id": "divorce-letter"
+        },
+        {
+          "id": "bundle",
+          "label": "Bundle of letters",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "Inside the envelope to the lawyers, folded behind the judge's letter, is a bundle of notes on blue paper tied with a ribbon.",
+          "evidence_id": "love-letters"
+        },
+        {
+          "id": "cash-box",
+          "label": "Cash box",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "A steel cash box on the shelf behind the desk. The key is in the lock and the lid is up.",
+          "evidence_id": "cash-box"
+        },
+        {
+          "id": "portrait",
+          "label": "Portrait",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "A portrait of the first Mrs. Hollis, Celia's mother, over the fireplace. There is no picture of Beatrice anywhere in the room.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "kitchen",
+      "name": "Kitchen",
+      "description": "A big, hot kitchen full of empty platters and champagne crates. The back door stands open onto the path that runs down the side of the garden to the lily pond.",
+      "background": "kitchen",
+      "hotspots": [
+        {
+          "id": "statement",
+          "label": "Patrolman's notebook",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "Patrolman Kerrigan has left the cook's statement on the table, two pages in pencil, signed by Mrs. Ortega.",
+          "evidence_id": "cook-statement"
+        },
+        {
+          "id": "ice-box",
+          "label": "Ice box",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "A big zinc ice box. The ice pick is still in the block where the judge left it when he chipped some for his drink.",
+          "evidence_id": null
+        },
+        {
+          "id": "champagne",
+          "label": "Champagne trays",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "Forty glasses poured and set out on trays for the toast that never happened. The bubbles have gone.",
+          "evidence_id": null
+        },
+        {
+          "id": "back-door",
+          "label": "Back door",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "The back door opens onto a gravel path that runs down the side of the garden, past the croquet lawn, to the lily pond. From the kitchen window you can see the first few yards of it and no more.",
+          "evidence_id": null
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "divorce-letter",
+      "name": "Letter to the lawyers",
+      "description": "The judge's letter to Crane and Morrow, typed this afternoon and signed: 'Begin proceedings for divorce against my wife, Beatrice, at once, on the grounds shown by the enclosed. Rely on clause four of the settlement of 1943. She is to leave this house with the property she brought into it and nothing else.'",
+      "found_in": "library",
+      "points_to": [
+        "beatrice"
+      ],
+      "is_red_herring": false
+    },
+    {
+      "id": "love-letters",
+      "name": "Letters on blue paper",
+      "description": "A dozen notes on blue paper, signed 'R.' and addressed to 'Bea'. The latest, dated July, ends: 'When this summer is over I will take you away from that old man if I have to carry you.'",
+      "found_in": "library",
+      "points_to": [
+        "rex"
+      ],
+      "is_red_herring": true
+    },
+    {
+      "id": "cash-box",
+      "name": "Emptied cash box",
+      "description": "The judge's steel cash box. A slip inside in his hand says '$450, August household'. There is one fifty-dollar bill left in it.",
+      "found_in": "library",
+      "points_to": [
+        "celia"
+      ],
+      "is_red_herring": true
+    },
+    {
+      "id": "croquet-mallet",
+      "name": "Croquet mallet",
+      "description": "A croquet mallet from the rack on the lawn, pulled out of the reeds. The head is chipped and there is hair and blood on one face. Pond water has washed the handle clean.",
+      "found_in": "garden",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "muddy-glove",
+      "name": "Muddy evening glove",
+      "description": "A long white kid evening glove, soaked to the elbow and caked with pond mud, pushed down into the geraniums in the stone urn. It smells of lily of the valley. Inside the cuff the maker has stamped a monogram: 'B.H.'",
+      "found_in": "garden",
+      "points_to": [
+        "beatrice"
+      ],
+      "is_red_herring": false
+    },
+    {
+      "id": "printed-program",
+      "name": "Printed dance program",
+      "description": "A printed program for the evening: '9.15 Fox Trots. 9.40 Moonlight Quickstep, with Miss Celia Hollis. 10.00 The Last Waltz. 10.20 Fireworks over the lower garden.'",
+      "found_in": "terrace",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "marked-program",
+      "name": "Bandleader's program",
+      "description": "Rex Danner's own copy of the program, marked in red pencil: 'Cello string gone 9.30. SWAP.' Arrows move the Last Waltz up to 9.40 and the Moonlight Quickstep down to 10.00. Next to the waltz: 'played 9.40 to 9.47'.",
+      "found_in": "terrace",
+      "points_to": [
+        "beatrice"
+      ],
+      "is_red_herring": false
+    },
+    {
+      "id": "society-photo",
+      "name": "Society photograph",
+      "description": "A damp print from the Courier photographer's plate, with his caption slip: 'Miss Celia Hollis sings with Rex Danner and his Orchestra, 10.05 pm.' Celia is at the microphone and Rex has his baton up. The terrace clock is in the frame behind them, at five past ten.",
+      "found_in": "terrace",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "cook-statement",
+      "name": "Cook's statement",
+      "description": "Mrs. Ortega's statement to Patrolman Kerrigan: 'The Judge came in for ice at ten to ten and went out the back door down the path. Mr. Philip came in right after to help me pour for the toast and he did not leave my kitchen till a quarter past ten. I did not see anybody else on the path. I was busy.'",
+      "found_in": "kitchen",
+      "points_to": [],
+      "is_red_herring": false
+    }
+  ],
+  "suspects": [
+    {
+      "id": "beatrice",
+      "name": "Beatrice Hollis",
+      "role": "The judge's wife",
+      "age": 46,
+      "portrait": "woman-long",
+      "color": "#8a4a6a",
+      "personality": "Beautiful, gracious and very good at parties. She knows how to make a room like her, and she tries it on the detective at once. Under the charm she is cold and very frightened, and she will cry when crying helps.",
+      "speech_style": "Warm and low, with a lot of 'darling' and 'you poor thing'. Calls her husband 'Arthur'. Changes the subject to the detective's comfort when a question gets close: a chair, a drink, the cold. When she is caught out her voice goes flat.",
+      "alibi": "At ten o'clock I was dancing the last waltz with Philip on the terrace, and then we all watched the fireworks. I never went near the garden.",
+      "public_facts": [
+        "Beatrice Hollis married the judge six years ago, after his first wife died.",
+        "She was the hostess tonight and was on the terrace most of the evening.",
+        "She came running down to the pond with everyone else when Celia screamed."
+      ],
+      "private_knowledge": [
+        "The last waltz was on the program at ten o'clock. You danced it with Philip.",
+        "Arthur went down to the kitchen for ice some time before the fireworks. He always did.",
+        "Rex Danner has been a friend of yours for a year."
+      ],
+      "lies": [
+        {
+          "topic": "Where she was at ten o'clock",
+          "claim": "I was dancing the last waltz with Philip on the terrace at ten.",
+          "truth": "The waltz was played early, from 21:40 to 21:47. You left the terrace by the side steps as soon as it ended and did not come back until 22:10."
+        },
+        {
+          "topic": "Her marriage",
+          "claim": "Arthur and I were very happy. People always say things about a second wife.",
+          "truth": "At seven o'clock Arthur told you he had your letters to Rex Danner, that he was divorcing you, and that you would leave with nothing."
+        }
+      ],
+      "secrets": [
+        "You have no money of your own at all. Everything you wear was bought by Arthur."
+      ],
+      "never_reveal": [
+        "That you followed Arthur down the path to the lily pond and struck him with the croquet mallet.",
+        "That you hid your muddy glove in the stone urn."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "bea-waltz",
+          "text": "Admits the waltz was played early, before ten. She says she felt faint afterward and sat alone on a bench at the top of the garden for a while, and nobody saw her there.",
+          "condition": "shown_evidence:marked-program"
+        },
+        {
+          "clue_id": "bea-ice",
+          "text": "Says Arthur always went down to the kitchen for his own ice before the fireworks. He did not trust the waiters to chip it properly.",
+          "condition": "free"
+        }
+      ],
+      "breaks_on": [
+        "marked-program",
+        "muddy-glove",
+        "divorce-letter"
+      ],
+      "patience": 12,
+      "deflections": [
+        "*touches the detective's sleeve*  You must be frozen. Let me have someone bring you a coffee.",
+        "*dabs her eyes*  I can't, darling. Not tonight. Ask me tomorrow.",
+        "*flat*  I have told you where I was."
+      ],
+      "alibi_verification": {
+        "status": "broken",
+        "evidence_ids": [
+          "marked-program"
+        ],
+        "clue_ids": [
+          "rex-swap",
+          "philip-waltz"
+        ],
+        "note": "The bandleader's program shows the last waltz ended at 21:47. Rex confirms the swap, and Philip says she left by the side steps as soon as they finished dancing."
+      }
+    },
+    {
+      "id": "celia",
+      "name": "Celia Hollis",
+      "role": "The judge's daughter; sang with the band tonight",
+      "age": 24,
+      "portrait": "young-woman",
+      "color": "#c08a5a",
+      "personality": "Bright, impatient and in a hurry to get out of her father's house. She loved him and fought with him all the time. She found him in the pond and she is in shock, which comes out as anger at everyone, the detective included.",
+      "speech_style": "Fast and sharp, with a singer's habit of finishing on a high note. Calls her father 'Daddy' and her stepmother 'Beatrice', never 'Mother'. Swears and then apologizes. Snaps 'So what?' when she is caught out.",
+      "alibi": "I was singing with the band from ten until the fireworks. Then I went down the garden to fetch Daddy for the toast and found him.",
+      "public_facts": [
+        "Celia Hollis is the judge's only child, from his first marriage.",
+        "She sang 'Moonlight Quickstep' with the band at the party.",
+        "She found her father in the lily pond when the fireworks started."
+      ],
+      "private_knowledge": [
+        "You sang the quickstep with Rex conducting from ten o'clock. The photographer took your picture at five past ten.",
+        "Rex had to swap the sets after the cellist broke a string, so the waltz went before your number.",
+        "Beatrice was not on the terrace while you were singing. You looked for her, because she always watches you to see if you go flat."
+      ],
+      "lies": [
+        {
+          "topic": "Money",
+          "claim": "I don't need Daddy's money. I've got my own.",
+          "truth": "At 19:45 you took three hundred dollars from his cash box for a train ticket to New York, because he refused to pay for singing lessons."
+        }
+      ],
+      "secrets": [
+        "You were going to leave for New York on Monday morning without telling him."
+      ],
+      "never_reveal": [
+        "That the last words you said to him, at seven o'clock, were that you hated him."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "celia-singing",
+          "text": "Says Rex was conducting the band the whole time she sang the quickstep, from ten o'clock until the fireworks. He never left the bandstand.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "celia-bea-missing",
+          "text": "Says Beatrice was not on the terrace while she was singing. She looked for her, because Beatrice always watches to see if she goes flat. Beatrice came up the side steps just before the fireworks.",
+          "condition": "pressed"
+        },
+        {
+          "clue_id": "celia-cash",
+          "text": "Admits she took three hundred dollars from the cash box at a quarter to eight for a ticket to New York. Daddy would not pay for lessons, and she was going on Monday.",
+          "condition": "shown_evidence:cash-box"
+        }
+      ],
+      "breaks_on": [
+        "cash-box"
+      ],
+      "patience": 12,
+      "deflections": [
+        "*wipes her face with the back of her hand*  So what? Ask somebody who wasn't in that pond up to her knees.",
+        "*laughs, wrong*  You want a song? I'm all out tonight.",
+        "*turns away*  Sorry. I'm sorry. Ask me something else."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": [
+          "society-photo"
+        ],
+        "clue_ids": [
+          "rex-celia"
+        ],
+        "note": "The photographer's picture with the terrace clock shows her singing at 22:05, and Rex confirms she sang from ten until the fireworks."
+      }
+    },
+    {
+      "id": "rex",
+      "name": "Rex Danner",
+      "role": "Bandleader, Rex Danner and his Orchestra",
+      "age": 38,
+      "portrait": "man-bare",
+      "color": "#4a5a8a",
+      "personality": "Easygoing, vain and good-humored, a man who has talked his way past a lot of trouble. He is in love with Beatrice and frightened for her, and frightened for himself, and he cannot decide which comes first.",
+      "speech_style": "Bandstand talk: 'cats', 'the set', 'in the pocket'. Calls everybody 'friend'. Counts time on his fingers when he is thinking. When a question scares him he makes a joke and then answers anyway.",
+      "alibi": "I was on the bandstand all night, friend. You can't run a band from the garden.",
+      "public_facts": [
+        "Rex Danner's orchestra has played the Hollis party for three summers.",
+        "He conducted from the bandstand on the terrace all evening.",
+        "He was on the terrace when the screaming started."
+      ],
+      "private_knowledge": [
+        "The cellist broke a string at about half past nine, so you swapped the sets. The last waltz went up to twenty to ten and Celia's quickstep went back to ten.",
+        "Beatrice danced the waltz with Philip. When it ended she went down the side steps, not back to her chair.",
+        "At half past nine Beatrice told you at the bandstand that Arthur knew about the two of you."
+      ],
+      "lies": [
+        {
+          "topic": "Beatrice",
+          "claim": "Mrs. Hollis? I play her parties. That's all there is to it.",
+          "truth": "You and Beatrice have been lovers for a year, and you wrote her the letters on blue paper."
+        }
+      ],
+      "secrets": [
+        "You meant to ask Beatrice to leave with you for Chicago when the summer season ended."
+      ],
+      "never_reveal": [
+        "That you owe the musicians' union local four months of dues."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "rex-swap",
+          "text": "Says the cellist broke a string at half past nine, so he swapped the sets. The last waltz went on at twenty to ten and was over by about a quarter to. Celia's quickstep moved to ten.",
+          "condition": "shown_evidence:printed-program"
+        },
+        {
+          "clue_id": "rex-celia",
+          "text": "Says Celia sang the quickstep with the band from ten o'clock right up to the fireworks. She was in front of the microphone the whole time.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "rex-letters",
+          "text": "Admits he wrote the letters and that he and Beatrice are in love. At half past nine she came to the bandstand white as a sheet and said, 'Arthur knows.'",
+          "condition": "shown_evidence:love-letters"
+        }
+      ],
+      "breaks_on": [
+        "love-letters"
+      ],
+      "patience": 13,
+      "deflections": [
+        "*taps out a beat on his knee*  Give me a minute, friend. I'm counting.",
+        "*grins, without much in it*  I'm a bandleader. I don't see anything after the downbeat.",
+        "*shrugs*  Ask the band. They'll tell you I never left the stand."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": [
+          "society-photo"
+        ],
+        "clue_ids": [
+          "celia-singing"
+        ],
+        "note": "The photograph shows him conducting at 22:05, and Celia says he was on the bandstand from ten until the fireworks."
+      }
+    },
+    {
+      "id": "philip",
+      "name": "Philip Hollis",
+      "role": "The judge's nephew and law clerk",
+      "age": 31,
+      "portrait": "man-glasses",
+      "color": "#5a7a6a",
+      "personality": "Careful, correct and anxious to do the proper thing. He worshipped his uncle and was a little afraid of him. He knows more about the family than anyone, and his training tells him to say nothing until he is asked properly.",
+      "speech_style": "Precise and formal, a lawyer's clerk: 'to the best of my recollection', 'I would not care to say'. Calls the victim 'the Judge' and Beatrice 'Aunt Beatrice'. Asks the detective to repeat the question when he wants time.",
+      "alibi": "I danced the last waltz with Aunt Beatrice, then I helped Mrs. Ortega pour champagne in the kitchen until a quarter past ten.",
+      "public_facts": [
+        "Philip Hollis is the judge's nephew and has been his law clerk for five years.",
+        "He lives in the house and handles the judge's papers.",
+        "He was in the kitchen when Celia screamed."
+      ],
+      "private_knowledge": [
+        "This afternoon the Judge had you type a letter to his lawyers, Crane and Morrow. You know what was in it.",
+        "At seven you heard the Judge and Aunt Beatrice in the library, his voice raised, through the closed door.",
+        "You danced the last waltz with Aunt Beatrice. It was played early because of the cello. When it ended she went down the side steps into the garden."
+      ],
+      "lies": [
+        {
+          "topic": "The letter to the lawyers",
+          "claim": "I have no idea what the Judge was writing to his lawyers. I only post the letters.",
+          "truth": "You typed it at four o'clock this afternoon. It instructs Crane and Morrow to begin divorce proceedings against Beatrice."
+        }
+      ],
+      "secrets": [
+        "You are named in the Judge's will for ten thousand dollars, and you know it."
+      ],
+      "never_reveal": [
+        "That you once read Beatrice's letters before the Judge found them, and said nothing."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "philip-typed",
+          "text": "Admits he typed the letter to Crane and Morrow at four o'clock on the Judge's orders. At seven he heard the Judge and Aunt Beatrice in the library through the door. The Judge was shouting, and she came out white in the face.",
+          "condition": "shown_evidence:divorce-letter"
+        },
+        {
+          "clue_id": "philip-waltz",
+          "text": "Says the last waltz was played early because of the broken cello string. They finished dancing at about a quarter to ten, and Aunt Beatrice went straight down the side steps into the garden. He went to the kitchen.",
+          "condition": "pressed"
+        }
+      ],
+      "breaks_on": [
+        "divorce-letter"
+      ],
+      "patience": 14,
+      "deflections": [
+        "*takes off his glasses and polishes them*  Would you repeat the question, Detective?",
+        "*stiffly*  I would not care to say, not without thinking about it.",
+        "*looks toward the window and the pond*  The Judge would have known what to do. I don't."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": [
+          "cook-statement"
+        ],
+        "clue_ids": [],
+        "note": "Mrs. Ortega's statement puts Philip in her kitchen from just after 21:50 until 22:15, the whole time the judge was down at the pond."
+      }
+    }
+  ],
+  "hints": [
+    "Walk the whole garden before you start asking questions. The weapon, and the thing hidden near it, are both down by the pond.",
+    "The judge was alive at ten to ten, when the cook saw him go out for ice. Find out who could reach the lily pond in the next twenty minutes.",
+    "Everybody remembers the music. Compare the printed program with the bandleader's own copy, and ask the bandleader why they differ.",
+    "Show the letter on the judge's desk to the person who typed it. He heard something through the library door at seven o'clock.",
+    "The photograph and the cook's statement clear more than one person. Use them to rule people out before you pin anyone down.",
+    "On the board, connect the reason, the thing in the urn and the dance that ended early, then press \"Check theory\".",
+    "Look hard at Beatrice Hollis. The judge was divorcing her, the glove is hers, and the last waltz was over long before ten."
+  ],
+  "endings": {
+    "correct": "Beatrice Hollis is still in her party dress when they take her down the front steps. She asks for her wrap and nobody brings it. Celia stands at the top of the garden while the patrolmen drag the pond, and on Monday she takes the morning train to New York with her father's money.",
+    "wrong_culprit": "You arrest the wrong person on the strength of a dance card. The judge's widow wears black very well at the funeral, inherits under a will nobody changed in time, and moves to Chicago in the spring with a bandleader.",
+    "weak_proof": "You named the right woman, and her lawyer laughed. Lots of women own white gloves, people get the time of a waltz wrong, and a husband's letter is only a letter. You needed the reason, the glove and the broken alibi together."
+  }
+}$case$, now())
+on conflict (id) do update set case_text = excluded.case_text, updated_at = now();
+
+-- mercers-pharmacy (sha256 of the minified JSON: 04f946e434d1b70954af4e60221063f531de798b264a70f700bd501520c371e1)
+insert into public.story_cases (id, case_text, updated_at) values ('mercers-pharmacy', $case${
+  "schema_version": 1,
+  "id": "mercers-pharmacy",
+  "title": "Mercer's Pharmacy",
+  "tagline": "He took the same spoonful of tonic every night at nine. Somebody only had to wait.",
+  "setting": "Mercer's Pharmacy on Calloway Street, with Dr. Pell's surgery on the floor above",
+  "era": "April 1950",
+  "intro_briefing": [
+    "Friday, 14 April 1950. Mercer's Pharmacy has stood on Calloway Street since 1911. Half the city has had a prescription filled there, including, eighteen months ago, a bottle of digitalis drops for a shipowner on the cliffs at Ashgrove. At ten past nine tonight its owner fell down behind the dispensary counter, and he was dead before the ambulance came.",
+    "Edgar Mercer was sixty-three. The police surgeon smelled the nerve tonic Mercer took every night before he locked up, looked at the arch of his back, and said strychnine. The police chemist has already confirmed it in the bottle. The question is when it got there.",
+    "Four people had their hands near that bottle today: his son and partner, Nathan Mercer; his wife, Lucille; Helen Voss, who runs the soda fountain; and Dr. Raymond Pell, whose surgery is upstairs and whose prescriptions the shop has filled for twelve years. Dr. Pell has come over from St. Columba's Hospital, where he spent the evening delivering a baby.",
+    "Search the shop, the dispensary, the cellar and Dr. Pell's surgery. Question the four of them and show them what you find. Do not ask them where they were at nine o'clock. Ask them where they were when the poison went in."
+  ],
+  "victim": {
+    "id": "edgar",
+    "name": "Edgar Mercer",
+    "age": 63,
+    "description": "Pharmacist and owner of Mercer's Pharmacy for thirty-nine years. Upright, fussy and stubborn, a man who checked every prescription twice and never forgot a face. He took a spoonful of his own nerve tonic every evening at nine before locking up.",
+    "cause_of_death": "Strychnine poisoning, from his nightly dose of nerve tonic.",
+    "found_in": "dispensary",
+    "found_at": "at about 21:10, on the dispensary floor behind the counter, where his son found him in convulsions"
+  },
+  "solution": {
+    "culprit_id": "pell",
+    "motive": "Edgar had found that Dr. Pell was writing morphine prescriptions in the names of dead patients, and he had told Pell he would report him to the State Board on Monday.",
+    "method": "When Pell came down to the dispensary at half past five, Edgar went to the cellar for stock and left him alone for eight minutes. Pell dropped crushed strychnine tablets from his own surgery cabinet into Edgar's tonic bottle and went to the hospital, where he spent the evening in plain sight while the poison waited for nine o'clock.",
+    "required_evidence": ["prescription-notes", "day-book", "surgery-ledger"],
+    "reveal": "Dr. Raymond Pell has been taking morphine for three years, ever since a riding accident, and he got it by writing prescriptions for patients who no longer needed them because they were dead. Mercer's filled them. In March Edgar Mercer noticed a name he had read in the death notices, and then another, and this afternoon he climbed the stairs to the surgery and told Pell he would take the prescriptions to the State Board of Pharmacy on Monday. Pell knew Edgar's habits as well as anybody on Calloway Street. At five o'clock Edgar took a spoonful of his freshly mixed tonic at the fountain, and it did him no harm. At half past five Pell came down to the dispensary with an excuse about a prescription, and Edgar, who never left anyone alone at the dispensary, went down to the cellar for stock and left him there for eight minutes. Pell crushed thirty-eight strychnine tablets from his own cabinet into the tonic bottle. By seven he was at St. Columba's, scrubbing up for a delivery in front of three nurses, and he stayed there until after ten. At nine o'clock Edgar took his spoonful. Pell's alibi is perfect for the wrong hour. Edgar's notes give the motive, his day book shows the eight minutes, and Pell's own poison ledger is thirty-eight tablets short."
+  },
+  "timeline": [
+    {
+      "day": 0,
+      "time": "12:15",
+      "location": "shop",
+      "who": ["lucille", "nathan"],
+      "what": "Nathan walks his mother to the corner and puts her on the 12:15 ferry to her sister's in Eastbank. She does not come back until 21:45.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "15:00",
+      "location": "dispensary",
+      "who": ["edgar"],
+      "what": "Edgar mixes a fresh bottle of his nerve tonic and puts it on the dispensary shelf.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "16:30",
+      "location": "surgery",
+      "who": ["edgar", "pell"],
+      "what": "Edgar goes up to Pell's surgery and tells him he knows about the morphine prescriptions written for dead patients, and that he will report him to the State Board of Pharmacy on Monday.",
+      "visibility": "private",
+      "tags": ["motive"]
+    },
+    {
+      "day": 0,
+      "time": "17:00",
+      "location": "shop",
+      "who": ["edgar", "helen", "nathan"],
+      "what": "After a row with Nathan about selling the shop, Edgar takes a spoonful of the new tonic at the soda fountain 'for his nerves'. It does him no harm. Helen sees it.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "17:05",
+      "location": "shop",
+      "who": ["nathan"],
+      "what": "Nathan leaves on the evening deliveries with the bicycle and the delivery book.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "17:30",
+      "location": "dispensary",
+      "who": ["pell", "edgar", "helen"],
+      "what": "Pell comes down to the dispensary saying he wants to check a prescription. At 17:32 Edgar goes down to the cellar for stock and leaves him alone until 17:40. Helen sees it from the fountain.",
+      "visibility": "private",
+      "tags": ["alibi"]
+    },
+    {
+      "day": 0,
+      "time": "17:34",
+      "location": "dispensary",
+      "who": ["pell"],
+      "what": "Alone in the dispensary, Pell drops crushed strychnine tablets from his surgery cabinet into the tonic bottle.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "day": 0,
+      "time": "18:00",
+      "location": "shop",
+      "who": ["helen", "edgar"],
+      "what": "Helen closes the soda fountain and goes home. Edgar locks the dispensary door and keeps the key on his chain.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "19:00",
+      "location": "st-columbas",
+      "who": ["pell"],
+      "what": "Pell arrives at St. Columba's Hospital for a delivery and stays there in front of the nurses until after 22:00.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "20:30",
+      "location": "cellar",
+      "who": ["nathan"],
+      "what": "Nathan comes back from his deliveries, puts the bicycle in the cellar, and sits down to the accounts in the back room.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "21:05",
+      "location": "dispensary",
+      "who": ["edgar"],
+      "what": "Edgar unlocks the dispensary and takes his nightly spoonful of tonic before locking up.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "21:10",
+      "location": "dispensary",
+      "who": ["edgar", "nathan"],
+      "what": "Edgar collapses in convulsions. Nathan finds him and telephones for an ambulance. Edgar dies before it arrives at 21:30.",
+      "visibility": "public",
+      "tags": []
+    }
+  ],
+  "offstage_locations": [
+    { "id": "st-columbas", "name": "St. Columba's Hospital" }
+  ],
+  "rooms": [
+    {
+      "id": "shop",
+      "name": "The shop",
+      "description": "A long, bright shop with mahogany counters, jars of coloured water in the window, and a marble soda fountain along one wall. The dispensary is through a door behind the main counter, with a glass panel so the pharmacist can see the shop.",
+      "background": "lobby",
+      "hotspots": [
+        {
+          "id": "fountain",
+          "label": "Soda fountain",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The marble fountain, wiped down for the night. The fountain has its own little cash register with a paper tape.",
+          "evidence_id": "fountain-tape"
+        },
+        {
+          "id": "delivery-bag",
+          "label": "Delivery bag",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "Nathan's canvas delivery bag on a hook by the door, with the delivery book in the outside pocket.",
+          "evidence_id": "delivery-book"
+        },
+        {
+          "id": "tonic-display",
+          "label": "Tonic display",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "A pyramid of bottles of 'Mercer's Own Nerve Tonic, est. 1911'. Edgar mixed his own nightly bottle separately and kept it in the dispensary.",
+          "evidence_id": null
+        },
+        {
+          "id": "dispensary-window",
+          "label": "Dispensary window",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "The glass panel in the dispensary door. From the fountain you can see straight through it to the dispensary shelf where the tonic stood.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "dispensary",
+      "name": "Dispensary",
+      "description": "A narrow room of drawers and labelled bottles, with a scale, a mortar and pestle, and a high desk for the books. The police chemist has taken samples and left his labels on everything.",
+      "background": "office",
+      "hotspots": [
+        {
+          "id": "tonic-bottle",
+          "label": "Tonic bottle",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "Edgar's own bottle of tonic, a third gone, with a spoon beside it and a red police chemist's label tied round the neck.",
+          "evidence_id": "tonic-bottle"
+        },
+        {
+          "id": "high-desk",
+          "label": "High desk",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "Edgar's high desk, with his day book open on it. He wrote in it all day, every day.",
+          "evidence_id": "day-book"
+        },
+        {
+          "id": "prescription-file",
+          "label": "Prescription file",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "A wooden file box of filled prescriptions. One bundle at the front is held with a rubber band and has a sheet of Edgar's notes on top.",
+          "evidence_id": "prescription-notes"
+        },
+        {
+          "id": "poison-cupboard",
+          "label": "Poison cupboard",
+          "x": 10,
+          "y": 56,
+          "width": 26,
+          "height": 26,
+          "description": "A locked cupboard marked POISONS, and the shop's poison register on a shelf beside it.",
+          "evidence_id": "shop-poison-register"
+        },
+        {
+          "id": "letter-spike",
+          "label": "Letter spike",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "Letters on a spike by the desk. The top one is on the letterhead of a chain of drugstores.",
+          "evidence_id": "chain-offer"
+        }
+      ]
+    },
+    {
+      "id": "cellar",
+      "name": "Stock cellar",
+      "description": "A whitewashed cellar under the shop, full of crates of bottles and boxes of stock. Nathan's bicycle leans by the stairs. There is a smell of soap and mice.",
+      "background": "cellar",
+      "hotspots": [
+        {
+          "id": "stock-shelves",
+          "label": "Stock shelves",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "Shelves of boxed stock. A carton of cough syrup has been opened today and three bottles taken, with 'E.M. 5.35' pencilled on the lid.",
+          "evidence_id": null
+        },
+        {
+          "id": "rat-bait",
+          "label": "Rat bait",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "A paper sack of grain on the floor in the corner, dyed bright pink, with a hardware store bill pinned to it.",
+          "evidence_id": "rat-poison"
+        },
+        {
+          "id": "bicycle",
+          "label": "Bicycle",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "The delivery bicycle with a big basket. The tyres are still wet from the evening rounds.",
+          "evidence_id": null
+        },
+        {
+          "id": "stairs",
+          "label": "Cellar stairs",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "Steep wooden stairs up to the back of the dispensary. From down here you cannot see or hear anything that happens in the room above.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "surgery",
+      "name": "Dr. Pell's surgery",
+      "description": "A doctor's consulting room on the floor above the shop, with a desk, an examination couch behind a screen, and a glass-fronted cabinet of drugs. The window looks down onto Calloway Street.",
+      "background": "study",
+      "hotspots": [
+        {
+          "id": "drug-cabinet",
+          "label": "Drug cabinet",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "A locked glass cabinet of drugs, with the doctor's poison ledger in a rack on the inside of the door. The key was on Dr. Pell's ring, which he handed over without being asked.",
+          "evidence_id": "surgery-ledger"
+        },
+        {
+          "id": "desk",
+          "label": "Desk",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "A tidy desk with a prescription pad, a fountain pen and a framed diploma above it. There is a calendar with tonight circled: 'Mrs. Kovacs, St. C., 7 pm'.",
+          "evidence_id": null
+        },
+        {
+          "id": "couch",
+          "label": "Couch",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "An examination couch behind a screen. Under the pillow is a leather case holding a hypodermic syringe that has been used recently.",
+          "evidence_id": null
+        },
+        {
+          "id": "window",
+          "label": "Window",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "The window looks down on Calloway Street and the pharmacy's sign. The doctor could see who went in and out of the shop all day.",
+          "evidence_id": null
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "prescription-notes",
+      "name": "Edgar's notes on the prescriptions",
+      "description": "A sheet in Edgar's careful hand on top of a bundle of morphine prescriptions, all signed by Dr. R. Pell: 'Mrs. Hanley, filled 2 Feb. Died 9 Jan, Courier notice. Mr. Bruno, filled 1 Mar. Died 14 Feb. Mrs. Teller, filled 30 Mar. Died 1947. Told R.P. 4.30 Fri. State Board Monday.'",
+      "found_in": "dispensary",
+      "points_to": ["pell"],
+      "is_red_herring": false
+    },
+    {
+      "id": "day-book",
+      "name": "Edgar's day book",
+      "description": "Edgar's day book for 14 April, every move written down: '3.00 New tonic mixed. 5.00 Tonic at fountain, nerves, Nathan. 5.30 Dr. P. down, re script. 5.32 to cellar for cough syrup, Dr. P. waiting. 5.40 back. 6.00 Dispensary locked, H.V. gone home.'",
+      "found_in": "dispensary",
+      "points_to": ["pell"],
+      "is_red_herring": false
+    },
+    {
+      "id": "surgery-ledger",
+      "name": "Dr. Pell's poison ledger",
+      "description": "The doctor's own poison ledger from his drug cabinet: 'Strychnine sulphate, tablets of 1/30 grain. 1 March, received 100.' Two patients are entered since, three tablets each. The bottle in the cabinet holds 56 tablets. It should hold 94.",
+      "found_in": "surgery",
+      "points_to": ["pell"],
+      "is_red_herring": false
+    },
+    {
+      "id": "tonic-bottle",
+      "name": "Tonic bottle",
+      "description": "Edgar's nightly tonic, with the police chemist's label: 'Strychnine sulphate present, about 1 1/4 grains in the bottle, from crushed tablets (binder present). Not from grain bait.' A spoonful would kill a man in half an hour.",
+      "found_in": "dispensary",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "shop-poison-register",
+      "name": "Shop poison register",
+      "description": "The pharmacy's own poison register. The shop's stock of strychnine is a sealed bottle of powder, last opened in 1948 and still sealed with Edgar's wax.",
+      "found_in": "dispensary",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "fountain-tape",
+      "name": "Fountain register tape",
+      "description": "The soda fountain's register tape, timed by the machine. Sales rung up under 'H' every few minutes from 4.55 to 5.58 pm, then 'CLOSED 6.00'.",
+      "found_in": "shop",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "delivery-book",
+      "name": "Delivery book",
+      "description": "Nathan's delivery book for the evening round, with a customer's signature and the time for every call: 5.20 Ferry Street, 5.45 Ash Lane, and on across the north side of the city until 8.25 pm on Calloway Street.",
+      "found_in": "shop",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "rat-poison",
+      "name": "Rat bait and bill",
+      "description": "A sack of strychnine grain bait for rats, dyed pink, and a bill from Hagen's Hardware: 'Strychnine grain bait, 1 lb. 8 April. Mrs. L. Mercer.'",
+      "found_in": "cellar",
+      "points_to": ["lucille"],
+      "is_red_herring": true
+    },
+    {
+      "id": "chain-offer",
+      "name": "Letter from a drugstore chain",
+      "description": "A letter from the Calder Drug Company offering thirty thousand dollars for Mercer's Pharmacy, 'subject to the agreement of both partners.' Across the bottom, in Edgar's hand: 'NEVER. Tell the boy.'",
+      "found_in": "dispensary",
+      "points_to": ["nathan"],
+      "is_red_herring": true
+    }
+  ],
+  "suspects": [
+    {
+      "id": "pell",
+      "name": "Dr. Raymond Pell",
+      "role": "Physician, with a surgery above the pharmacy",
+      "age": 50,
+      "portrait": "man-hat",
+      "color": "#4a5a6a",
+      "personality": "Calm, kind and reassuring, the family doctor everyone on Calloway Street trusts. He has a doctor's way of taking charge of a room. Underneath he is tired, in pain from an old injury, and dependent on morphine, and he has been waiting three years to be found out.",
+      "speech_style": "Gentle and professional, a bedside manner. Uses medical words and explains them. Calls the victim 'poor Edgar' and the detective 'my friend'. When pressed, he gets slower and more patient, as if the detective were a nervous patient.",
+      "alibi": "At half past five I was in the dispensary for two minutes with Edgar at my elbow, about a prescription. From seven until after ten I was at St. Columba's delivering Mrs. Kovacs's twins.",
+      "public_facts": [
+        "Dr. Raymond Pell has had his surgery above Mercer's Pharmacy for twelve years.",
+        "He was at St. Columba's Hospital from seven until after ten tonight, delivering a baby.",
+        "Most of the prescriptions Mercer's filled came from his pad."
+      ],
+      "private_knowledge": [
+        "Edgar took a spoonful of his own nerve tonic every night at nine before locking up. Everyone on the street knew it.",
+        "At half past five you went down to the dispensary about a prescription.",
+        "You keep strychnine tablets in your drug cabinet for patients with weak hearts."
+      ],
+      "lies": [
+        {
+          "topic": "His visit to the dispensary",
+          "claim": "I was in the dispensary for two minutes and Edgar never left my side.",
+          "truth": "Edgar went down to the cellar for stock at 17:32 and left you alone in the dispensary until 17:40."
+        },
+        {
+          "topic": "His talk with Edgar this afternoon",
+          "claim": "Edgar came up for a chat at half past four. We often talked in the afternoons.",
+          "truth": "Edgar came up to tell you he knew about the morphine prescriptions written for dead patients and would report you to the State Board on Monday."
+        }
+      ],
+      "secrets": [
+        "You have been taking morphine every day since a riding accident three years ago."
+      ],
+      "never_reveal": [
+        "That you crushed strychnine tablets from your own cabinet into Edgar's tonic bottle while he was in the cellar."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "pell-habit",
+          "text": "Says poor Edgar took a spoonful of his own nerve tonic every night at nine before he locked up. Everybody on Calloway Street knew it.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "pell-cabinet",
+          "text": "Says he keeps strychnine tablets in his cabinet for patients with weak hearts, and that he cannot account for the shortfall without his patient cards. He thinks the ledger must be wrong.",
+          "condition": "shown_evidence:surgery-ledger"
+        }
+      ],
+      "breaks_on": ["day-book", "surgery-ledger", "prescription-notes"],
+      "patience": 13,
+      "deflections": [
+        "*gently*  My friend, you're tired. We all are. Ask me again slowly.",
+        "*rubs his hip*  Poor Edgar. Thirty-nine years behind that counter.",
+        "*patiently*  I was at St. Columba's. Three nurses and a mother of twins will tell you so."
+      ],
+      "alibi_verification": {
+        "status": "broken",
+        "evidence_ids": ["day-book"],
+        "clue_ids": ["helen-alone"],
+        "note": "His hospital alibi covers the wrong hours. Edgar's day book shows he left Pell alone in the dispensary from 17:32 to 17:40, after the tonic was last drunk safely at 17:00, and Helen saw Pell alone there from the fountain."
+      }
+    },
+    {
+      "id": "nathan",
+      "name": "Nathan Mercer",
+      "role": "Pharmacist, Edgar's son and partner",
+      "age": 34,
+      "portrait": "man-bare",
+      "color": "#6a7a5a",
+      "personality": "Restless, decent and worn out by working for his father. He wanted to sell the shop and get out from under the old man, and he said so this afternoon in front of the soda fountain. He found his father dying and he cannot stop seeing it.",
+      "speech_style": "Tired and short-tempered, with sudden bursts of guilt. Calls his father 'Dad' and then corrects himself to 'my father' for the detective. Says 'Look' at the start of sentences. Goes quiet and stares at his hands when it gets too close.",
+      "alibi": "I was out on the deliveries from five past five until half past eight. Then I did the accounts in the back until I heard him fall.",
+      "public_facts": [
+        "Nathan Mercer is Edgar's son and has been his partner in the pharmacy since 1946.",
+        "He did the evening deliveries tonight on the shop bicycle.",
+        "He found his father in convulsions at about 21:10 and telephoned for the ambulance."
+      ],
+      "private_knowledge": [
+        "Your father took a spoonful of the new tonic at the fountain at five o'clock after your row. He was fine.",
+        "You put your mother on the 12:15 ferry to Aunt Rose's in Eastbank. She did not come back until a quarter to ten.",
+        "The Calder Drug Company has offered thirty thousand dollars for the shop, and your father refused."
+      ],
+      "lies": [
+        {
+          "topic": "The chain's offer",
+          "claim": "Sell the shop? Never crossed my mind. This shop is my life too.",
+          "truth": "You have wanted to sell to the Calder Drug Company for a year, and you argued with your father about it at five o'clock in front of Helen."
+        }
+      ],
+      "secrets": [
+        "You have already told the Calder Drug Company you would sell your half if your father agreed."
+      ],
+      "never_reveal": [
+        "That at five o'clock you told your father you wished he would just retire and die somewhere warm."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "nathan-spoonful",
+          "text": "Says his father took a spoonful of the new tonic at the fountain at about five o'clock, right after their row, 'for his nerves'. He was perfectly well afterward.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "nathan-mother",
+          "text": "Says he walked his mother to the corner and put her on the 12:15 ferry to his aunt's in Eastbank. She did not get back until a quarter to ten, after the ambulance had gone.",
+          "condition": "pressed"
+        },
+        {
+          "clue_id": "nathan-offer",
+          "text": "Admits he wanted to sell to the Calder Drug Company and that he and his father argued about it at five o'clock. He says his father would have come round in time, and he would never have hurt him for it.",
+          "condition": "shown_evidence:chain-offer"
+        }
+      ],
+      "breaks_on": ["chain-offer"],
+      "patience": 12,
+      "deflections": [
+        "*stares at his hands*  Look. I just found him. I can't do this right now.",
+        "*rubs his face*  Dad. My father. Sorry.",
+        "*flat*  Ask Helen. She was there. She sees everything from that fountain."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": ["delivery-book"],
+        "clue_ids": [],
+        "note": "His delivery book has a customer's signature and time for every call from 17:20 to 20:25 across the north side of the city."
+      }
+    },
+    {
+      "id": "lucille",
+      "name": "Lucille Mercer",
+      "role": "Edgar's wife",
+      "age": 58,
+      "portrait": "elder-woman",
+      "color": "#8a6a7a",
+      "personality": "Brisk, practical and plain-spoken, married to Edgar for thirty-five years and fond of him in a worn, everyday way. She came home from her sister's to an ambulance outside the shop and has not cried yet. She is angry at the poison, at the doctor who could not save him, and at the detective for asking her about rats.",
+      "speech_style": "Short and practical. Calls her husband 'Mr. Mercer' to strangers and 'Edgar' when she forgets. Says 'Well, there it is' to close a subject. Gets sharp when she thinks she is being made a fool of.",
+      "alibi": "I was at my sister Rose's in Eastbank from the noon ferry until the eight-forty back. I walked in on the ambulance.",
+      "public_facts": [
+        "Lucille Mercer has been married to Edgar for thirty-five years.",
+        "She spent the day at her sister's in Eastbank.",
+        "She came home at about 21:45, after the ambulance had gone."
+      ],
+      "private_knowledge": [
+        "Edgar mixed his own nerve tonic and took a spoonful every night at nine. He had done it for twenty years.",
+        "There are rats in the cellar. You bought bait last Saturday because Edgar kept forgetting to.",
+        "Edgar was worried about something this week. He said 'a doctor's business' and would not tell you more."
+      ],
+      "lies": [
+        {
+          "topic": "The rat poison",
+          "claim": "I've never bought poison in my life. That's Edgar's department.",
+          "truth": "You bought a pound of strychnine grain bait at Hagen's Hardware on 8 April for the rats in the cellar."
+        }
+      ],
+      "secrets": [
+        "You have a little money of your own put by in the post office that Edgar never knew about."
+      ],
+      "never_reveal": [
+        "That you were going to ask Edgar this summer to sell the shop and retire, the same as Nathan."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "lucille-bait",
+          "text": "Admits she bought the rat bait at Hagen's Hardware last Saturday because Edgar kept forgetting. It is pink grain, she says, and anybody who knows anything knows it is no good in a tonic.",
+          "condition": "shown_evidence:rat-poison"
+        },
+        {
+          "clue_id": "lucille-worried",
+          "text": "Says Edgar was worried all week about 'a doctor's business' and was going up to see somebody about it on Friday afternoon. He would not tell her who.",
+          "condition": "pressed"
+        }
+      ],
+      "breaks_on": ["rat-poison"],
+      "patience": 12,
+      "deflections": [
+        "*folds her arms*  Well, there it is. I wasn't here.",
+        "*sharp*  I've told you once. I'll not tell you twice.",
+        "*looks at the counter*  Thirty-nine years. He never missed a day."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": [],
+        "clue_ids": ["nathan-mother"],
+        "note": "Nathan put her on the 12:15 ferry to Eastbank, and she did not come back until after the ambulance had gone. She was not on Calloway Street when the tonic was poisoned."
+      }
+    },
+    {
+      "id": "helen",
+      "name": "Helen Voss",
+      "role": "Soda fountain attendant",
+      "age": 29,
+      "portrait": "woman-bob",
+      "color": "#a07a5a",
+      "personality": "Cheerful, nosy and sharp-eyed, the kind of girl who knows everybody's order and everybody's business. Mr. Mercer told her off this morning for giving free sodas to her little brothers, and she is ashamed of how angry she was. She saw more from the fountain today than she has told anyone.",
+      "speech_style": "Quick and friendly, a lot of 'honest' and 'swear to God'. Calls the victim 'Mr. Mercer' and the doctor 'Doc'. Describes people by what they order. Gets defensive and talks faster when she thinks she is in trouble.",
+      "alibi": "I was behind the fountain from before five until I closed at six, and then I went home on the streetcar.",
+      "public_facts": [
+        "Helen Voss has run the soda fountain at Mercer's for three years.",
+        "She worked until six o'clock tonight and then went home.",
+        "From the fountain you can see through the glass panel into the dispensary."
+      ],
+      "private_knowledge": [
+        "At five o'clock Mr. Mercer took a spoonful of his new tonic at the fountain after shouting at Nathan. He was fine.",
+        "At half past five Doc Pell came down. A couple of minutes later Mr. Mercer went down the cellar stairs and Doc was left in the dispensary on his own, by the shelf where the tonic was.",
+        "Mr. Mercer came back up with cough syrup at about twenty to six."
+      ],
+      "lies": [
+        {
+          "topic": "Her quarrel with Edgar",
+          "claim": "Mr. Mercer was a swell boss. We never had a cross word.",
+          "truth": "He told you off sharply this morning for giving free sodas to your brothers and said one more time and you were through."
+        }
+      ],
+      "secrets": [
+        "You have been giving your brothers free sodas every afternoon for a year."
+      ],
+      "never_reveal": [
+        "That you said under your breath this morning that you hoped the old man choked."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "helen-alone",
+          "text": "Says at half past five Doc Pell came down to the dispensary. A couple of minutes later Mr. Mercer went down the cellar stairs for stock, and Doc was alone in there by the shelf where the tonic stood until Mr. Mercer came back up with cough syrup at about twenty to six.",
+          "condition": "shown_evidence:day-book"
+        },
+        {
+          "clue_id": "helen-spoon",
+          "text": "Says at five o'clock, right after shouting at Nathan, Mr. Mercer took a spoonful of his new tonic at the fountain, 'for his nerves'. Nothing happened to him. He went back to work.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "helen-pell-pressed",
+          "text": "Says Doc Pell looked terrible this afternoon, grey in the face, and that he had a row with Mr. Mercer upstairs at about half past four. She heard Mr. Mercer's voice through the ceiling.",
+          "condition": "pressed"
+        }
+      ],
+      "breaks_on": ["fountain-tape"],
+      "patience": 12,
+      "deflections": [
+        "*wipes the counter that is already clean*  Honest, I just make the sodas.",
+        "*quickly*  Swear to God, I went home at six. Ask the streetcar man.",
+        "*bites her lip*  Mr. Mercer gave me this job when nobody else would."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": ["fountain-tape"],
+        "clue_ids": [],
+        "note": "The fountain register tape shows her ringing up sales every few minutes from 16:55 to 17:58, and the dispensary was locked from six. She never had the bottle alone."
+      }
+    }
+  ],
+  "hints": [
+    "Edgar died at nine, but the poison went in earlier. Find out when the tonic was last drunk safely, and who was alone with it after that.",
+    "Edgar wrote down everything he did all day. Read his day book carefully.",
+    "Helen sees everything from the soda fountain. Show her what Edgar wrote down about half past five.",
+    "The police chemist says the strychnine came from crushed tablets, not grain bait. Find out who keeps tablets.",
+    "Edgar had something in his prescription file he was going to report on Monday. Read the notes on the bundle at the front.",
+    "On the board, pin Edgar's notes, his day book and the poison ledger from upstairs together, then press \"Check theory\".",
+    "Look hard at Dr. Pell. Edgar was reporting him, Edgar left him alone with the tonic, and his own cabinet is thirty-eight tablets short. His hospital alibi covers the wrong hours."
+  ],
+  "endings": {
+    "correct": "Dr. Raymond Pell asks to sit down before they take him, and he is allowed to. The State Board gets Edgar Mercer's bundle of prescriptions on Monday after all. On Tuesday morning Nathan Mercer opens the shop at eight, the same as his father did, and does not sell it.",
+    "wrong_culprit": "You arrest the wrong person and Dr. Pell signs the death certificate himself. Mercer's Pharmacy is sold to the Calder Drug Company in June. The new pharmacist fills Dr. Pell's prescriptions without reading the death notices.",
+    "weak_proof": "You named the right man and the hospital stood behind him. Three nurses saw him at nine o'clock. You needed the reason, the eight minutes and the missing tablets in front of a jury together."
+  }
+}$case$, now())
+on conflict (id) do update set case_text = excluded.case_text, updated_at = now();
+
+-- night-express (sha256 of the minified JSON: ab72673c07c7dd860f26db1086d538b589a42a474c89cefda1d6da6c4786e6d5)
+insert into public.story_cases (id, case_text, updated_at) values ('night-express', $case${
+  "schema_version": 1,
+  "id": "night-express",
+  "title": "The Night Express",
+  "tagline": "A newspaper owner with a file for the commission, a sleeping car, and twelve minutes at a water stop.",
+  "setting": "The Calder Limited, the overnight sleeper from Calder City to Harmon Junction",
+  "era": "June 1949",
+  "intro_briefing": [
+    "Thursday, 9 June 1949. The Calder Limited left Calder City at nine last night with one sleeping car, one dining car and a lounge car on the back. It was due into Harmon Junction at seven. At five past midnight the porter brought a cup of coffee to Compartment C and found Walter Brandt dead in his berth.",
+    "Brandt owned the Calder Courier, the paper that ran the Pier Seventeen story in April and kept running it. He was on his way to Harmon to give evidence to the state Waterfront Commission at ten this morning. Somebody stabbed him once, under the ribs, with a knife that is not in the compartment.",
+    "The railroad stopped the train at Ferris Crossing and telephoned the city. You came out on the engine of the milk train. Nobody has left the sleeping car. In it you have his wife, Irene Brandt; his star reporter, Paul Sutter, who was carrying the Courier's half of the file; Conrad Teague, the waterfront contractor whose name is all over that file, travelling to the same hearing; and the porter, Gus Malloy, who has worked this car for twenty-two years.",
+    "Search the compartment, the corridor, the dining car and the lounge car. Question the four of them and put what you find on the table in front of them. When you can show who went into Compartment C, and why, make your accusation."
+  ],
+  "victim": {
+    "id": "walter",
+    "name": "Walter Brandt",
+    "age": 54,
+    "description": "Owner and publisher of the Calder Courier. Loud, stubborn and hard to frighten. He had spent eight months building a file on waterfront contracts and meant to hand it to the commission himself.",
+    "cause_of_death": "A single stab wound under the left ribs from a narrow serrated blade.",
+    "found_in": "compartment-c",
+    "found_at": "at about 00:05, lying in his lower berth in Compartment C, half under the blanket"
+  },
+  "solution": {
+    "culprit_id": "paul",
+    "motive": "Paul Sutter had been taking money from Teague Construction to tell Teague what the Courier knew, and Walter had found the deposit slip and put it on the list of exhibits for the commission.",
+    "method": "Paul pocketed a steak knife at dinner. When the porter got off the train at the Ferris Crossing water stop, Paul went from his own compartment into Compartment C, stabbed Walter, and pushed the knife into the corridor fire bucket wrapped in a page of his own typed copy.",
+    "required_evidence": ["deposit-slip", "wrapped-knife", "bar-tab"],
+    "reveal": "Paul Sutter sold his own paper. Since the spring, Teague Construction had been paying him to tell Conrad Teague what the Courier was about to print, and in May a cheque for two thousand five hundred dollars went into his account. Walter Brandt found the deposit slip. He said nothing to Paul until last night, when the two of them sat in Compartment C going through the commission file, and he showed Paul item seven on the list. Paul had already taken a steak knife off the table at dinner. He sat in the lounge car until the bar shut at half past eleven, went to his own compartment and waited. At twenty to twelve the train stopped at Ferris Crossing to take on water and ice, and Gus Malloy left his seat at the end of the corridor to help the ice crew, as he does every trip. For twelve minutes nobody was watching the corridor. Paul knocked on Compartment C, went in and stabbed Walter once. He wrapped the knife in the first paper he had, a page of his own story, and pushed it into the sand of the fire bucket. Then he told everyone he had been writing in the lounge car until midnight. The lounge car was dark by then, the barman wrote down the time of his last drink, and Walter had left a carbon of the deposit slip in his wife's handbag."
+  },
+  "timeline": [
+    {
+      "day": 0,
+      "time": "21:00",
+      "location": "corridor",
+      "who": ["walter", "irene", "paul", "teague", "gus"],
+      "what": "The Calder Limited leaves Calder City. Walter Brandt has Compartment C, Irene Brandt has D next door with a connecting door, Paul Sutter has B and Conrad Teague has F. Gus Malloy is the sleeping car porter.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "21:20",
+      "location": "dining-car",
+      "who": ["walter", "irene", "paul"],
+      "what": "Walter, Irene and Paul dine together at table 4. Teague eats alone at table 1.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "21:50",
+      "location": "dining-car",
+      "who": ["paul"],
+      "what": "Paul slips a steak knife from table 4 into his jacket inside his folded napkin and leaves the table first.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "day": 0,
+      "time": "22:05",
+      "location": "dining-car",
+      "who": ["teague", "walter"],
+      "what": "Teague stops at Walter's table and offers him ten thousand dollars to stay home from the hearing. Walter laughs at him loudly enough for the steward to hear.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "22:15",
+      "location": "compartment-c",
+      "who": ["walter", "paul"],
+      "what": "Walter and Paul go through the commission file in Compartment C. Walter shows Paul item seven on the exhibit list, the Teague deposit slip, and tells him he will be named on Thursday.",
+      "visibility": "private",
+      "tags": ["motive"]
+    },
+    {
+      "day": 0,
+      "time": "22:40",
+      "location": "compartment-c",
+      "who": ["irene", "walter"],
+      "what": "Irene goes through the connecting door into C. They argue about the divorce she wants. Walter says he cannot sleep, and she gives him one of her sleeping powders. He bolts the connecting door after her.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "22:50",
+      "location": "lounge-car",
+      "who": ["teague", "paul"],
+      "what": "Teague sits down to gin rummy with Conductor Hale at the card table. Paul is at the bar with his portable typewriter.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "23:25",
+      "location": "lounge-car",
+      "who": ["paul"],
+      "what": "Paul signs for a last rye and soda. At 23:30 the barman shuts the bar and at 23:35 turns out the lounge lights. Paul says he will finish his story in his berth and goes forward.",
+      "visibility": "public",
+      "tags": ["alibi"]
+    },
+    {
+      "day": 0,
+      "time": "23:30",
+      "location": "compartment-c",
+      "who": ["walter", "gus"],
+      "what": "Walter rings for the porter and asks through the door for coffee at midnight.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "23:35",
+      "location": "conductors-office",
+      "who": ["teague"],
+      "what": "Teague and Conductor Hale carry their game back to the conductor's office at the rear of the lounge car and keep playing.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "23:38",
+      "location": "corridor",
+      "who": ["gus", "irene"],
+      "what": "Irene rings from D. Gus brings her a glass of water. She is in her nightgown and barely awake, and she bolts her door after him.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "23:40",
+      "location": "ferris-crossing",
+      "who": ["gus"],
+      "what": "The train stops at the Ferris Crossing water tower. Gus leaves his seat and gets down to help the ice crew load the dining car, against the railroad's rules. Teague and Hale can see him from the office window.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "23:43",
+      "location": "compartment-c",
+      "who": ["paul", "walter"],
+      "what": "Paul knocks on Compartment C, is let in, and stabs Walter once with the steak knife.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "day": 0,
+      "time": "23:47",
+      "location": "corridor",
+      "who": ["paul"],
+      "what": "Paul wraps the knife in a page of his typed story and pushes it into the sand of the fire bucket at the end of the corridor.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "day": 0,
+      "time": "23:52",
+      "location": "corridor",
+      "who": ["gus", "paul"],
+      "what": "The train moves off. Gus climbs back aboard and sees Paul at the end of the corridor by the fire bucket. Paul says he wanted some air.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 1,
+      "time": "00:05",
+      "location": "compartment-c",
+      "who": ["gus", "walter"],
+      "what": "Gus brings the coffee to Compartment C, gets no answer, opens the door with his key and finds Walter dead. The train stops at the next siding and the conductor telephones the city.",
+      "visibility": "public",
+      "tags": []
+    }
+  ],
+  "offstage_locations": [
+    { "id": "conductors-office", "name": "Conductor's office" },
+    { "id": "ferris-crossing", "name": "Ferris Crossing water stop" }
+  ],
+  "rooms": [
+    {
+      "id": "compartment-c",
+      "name": "Compartment C",
+      "description": "A first-class compartment, green plush and polished walnut, with the lower berth made up and the upper folded away. The blind is down. A briefcase lies open on the seat, and the connecting door to Compartment D is in the far wall.",
+      "background": "train-car",
+      "hotspots": [
+        {
+          "id": "berth",
+          "label": "Berth",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The lower berth where Gus found him. The blanket is pulled half off and there is blood on the sheet. His reading glasses are folded on the shelf above, and his shoes are side by side on the floor.",
+          "evidence_id": null
+        },
+        {
+          "id": "briefcase",
+          "label": "Briefcase",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "A heavy leather briefcase stamped W.B., open on the seat. Inside is a cardboard folder marked 'Commission' with a typed list clipped to the front. One of the pockets in the folder is empty.",
+          "evidence_id": "exhibit-list"
+        },
+        {
+          "id": "connecting-door",
+          "label": "Connecting door",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "The door through to Compartment D. A brass bolt on this side is shot home, and there is dust in the slot on the D side of the frame.",
+          "evidence_id": "door-bolt"
+        },
+        {
+          "id": "side-table",
+          "label": "Side table",
+          "x": 10,
+          "y": 56,
+          "width": 26,
+          "height": 26,
+          "description": "A water glass on the fold-down table with a chalky white ring in the bottom, and beside it a folded paper twist from a pharmacy.",
+          "evidence_id": "sleeping-draught"
+        },
+        {
+          "id": "window",
+          "label": "Window",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "The blind is down and latched. The window behind it is shut tight. Nothing went in or out this way.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "corridor",
+      "name": "Sleeping car corridor",
+      "description": "A narrow corridor down one side of the sleeping car, carpeted in maroon, with the compartment doors A to F along the left and windows along the right. The porter's seat and call board are at one end, the fire bucket and the door to the vestibule at the other.",
+      "background": "hallway",
+      "hotspots": [
+        {
+          "id": "call-board",
+          "label": "Call board",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The porter's call board, a little glass panel with a flag for each compartment. Gus writes every call in a pocket book that hangs beside it on a string.",
+          "evidence_id": "call-board"
+        },
+        {
+          "id": "porters-seat",
+          "label": "Porter's seat",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "A fold-down seat at the end of the car with a shoeshine box under it and four pairs of shoes in a row. From here you can see every door in the corridor.",
+          "evidence_id": null
+        },
+        {
+          "id": "fire-bucket",
+          "label": "Fire bucket",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "A red fire bucket of sand on a hook by the vestibule door. The sand has been dug into and smoothed over, and a corner of paper sticks out of it.",
+          "evidence_id": "wrapped-knife"
+        },
+        {
+          "id": "window",
+          "label": "Window",
+          "x": 10,
+          "y": 56,
+          "width": 26,
+          "height": 26,
+          "description": "Fields and telegraph poles go past in the dark. Through the glass you can see the next car's lights swing as the train takes the curve.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "dining-car",
+      "name": "Dining car",
+      "description": "White tablecloths, little brass lamps, and the smell of coffee and cigars. The tables have been cleared for the night except for the steward's tray of silver, which is still waiting to be counted back into its drawers.",
+      "background": "dining-room",
+      "hotspots": [
+        {
+          "id": "steward-tray",
+          "label": "Silver tray",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The steward's tray of knives, forks and spoons, with his tally card tucked under the rim.",
+          "evidence_id": "knife-tally"
+        },
+        {
+          "id": "seating-card",
+          "label": "Seating card",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "The steward's seating card for the second sitting. Table 1: Mr. Teague, alone. Table 4: Mr. and Mrs. Brandt and Mr. Sutter. In pencil beside table 4: 'Shouting, 10.05. Mr. T.'",
+          "evidence_id": null
+        },
+        {
+          "id": "kitchen-hatch",
+          "label": "Kitchen hatch",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "The hatch into the galley. Through it you can see the ice chest, freshly filled at Ferris Crossing. Water is still dripping out of it onto the floor.",
+          "evidence_id": null
+        },
+        {
+          "id": "table-four",
+          "label": "Table four",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "Table 4, by the window. The cloth is clean now. Under it, stuck to the table edge, is a folded menu with doodles of the Courier masthead in the margin.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "lounge-car",
+      "name": "Lounge car",
+      "description": "The last car on the train: leather armchairs, a little bar with a brass rail, and a card table under a green-shaded lamp. The lights are on again now, but the bar is shuttered.",
+      "background": "bar",
+      "hotspots": [
+        {
+          "id": "bar",
+          "label": "Bar",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The barman's tab book lies on the counter beside the till, and a chalkboard hangs above the shutter.",
+          "evidence_id": "bar-tab"
+        },
+        {
+          "id": "card-table",
+          "label": "Card table",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "A deck of cards squared off neatly and a score pad in a conductor's careful figures.",
+          "evidence_id": "gin-score-pad"
+        },
+        {
+          "id": "ashtray",
+          "label": "Ashtray",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "A standing ashtray by the armchair Teague used. Among the cigar ends is a yellow telegram form, crumpled into a ball.",
+          "evidence_id": "teague-telegram"
+        },
+        {
+          "id": "typewriter-case",
+          "label": "Typewriter case",
+          "x": 10,
+          "y": 56,
+          "width": 26,
+          "height": 26,
+          "description": "An empty case for a portable typewriter, left under the bar stool. The machine has gone forward with its owner. A few balls of discarded copy paper lie beside it, all typed in purple ribbon.",
+          "evidence_id": null
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "exhibit-list",
+      "name": "Commission exhibit list",
+      "description": "A typed list headed 'For the Commission, Thursday', clipped to Walter's folder. Seven items. The seventh reads: 'Deposit slip, Teague Construction to P.S., 3 May 1949, $2,500. Carbon with I.' The pocket in the folder marked 7 is empty.",
+      "found_in": "compartment-c",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "deposit-slip",
+      "name": "Carbon of a deposit slip",
+      "description": "A carbon copy of a deposit slip from the Calder Savings Bank, dated 3 May 1949: one cheque, Teague Construction Company, $2,500, paid into the account of Paul R. Sutter. Across the back, in Walter's heavy pencil: 'Our own man. God help us. Thursday.'",
+      "found_in": "irene",
+      "points_to": ["paul", "teague"],
+      "is_red_herring": false
+    },
+    {
+      "id": "wrapped-knife",
+      "name": "Knife in the fire bucket",
+      "description": "A dining car steak knife with a serrated blade, dark and sticky to the handle, wrapped in a sheet of typed copy and pushed into the sand. The page is typed in purple ribbon and starts 'HARMON JUNCTION, June 10. By Paul Sutter, Courier Staff.'",
+      "found_in": "corridor",
+      "points_to": ["paul"],
+      "is_red_herring": false
+    },
+    {
+      "id": "knife-tally",
+      "name": "Steward's tally card",
+      "description": "The steward's card for the second sitting: 'Steak knives out 24, back 23. Short one, table 4.' Table 4 was the Brandt party: Walter, Irene and Paul.",
+      "found_in": "dining-car",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "bar-tab",
+      "name": "Lounge car tab book",
+      "description": "The barman's tab book. The last entry is '11.25. Rye and soda. Comp. B', signed 'P. Sutter'. On the chalkboard above the shutter: 'BAR CLOSED 11.30. LIGHTS OUT 11.35. By order.'",
+      "found_in": "lounge-car",
+      "points_to": ["paul"],
+      "is_red_herring": false
+    },
+    {
+      "id": "gin-score-pad",
+      "name": "Gin rummy score pad",
+      "description": "A conductor's score pad: 'Hale v. Teague'. Hands are numbered and timed in the margin, the way a railroad man writes everything. The first hand is at 10.50, there is a note 'moved to office 11.35', and the hands go on without a gap to 12.20, when someone has written 'stopped, trouble in sleeper'.",
+      "found_in": "lounge-car",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "teague-telegram",
+      "name": "Crumpled telegram",
+      "description": "A telegram form handed in at Calder City at 6.10 last evening, addressed to Conrad Teague, Calder Limited: 'BRANDT MUST NOT REACH HEARING WITH FILE. DEAL WITH IT TONIGHT. FISK.'",
+      "found_in": "lounge-car",
+      "points_to": ["teague"],
+      "is_red_herring": true
+    },
+    {
+      "id": "sleeping-draught",
+      "name": "Glass and powder paper",
+      "description": "Walter's water glass with a chalky ring in the bottom, and a folded paper twist printed 'Mercer's Pharmacy. Mrs. I. Brandt. One powder at bedtime.'",
+      "found_in": "compartment-c",
+      "points_to": ["irene"],
+      "is_red_herring": true
+    },
+    {
+      "id": "door-bolt",
+      "name": "Bolted connecting door",
+      "description": "The connecting door between C and D is bolted on Walter's side. There is a film of dust in the bolt slot on the D side that nobody has touched.",
+      "found_in": "compartment-c",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "call-board",
+      "name": "Porter's call book",
+      "description": "Gus Malloy's pocket book of calls for the night, in pencil: '11.30 C, coffee at 12. 11.38 D, water. 12.05 C coffee, no answer.'",
+      "found_in": "corridor",
+      "points_to": [],
+      "is_red_herring": false
+    }
+  ],
+  "suspects": [
+    {
+      "id": "irene",
+      "name": "Irene Brandt",
+      "role": "Walter Brandt's wife",
+      "age": 41,
+      "portrait": "woman-hat",
+      "color": "#7a5c8a",
+      "personality": "Tired, elegant and very honest about how little she liked her husband in the last few years, which makes people think she is harder than she is. She wanted a divorce and was going to ask for it properly after the hearing. Under the sleeping powder she is slow and foggy, and she knows it, and it frightens her more than the detective does.",
+      "speech_style": "Low voice, long pauses, dry jokes she does not smile at. Calls her husband 'Walter' and never 'my husband'. Says 'I'm afraid' when she means no. When she is caught out she goes very still and answers with one word.",
+      "alibi": "I took my powder at eleven and I was asleep until the porter started shouting.",
+      "public_facts": [
+        "Irene Brandt has been married to Walter for nineteen years.",
+        "She had Compartment D, next to her husband's, with a connecting door between them.",
+        "She dined with Walter and Paul Sutter at table 4 in the dining car."
+      ],
+      "private_knowledge": [
+        "Walter told you at dinner, under his breath, that he had found 'one of our own' on Teague's payroll, and that he was going to name him at the hearing.",
+        "Walter gave you a carbon of a bank slip to keep in your handbag, in case anything happened to his briefcase. You have not looked at it closely.",
+        "Paul left the dinner table first, at about ten to ten, holding his napkin bunched up in his hand.",
+        "At about twenty to midnight you rang for water and the porter brought it. You bolted your door after him."
+      ],
+      "lies": [
+        {
+          "topic": "Whether she saw Walter after dinner",
+          "claim": "I didn't see Walter again after dinner. I went to my compartment and took my powder.",
+          "truth": "At about 22:40 you went through the connecting door into C. You argued about the divorce, he said he could not sleep, and you gave him one of your powders. He bolted the connecting door after you."
+        }
+      ],
+      "secrets": [
+        "You have been seeing a lawyer about a divorce since March, and you meant to ask Walter for one after the hearing."
+      ],
+      "never_reveal": [
+        "That the last thing you said to Walter was that you wished you had never married him."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "irene-carbon",
+          "text": "Says Walter told her at dinner he had found one of his own people on Teague's payroll. He gave her a carbon of a bank slip to keep in her handbag in case his briefcase went missing. She takes it out and hands it over.",
+          "condition": "shown_evidence:exhibit-list",
+          "evidence_id": "deposit-slip"
+        },
+        {
+          "clue_id": "irene-quarrel",
+          "text": "Admits she went into C through the connecting door at about 22:40. They argued about the divorce she wants. He said he could not sleep, so she gave him one of her powders, and he bolted the connecting door behind her.",
+          "condition": "shown_evidence:sleeping-draught"
+        },
+        {
+          "clue_id": "irene-napkin",
+          "text": "Remembers Paul getting up from table 4 first, at about ten to ten, with his napkin bunched up in his fist, as if he had something in it.",
+          "condition": "pressed"
+        }
+      ],
+      "breaks_on": ["sleeping-draught"],
+      "patience": 12,
+      "deflections": [
+        "*rubs her eyes*  I'm afraid I'm still half asleep, Detective. Ask me again in a little while.",
+        "*looks at the blind*  Walter would have had a headline for this. I haven't got one.",
+        "*very still*  No."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": ["door-bolt"],
+        "clue_ids": ["gus-water"],
+        "note": "The connecting door was bolted on Walter's side with undisturbed dust on her side, so nobody came from D. The porter took her water at 23:38, found her barely awake, and heard her bolt her corridor door."
+      }
+    },
+    {
+      "id": "paul",
+      "name": "Paul Sutter",
+      "role": "Chief reporter, the Calder Courier",
+      "age": 29,
+      "portrait": "young-man",
+      "color": "#5a6e8c",
+      "personality": "Quick, likeable and eager to be liked. He talks to the detective as one professional to another and offers help before he is asked. Underneath he is badly frightened, and the more frightened he gets the more he talks.",
+      "speech_style": "Newspaper talk: short punchy sentences, 'off the record', 'for what it's worth', 'the old man' for Walter. Calls the detective 'Detective' and sometimes 'pal'. When he is cornered he starts quoting what he would write about it.",
+      "alibi": "I sat in the lounge car writing up the hearing piece until about midnight. Then I turned in and slept until all the noise.",
+      "public_facts": [
+        "Paul Sutter has worked for the Courier for six years and wrote most of the Pier Seventeen stories.",
+        "He was carrying the Courier's notes for the Waterfront Commission hearing.",
+        "He had Compartment B and spent part of the evening in the lounge car with his typewriter."
+      ],
+      "private_knowledge": [
+        "You and Walter went through the commission file in Compartment C from about 22:15 until 22:40.",
+        "You saw Conrad Teague stop at Walter's table after dinner. Walter laughed in his face.",
+        "You know the porter gets off at Ferris Crossing every trip to help with the ice."
+      ],
+      "lies": [
+        {
+          "topic": "Where he was from half past eleven",
+          "claim": "I was in the lounge car writing until about midnight.",
+          "truth": "The bar shut at 23:30 and the lights went out at 23:35. You went back to Compartment B, and at about 23:43 you went to Compartment C."
+        },
+        {
+          "topic": "Money from Teague",
+          "claim": "Teague? I've been trying to nail that man for a year. I wouldn't take a cigarette from him.",
+          "truth": "Teague Construction paid you two thousand five hundred dollars in May to tell them what the Courier was going to print."
+        }
+      ],
+      "secrets": [
+        "Walter showed you item seven on the exhibit list at about 22:30 and told you he would name you at the hearing."
+      ],
+      "never_reveal": [
+        "That you went into Compartment C during the water stop and stabbed Walter with the steak knife from dinner.",
+        "That you hid the knife in the corridor fire bucket wrapped in a page of your own copy."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "paul-file",
+          "text": "Says he and Walter went through the commission file together in Compartment C from about 22:15 to 22:40, and that Walter was in a foul mood all evening.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "paul-lounge",
+          "text": "Admits the bar shut at half past eleven and the lights went out. He says he went back to Compartment B and finished his story in his berth, alone.",
+          "condition": "shown_evidence:bar-tab"
+        }
+      ],
+      "breaks_on": ["bar-tab", "wrapped-knife", "deposit-slip"],
+      "patience": 12,
+      "deflections": [
+        "*spreads his hands*  Off the record, Detective, I'm as lost as you are.",
+        "*laughs, too loud*  You want a quote? 'Reporter has nothing to add.' Print it.",
+        "*lights a cigarette with a shaking match*  Give me a minute. The old man was a friend of mine."
+      ],
+      "alibi_verification": {
+        "status": "broken",
+        "evidence_ids": ["bar-tab"],
+        "clue_ids": ["teague-left", "gus-saw-paul"],
+        "note": "The tab book and chalkboard show the bar shut at 23:30 and the lounge went dark at 23:35. Teague saw him leave then, and the porter found him by the fire bucket at 23:52."
+      }
+    },
+    {
+      "id": "teague",
+      "name": "Conrad Teague",
+      "role": "President, Teague Construction Company",
+      "age": 52,
+      "portrait": "man-hat",
+      "color": "#6e5a3c",
+      "personality": "A big, comfortable man who has bought his way out of every trouble he has been in and expects to do it again. He is rude to the porter and polite to the detective, and he is honestly shocked that someone got to Brandt before the commission did, because now he will be the first name in every paper.",
+      "speech_style": "Slow and heavy, with a builder's words: 'foundations', 'square', 'load-bearing'. Calls the detective 'son' or 'officer' whatever their rank. Never answers a question with a yes or a no when he can answer it with a story.",
+      "alibi": "From ten to eleven until gone midnight I was playing gin rummy with Conductor Hale, first in the lounge car and then in his office at the back.",
+      "public_facts": [
+        "Conrad Teague's company holds most of the city's waterfront building contracts.",
+        "He was travelling to the Waterfront Commission hearing, where Walter Brandt was going to give evidence about his contracts.",
+        "He had Compartment F and dined alone at table 1."
+      ],
+      "private_knowledge": [
+        "You played gin rummy with Conductor Hale from 22:50. When the lounge lights went out at 23:35 you moved to his office at the back of the lounge car.",
+        "From the office window you watched the porter out on the platform at Ferris Crossing, helping the ice crew, the whole time the train stood there.",
+        "The reporter left the lounge car when the bar shut at half past eleven and said he would finish his piece in his berth."
+      ],
+      "lies": [
+        {
+          "topic": "Whether he spoke to Brandt on the train",
+          "claim": "I never said a word to Brandt all night. We nodded in the corridor, that's all.",
+          "truth": "At 22:05 you stopped at his table in the dining car and offered him ten thousand dollars to stay away from the hearing. He laughed at you."
+        },
+        {
+          "topic": "The telegram",
+          "claim": "I don't get telegrams on trains. Nobody knew I was on this one.",
+          "truth": "Your lawyer, Morton Fisk, wired you at the station. 'Deal with it' meant make Brandt an offer, which you did."
+        }
+      ],
+      "secrets": [
+        "You have paid people at the Courier for information before. You do not know which one Walter found."
+      ],
+      "never_reveal": [
+        "The names of the city officials Teague Construction pays every Christmas."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "teague-left",
+          "text": "Says the reporter, Sutter, packed up his typewriter and left the lounge car when the barman shut the bar at half past eleven. He said he would finish his piece in his berth.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "teague-porter",
+          "text": "Says that from the conductor's office window he watched the old porter out on the platform at Ferris Crossing with the ice crew the whole time the train stood there, from about 23:40 until it moved off at about 23:52.",
+          "condition": "pressed"
+        },
+        {
+          "clue_id": "teague-offer",
+          "text": "Admits the telegram is from his lawyer, Morton Fisk. 'Deal with it' meant make Brandt an offer. He offered Brandt ten thousand dollars at his table in the dining car at about 22:05 and Brandt laughed at him.",
+          "condition": "shown_evidence:teague-telegram"
+        }
+      ],
+      "breaks_on": ["teague-telegram"],
+      "patience": 14,
+      "deflections": [
+        "*settles back in his chair*  You're building on sand, son. Try another question.",
+        "*checks his watch*  I've got a hearing in the morning. I'd like to be awake for it.",
+        "*smiles without warmth*  My lawyer would tell me to stop talking about here."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": ["gin-score-pad"],
+        "clue_ids": [],
+        "note": "Conductor Hale's score pad times every hand from 22:50 to 00:20, with the move to the conductor's office at 23:35 and no gap during the water stop."
+      }
+    },
+    {
+      "id": "gus",
+      "name": "Gus Malloy",
+      "role": "Sleeping car porter, the Calder Limited",
+      "age": 61,
+      "portrait": "elder-man",
+      "color": "#4c6a5a",
+      "personality": "Patient, careful and proud of a clean record. He has seen everything that happens on a sleeping car and talks about very little of it. He is shaken by the death and more shaken that it happened on his car, and he is afraid that what he did at the water stop will cost him his job.",
+      "speech_style": "Polite and slow, 'sir' or 'ma'am' every sentence, times given exactly. Says 'that's the way of it' when he means he will not say more. Never says anything bad about a passenger.",
+      "alibi": "I sat on my seat at the end of the car all night, doing the shoes, the same as always.",
+      "public_facts": [
+        "Gus Malloy has been porter on this sleeping car for twenty-two years.",
+        "He found Walter Brandt dead when he brought the coffee at 00:05.",
+        "His seat at the end of the corridor looks down the whole car."
+      ],
+      "private_knowledge": [
+        "Mr. Brandt rang at 23:30 and asked through the door for coffee at midnight. He sounded wide awake.",
+        "Mrs. Brandt rang at 23:38. You took her a glass of water. She was in her nightgown and could barely hold the glass, and you heard her bolt her door after you.",
+        "When you came back aboard at 23:52 you saw the young newspaper fellow standing by the fire bucket at the end of the corridor. He said he wanted some air."
+      ],
+      "lies": [
+        {
+          "topic": "The water stop",
+          "claim": "I never left my seat, sir. Not once.",
+          "truth": "At Ferris Crossing you got down to help the ice crew load the dining car, as you do every trip. You were off the train from about 23:40 to 23:52. It is against the rules."
+        }
+      ],
+      "secrets": [
+        "The ice crew foreman pays you a dollar a trip to help, and you need it."
+      ],
+      "never_reveal": [
+        "That you have done this every trip for eleven years."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "gus-coffee",
+          "text": "Says Mr. Brandt rang at half past eleven and asked through the door for coffee at midnight. He sounded wide awake. At five past twelve there was no answer, so Gus opened the door with his key.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "gus-water",
+          "text": "Says Mrs. Brandt rang at 23:38. He took her a glass of water in D. She was in her nightgown and could hardly hold the glass, and he heard her bolt her door behind him.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "gus-saw-paul",
+          "text": "Admits he got off at Ferris Crossing to help with the ice. When he climbed back aboard at 23:52 the young newspaper fellow, Mr. Sutter, was standing by the fire bucket at the end of the corridor and said he wanted some air.",
+          "condition": "shown_evidence:wrapped-knife"
+        }
+      ],
+      "breaks_on": ["wrapped-knife"],
+      "patience": 14,
+      "deflections": [
+        "*turns his cap in his hands*  I couldn't say, sir. That's the way of it.",
+        "*looks down the corridor*  Twenty-two years on this car, sir, and nothing like this.",
+        "*looks at his shoes*  I'd rather not speak about the passengers, sir, if it's all the same."
+      ],
+      "alibi_verification": {
+        "status": "broken",
+        "evidence_ids": [],
+        "clue_ids": ["teague-porter"],
+        "note": "He did leave his seat, but Teague watched him on the platform at Ferris Crossing from about 23:40 to 23:52, the whole stop. He was off the train when Walter was killed."
+      }
+    }
+  ],
+  "hints": [
+    "Start in Compartment C. Read the list in the briefcase carefully. One exhibit is missing, and the list says who has the copy.",
+    "Walter was alive at half past eleven. The porter's call book shows it. Work out who could reach Compartment C after that without being seen.",
+    "The train stopped at Ferris Crossing for about twelve minutes. Ask the porter where he was. If he will not say, someone else saw him from a window.",
+    "Use \"Show evidence\" in an interrogation. Show Irene Brandt the exhibit list and she will hand you something Walter gave her to keep.",
+    "Check where everyone says they were against the lounge car tab book and the score pad. One of them was not where he says.",
+    "On the red-string board, pin the deposit slip, the knife from the fire bucket and the tab book together and press \"Check theory\" before you accuse.",
+    "Look hard at Paul Sutter. He took Teague's money, his own copy is wrapped round the knife, and the lounge car was dark when he says he was writing there."
+  ],
+  "endings": {
+    "correct": "Paul Sutter is taken off the train at Harmon Junction in handcuffs, past the photographers who came for the hearing. The commission sits at ten anyway. Irene Brandt hands it her husband's folder herself, with item seven back in its pocket.",
+    "wrong_culprit": "You take the wrong passenger off at Harmon Junction, and the man who wrapped the knife in his own story writes the Courier's front page about the arrest. It is a very good story. He knows everything you got wrong.",
+    "weak_proof": "You have the right man and a lawyer will make short work of the rest. A knife anyone could have taken, a page anyone could have picked up, a slip with no witness to it. You needed the money, the knife and the hour, Detective, together."
+  }
+}$case$, now())
+on conflict (id) do update set case_text = excluded.case_text, updated_at = now();
+
 -- pier-seventeen (sha256 of the minified JSON: dec4d712c01da0f40918a434fb859f011265b85bd9a549545909b67ccd777f0a)
 insert into public.story_cases (id, case_text, updated_at) values ('pier-seventeen', $case${
   "schema_version": 1,
@@ -2600,6 +4807,2805 @@ insert into public.story_cases (id, case_text, updated_at) values ('pier-sevente
     "correct": "Ruth Calloway takes the cuffs without a word. The Harbor Commission gets Harold Pike's carbon at nine after all, and by noon six Ashgrove sailings are coming apart in the evening papers. Out on Pier Seventeen the fog lifts for the first time in three days.",
     "wrong_culprit": "You make the arrest and the papers make the rest. Somewhere uptown a navy rain cape dries on its hook, and next week another freighter's crates sail through a clearance signed in a neat, upright hand. Harold Pike kept a carbon of everything, and you missed this one.",
     "weak_proof": "You had the right name and a thin file. The waterfront is full of good lawyers, and one of them walks Ruth Calloway out of the station before the coffee is cold. The case needed the motive, the weapon, the broken alibi and the witness who saw her on the pier."
+  }
+}$case$, now())
+on conflict (id) do update set case_text = excluded.case_text, updated_at = now();
+
+-- reading-room (sha256 of the minified JSON: db4a176ae9006969d588a159425121501e0b5722bd4cc8dd80e9d4d68ca45958)
+insert into public.story_cases (id, case_text, updated_at) values ('reading-room', $case${
+  "schema_version": 1,
+  "id": "reading-room",
+  "title": "The Reading Room",
+  "tagline": "One line of footprints in the snow, and they all belong to the dead woman.",
+  "setting": "The Calder City Public Library on Founders Square, and its rare book annex across the courtyard",
+  "era": "February 1950",
+  "intro_briefing": [
+    "Friday, 17 February 1950. It started snowing at a quarter to eight and has not stopped. The Calder City Public Library stays open late on Fridays, and tonight almost nobody came. At twenty-five past nine the night porter and a visitor crossed the courtyard to the rare book annex and found Miss Agnes Thorne dead at her desk.",
+    "Miss Thorne was sixty-one and had kept the library's rare books for thirty years. Someone struck her on the head with the heavy brass book press from her own desk. The police surgeon puts it between half past eight and nine o'clock.",
+    "There is one line of footprints across the snow in the courtyard before the porter's: hers, going in, at about ten to eight. Nobody else crossed. The people who were in the library tonight are waiting in the reading room: Graham Oakes, the deputy librarian, who was on the reference desk; Oliver Prentice, a rare book dealer who had an appointment with her at nine; Rosa Lindqvist, a student who reads at the window table every night; and Abe Kowalski, the night porter. Miss Peabody from the circulation desk has given the patrolman a statement.",
+    "Search the reading room, the courtyard, the annex and the cellars. Question the four of them and show them what you find. Somebody reached that annex without walking on the snow."
+  ],
+  "victim": {
+    "id": "agnes",
+    "name": "Agnes Thorne",
+    "age": 61,
+    "description": "Keeper of rare books at the Calder City Public Library since 1920. Small, sharp and terrifying to anyone who touched a book without washing their hands. She knew every volume in the annex by its binding.",
+    "cause_of_death": "A single blow to the head with a brass book press.",
+    "found_in": "rare-book-room",
+    "found_at": "at about 21:25, slumped over her desk in the rare book annex"
+  },
+  "solution": {
+    "culprit_id": "graham",
+    "motive": "Graham Oakes had been stealing rare books from the annex and selling them to a dealer, putting cheap copies in their place, and Agnes had found one of the copies that evening.",
+    "method": "Graham left the reference desk by the back stairs, took the tunnel key, went under the courtyard through the cellar tunnel to the annex, struck Agnes with the brass book press, and came back the same way, so he left no prints in the snow.",
+    "required_evidence": ["swapped-book", "whitewash-jacket", "porter-log"],
+    "reveal": "Graham Oakes had been robbing the annex for two years. He took the good copies of books nobody asked for, put cheaper copies of the same editions on the shelves, and sold the real ones to Oliver Prentice as the library of a late uncle. Tonight Agnes Thorne opened the Calder Psalter, a book she had not handled since before the war, and knew at once it was not hers. The library's copy had the bishop's notes in the margins, and the 1947 inventory that called it present and correct was signed by Graham Oakes. At half past eight she telephoned the reference desk and told him to bring her the inventory and the accession register at once. Graham knew what that meant. At twenty to nine he left the desk by the back stairs, took the tunnel key from the porter's board in the cellar and went through the old heating tunnel that runs under the courtyard to the annex. He came up the annex stair, struck her with the book press, took the letter she had begun to the library board, and went back the way he came. Nobody walked on the snow. But the tunnel walls are whitewashed and rub off on dark cloth, the porter missed his key, and Agnes had already slipped a note into the false Psalter, where Graham never thought to look."
+  },
+  "timeline": [
+    {
+      "day": 0,
+      "time": "19:30",
+      "location": "reading-room",
+      "who": ["graham", "rosa"],
+      "what": "The library is open late. Graham is on the reference desk and Rosa at her usual window table. Snow starts falling heavily at about 19:45.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "19:50",
+      "location": "courtyard",
+      "who": ["agnes"],
+      "what": "Agnes crosses the courtyard to the rare book annex. Hers are the only prints until 21:25.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "20:00",
+      "location": "rare-book-room",
+      "who": ["agnes"],
+      "what": "Agnes takes out the Calder Psalter for the first time in years and finds it is a different copy from the library's. She slips a note inside it and starts a letter to the library board.",
+      "visibility": "private",
+      "tags": ["motive"]
+    },
+    {
+      "day": 0,
+      "time": "20:30",
+      "location": "reading-room",
+      "who": ["graham", "agnes"],
+      "what": "Agnes telephones the reference desk from the annex and tells Graham to bring her the 1947 inventory and the accession register at once. Rosa hears his side of the call.",
+      "visibility": "private",
+      "tags": ["motive"]
+    },
+    {
+      "day": 0,
+      "time": "20:30",
+      "location": "tunnel",
+      "who": ["abe"],
+      "what": "Abe leaves his lodge and goes down to the boiler room in the cellar, where he keeps a bottle, and stays there until 21:00, writing up the boiler gauges as usual.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "20:40",
+      "location": "reading-room",
+      "who": ["graham", "rosa"],
+      "what": "Graham leaves the reference desk and goes down the back stairs toward the cellar, not toward the stacks.",
+      "visibility": "private",
+      "tags": ["alibi"]
+    },
+    {
+      "day": 0,
+      "time": "20:42",
+      "location": "tunnel",
+      "who": ["graham"],
+      "what": "Graham takes the tunnel key from the porter's board in the cellar and goes through the whitewashed heating tunnel under the courtyard to the annex. From the boiler room, Abe sees him pass.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "day": 0,
+      "time": "20:47",
+      "location": "rare-book-room",
+      "who": ["graham", "agnes"],
+      "what": "Graham comes up the annex stair, strikes Agnes with the brass book press from her desk, and takes her unfinished letter to the board.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "day": 0,
+      "time": "20:57",
+      "location": "reading-room",
+      "who": ["graham", "rosa"],
+      "what": "Graham comes back up the back stairs to the reference desk carrying his jacket over his arm and hangs it on his chair.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "21:10",
+      "location": "reading-room",
+      "who": ["prentice"],
+      "what": "Prentice arrives by taxi through the front doors, covered in snow, for his nine o'clock appointment, and waits at the circulation desk with Miss Peabody.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "21:25",
+      "location": "courtyard",
+      "who": ["abe", "prentice", "agnes"],
+      "what": "Abe and Prentice cross the courtyard to the annex to fetch Miss Thorne and find her dead.",
+      "visibility": "public",
+      "tags": []
+    }
+  ],
+  "offstage_locations": [],
+  "rooms": [
+    {
+      "id": "reading-room",
+      "name": "Main reading room",
+      "description": "A long hall of oak tables and green lamps under a high ceiling, almost empty tonight. Tall windows look out over the snowy courtyard to the annex. The reference desk is by the back stairs and the circulation desk is by the front doors.",
+      "background": "library",
+      "hotspots": [
+        {
+          "id": "reference-desk",
+          "label": "Reference desk",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "Graham Oakes's desk, tidy, with a telephone and a stack of call slips. A dark tweed jacket hangs over the back of his chair.",
+          "evidence_id": "whitewash-jacket"
+        },
+        {
+          "id": "circulation-desk",
+          "label": "Circulation desk",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "Miss Peabody's desk by the front doors, with the patrolman's notebook open on it at her statement.",
+          "evidence_id": "peabody-statement"
+        },
+        {
+          "id": "window-table",
+          "label": "Window table",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "Rosa Lindqvist's table by the window, piled with atlases. Her satchel hangs on the chair, and a folder of loose map pages is sticking out of it.",
+          "evidence_id": "cut-maps"
+        },
+        {
+          "id": "windows",
+          "label": "Windows",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "From the windows you can see the whole courtyard under the lamp: the snow, the line of prints, and the dark annex door. Anyone crossing would have been seen from here.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "courtyard",
+      "name": "Courtyard",
+      "description": "A square courtyard between the main building and the annex, under a foot of fresh snow. One lamp on a post lights it. The annex is a small stone building with its own door and a single lit window.",
+      "background": "garden",
+      "hotspots": [
+        {
+          "id": "prints",
+          "label": "Footprints",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The tracks across the courtyard, already filling with snow.",
+          "evidence_id": "snow-prints"
+        },
+        {
+          "id": "annex-door",
+          "label": "Annex door",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "A heavy oak door. Snow has drifted against it and was only broken when the porter pushed it open at twenty-five past nine.",
+          "evidence_id": null
+        },
+        {
+          "id": "lamp-post",
+          "label": "Lamp post",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "The courtyard lamp. Under it the snow is smooth and untouched.",
+          "evidence_id": null
+        },
+        {
+          "id": "grating",
+          "label": "Grating",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "An iron grating set in the middle of the courtyard. The snow on it has melted away, and warm air rises from below.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "rare-book-room",
+      "name": "Rare book annex",
+      "description": "A single high room lined with locked glass cases, smelling of leather and dust. Miss Thorne's desk stands under the lamp. In the corner a narrow door opens onto a stair going down.",
+      "background": "archive",
+      "hotspots": [
+        {
+          "id": "agnes-desk",
+          "label": "Desk",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "Where she was found. Her blotter has a fresh sheet on it with the indented marks of a letter that is not there any more. On the floor beside the chair lies a heavy brass book press.",
+          "evidence_id": "book-press"
+        },
+        {
+          "id": "book-cradle",
+          "label": "Book cradle",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "A small book lies open on a felt cradle at the end of the desk. A corner of white paper sticks out from between the pages.",
+          "evidence_id": "swapped-book"
+        },
+        {
+          "id": "letter-tray",
+          "label": "Letter tray",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "Miss Thorne's incoming letters, in order. The top one is on a dealer's letterhead.",
+          "evidence_id": "prentice-offer"
+        },
+        {
+          "id": "stair-door",
+          "label": "Stair door",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "A narrow door in the corner, unbolted, onto a stone stair that goes down into the dark. There is a white smear on the door frame at shoulder height.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "tunnel",
+      "name": "Cellars and heating tunnel",
+      "description": "The main building's cellar: the boiler room behind a half-open door, the porter's key board on the wall, and an iron door into the old heating tunnel. The tunnel runs straight under the courtyard to the annex stair. Its walls are whitewashed and close enough to touch on both sides.",
+      "background": "cellar",
+      "hotspots": [
+        {
+          "id": "key-board",
+          "label": "Key board",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "A board of labelled hooks for every key in the building. The porter's key book hangs beside it on a nail.",
+          "evidence_id": "porter-log"
+        },
+        {
+          "id": "boiler-room",
+          "label": "Boiler room",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "The boiler room door stands half open. From the stool inside you can see the key board and the tunnel door. There is a gauge log on a clipboard, and a half bottle of rye behind the coal shovel.",
+          "evidence_id": "boiler-log"
+        },
+        {
+          "id": "tunnel-door",
+          "label": "Tunnel door",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "An iron door into the heating tunnel, unlocked now. The tunnel beyond is narrow, warm and white, with steam pipes along one wall.",
+          "evidence_id": null
+        },
+        {
+          "id": "tunnel-wall",
+          "label": "Tunnel wall",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "You brush the wall with your sleeve and it comes away white. The whitewash rubs off on anything that touches it. Halfway along, at shoulder height, there is a clean scraped patch where somebody's shoulder rubbed hard against it.",
+          "evidence_id": null
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "swapped-book",
+      "name": "The false Psalter",
+      "description": "A small leather-bound Psalter printed in 1712, labelled as the library's Calder Psalter. Inside, in Miss Thorne's sharp hand: 'NOT OURS. Ours has the Bishop's notes in the margin of every page. This is clean. 1947 inventory says present and correct, signed G.O. Find out who sold ours. Ask O.P.'",
+      "found_in": "rare-book-room",
+      "points_to": ["graham", "prentice"],
+      "is_red_herring": false
+    },
+    {
+      "id": "whitewash-jacket",
+      "name": "Graham's tweed jacket",
+      "description": "Graham Oakes's dark tweed jacket from the back of his chair. The right shoulder and sleeve are streaked with chalky white powder that has been brushed at and not got out. Nothing in the reading room or the stacks is painted white.",
+      "found_in": "reading-room",
+      "points_to": ["graham"],
+      "is_red_herring": false
+    },
+    {
+      "id": "porter-log",
+      "name": "Porter's key book",
+      "description": "Abe Kowalski's key book: '8.42 pm. Tunnel key gone from board. Not signed out. 9.00 pm. Tunnel key back on hook. ???'",
+      "found_in": "tunnel",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "snow-prints",
+      "name": "Tracks in the snow",
+      "description": "A single line of small prints from the main building's side door to the annex, half filled with snow, made at about ten to eight by a woman's galoshes. Then two fresh sets side by side, the porter and Mr. Prentice at twenty-five past nine. Nobody else crossed this courtyard tonight.",
+      "found_in": "courtyard",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "book-press",
+      "name": "Brass book press",
+      "description": "A heavy brass press for flattening bindings, from the corner of Miss Thorne's desk. One edge is bloody. The handle has been wiped.",
+      "found_in": "rare-book-room",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "peabody-statement",
+      "name": "Miss Peabody's statement",
+      "description": "Miss Peabody's statement to the patrolman: 'Miss Lindqvist sat at the window table all evening and never left it. Mr. Oakes left the reference desk at twenty to nine by the back stairs and came back about nine. Mr. Prentice came in the front doors at ten past nine, white with snow, and waited at my desk until the porter took him across.'",
+      "found_in": "reading-room",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "prentice-offer",
+      "name": "Dealer's letter",
+      "description": "A letter on the letterhead of Oliver Prentice, Fine and Rare Books: 'Dear Miss Thorne, my client will pay four thousand dollars for the Calder Psalter. No questions need be asked on either side. I will call on Friday at nine.'",
+      "found_in": "rare-book-room",
+      "points_to": ["prentice"],
+      "is_red_herring": true
+    },
+    {
+      "id": "cut-maps",
+      "name": "Loose map pages",
+      "description": "A folder in Rosa Lindqvist's satchel holding six hand-coloured map pages cut neatly from an atlas, and a safety razor blade wrapped in paper.",
+      "found_in": "reading-room",
+      "points_to": ["rosa"],
+      "is_red_herring": true
+    },
+    {
+      "id": "boiler-log",
+      "name": "Boiler gauge log",
+      "description": "The boiler log on its clipboard, in the porter's hand: pressure and temperature at 8.30, 8.40, 8.50 and 9.00 pm. The boiler room stool faces the key board and the tunnel door.",
+      "found_in": "tunnel",
+      "points_to": [],
+      "is_red_herring": false
+    }
+  ],
+  "suspects": [
+    {
+      "id": "graham",
+      "name": "Graham Oakes",
+      "role": "Deputy librarian",
+      "age": 45,
+      "portrait": "man-bare",
+      "color": "#5a6a5a",
+      "personality": "Mild, pleasant and very helpful, the man who knows where everything is. He has been passed over for the top job twice and smiles about it. He respected Agnes Thorne and was afraid of her, and for two years he has been waiting for the day she opened the wrong book.",
+      "speech_style": "Soft and helpful, a librarian's voice, never above a murmur. Uses catalogue words: 'shelved', 'accession', 'provenance'. Calls her 'Miss Thorne', always. Offers to look things up when he does not want to answer.",
+      "alibi": "I was at the reference desk all evening, apart from a few minutes in the stacks. And you've seen the snow. Nobody could have got to the annex without leaving prints.",
+      "public_facts": [
+        "Graham Oakes has been deputy librarian for nine years.",
+        "He was on the reference desk in the main reading room tonight.",
+        "He signs the yearly inventories of the library's collections, including the annex."
+      ],
+      "private_knowledge": [
+        "Miss Thorne telephoned the reference desk at half past eight and asked for the 1947 inventory and the accession register.",
+        "There is an old heating tunnel under the courtyard from the main cellar to the annex stair. Few people outside the staff know about it.",
+        "The snow started at about a quarter to eight."
+      ],
+      "lies": [
+        {
+          "topic": "Where he went at twenty to nine",
+          "claim": "I went into the stacks for a few minutes to fetch a book for a reader. That's all.",
+          "truth": "You went down the back stairs to the cellar, took the tunnel key and went under the courtyard to the annex. You were gone from 20:40 to 20:57."
+        },
+        {
+          "topic": "The rare books",
+          "claim": "Every book in the annex was checked in the 1947 inventory. I signed it myself.",
+          "truth": "You have taken the good copies of eleven books since 1948, replaced them with cheaper copies, and sold the originals to Oliver Prentice."
+        }
+      ],
+      "secrets": [
+        "You told Prentice the books came from your late uncle's library in Harmon."
+      ],
+      "never_reveal": [
+        "That you struck Miss Thorne with the book press and took her letter to the board.",
+        "That you went to the annex through the heating tunnel."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "graham-call",
+          "text": "Says Miss Thorne telephoned the reference desk at half past eight wanting the 1947 inventory and the accession register, and that he told her he would bring them when the desk was quiet.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "graham-tunnel",
+          "text": "Admits, when pressed, that there is an old heating tunnel from the main cellar to the annex stair. He says it has been locked for years and nobody uses it.",
+          "condition": "pressed"
+        }
+      ],
+      "breaks_on": ["whitewash-jacket", "porter-log", "swapped-book"],
+      "patience": 13,
+      "deflections": [
+        "*folds his hands on the desk*  I could look that up for you, Detective, if you'd like.",
+        "*softly*  Miss Thorne would have known. She always knew.",
+        "*glances at the windows*  You've seen the snow. I don't know what else to tell you."
+      ],
+      "alibi_verification": {
+        "status": "broken",
+        "evidence_ids": ["porter-log", "peabody-statement"],
+        "clue_ids": ["abe-saw", "rosa-stairs"],
+        "note": "The key book shows the tunnel key gone from 20:42 to 21:00. Miss Peabody saw him leave by the back stairs at 20:40, Rosa saw him go toward the cellar, and the porter saw him pass into the tunnel."
+      }
+    },
+    {
+      "id": "prentice",
+      "name": "Oliver Prentice",
+      "role": "Dealer in fine and rare books",
+      "age": 60,
+      "portrait": "elder-man",
+      "color": "#7a6a5a",
+      "personality": "Courtly, well dressed and well read, with a dealer's habit of never asking where a fine thing came from if the price is right. He did not kill anybody and is very frightened of what an honest answer about his stock would do to him.",
+      "speech_style": "Old-fashioned and elaborate: 'one would hardly say', 'a matter of some delicacy'. Calls books 'she'. Calls the detective 'my dear sir' or 'my dear madam'. When frightened he gets more polite.",
+      "alibi": "I arrived at ten past nine in a taxi through the front door, late because of the snow, and I waited at the desk until the porter took me across.",
+      "public_facts": [
+        "Oliver Prentice has a shop on Lantern Street that sells rare books.",
+        "He had an appointment with Miss Thorne at nine o'clock tonight.",
+        "He and the porter found her body."
+      ],
+      "private_knowledge": [
+        "Miss Thorne wrote to you this week asking you to come on Friday at nine about 'a matter of provenance'.",
+        "In 1948 you bought a Calder Psalter with a bishop's notes in the margins from Graham Oakes, who said it came from his late uncle's library.",
+        "You have bought ten other fine books from Oakes in two years."
+      ],
+      "lies": [
+        {
+          "topic": "Buying from the library's staff",
+          "claim": "I have never bought a book from anyone connected with this library. I would not dream of it.",
+          "truth": "Since 1948 you have bought eleven fine books from Graham Oakes, including a Calder Psalter with a bishop's notes in it."
+        }
+      ],
+      "secrets": [
+        "You sold the annotated Psalter on to a collector in Boston for six thousand dollars."
+      ],
+      "never_reveal": [
+        "The name of the Boston collector."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "prentice-bought",
+          "text": "Admits he bought a Calder Psalter with the Bishop's notes in it from Graham Oakes in 1948. Oakes said it came from his late uncle's library in Harmon. He has bought ten other fine books from Oakes since.",
+          "condition": "shown_evidence:swapped-book"
+        },
+        {
+          "clue_id": "prentice-letter",
+          "text": "Says Miss Thorne wrote this week asking him to call on Friday at nine about 'a matter of provenance'. The offer in his letter was for a private client and, he insists, perfectly proper.",
+          "condition": "shown_evidence:prentice-offer"
+        },
+        {
+          "clue_id": "prentice-snow",
+          "text": "Says when he and the porter crossed the courtyard at twenty-five past nine there was only one line of prints in front of them, small ones, half filled with snow.",
+          "condition": "free"
+        }
+      ],
+      "breaks_on": ["swapped-book", "prentice-offer"],
+      "patience": 12,
+      "deflections": [
+        "*touches his tie*  My dear sir, a matter of some delicacy. Might we come back to it?",
+        "*looks toward the windows*  She was the finest keeper of books in this city. I'll say that much.",
+        "*very politely*  I really could not say."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": ["peabody-statement"],
+        "clue_ids": [],
+        "note": "Miss Peabody saw him come in the front doors at 21:10 covered in snow, and he waited at her desk until the porter took him across. Agnes was dead by then."
+      }
+    },
+    {
+      "id": "rosa",
+      "name": "Rosa Lindqvist",
+      "role": "Graduate student in history",
+      "age": 26,
+      "portrait": "young-woman",
+      "color": "#6a8aa0",
+      "personality": "Clever, poor and proud. She is writing a thesis on the early maps of Calder City and spends every evening at the window table because her room has no heat. She has done something she is ashamed of and expects to be blamed for everything else.",
+      "speech_style": "Quick and precise, with a slight Swedish lilt. Gives exact details and then apologizes for them. Calls the victim 'Miss Thorne'. Gets defensive and sharp when she feels accused.",
+      "alibi": "I sat at the window table all evening. I didn't leave it until the porter started shouting.",
+      "public_facts": [
+        "Rosa Lindqvist reads at the window table in the reading room almost every evening.",
+        "She is a student at the university writing about early maps of the city.",
+        "Miss Thorne caught her with a razor in the annex last month and banned her from it."
+      ],
+      "private_knowledge": [
+        "At half past eight the reference desk telephone rang. You heard Mr. Oakes say, 'Yes, Miss Thorne. Now? Yes, of course.'",
+        "At twenty to nine Mr. Oakes left the desk and went down the back stairs toward the cellar. The stacks are the other way.",
+        "He came back at about nine with his jacket over his arm, and hung it on his chair very carefully, inside out."
+      ],
+      "lies": [
+        {
+          "topic": "The map pages",
+          "claim": "Those are my own copies. I trace them.",
+          "truth": "You cut six map pages out of an atlas in the main collection with a razor blade to sell, because you could not pay your rent."
+        }
+      ],
+      "secrets": [
+        "You sold two maps to a shop on Lantern Street last month."
+      ],
+      "never_reveal": [
+        "That you cried when Miss Thorne banned you from the annex."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "rosa-stairs",
+          "text": "Says Mr. Oakes took a telephone call at half past eight and said 'Yes, Miss Thorne. Now? Yes, of course.' At twenty to nine he went down the back stairs toward the cellar, which is the other way from the stacks.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "rosa-jacket",
+          "text": "Says when Mr. Oakes came back at about nine he was carrying his jacket over his arm, and he hung it on his chair carefully, inside out, as if he did not want the outside to touch anything.",
+          "condition": "pressed"
+        },
+        {
+          "clue_id": "rosa-maps",
+          "text": "Admits she cut the map pages from an atlas with the razor blade to sell. She could not pay her rent. She never went near the annex tonight.",
+          "condition": "shown_evidence:cut-maps"
+        }
+      ],
+      "breaks_on": ["cut-maps"],
+      "patience": 12,
+      "deflections": [
+        "*pushes her hair back*  I'm sorry. I'm sorry, I don't know any more than that.",
+        "*sharp*  You will blame me anyway, I think.",
+        "*looks at the windows*  I can still see the light in the annex. I keep thinking she's in there working."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": ["peabody-statement"],
+        "clue_ids": [],
+        "note": "Miss Peabody says Rosa sat at the window table all evening and never left it."
+      }
+    },
+    {
+      "id": "abe",
+      "name": "Abe Kowalski",
+      "role": "Night porter",
+      "age": 58,
+      "portrait": "man-cap",
+      "color": "#6a5a4a",
+      "personality": "Big, slow and kind, with bad knees and a bottle he thinks nobody knows about. He liked Miss Thorne, who once lent him a book about ships and asked him what he thought of it. He is ashamed of where he was tonight and frightened it will cost him his job.",
+      "speech_style": "Plain and slow, with a heavy city accent. Calls everybody 'mister' or 'miss'. Says 'I ain't saying' when he means he will not say. Gets quiet and looks at his boots when he is caught out.",
+      "alibi": "I was in my lodge by the front door all evening, like always.",
+      "public_facts": [
+        "Abe Kowalski has been night porter at the library for fifteen years.",
+        "He keeps the building's keys on a board and writes them in a book.",
+        "He and Mr. Prentice found Miss Thorne's body."
+      ],
+      "private_knowledge": [
+        "There is an old heating tunnel under the courtyard from the cellar to the annex stair. The key hangs on your board.",
+        "From half past eight to nine you were in the boiler room with your bottle, where you can see the key board and the tunnel door.",
+        "At twenty to nine Mr. Oakes came past the boiler room, took the tunnel key and went into the tunnel. He came back at about five to nine with white all down his shoulder."
+      ],
+      "lies": [
+        {
+          "topic": "Where he was",
+          "claim": "I was in my lodge all evening, mister. Never left it.",
+          "truth": "From 20:30 to 21:00 you were in the boiler room in the cellar with your bottle."
+        }
+      ],
+      "secrets": [
+        "You keep a half bottle of rye behind the coal shovel in the boiler room."
+      ],
+      "never_reveal": [
+        "That you were drunk on duty twice last winter and Miss Thorne covered for you."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "abe-saw",
+          "text": "Admits he was in the boiler room with his bottle from half past eight to nine. At twenty to nine Mr. Oakes came past, took the tunnel key off the board and went into the tunnel. He came back at about five to nine with white all down his right shoulder and hung the key back.",
+          "condition": "shown_evidence:porter-log"
+        },
+        {
+          "clue_id": "abe-tunnel",
+          "text": "Says there is an old heating tunnel from the main cellar under the courtyard to the annex stair. Only the staff know it, and the key hangs on his board.",
+          "condition": "free"
+        }
+      ],
+      "breaks_on": ["porter-log", "boiler-log"],
+      "patience": 12,
+      "deflections": [
+        "*looks at his boots*  I ain't saying, mister.",
+        "*rubs his knee*  She lent me a book once. About ships. Asked me what I thought.",
+        "*slowly*  I do the keys and the doors. That's all I do."
+      ],
+      "alibi_verification": {
+        "status": "broken",
+        "evidence_ids": ["boiler-log"],
+        "clue_ids": [],
+        "note": "He was not in his lodge. His own boiler log has entries every ten minutes from 20:30 to 21:00 in the cellar, and he never went through the tunnel."
+      }
+    }
+  ],
+  "hints": [
+    "Look at the courtyard first. If nobody walked on the snow, ask how else somebody could get from the main building to the annex.",
+    "Something warm runs under the courtyard. Find the way down from the main building.",
+    "The porter keeps a book of every key. Show it to him and ask him where he really was tonight.",
+    "Miss Thorne found something wrong just before she died. Look inside the book on her desk, then show it to the dealer.",
+    "Two people in the reading room have things they are ashamed of. Clear them with Miss Peabody's statement before you go after them.",
+    "On the board, connect the false Psalter, the key book and whatever has white on it, then press \"Check theory\".",
+    "Look hard at Graham Oakes. He signed the inventory that hid the theft, the tunnel key was out while he was away from his desk, and the tunnel whitewash is on his jacket."
+  ],
+  "endings": {
+    "correct": "Graham Oakes asks if he may put his jacket on before they take him out. He may not. The library board meets on Monday and finds ten more false books in the annex by Wednesday. Rosa Lindqvist is given a key to the annex, to help put them right.",
+    "wrong_culprit": "You arrest the wrong person on a night with only one set of footprints, and the papers call it the perfect crime. Graham Oakes is made keeper of rare books in March. Nobody opens the Calder Psalter again for years.",
+    "weak_proof": "You named the right man, and his lawyer asked how he crossed the snow. A dusty jacket, a missing key, a dead woman's note. You needed to tie the book, the tunnel and the man together."
+  }
+}$case$, now())
+on conflict (id) do update set case_text = excluded.case_text, updated_at = now();
+
+-- studio-nine (sha256 of the minified JSON: eada2b10205c02711c3ecc99aaf5aa419c2b792b66a363ae9a612e099c68e990)
+insert into public.story_cases (id, case_text, updated_at) values ('studio-nine', $case${
+  "schema_version": 1,
+  "id": "studio-nine",
+  "title": "Studio Nine",
+  "tagline": "Half a million people heard her on the air. Half of what they heard was a record.",
+  "setting": "Radio Calder, on the ninth floor of the Courier Building",
+  "era": "October 1949",
+  "intro_briefing": [
+    "Friday, 14 October 1949. Every Friday at half past nine Radio Calder puts out 'Nightbeat', a crime serial played live from Studio Nine on the ninth floor of the Courier Building. Tonight's episode went out on time and finished on time. At five past ten an actress waiting for an appointment walked into the producer's office and found him dead.",
+    "Vernon Clay, forty-seven, produced and directed 'Nightbeat' and half the station's other shows. Someone strangled him at his desk with a length of microphone cable. The police surgeon puts it between half past nine and ten, the half hour the show was on the air.",
+    "Four people are still on the floor: Dorothy Vale, the star of the serial; Eddie Fenn, the sound-effects man; Sam Okada, the engineer who ran the board tonight; and Nora Quill, the young actress who found him. The night receptionist, Mrs. Gage, has gone home after giving a statement, and the lobby sign-in book is still on her desk.",
+    "Search the studio, Clay's office, the record library and the lobby. Question the four of them and show them what you find. Everybody in the building says they were somewhere they can prove. One of them is counting on a record."
+  ],
+  "victim": {
+    "id": "vernon",
+    "name": "Vernon Clay",
+    "age": 47,
+    "description": "Producer and director of 'Nightbeat' and most of Radio Calder's evening shows. Clever, smooth and mean with money and with people. He kept a locked drawer and a lot of secrets in it.",
+    "cause_of_death": "Strangled with a length of rubber-covered microphone cable.",
+    "found_in": "vernon-office",
+    "found_at": "at about 22:05, slumped forward over his desk"
+  },
+  "solution": {
+    "culprit_id": "dorothy",
+    "motive": "Vernon had been blackmailing Dorothy for two years over her 1938 conviction under her real name, and that evening he doubled what she paid him.",
+    "method": "Dorothy had recorded her long monologue on a transcription disc that afternoon. While the engineer played the record on the air, she slipped out of the studio's back door, strangled Vernon in his office with a microphone cable, and was back at the microphone before the record ended.",
+    "required_evidence": ["blackmail-ledger", "transcription-sleeve", "pearl-earring"],
+    "reveal": "Before she was Dorothy Vale she was Dora Valinski, and in 1938 she did six months for passing bad cheques. Vernon Clay found out two years ago and had taken two hundred dollars a month from her ever since. At seven tonight he told her the price was going up to four hundred. She had already planned for it. At a quarter past three she asked Sam Okada to record her long monologue on a transcription disc, in case her throat went in the evening. The sponsor forbids records on 'Nightbeat', so Sam told nobody. At twenty to ten Sam put the record on the air, and Dorothy went out through the studio's back door into the corridor. Vernon's office is two doors down. She took a length of cable from the reel by the door, came up behind him at his desk and strangled him. One of her pearl earrings came off and rolled under the desk. She was back at the microphone at six minutes to ten to read her last lines live, and half a million listeners would swear she never left. The ledger in Vernon's drawer gives the reason, the record sleeve gives the time, and the earring puts her in the room."
+  },
+  "timeline": [
+    {
+      "day": 0,
+      "time": "15:15",
+      "location": "studio-nine",
+      "who": ["dorothy", "sam"],
+      "what": "Dorothy asks Sam to record her fourteen-minute monologue for tonight's episode on a transcription disc, saying her throat may give out. Sam records it and files it in the record library for 21:40.",
+      "visibility": "private",
+      "tags": ["alibi"]
+    },
+    {
+      "day": 0,
+      "time": "19:00",
+      "location": "vernon-office",
+      "who": ["vernon", "dorothy"],
+      "what": "Vernon tells Dorothy that from November she will pay him four hundred dollars a month instead of two hundred.",
+      "visibility": "private",
+      "tags": ["motive"]
+    },
+    {
+      "day": 0,
+      "time": "20:30",
+      "location": "vernon-office",
+      "who": ["eddie", "vernon"],
+      "what": "Eddie shouts at Vernon in his office about eleven weeks of unpaid overtime and leaves a note on his desk.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "21:30",
+      "location": "studio-nine",
+      "who": ["dorothy", "eddie", "sam"],
+      "what": "'Nightbeat' goes on the air. Dorothy is at the microphone, Eddie at the effects table, and Sam in the control booth behind the glass.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "21:35",
+      "location": "lobby",
+      "who": ["nora"],
+      "what": "Nora signs in at the lobby desk to see Vernon at ten and waits with the receptionist, Mrs. Gage.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "21:40",
+      "location": "studio-nine",
+      "who": ["sam", "dorothy", "eddie"],
+      "what": "Sam puts the transcription disc of Dorothy's monologue on the air. Dorothy leaves the studio by the back door into the corridor. Eddie keeps working the effects for the scene, and Sam stays at the board.",
+      "visibility": "private",
+      "tags": ["alibi"]
+    },
+    {
+      "day": 0,
+      "time": "21:42",
+      "location": "vernon-office",
+      "who": ["dorothy", "vernon"],
+      "what": "Dorothy takes a length of microphone cable from the reel by the studio door, goes into Vernon's office and strangles him at his desk. One of her pearl earrings falls under the desk.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "day": 0,
+      "time": "21:54",
+      "location": "studio-nine",
+      "who": ["dorothy", "sam", "eddie"],
+      "what": "Dorothy comes back in by the back door. The record ends and she reads her last lines live.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "22:00",
+      "location": "studio-nine",
+      "who": ["dorothy", "eddie", "sam"],
+      "what": "'Nightbeat' goes off the air on time.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "22:05",
+      "location": "vernon-office",
+      "who": ["nora", "vernon"],
+      "what": "Nora goes up for her ten o'clock appointment and finds Vernon dead at his desk.",
+      "visibility": "public",
+      "tags": []
+    }
+  ],
+  "offstage_locations": [],
+  "rooms": [
+    {
+      "id": "studio-nine",
+      "name": "Studio Nine",
+      "description": "A padded room with a hanging microphone, music stands for scripts, and a long table covered in the sound-effects man's gear. The control booth looks in through a wide glass window. A red ON AIR light over the main door is dark now. A plain door at the back opens onto the service corridor.",
+      "background": "stage",
+      "hotspots": [
+        {
+          "id": "script-stand",
+          "label": "Script stand",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "Dorothy's script for episode 112 on the stand under the microphone. Four pages in the middle are clipped together with a paper clip and marked 'INSERT' in pencil. She did not read those pages tonight.",
+          "evidence_id": null
+        },
+        {
+          "id": "booth-window",
+          "label": "Control booth",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "Through the glass, the engineer's board with its dials and two turntables. His log sheet is clipped beside the faders.",
+          "evidence_id": "engineer-log"
+        },
+        {
+          "id": "effects-table",
+          "label": "Effects table",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "Coconut shells, a rain drum, a door on a little frame, a box of gravel for footsteps. Eddie's cue sheet for the episode has every effect ticked off in pencil, one after another without a gap.",
+          "evidence_id": null
+        },
+        {
+          "id": "cable-reel",
+          "label": "Cable reel",
+          "x": 10,
+          "y": 56,
+          "width": 26,
+          "height": 26,
+          "description": "A reel of rubber-covered microphone cable by the back door, with a pair of cutters hanging next to it. A length has been cut off recently. The rubber at the cut end is clean and bright.",
+          "evidence_id": null
+        },
+        {
+          "id": "back-door",
+          "label": "Back door",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "A plain, felt-lined door onto the service corridor. It closes without a sound. From the microphone you would not notice anyone using it. From the booth you would.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "vernon-office",
+      "name": "Vernon Clay's office",
+      "description": "A corner office two doors down the corridor from Studio Nine, with framed posters of the station's shows and a big desk facing the door. The radio on the filing cabinet is still tuned to Radio Calder.",
+      "background": "office",
+      "hotspots": [
+        {
+          "id": "desk-chair",
+          "label": "Desk chair",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The chair where Nora found him. Lying on the carpet behind it is a length of black rubber-covered cable, cut clean at both ends.",
+          "evidence_id": "mic-cable"
+        },
+        {
+          "id": "drawer",
+          "label": "Locked drawer",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "The bottom drawer of the desk, the one he always kept locked. The key was on his watch chain. Inside is a small black account book with a newspaper cutting folded into it.",
+          "evidence_id": "blackmail-ledger"
+        },
+        {
+          "id": "under-desk",
+          "label": "Under the desk",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "Something small and white has rolled into the corner under the desk, against the skirting board.",
+          "evidence_id": "pearl-earring"
+        },
+        {
+          "id": "wastebasket",
+          "label": "Wastebasket",
+          "x": 10,
+          "y": 56,
+          "width": 26,
+          "height": 26,
+          "description": "A wire wastebasket with a crumpled sheet of station notepaper on top.",
+          "evidence_id": "overtime-note"
+        },
+        {
+          "id": "photo-frame",
+          "label": "Signed photograph",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "A publicity photograph of a young woman, propped face down on the blotter, as if he had turned it over when someone came in.",
+          "evidence_id": "signed-photo"
+        }
+      ]
+    },
+    {
+      "id": "record-library",
+      "name": "Record library",
+      "description": "A narrow room lined with steel shelves of sixteen-inch transcription discs in brown paper sleeves, each labelled and numbered. There is a turntable for checking discs and a desk with the library ledger.",
+      "background": "archive",
+      "hotspots": [
+        {
+          "id": "turntable",
+          "label": "Turntable",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The checking turntable. An empty brown sleeve lies on top of it, put down in a hurry after the disc was taken out.",
+          "evidence_id": "transcription-sleeve"
+        },
+        {
+          "id": "shelves",
+          "label": "Shelves",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "Rows and rows of discs: 'Nightbeat' episodes back to 1946, dance bands, sponsors' announcements. The 'Nightbeat' shelf has a gap at number 112.",
+          "evidence_id": null
+        },
+        {
+          "id": "library-ledger",
+          "label": "Library ledger",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "The ledger where every disc taken out is signed for. The last entry today is in Sam Okada's neat hand: 'NB 112 insert, out 9.35 pm, booth.'",
+          "evidence_id": null
+        },
+        {
+          "id": "sponsor-notice",
+          "label": "Notice",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "A typed notice pinned to the door: 'By order of the sponsor, NIGHTBEAT is a LIVE program. No transcriptions to be used on the air without written approval. V. Clay.'",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "lobby",
+      "name": "Ninth-floor lobby",
+      "description": "The lobby by the elevators, with a reception desk, a leather bench for guests and the station's call letters in chrome on the wall. The elevator dial is the only light that moves.",
+      "background": "lobby",
+      "hotspots": [
+        {
+          "id": "sign-in-book",
+          "label": "Sign-in book",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The visitors' book on Mrs. Gage's desk, with a note pinned to tonight's page.",
+          "evidence_id": "sign-in-book"
+        },
+        {
+          "id": "bench",
+          "label": "Guest bench",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "A leather bench facing the desk. A movie magazine lies open on it at a page of screen tests, and an ashtray beside it holds three cigarette ends with pink lipstick on them.",
+          "evidence_id": null
+        },
+        {
+          "id": "elevator",
+          "label": "Elevator",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "The elevator dial shows the car parked at the ninth floor. The night man says nobody used it between half past nine and the police arriving.",
+          "evidence_id": null
+        },
+        {
+          "id": "corridor-door",
+          "label": "Corridor door",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "Glass doors from the lobby into the main corridor. From the reception desk you can see straight down to the front door of Studio Nine, but not the service corridor that runs behind it past Vernon's office.",
+          "evidence_id": null
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "blackmail-ledger",
+      "name": "Black account book",
+      "description": "A small account book from Vernon's locked drawer. One page is headed 'D.V.' with monthly entries of $200 going back to November 1947. The last line, dated today: 'Nov. on, $400. Told her 7 pm.' Folded inside is a cutting from the Calder Courier, March 1938: 'Dora Valinski, 28, actress, six months for passing bad cheques.' The photograph is of a younger Dorothy Vale.",
+      "found_in": "vernon-office",
+      "points_to": ["dorothy"],
+      "is_red_herring": false
+    },
+    {
+      "id": "transcription-sleeve",
+      "name": "Record sleeve",
+      "description": "An empty sleeve for a sixteen-inch transcription disc, labelled in grease pencil: 'NIGHTBEAT 112. INSERT. D. VALE MONOLOGUE. 14 min 30. Rec. 3.15 pm 14/10. ON AIR 9.40.'",
+      "found_in": "record-library",
+      "points_to": ["dorothy"],
+      "is_red_herring": false
+    },
+    {
+      "id": "pearl-earring",
+      "name": "Pearl drop earring",
+      "description": "A single pearl drop on a gold screw-back, found in the corner under Vernon's desk. The screw is loose, as if it was pulled off. It is not cheap.",
+      "found_in": "vernon-office",
+      "points_to": ["dorothy"],
+      "is_red_herring": false
+    },
+    {
+      "id": "mic-cable",
+      "name": "Length of microphone cable",
+      "description": "About four feet of rubber-covered microphone cable, cut clean at both ends with good cutters. The cut ends are bright and new. It matches the reel by the back door of Studio Nine.",
+      "found_in": "vernon-office",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "engineer-log",
+      "name": "Engineer's log",
+      "description": "Sam Okada's log sheet for 'Nightbeat' 112: '9.30 on air, live. 9.40 TR insert on, table 2. 9.54 TR off, live. 10.00 off air.' Every line is initialled S.O., and there are entries every few minutes from 9.25 until 10.10.",
+      "found_in": "studio-nine",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "overtime-note",
+      "name": "Crumpled note",
+      "description": "A sheet of station notepaper, crumpled: 'Eleven weeks overtime. You pay me by Monday or I take it out of your hide. E.F.'",
+      "found_in": "vernon-office",
+      "points_to": ["eddie"],
+      "is_red_herring": true
+    },
+    {
+      "id": "signed-photo",
+      "name": "Signed photograph",
+      "description": "A publicity photograph of Nora Quill, signed across the corner: 'To V., who made me promises. Keep them. N.'",
+      "found_in": "vernon-office",
+      "points_to": ["nora"],
+      "is_red_herring": true
+    },
+    {
+      "id": "sign-in-book",
+      "name": "Lobby sign-in book",
+      "description": "Tonight's page of the visitors' book: 'Miss N. Quill. In 9.35. To see Mr. Clay at 10.' Pinned to it is Mrs. Gage's note for the police: 'Miss Quill sat on the bench in front of me from 9.35 until she went down the corridor at 10.04. She did not leave the lobby. I. Gage.'",
+      "found_in": "lobby",
+      "points_to": [],
+      "is_red_herring": false
+    }
+  ],
+  "suspects": [
+    {
+      "id": "dorothy",
+      "name": "Dorothy Vale",
+      "role": "Star of 'Nightbeat'",
+      "age": 39,
+      "portrait": "woman-bob",
+      "color": "#7a4a5a",
+      "personality": "A real professional: calm, gracious, and in control of every pause. She has played widows and murderesses on the air for ten years and knows exactly how a frightened woman sounds, so she never sounds like one. She is proud of having made herself from nothing, and terrified of anyone finding out what the nothing was.",
+      "speech_style": "Beautiful diction, a little theatrical. Calls the detective 'my dear'. Uses actors' words: 'cue', 'beat', 'in the wings'. Takes a breath before every answer as if before a line. When she is rattled she corrects her own grammar.",
+      "alibi": "I was at the microphone in Studio Nine from half past nine until ten. Half the city heard me.",
+      "public_facts": [
+        "Dorothy Vale has played the lead in 'Nightbeat' since 1946.",
+        "Tonight's episode went out live from Studio Nine from 21:30 to 22:00.",
+        "She was still in the studio when Nora Quill screamed."
+      ],
+      "private_knowledge": [
+        "Tonight's script had a long monologue for you in the middle of the episode.",
+        "Vernon's office is two doors down the service corridor from the back door of Studio Nine.",
+        "You were wearing your pearl drop earrings tonight."
+      ],
+      "lies": [
+        {
+          "topic": "Whether she left the studio",
+          "claim": "I never left the microphone. Not for a moment. You can ask anyone who listens to the radio.",
+          "truth": "You recorded your monologue on a disc at 15:15. While Sam played it on the air from 21:40 to 21:54, you were out of the studio."
+        },
+        {
+          "topic": "Vernon Clay",
+          "claim": "Vernon and I had a perfectly good working arrangement. He gave me the best part on the air.",
+          "truth": "Vernon had been blackmailing you for two years over your conviction in 1938 under your real name, Dora Valinski. At seven tonight he doubled the price."
+        }
+      ],
+      "secrets": [
+        "Your real name is Dora Valinski, and you served six months in 1938 for passing bad cheques."
+      ],
+      "never_reveal": [
+        "That you left by the back door of the studio during the record, went to Vernon's office and strangled him with a length of microphone cable.",
+        "That you lost a pearl earring in his office."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "dorothy-record",
+          "text": "Admits she asked Sam to record her monologue that afternoon because she was afraid her throat would go. She says that while the record played she stepped out into the service corridor to rest her voice, alone, and came back for her last lines.",
+          "condition": "shown_evidence:transcription-sleeve"
+        },
+        {
+          "clue_id": "dorothy-vernon-seven",
+          "text": "Admits she saw Vernon in his office at seven o'clock 'about the script', and that he was in a vile temper.",
+          "condition": "pressed"
+        }
+      ],
+      "breaks_on": ["transcription-sleeve", "blackmail-ledger", "pearl-earring"],
+      "patience": 13,
+      "deflections": [
+        "*takes a breath, as if before a line*  My dear, I have answered that already. Beautifully, I thought.",
+        "*touches her ear, then lowers her hand*  It has been a very long evening.",
+        "*smiles*  You should hear me on a good night. This isn't one."
+      ],
+      "alibi_verification": {
+        "status": "broken",
+        "evidence_ids": ["transcription-sleeve", "engineer-log"],
+        "clue_ids": ["sam-disc", "eddie-earring"],
+        "note": "The record sleeve and the engineer's log show her monologue went out from a disc from 21:40 to 21:54. Sam saw her leave by the back door, and Eddie noticed she came back with one earring."
+      }
+    },
+    {
+      "id": "eddie",
+      "name": "Eddie Fenn",
+      "role": "Sound-effects man, Radio Calder",
+      "age": 44,
+      "portrait": "man-cap",
+      "color": "#6a5a3a",
+      "personality": "Gruff, honest and fed up. He has done every footstep and gunshot on 'Nightbeat' for three years for less money than he was promised, and he hated Vernon Clay openly. He notices small things for a living and he noticed a lot tonight.",
+      "speech_style": "Short and blunt, working man's talk. Calls the detective 'chief'. Describes things by how they sound: 'a door like a coffin lid', 'heels on lino'. Gets louder when he is accused.",
+      "alibi": "I was at my effects table the whole show. Rain, a train, two doors and a gunshot. You can't do that from anywhere else.",
+      "public_facts": [
+        "Eddie Fenn has done the sound effects for 'Nightbeat' since 1946.",
+        "Everyone on the floor heard him shouting at Vernon about money at half past eight.",
+        "He was in Studio Nine for the whole broadcast."
+      ],
+      "private_knowledge": [
+        "Sam was at his board in the booth the whole show. You could see him through the glass every time you looked up for a cue.",
+        "At twenty to ten Dorothy stepped away from the microphone and went out the back door. Her voice kept coming out of the monitor speaker.",
+        "Dorothy had both pearl drops in her ears when the show started. When she came back in at six minutes to ten she only had one, and she kept touching that ear."
+      ],
+      "lies": [
+        {
+          "topic": "His quarrel with Vernon",
+          "claim": "I shouted a bit. Everybody shouted at Vernon. Didn't mean anything.",
+          "truth": "You told Vernon you would take your overtime out of his hide and left a note on his desk saying so."
+        }
+      ],
+      "secrets": [
+        "You have an offer from a station in Chicago and were going to take it next month."
+      ],
+      "never_reveal": [
+        "That you once stole the 'Nightbeat' theme recording to sell to a dance band."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "eddie-sam",
+          "text": "Says Sam was at his board in the control booth the whole show. Eddie looked up at the glass for every cue and Sam was always there.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "eddie-earring",
+          "text": "Says Dorothy had both pearl drops in at the start of the show. When she came back in by the back door at about six minutes to ten she was wearing one, and she kept touching that ear.",
+          "condition": "shown_evidence:pearl-earring"
+        },
+        {
+          "clue_id": "eddie-note",
+          "text": "Admits he wrote the note and meant it, about the money. He says he never went near Vernon's office after half past eight, and his cue sheet shows an effect every minute of the show.",
+          "condition": "shown_evidence:overtime-note"
+        }
+      ],
+      "breaks_on": ["overtime-note"],
+      "patience": 12,
+      "deflections": [
+        "*cracks his knuckles*  Ask me something I can answer, chief.",
+        "*snorts*  You want the sound of a man not caring? That's it.",
+        "*leans back*  I do noises. I don't do speeches."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": ["engineer-log"],
+        "clue_ids": ["sam-eddie"],
+        "note": "Sam watched him at the effects table through the booth glass for the whole show, and the engineer's log shows effects cues running without a break."
+      }
+    },
+    {
+      "id": "sam",
+      "name": "Sam Okada",
+      "role": "Engineer, Radio Calder",
+      "age": 35,
+      "portrait": "man-glasses",
+      "color": "#3a6a7a",
+      "personality": "Exact, reserved and very good at his job. He bent a rule tonight as a favor to Dorothy, and now that rule is tangled up in a murder and he is afraid of losing the only job in radio that would have him. He will not lie about anything he can be shown.",
+      "speech_style": "Quiet and technical: 'the board', 'levels', 'cue light'. Gives times to the minute. Says 'I'd have to check the log' when he wants a moment. Never raises his voice.",
+      "alibi": "I was at the board in the control booth from before the show until after ten. You don't leave the board.",
+      "public_facts": [
+        "Sam Okada has been an engineer at Radio Calder for four years.",
+        "He ran the board in the control booth for tonight's broadcast.",
+        "He keeps a log sheet for every program."
+      ],
+      "private_knowledge": [
+        "At a quarter past three Dorothy asked you to record her monologue on a disc in case her throat gave out. You recorded it.",
+        "At twenty to ten you put the disc on the air. Dorothy went out the back door of the studio as soon as it started and came back at six minutes to ten.",
+        "Eddie was at his effects table the whole show. You could see him through the glass."
+      ],
+      "lies": [
+        {
+          "topic": "Whether the show was live",
+          "claim": "'Nightbeat' is a live program. It went out live tonight, start to finish.",
+          "truth": "You played Dorothy's monologue from a transcription disc from 21:40 to 21:54. The sponsor forbids it, and you told nobody."
+        }
+      ],
+      "secrets": [
+        "You have recorded inserts for Dorothy twice before this year."
+      ],
+      "never_reveal": [
+        "That Vernon once told you he would see you never worked in radio again if you crossed him."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "sam-disc",
+          "text": "Admits he recorded Dorothy's monologue at a quarter past three and played it on the air at twenty to ten. Dorothy went out the back door of the studio as soon as the record started and came back at six minutes to ten.",
+          "condition": "shown_evidence:transcription-sleeve"
+        },
+        {
+          "clue_id": "sam-eddie",
+          "text": "Says Eddie was at the effects table the whole show. Sam could see him through the glass and Eddie never missed a cue.",
+          "condition": "free"
+        }
+      ],
+      "breaks_on": ["transcription-sleeve", "engineer-log"],
+      "patience": 14,
+      "deflections": [
+        "*adjusts his glasses*  I'd have to check the log.",
+        "*looks at his hands*  I run the board. That's all I do.",
+        "*evenly*  I'd rather not guess, Detective. Guessing is how you get dead air."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": ["engineer-log"],
+        "clue_ids": ["eddie-sam"],
+        "note": "His log has initialled entries every few minutes from 21:25 to 22:10, and Eddie saw him at the board through the glass for every cue."
+      }
+    },
+    {
+      "id": "nora",
+      "name": "Nora Quill",
+      "role": "Actress",
+      "age": 23,
+      "portrait": "young-woman",
+      "color": "#b07a8a",
+      "personality": "Young, ambitious and out of her depth. She came up from a small-town stock company in the spring and believed Vernon when he said he would make her a star. She found his body, and she is shaking, and part of her is already wondering what this does to her chances.",
+      "speech_style": "Breathless, a lot of 'I mean' and 'you know'. Calls the victim 'Mr. Clay' and then, by accident, 'Vernon'. Tells more than she is asked. When she is embarrassed she laughs.",
+      "alibi": "I sat in the lobby from twenty-five to ten waiting for my appointment. At ten I went down the corridor and found him.",
+      "public_facts": [
+        "Nora Quill is a young actress who has had small parts on Radio Calder this year.",
+        "She had an appointment with Vernon Clay at ten o'clock.",
+        "She found his body at about 22:05."
+      ],
+      "private_knowledge": [
+        "You waited on the bench in front of Mrs. Gage's desk the whole time and never left the lobby.",
+        "From the lobby you can see the front door of Studio Nine but not the service corridor behind it.",
+        "Vernon told you last week that Dorothy Vale would be 'leaving the show' by Christmas and that her part would be yours."
+      ],
+      "lies": [
+        {
+          "topic": "Vernon Clay",
+          "claim": "I'd hardly met Mr. Clay. It was just an audition.",
+          "truth": "You had dinner with Vernon at the Ambassador Hotel last week, and he promised you Dorothy Vale's part by Christmas."
+        }
+      ],
+      "secrets": [
+        "You told your mother in a letter that you were going to be the new star of 'Nightbeat'."
+      ],
+      "never_reveal": [
+        "That you were afraid of Vernon after the dinner at the Ambassador and did not want to go up alone."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "nora-promise",
+          "text": "Admits she signed the photograph for Vernon. He took her to dinner at the Ambassador last week and promised her Dorothy Vale's part by Christmas. He said Dorothy would be 'leaving the show' and would not argue about it.",
+          "condition": "shown_evidence:signed-photo"
+        },
+        {
+          "clue_id": "nora-found",
+          "text": "Says when she opened Vernon's door at five past ten the radio on the cabinet was still playing and the room smelled of a woman's perfume, something like gardenia, that was not hers.",
+          "condition": "pressed"
+        }
+      ],
+      "breaks_on": ["signed-photo"],
+      "patience": 12,
+      "deflections": [
+        "*laughs, then stops*  I'm sorry. I don't know why I'm laughing.",
+        "*twists her gloves*  I mean, you know, I only came for an audition.",
+        "*looks at the corridor door*  Do I have to stay much longer? I really don't want to go back down there."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": ["sign-in-book"],
+        "clue_ids": [],
+        "note": "Mrs. Gage's note in the sign-in book says Nora sat in front of her desk from 21:35 until 22:04 and never left the lobby."
+      }
+    }
+  ],
+  "hints": [
+    "Everybody on this floor has an alibi. Find out which ones rest on something you can hold in your hand.",
+    "The record library keeps track of every disc that goes on the air. Look at what is lying on the turntable.",
+    "Show the engineer what you find in the record library. He bent a rule tonight and will tell you what really went out on the air.",
+    "Something small rolled under Vernon's desk. Show it to the people who were in the studio and ask who was wearing it.",
+    "Vernon kept one drawer locked. What is in it explains why one person on this floor could not afford to let him live.",
+    "Pin the account book, the record sleeve and the earring on the board together and press \"Check theory\" before you accuse.",
+    "Look hard at Dorothy Vale. Vernon was bleeding her for money, her monologue was a record, and her earring was under his desk."
+  ],
+  "endings": {
+    "correct": "Dorothy Vale walks out past the ON AIR light with her head up and one earring in. Next Friday 'Nightbeat' goes out with a new leading lady and a notice from the sponsor about records. Nobody at Radio Calder mentions Dora Valinski by name.",
+    "wrong_culprit": "You arrest the wrong person and the evening papers love it. Dorothy Vale reads a tribute to Vernon Clay on the air the next Friday, live, and her voice does not shake once.",
+    "weak_proof": "You named the right woman and couldn't hold her. A record proves the show broke the sponsor's rules, an earring can be lost anywhere, and a dead man's account book is only numbers. You needed all three together."
+  }
+}$case$, now())
+on conflict (id) do update set case_text = excluded.case_text, updated_at = now();
+
+-- the-regent (sha256 of the minified JSON: 16c993527ee701305e9d8a38b373a7cbd17e0185977f56ea0b35c4ac50923509)
+insert into public.story_cases (id, case_text, updated_at) values ('the-regent', $case${
+  "schema_version": 1,
+  "id": "the-regent",
+  "title": "The Regent",
+  "tagline": "Everybody in the ballroom kissed somebody at midnight. The clock on the wall was ten minutes fast.",
+  "setting": "The Regent Hotel on Harbor Avenue, during the Ashgrove Shipping New Year's Eve party",
+  "era": "December 1949",
+  "intro_briefing": [
+    "Saturday, 31 December 1949. Ashgrove Shipping took the whole Starlight Ballroom at the Regent Hotel to see out the year, with a band, a countdown and fireworks over the river at midnight. At ten past twelve the hotel's house detective let himself into Suite 1204 and found a guest dead beside the telephone.",
+    "The dead man is Gilbert Ames, fifty, an accountant of Ames and Fowler. Clara Ashgrove hired him in December to go through the books of the Ashgrove Family Trust. Someone hit him on the head with a champagne magnum. A minute before, he had rung the switchboard and asked for the house detective.",
+    "Four people from the Ashgrove table are waiting in the manager's office: his wife, Lorraine Ames; his partner, Howard Fowler; Clara Ashgrove, who invited him; and Leonard Vance of Vance and Pryor, the trustee whose books Ames was going through. All four say they were in the ballroom at midnight, and all four are telling the truth about the countdown.",
+    "Search the lobby, the suite, the ballroom and the hotel laundry. Question the four of them and show them what you find. Find out exactly when midnight was in each room of this hotel."
+  ],
+  "victim": {
+    "id": "gilbert",
+    "name": "Gilbert Ames",
+    "age": 50,
+    "description": "Senior partner of Ames and Fowler, accountants, on Commerce Street. Slow, thorough and honest to the point of being dull. He went through other people's books for a living and never let a figure go until it added up.",
+    "cause_of_death": "Two blows to the head with a champagne magnum.",
+    "found_in": "suite-1204",
+    "found_at": "at about 00:10, on the floor of Suite 1204 beside the telephone table, with the receiver hanging off the hook"
+  },
+  "solution": {
+    "culprit_id": "fowler",
+    "motive": "Gilbert had found that his partner Howard Fowler had taken more than sixty thousand dollars from the firm's client accounts, and he meant to go to the police on the second of January.",
+    "method": "Right after the countdown, which the ballroom clock ran ten minutes early, Fowler slipped up to Suite 1204, struck Gilbert down with the champagne magnum as he was telephoning for help, and dropped his bloodied gloves down the laundry chute before going back to the ballroom.",
+    "required_evidence": ["audit-notes", "laundry-gloves", "switchboard-log"],
+    "reveal": "Howard Fowler had been dipping into the client accounts of Ames and Fowler since 1947, sixty-one thousand dollars of other people's money. Over Christmas Gilbert Ames found it. At eleven o'clock in the ballroom he told Fowler, under the noise of the band, that he would give him one chance: come up to the suite after midnight and sign a confession, or Gilbert would go to the police on the second. Fowler never meant to sign. The ballroom clock had been running ten minutes fast since Wednesday, and the bandleader counted down off it, so the whole room sang at ten to twelve by the real time. In the noise and kissing that followed, Fowler went out to the elevators. Gilbert saw his face at the door and reached for the telephone. At 23:56 by the switchboard clock he asked for the house detective, and the operator heard the receiver fall. Fowler hit him twice with the magnum from the ice bucket, pulled off his white gloves, which were spattered, and dropped them down the laundry chute on the twelfth floor. He was back at the Ashgrove table by five past twelve, without his gloves, telling everyone he had been there at midnight. He had been, at the ballroom's midnight. The partner's own notes give the motive, the switchboard log proves Gilbert was alive after the countdown, and the laundry marks on the gloves have Fowler's name on them."
+  },
+  "timeline": [
+    {
+      "day": 0,
+      "time": "20:00",
+      "location": "ballroom",
+      "who": ["gilbert", "lorraine", "fowler", "clara", "vance"],
+      "what": "The Ashgrove Shipping New Year's Eve party begins in the Starlight Ballroom. Everyone at the Ashgrove table wears evening dress, and the men wear white gloves for dancing.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "22:30",
+      "location": "ballroom",
+      "who": ["vance", "gilbert"],
+      "what": "At the ballroom bar, Vance tells Gilbert sharply that the trust ledgers will not be available until the third of January. Lorraine sees them argue.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "23:00",
+      "location": "ballroom",
+      "who": ["gilbert", "fowler"],
+      "what": "Gilbert tells Fowler he knows about the client accounts and that Fowler can come up to the suite after midnight to sign a confession, or he goes to the police on 2 January.",
+      "visibility": "private",
+      "tags": ["motive"]
+    },
+    {
+      "day": 0,
+      "time": "23:30",
+      "location": "suite-1204",
+      "who": ["gilbert"],
+      "what": "Gilbert tells Lorraine he has a headache and goes up to Suite 1204.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "23:50",
+      "location": "ballroom",
+      "who": ["lorraine", "fowler", "clara", "vance"],
+      "what": "The band counts down to the New Year off the ballroom clock, which is ten minutes fast. The room sings and kisses. By the real time it is ten to twelve.",
+      "visibility": "public",
+      "tags": ["alibi"]
+    },
+    {
+      "day": 0,
+      "time": "23:52",
+      "location": "lobby",
+      "who": ["fowler"],
+      "what": "Fowler slips out of the ballroom in the crush and takes an elevator to the twelfth floor.",
+      "visibility": "private",
+      "tags": ["alibi"]
+    },
+    {
+      "day": 0,
+      "time": "23:55",
+      "location": "suite-1204",
+      "who": ["fowler", "gilbert"],
+      "what": "Fowler knocks at Suite 1204 and Gilbert lets him in.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "day": 0,
+      "time": "23:56",
+      "location": "suite-1204",
+      "who": ["gilbert"],
+      "what": "Gilbert rings the switchboard and asks for the house detective. The operator hears the receiver fall.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "23:57",
+      "location": "suite-1204",
+      "who": ["fowler", "gilbert"],
+      "what": "Fowler strikes Gilbert twice with the champagne magnum from the ice bucket.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "day": 1,
+      "time": "00:00",
+      "location": "ballroom",
+      "who": ["lorraine", "clara", "vance"],
+      "what": "Real midnight. Fireworks go up over the river and the ships in the harbor sound their horns. The guests in the ballroom crowd to the windows.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 1,
+      "time": "00:01",
+      "location": "laundry",
+      "who": ["fowler"],
+      "what": "Fowler pulls off his spattered white gloves and drops them down the laundry chute on the twelfth floor. They land in the linen bin in the basement laundry.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "day": 1,
+      "time": "00:05",
+      "location": "ballroom",
+      "who": ["fowler", "clara", "lorraine", "vance"],
+      "what": "Fowler is back at the Ashgrove table without his gloves.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 1,
+      "time": "00:10",
+      "location": "suite-1204",
+      "who": ["gilbert"],
+      "what": "The house detective, Mr. Brophy, held up by the crowds in the lobby, reaches Suite 1204 and finds Gilbert dead.",
+      "visibility": "public",
+      "tags": []
+    }
+  ],
+  "offstage_locations": [],
+  "rooms": [
+    {
+      "id": "lobby",
+      "name": "Hotel lobby",
+      "description": "Marble floor, potted palms and a great deal of brass. Paper streamers and squashed party hats are everywhere. Behind the front desk is a glass-fronted switchboard room, and over the desk is the hotel clock.",
+      "background": "lobby",
+      "hotspots": [
+        {
+          "id": "switchboard",
+          "label": "Switchboard",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The night operator's switchboard. Every call is written in a log book with the time from the switchboard clock.",
+          "evidence_id": "switchboard-log"
+        },
+        {
+          "id": "lobby-clock",
+          "label": "Lobby clock",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "A big electric clock over the front desk. A small card under it reads: 'Set by the radio time signal daily. The switchboard clock is on the same circuit.'",
+          "evidence_id": null
+        },
+        {
+          "id": "front-desk",
+          "label": "Front desk",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "The register is open at tonight's page. Suite 1204: Mr. and Mrs. G. Ames. Room 806: Mr. H. Fowler. The Ashgrove party is billed to the company.",
+          "evidence_id": null
+        },
+        {
+          "id": "elevators",
+          "label": "Elevators",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "Three brass elevator doors off the lobby, a few steps from the ballroom entrance. Tonight the operators were too busy with the crowds to notice who rode where.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "suite-1204",
+      "name": "Suite 1204",
+      "description": "A sitting room and bedroom on the twelfth floor with a view of the river. A silver ice bucket stands on the sideboard, and papers are spread over the writing desk. The telephone receiver still hangs over the edge of its table.",
+      "background": "hotel-room",
+      "hotspots": [
+        {
+          "id": "telephone-table",
+          "label": "Telephone table",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "Where Mr. Brophy found him, beside the telephone table. Next to the body, among the broken glass, lies a heavy champagne bottle with a dark smear along the base.",
+          "evidence_id": "champagne-magnum"
+        },
+        {
+          "id": "writing-desk",
+          "label": "Writing desk",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "Ledger sheets and an adding machine tape spread across the desk, and on top a page of notes in Gilbert's small, square hand. Beside it is a sheet of hotel notepaper with a single typed line and a blank space for a signature.",
+          "evidence_id": "audit-notes"
+        },
+        {
+          "id": "briefcase",
+          "label": "Briefcase",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "Gilbert's briefcase under the desk, with a folder labelled 'Ashgrove Family Trust' on top.",
+          "evidence_id": "trust-memo"
+        },
+        {
+          "id": "dressing-table",
+          "label": "Dressing table",
+          "x": 10,
+          "y": 56,
+          "width": 26,
+          "height": 26,
+          "description": "Lorraine's scent bottles and brushes, and in the drawer a long blue envelope from an insurance company.",
+          "evidence_id": "insurance-policy"
+        },
+        {
+          "id": "window",
+          "label": "Window",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "A wide window over the river. The last of the fireworks smoke is drifting over the water, and a freighter is still sounding its horn.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "ballroom",
+      "name": "Starlight Ballroom",
+      "description": "A long ballroom under a ceiling painted with stars, with a bandstand at one end and a bar at the other. Balloons have come down all over the floor. The Ashgrove table is still covered in glasses and place cards.",
+      "background": "bar",
+      "hotspots": [
+        {
+          "id": "ballroom-clock",
+          "label": "Ballroom clock",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "A gilt clock high on the wall above the bandstand. A brass tag hangs from its winding key on a string.",
+          "evidence_id": "ballroom-clock"
+        },
+        {
+          "id": "bandstand",
+          "label": "Bandstand",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "The bandleader's set list is taped to the front of the stand. Under 'Auld Lang Syne' he has written: 'Countdown off the big clock. Fireworks are the hotel's business.'",
+          "evidence_id": null
+        },
+        {
+          "id": "ashgrove-table",
+          "label": "Ashgrove table",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "Six place cards and five chairs pushed back. A pair of white dance gloves lies folded by Vance's card and another by Gilbert's, which he never came back for. There are none at Fowler's place.",
+          "evidence_id": null
+        },
+        {
+          "id": "bar",
+          "label": "Ballroom bar",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "The bar where the barman says he saw 'the lawyer and the accountant' having words at about half past ten. He did not hear what about.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "laundry",
+      "name": "Hotel laundry",
+      "description": "A hot basement room full of steam and the smell of starch, with linen carts and the open mouth of the laundry chute, which runs down from every floor of the hotel.",
+      "background": "cellar",
+      "hotspots": [
+        {
+          "id": "chute-bin",
+          "label": "Chute bin",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The canvas bin under the laundry chute, half full of napkins and towels from the party. On top of the pile is a pair of white gloves.",
+          "evidence_id": "laundry-gloves"
+        },
+        {
+          "id": "chute-door",
+          "label": "Chute door",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "The steel door at the bottom of the chute. A painted plate lists the floors it serves: every floor from two to fourteen, through a hatch beside each service stair.",
+          "evidence_id": null
+        },
+        {
+          "id": "linen-carts",
+          "label": "Linen carts",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "Carts of clean sheets and towels ready for the morning. Each guest's own laundry comes back with a sewn name tape, and the tapes hang in a box on the wall, waiting to be sewn.",
+          "evidence_id": null
+        },
+        {
+          "id": "boiler",
+          "label": "Boiler",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "The laundry boiler roaring behind its door. The night laundryman says nothing has been burned in it tonight. He keeps it for water.",
+          "evidence_id": null
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "audit-notes",
+      "name": "Gilbert's notes",
+      "description": "A page in Gilbert's square hand: 'Fowler and Ames client accounts. Withdrawals by H.F., 1947 to date: $61,400. Covered with false transfers. H.F. told 11 pm. Sign tonight or police Jan 2.' Underneath, a typed sheet on hotel paper: 'I, Howard Fowler, admit taking the sums listed below.' The signature line is empty.",
+      "found_in": "suite-1204",
+      "points_to": ["fowler"],
+      "is_red_herring": false
+    },
+    {
+      "id": "switchboard-log",
+      "name": "Switchboard log",
+      "description": "The operator's log for the night, timed by the switchboard clock, which is set daily by the radio time signal: '11.56 pm. 1204, Mr. Ames. Asked for house detective. Line dropped 11.57, receiver off. 11.58 Brophy sent, held up in lobby crowd.'",
+      "found_in": "lobby",
+      "points_to": ["fowler"],
+      "is_red_herring": false
+    },
+    {
+      "id": "laundry-gloves",
+      "name": "Gloves from the chute",
+      "description": "A pair of men's white kid evening gloves, the right one spattered with dark spots across the back and fingers. Inside each cuff is the hotel laundry's sewn name tape: 'H. FOWLER 806'.",
+      "found_in": "laundry",
+      "points_to": ["fowler"],
+      "is_red_herring": false
+    },
+    {
+      "id": "champagne-magnum",
+      "name": "Champagne magnum",
+      "description": "A magnum of champagne from the suite's ice bucket, unopened, with blood and hair on the heavy base. The neck is wet from the ice. Whoever held it wore gloves or wiped it.",
+      "found_in": "suite-1204",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "ballroom-clock",
+      "name": "Tag on the ballroom clock",
+      "description": "A brass tag from the hotel engineers on the ballroom clock: 'Runs 10 min fast. Do not adjust. Repair after holiday. 28 Dec.'",
+      "found_in": "ballroom",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "trust-memo",
+      "name": "Note on the Ashgrove trust",
+      "description": "A note in Gilbert's folder on the Ashgrove Family Trust: 'L.V. refuses ledgers until Jan 3. Bank statements do not match his summaries for 1946 and 1947. Something badly wrong here. Ask C.A.'",
+      "found_in": "suite-1204",
+      "points_to": ["vance"],
+      "is_red_herring": true
+    },
+    {
+      "id": "insurance-policy",
+      "name": "Insurance policy",
+      "description": "A life insurance policy on Gilbert Ames for fifty thousand dollars, taken out in October, with Lorraine Ames as the sole beneficiary.",
+      "found_in": "suite-1204",
+      "points_to": ["lorraine"],
+      "is_red_herring": true
+    }
+  ],
+  "suspects": [
+    {
+      "id": "fowler",
+      "name": "Howard Fowler",
+      "role": "Partner, Ames and Fowler, accountants",
+      "age": 52,
+      "portrait": "man-glasses",
+      "color": "#5a5a7a",
+      "personality": "Jovial, soft-spoken and full of sympathy for everyone, especially the widow. He has been the friendly half of the firm for twenty years while Gilbert was the careful one. He is very clever about figures and not as clever about people as he thinks.",
+      "speech_style": "Warm and comfortable, a good after-dinner speaker. Calls the dead man 'poor old Gil'. Uses bookkeeping words for everything: 'balance', 'on the books', 'carried forward'. When he is worried he talks about the weather and the fireworks.",
+      "alibi": "I was in the ballroom at midnight. We all were. I sang Auld Lang Syne with Lorraine on one side of me and Miss Ashgrove on the other.",
+      "public_facts": [
+        "Howard Fowler has been Gilbert Ames's partner for twenty years.",
+        "He was a guest at the Ashgrove table tonight and had Room 806.",
+        "Everyone at the table saw him there at the countdown."
+      ],
+      "private_knowledge": [
+        "Gil went up to the suite at half past eleven saying he had a headache.",
+        "At the countdown you stood between Lorraine and Miss Ashgrove.",
+        "You know the ballroom clock is fast. The barman complained about it earlier."
+      ],
+      "lies": [
+        {
+          "topic": "Where he was after the countdown",
+          "claim": "I never left the ballroom. I was there from the countdown until the house detective came for us.",
+          "truth": "You left at 23:52, went up to Suite 1204, and came back at 00:05 without your gloves."
+        },
+        {
+          "topic": "The firm's accounts",
+          "claim": "The firm is in fine shape. Gil and I never had a cross word about money in twenty years.",
+          "truth": "You have taken sixty-one thousand four hundred dollars from client accounts since 1947, and at eleven o'clock Gil told you he knew."
+        }
+      ],
+      "secrets": [
+        "You lost most of the money at the racetrack in Harmon."
+      ],
+      "never_reveal": [
+        "That you went up to Suite 1204 after the countdown and struck Gil with the champagne magnum.",
+        "That you dropped your gloves down the laundry chute."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "fowler-headache",
+          "text": "Says poor old Gil went up to the suite at half past eleven with a headache, and that he meant to look in on him in the morning.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "fowler-gloves",
+          "text": "Says he took his gloves off after the countdown because it was hot and must have left them somewhere in the ballroom.",
+          "condition": "pressed"
+        }
+      ],
+      "breaks_on": ["switchboard-log", "laundry-gloves", "audit-notes"],
+      "patience": 13,
+      "deflections": [
+        "*shakes his head slowly*  Poor old Gil. I can't take it in.",
+        "*looks at the window*  Did you see the fireworks over the river? Best I can remember.",
+        "*spreads his hands*  I'm a numbers man, Detective. Ask me something with a number in it."
+      ],
+      "alibi_verification": {
+        "status": "broken",
+        "evidence_ids": ["switchboard-log", "ballroom-clock"],
+        "clue_ids": ["clara-gloves", "lorraine-howard"],
+        "note": "The ballroom counted down at ten to twelve by the real time, and the switchboard log has Gilbert alive at 23:56. Lorraine saw Howard leave toward the elevators after the countdown, and Clara saw him come back at five past twelve without his gloves."
+      }
+    },
+    {
+      "id": "lorraine",
+      "name": "Lorraine Ames",
+      "role": "Gilbert Ames's wife",
+      "age": 44,
+      "portrait": "woman-bun",
+      "color": "#7a6a4a",
+      "personality": "Bright and sociable, the opposite of her husband, and bored by him for years. She is shocked and guilty about the boredom, and she knows how the insurance policy will look. She wants to be helpful and keeps saying the wrong thing.",
+      "speech_style": "Chatty, too many words, nervous laughter in the wrong places. Calls her husband 'Gilbert', never 'Gil'. Says 'I mean to say' before every awkward fact. Apologizes for crying and then cries.",
+      "alibi": "I was at the Ashgrove table from before the countdown until the house detective came. I never went upstairs.",
+      "public_facts": [
+        "Lorraine Ames has been married to Gilbert for eighteen years.",
+        "She and Gilbert had Suite 1204 for the night.",
+        "She was at the Ashgrove table in the ballroom for the countdown."
+      ],
+      "private_knowledge": [
+        "Gilbert went up to the suite at half past eleven with a headache.",
+        "At about half past ten you saw Mr. Vance and Gilbert arguing at the ballroom bar.",
+        "Right after the countdown, Howard kissed your cheek and went off toward the lobby doors, the way the elevators are."
+      ],
+      "lies": [
+        {
+          "topic": "The insurance",
+          "claim": "Insurance? I wouldn't know anything about that. Gilbert handled all that sort of thing.",
+          "truth": "You asked Gilbert to take out the policy in October, after his heart scare, and you know it is for fifty thousand dollars."
+        }
+      ],
+      "secrets": [
+        "You had been thinking about leaving Gilbert in the spring."
+      ],
+      "never_reveal": [
+        "That you were relieved, for one moment, when they told you."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "lorraine-howard",
+          "text": "Says right after the countdown Howard kissed her cheek and went off through the crowd toward the lobby doors, the way the elevators are. She did not see him again until after midnight.",
+          "condition": "shown_evidence:ballroom-clock"
+        },
+        {
+          "clue_id": "lorraine-argument",
+          "text": "Says she saw Mr. Vance and Gilbert having words at the ballroom bar at about half past ten. Gilbert came back to the table very red and said 'That man is hiding something.'",
+          "condition": "free"
+        },
+        {
+          "clue_id": "lorraine-table",
+          "text": "Says Miss Ashgrove and Mr. Vance were both at the table with her from the countdown until the house detective came for them. Mr. Vance gave a little speech about the old year.",
+          "condition": "pressed"
+        },
+        {
+          "clue_id": "lorraine-policy",
+          "text": "Admits she asked Gilbert to take out the policy in October, after a heart scare, because she would have had nothing. She says she would never have touched him.",
+          "condition": "shown_evidence:insurance-policy"
+        }
+      ],
+      "breaks_on": ["insurance-policy"],
+      "patience": 12,
+      "deflections": [
+        "*laughs, then covers her mouth*  I'm sorry. I mean to say, I don't know what I'm saying.",
+        "*twists her handkerchief*  Gilbert would know. Gilbert always knew where everybody was.",
+        "*crying*  I'm sorry. Could we stop for a minute?"
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": [],
+        "clue_ids": ["clara-table", "vance-table"],
+        "note": "Clara and Vance both put her at the Ashgrove table from the countdown until the house detective arrived."
+      }
+    },
+    {
+      "id": "clara",
+      "name": "Clara Ashgrove",
+      "role": "Head of Ashgrove Shipping; host of the party",
+      "age": 33,
+      "portrait": "woman-bun",
+      "color": "#8c4a5a",
+      "personality": "Sharp, proud and controlled. She has run Ashgrove Shipping for a year through two scandals and a murder trial, and tonight was meant to show the city the firm was still standing. She hired Gilbert Ames because she no longer trusts the figures Leonard Vance gives her about her father's trust, and she will not say so to a policeman until she is sure.",
+      "speech_style": "Clipped, exact sentences, times and figures, no softening. Says 'my father's trust' and 'Ashgrove' as if they were one word. Corrects imprecision: 'Not quite, Detective.' Goes quieter when she is angry.",
+      "alibi": "I was at my table in the ballroom from the countdown until the house detective came. Mr. Vance and Mrs. Ames were with me.",
+      "public_facts": [
+        "Clara Ashgrove has run Ashgrove Shipping since her father's death in October 1948.",
+        "She hosted the party in the Starlight Ballroom.",
+        "In December she hired Gilbert Ames to examine the books of the Ashgrove Family Trust."
+      ],
+      "private_knowledge": [
+        "Leonard Vance has been trustee of your father's trust since before the war. Your father meant to replace him with you and never signed the paper.",
+        "Howard Fowler was standing next to you at the countdown. He wore white gloves.",
+        "When Howard came back to the table at about five past twelve his hands were bare, and he kept them in his pockets."
+      ],
+      "lies": [
+        {
+          "topic": "Why she hired Ames",
+          "claim": "Mr. Ames was doing a routine review of the trust. Every trust has one.",
+          "truth": "You hired him because the trust's income has fallen every year since 1946 and Leonard Vance will not show you the ledgers."
+        }
+      ],
+      "secrets": [
+        "You have already written to the State Bar asking how to remove a trustee."
+      ],
+      "never_reveal": [
+        "That you are afraid your father's money is gone."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "clara-gloves",
+          "text": "Says Howard Fowler stood next to her at the countdown wearing white gloves. When he came back to the table at about five past twelve his hands were bare and he kept them in his pockets.",
+          "condition": "shown_evidence:laundry-gloves"
+        },
+        {
+          "clue_id": "clara-table",
+          "text": "Says Mrs. Ames and Mr. Vance were at her table from the countdown until the house detective came. She would have noticed either of them leaving. She was watching Vance.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "clara-trust",
+          "text": "Admits she hired Ames because the trust's income has fallen every year since 1946 and Vance will not show her the ledgers. She says she does not know yet what Ames found.",
+          "condition": "shown_evidence:trust-memo"
+        }
+      ],
+      "breaks_on": ["trust-memo"],
+      "patience": 12,
+      "deflections": [
+        "*evenly*  Not quite, Detective. Try the question again.",
+        "*looks at the ballroom doors*  I have two hundred guests to apologize to in the morning.",
+        "*a thin smile*  You will forgive me if I keep my opinions off the manifest for now."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": [],
+        "clue_ids": ["lorraine-table", "vance-table"],
+        "note": "Lorraine and Vance both put her at the Ashgrove table from the countdown until the house detective came."
+      }
+    },
+    {
+      "id": "vance",
+      "name": "Leonard Vance",
+      "role": "Attorney-at-law, Vance and Pryor; trustee of the Ashgrove Family Trust",
+      "age": 55,
+      "portrait": "man-glasses",
+      "color": "#6b7f99",
+      "personality": "Smooth, precise and unfailingly polite, a man who has spent thirty years making other people's trouble sound like paperwork. This is the third death in fourteen months with his name somewhere near it, and he is very careful indeed. The accountant was going through his trust, and he knows exactly how that looks.",
+      "speech_style": "Measured, lawyerly sentences: 'strictly speaking', 'as a matter of form', 'I would put it rather differently'. A Latin tag when he wants distance: res ipsa loquitur, de mortuis nil nisi bonum. Calls the detective 'Detective' with a faint smile and answers a question with a question when he can.",
+      "alibi": "From the countdown until Mr. Brophy came for us I was at Miss Ashgrove's table. I made a short speech. Several hundred people heard it, though I doubt many listened.",
+      "public_facts": [
+        "Leonard Vance of Vance and Pryor is counsel to Ashgrove Shipping and trustee of the Ashgrove Family Trust.",
+        "He was a guest at the Ashgrove table tonight.",
+        "Gilbert Ames was examining the books of the trust he manages."
+      ],
+      "private_knowledge": [
+        "You argued with Ames at the ballroom bar at about half past ten. He wanted the trust ledgers before the third of January.",
+        "Mrs. Ames and Miss Ashgrove were at the table with you from the countdown until the house detective arrived.",
+        "Fowler went off through the crowd toward the lobby a minute or two after the countdown."
+      ],
+      "lies": [
+        {
+          "topic": "His talk with Ames",
+          "claim": "I exchanged New Year's greetings with Mr. Ames. Nothing more.",
+          "truth": "At about half past ten you told Ames sharply at the bar that he would not see the trust ledgers before the third of January."
+        }
+      ],
+      "secrets": [
+        "The trust ledgers do not match the bank statements, and you need until the third to make them."
+      ],
+      "never_reveal": [
+        "That you have taken money from the Ashgrove Family Trust since 1946."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "vance-table",
+          "text": "Says Miss Ashgrove and Mrs. Ames were at the table with him from the countdown until the house detective came for them. He made a little speech about the old year and both of them had to sit through it.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "vance-fowler",
+          "text": "Says that a minute or two after the countdown Fowler went off through the crowd toward the lobby doors. Vance assumed he was looking for the men's room.",
+          "condition": "pressed"
+        },
+        {
+          "clue_id": "vance-ledgers",
+          "text": "Admits he argued with Ames at the bar about the trust ledgers and told him he would have them on the third. He calls it 'a question of good order' and will not say more about the trust.",
+          "condition": "shown_evidence:trust-memo"
+        }
+      ],
+      "breaks_on": ["trust-memo"],
+      "patience": 14,
+      "deflections": [
+        "*adjusts a cufflink*  Strictly speaking, Detective, I'm not sure that is a proper question.",
+        "*with a small bow of the head*  De mortuis nil nisi bonum. I'll say nothing against him.",
+        "*smiles faintly*  I have answered rather a lot of policemen this year. Would you like to try another?"
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": [],
+        "clue_ids": ["clara-table", "lorraine-table"],
+        "note": "Clara and Lorraine both put him at the Ashgrove table from the countdown until the house detective came. Clara says she was watching him the whole time."
+      }
+    }
+  ],
+  "hints": [
+    "Every one of them says they were in the ballroom at midnight. Find out which midnight they mean. Look at the ballroom clock, then the lobby clock.",
+    "The switchboard writes down every call with the time. Find out when Gilbert Ames was last alive.",
+    "Show Lorraine Ames the tag from the ballroom clock. She saw somebody leave right after the countdown.",
+    "Laundry in a hotel comes back with a name tape. Go down to the basement and see what came down the chute tonight.",
+    "Two people at the table have papers in the suite that look bad for them. Ask about them, then check whether they ever left the table.",
+    "On the board, pin Gilbert's notes, the switchboard log and whatever you found in the laundry, then press \"Check theory\".",
+    "Look hard at Howard Fowler. Gilbert caught him with his hand in the client accounts, Gilbert was alive after the countdown, and the gloves in the chute have his name in them."
+  ],
+  "endings": {
+    "correct": "Howard Fowler is taken out through the kitchens to keep him away from the photographers. The New Year is four hours old. Clara Ashgrove takes Gilbert Ames's folder on her father's trust home in her own briefcase, and does not mention it to Leonard Vance.",
+    "wrong_culprit": "You arrest the wrong person on New Year's morning and the papers love it. Howard Fowler gives the eulogy at the funeral, settles his late partner's affairs himself, and closes the client accounts before anybody else can open them.",
+    "weak_proof": "You named the right man, and his lawyer made the clock your problem. Everybody saw him at midnight. You needed his partner's notes, the call that proved Gilbert outlived the countdown, and the gloves with his name in them."
+  }
+}$case$, now())
+on conflict (id) do update set case_text = excluded.case_text, updated_at = now();
+
+-- vance-and-pryor (sha256 of the minified JSON: 1a4d05d299a00898d66873631ed93a813fc77ce6059cd5806738438ff3622aae)
+insert into public.story_cases (id, case_text, updated_at) values ('vance-and-pryor', $case${
+  "schema_version": 1,
+  "id": "vance-and-pryor",
+  "title": "Vance and Pryor",
+  "tagline": "A partner shot at his desk, a typed confession, and a lawyer who has been near every case you've worked.",
+  "setting": "The offices of Vance and Pryor, attorneys, on the sixth floor of the Harbor Exchange Building",
+  "era": "June 1950",
+  "intro_briefing": [
+    "Monday, 12 June 1950. At half past eight this morning Miss June Hartley unlocked the offices of Vance and Pryor on the sixth floor of the Harbor Exchange Building and found Martin Pryor dead in his chair. His own revolver was in his hand and a typed note was on his blotter.",
+    "The note says he cannot face what he has done to the Ashgrove Family Trust. The police surgeon says Pryor died some time on Sunday evening, between seven and ten, from a single shot to the right temple at close range. The Captain would like to call it suicide and close the file. He sent you because of the name on the trust.",
+    "You know these people. Leonard Vance, Pryor's partner of twenty-six years, trustee of the Ashgrove trust since before the war, and somewhere in the background of every case you have worked since that night at Ashgrove House. Clara Ashgrove, whose father's money the note talks about. Miss June Hartley, the firm's secretary. And Tommy Reyes, who used to watch the gate at Pier Seventeen and now runs the night elevator here.",
+    "Search the lobby, both partners' offices and the records room. Question the four of them and show them what you find. If Martin Pryor did not write that note, somebody in this building wanted you to believe he did."
+  ],
+  "victim": {
+    "id": "pryor",
+    "name": "Martin Pryor",
+    "age": 61,
+    "description": "Junior name and senior conscience of Vance and Pryor for twenty-six years. A quiet, old-fashioned probate lawyer who wrote everything by hand, played tennis badly every Saturday, and trusted his partner completely until a fortnight ago.",
+    "cause_of_death": "A single gunshot to the right temple from his own revolver, fired at close range.",
+    "found_in": "pryor-office",
+    "found_at": "at about 08:30 on Monday, sitting at his desk with the revolver in his right hand"
+  },
+  "solution": {
+    "culprit_id": "vance",
+    "motive": "Martin Pryor had found that Leonard Vance had taken a hundred and eighty-two thousand dollars from the Ashgrove Family Trust, and he meant to tell Clara Ashgrove and the District Attorney on Monday morning.",
+    "method": "On Sunday evening Vance slipped away from the Yacht Club dinner, rode the elevator up to the office, shot Pryor with the revolver from Pryor's own desk, typed a confession on his own typewriter, put it on Pryor's blotter and the gun in his right hand, and was back at the dinner within the hour.",
+    "required_evidence": ["pryor-letter", "vance-typewriter", "elevator-log", "left-hand-desk"],
+    "reveal": "Leonard Vance began taking money from the Ashgrove Family Trust in 1946, a little at a time, and by this spring a hundred and eighty-two thousand dollars of Edmund Ashgrove's money had gone into an account at the Harbor Trust in his own name. Edmund nearly caught him in 1948 and died with the codicil that would have replaced him still unsigned. Harold Pike had a dossier, and Vance bought it back the night Pike died. Gilbert Ames got close, and Howard Fowler killed Ames for reasons of his own before he could finish. In May Clara Ashgrove gave Ames's folder to the one man she still trusted at Vance and Pryor. Martin Pryor spent a fortnight in the records room, and on Saturday afternoon he told his partner what he had found. He gave him until Monday at nine. Then he went home and wrote to Clara. On Sunday Vance went to the Harbor Commission dinner at the Yacht Club, made sure everyone saw him, and at twenty-five to nine said he had a call to make. He drove to the Exchange Building, rode up with the night man at ten to nine, and found Martin at his desk with the ledgers. He took the revolver Martin kept in his drawer and shot him at close range. Then he typed a confession on the machine in his own office, signed it with initials Martin never used, and put the gun in Martin's right hand. Martin Pryor did everything with his left. Vance was back at the Yacht Club by twenty past nine, in time to applaud the end of Clara's speech. Martin's letter to Clara gives the motive, the broken letter on Vance's typewriter is in the confession, the night man's log puts Vance in the building, and the dead man's own desk shows he could not have held that gun the way it was found."
+  },
+  "timeline": [
+    {
+      "day": 0,
+      "time": "15:00",
+      "location": "records-room",
+      "who": ["pryor", "vance"],
+      "what": "Saturday. In the records room Pryor shows Vance the Ashgrove trust ledgers and the bank statements side by side, and says he will take them to Clara Ashgrove and the District Attorney on Monday at nine.",
+      "visibility": "private",
+      "tags": ["motive"]
+    },
+    {
+      "day": 0,
+      "time": "17:00",
+      "location": "pryor-office",
+      "who": ["pryor"],
+      "what": "Saturday. Pryor writes to Clara Ashgrove by hand and sends it special delivery: he must see her on Monday at nine about her father's trust, and she is not to speak to his partner first.",
+      "visibility": "private",
+      "tags": ["motive"]
+    },
+    {
+      "day": 1,
+      "time": "14:00",
+      "location": "records-room",
+      "who": ["june"],
+      "what": "Sunday. June lets herself into the office for an hour to finish typing a will for Monday and puts two more IOUs in the petty cash box.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 1,
+      "time": "18:30",
+      "location": "yacht-club",
+      "who": ["vance", "clara"],
+      "what": "Sunday. The Harbor Commission dinner begins at the Harbor Yacht Club. Vance sits across the table from Clara.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 1,
+      "time": "19:00",
+      "location": "rialto",
+      "who": ["june"],
+      "what": "June goes to the seven o'clock show at the Rialto with her sister and stays until ten.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 1,
+      "time": "19:30",
+      "location": "lobby",
+      "who": ["pryor", "tommy"],
+      "what": "Tommy takes Pryor up to the sixth floor in the night elevator and writes it in his log.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 1,
+      "time": "20:35",
+      "location": "yacht-club",
+      "who": ["vance", "clara"],
+      "what": "Vance leaves the dinner table saying he has a telephone call to make. His chair stays empty through the fish course and Clara's speech.",
+      "visibility": "private",
+      "tags": ["alibi"]
+    },
+    {
+      "day": 1,
+      "time": "20:50",
+      "location": "lobby",
+      "who": ["vance", "tommy"],
+      "what": "Vance comes in through the revolving door and Tommy takes him up to the sixth floor. Tommy writes it in the log.",
+      "visibility": "private",
+      "tags": ["alibi"]
+    },
+    {
+      "day": 1,
+      "time": "20:55",
+      "location": "pryor-office",
+      "who": ["vance", "pryor"],
+      "what": "Vance takes the revolver from Pryor's desk drawer and shoots him at close range in the right temple.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "day": 1,
+      "time": "20:55",
+      "location": "lobby",
+      "who": ["tommy"],
+      "what": "Down in the lobby Tommy hears a sharp crack from somewhere above and takes it for a car backfiring in the street.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 1,
+      "time": "21:00",
+      "location": "yacht-club",
+      "who": ["clara"],
+      "what": "Clara gives her address to the Harbor Commission dinner. She looks at Vance's empty chair while she speaks.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 1,
+      "time": "21:00",
+      "location": "vance-office",
+      "who": ["vance"],
+      "what": "Vance types a confession on the typewriter in his own office, signs it 'M.P.', puts it on Pryor's blotter and closes Pryor's right hand round the revolver.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "day": 1,
+      "time": "21:08",
+      "location": "lobby",
+      "who": ["vance", "tommy"],
+      "what": "Tommy takes Vance down. Vance tells him he only came for some papers and gives him a dollar for his trouble.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 1,
+      "time": "21:15",
+      "location": "lobby",
+      "who": ["tommy"],
+      "what": "Tommy leaves the elevator and goes across to Mulligan's bar for a drink until 21:45.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 1,
+      "time": "21:20",
+      "location": "yacht-club",
+      "who": ["vance", "clara"],
+      "what": "Vance is back at the Yacht Club in time to applaud the end of Clara's speech.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 2,
+      "time": "08:30",
+      "location": "pryor-office",
+      "who": ["june", "pryor"],
+      "what": "Monday. June unlocks the office and finds Martin Pryor dead at his desk.",
+      "visibility": "public",
+      "tags": []
+    }
+  ],
+  "offstage_locations": [
+    { "id": "yacht-club", "name": "Harbor Yacht Club" },
+    { "id": "rialto", "name": "The Rialto cinema" }
+  ],
+  "rooms": [
+    {
+      "id": "lobby",
+      "name": "Exchange Building lobby",
+      "description": "A marble lobby with a bronze directory board, a revolving door onto Harbor Avenue, and one elevator kept running at night and on Sundays. The night man's stool and desk stand beside the elevator gate.",
+      "background": "lobby",
+      "hotspots": [
+        {
+          "id": "night-desk",
+          "label": "Night desk",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The night elevator man's desk, with the building's rule printed on a card: 'Every passenger after 6 pm and on Sundays to be entered in the log, with floor and time.' The log book is open.",
+          "evidence_id": "elevator-log"
+        },
+        {
+          "id": "directory",
+          "label": "Directory",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "The bronze directory board. '6th Floor. Vance and Pryor, Attorneys at Law. Suite 610.'",
+          "evidence_id": null
+        },
+        {
+          "id": "revolving-door",
+          "label": "Revolving door",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "The revolving door onto Harbor Avenue. Across the street is Mulligan's, with a clear view of this door from its front window.",
+          "evidence_id": null
+        },
+        {
+          "id": "elevator-gate",
+          "label": "Elevator",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "A brass gate and an old cage elevator. On Sundays it is the only way up. The stairs are locked at every floor from the inside, by the fire marshal's leave.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "pryor-office",
+      "name": "Martin Pryor's office",
+      "description": "A plain office with a worn carpet, a big desk under the window and shelves of probate reports. Two ledgers lie open on a side table. The body has been taken away, but the chair has not been moved.",
+      "background": "office",
+      "hotspots": [
+        {
+          "id": "desk-chair",
+          "label": "Desk chair",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "Where June found him, slumped to the right. The photographs from this morning show the revolver in his right hand, the muzzle burn on his right temple, and his fountain pen lying uncapped on the left side of the blotter.",
+          "evidence_id": "revolver"
+        },
+        {
+          "id": "blotter",
+          "label": "Blotter",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "A single typed sheet lies squarely on the blotter, as if placed there for whoever came in first.",
+          "evidence_id": "suicide-note"
+        },
+        {
+          "id": "desk-set",
+          "label": "Desk set",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "Pryor's pen tray, inkwell and telephone, all on the left-hand side of the desk. A pair of scissors in the drawer has the handles moulded the other way round.",
+          "evidence_id": "left-hand-desk"
+        },
+        {
+          "id": "tennis-photo",
+          "label": "Photograph",
+          "x": 10,
+          "y": 56,
+          "width": 26,
+          "height": 26,
+          "description": "A framed photograph of Pryor at the Harbor Tennis Club, holding a cup and his racquet, in his left hand. The caption reads: 'M. Pryor, veterans' doubles, runner-up, 1938.'",
+          "evidence_id": null
+        },
+        {
+          "id": "window",
+          "label": "Window",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "Six floors up over Harbor Avenue. The window is shut and latched. On a quiet Sunday a shot up here would sound like a backfire in the street.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "vance-office",
+      "name": "Leonard Vance's office",
+      "description": "The senior partner's room: Persian rug, leather chairs, a decanter, and a framed letter of thanks from the Harbor Commission. A typewriter sits on a stand by the desk. Vance types his own private letters, June says, and nobody else touches the machine.",
+      "background": "study",
+      "hotspots": [
+        {
+          "id": "typewriter",
+          "label": "Typewriter",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "A black office typewriter with a sheet of paper still in the roller. You type a line on it yourself.",
+          "evidence_id": "vance-typewriter"
+        },
+        {
+          "id": "desk",
+          "label": "Desk",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "A clean, polished desk. On it lies a dinner program from last night, folded in half, and a letter in a strong, slanting hand.",
+          "evidence_id": "clara-letter"
+        },
+        {
+          "id": "cufflink-box",
+          "label": "Cufflink box",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "A leather box of cufflinks, a dozen pairs. Vain about his cufflinks, as everyone says. One velvet slot is empty and has been for a year.",
+          "evidence_id": null
+        },
+        {
+          "id": "program",
+          "label": "Dinner program",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "The program from the Harbor Commission dinner at the Yacht Club last night, with the speeches and their times.",
+          "evidence_id": "dinner-program"
+        }
+      ]
+    },
+    {
+      "id": "records-room",
+      "name": "Records room",
+      "description": "A windowless room of steel cabinets and deed boxes. One cabinet labelled ASHGROVE FAMILY TRUST stands open, and its drawers are nearly empty. The missing ledgers are on Pryor's side table.",
+      "background": "archive",
+      "hotspots": [
+        {
+          "id": "trust-cabinet",
+          "label": "Trust cabinet",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The Ashgrove trust cabinet. In the bottom drawer, under the deed boxes, is a bundle of bank statements with Pryor's pencil ticks all down the margins, and a summary sheet in his hand.",
+          "evidence_id": "trust-ledger"
+        },
+        {
+          "id": "deed-boxes",
+          "label": "Deed boxes",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "Black tin deed boxes with clients' names in white paint. One is labelled 'ASHGROVE, E. Codicil (draft, unsigned) 1948'. Inside is the draft that would have replaced Leonard Vance as trustee with Clara.",
+          "evidence_id": null
+        },
+        {
+          "id": "work-table",
+          "label": "Work table",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "A plain table under a hanging lamp with two weeks of Pryor's working papers on it, all in his slanting left-handed script, the letters leaning backward.",
+          "evidence_id": null
+        },
+        {
+          "id": "reception-desk",
+          "label": "Secretary's desk",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "June Hartley's desk, which stands by the door between the records room and reception. In the petty cash box there are more slips of paper than dollars, and a cinema ticket stub is tucked in the corner of her blotter.",
+          "evidence_id": "petty-cash"
+        },
+        {
+          "id": "june-tray",
+          "label": "Letter tray",
+          "x": 10,
+          "y": 56,
+          "width": 26,
+          "height": 26,
+          "description": "June's letter tray, with a carbon of a letter Pryor dictated last week to the building management, and two ticket stubs from the Rialto clipped together.",
+          "evidence_id": "rialto-stubs"
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "pryor-letter",
+      "name": "Pryor's letter to Clara",
+      "description": "A handwritten letter on Vance and Pryor paper, in Pryor's backward-leaning script, delivered special delivery on Sunday morning: 'Dear Miss Ashgrove, I have been through the books with Mr. Ames's folder. Your father's trust is short by $182,000, and the money went into an account at the Harbor Trust in the name of L. Vance. I told Leonard on Saturday. I will bring everything to you and to the District Attorney at nine on Monday. Do not speak to him before then. I am more ashamed than I can say. Martin Pryor.'",
+      "found_in": "clara",
+      "points_to": ["vance"],
+      "is_red_herring": false
+    },
+    {
+      "id": "suicide-note",
+      "name": "Typed note",
+      "description": "A typed sheet: 'I cannot face what I have done to the Ashgrove Family Trust. The money is gone and I took it. Forgive me. M.P.' Every lowercase 'e' on the sheet prints with a break in the loop at the top. The initials are typed too, not signed.",
+      "found_in": "pryor-office",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "vance-typewriter",
+      "name": "Vance's typewriter",
+      "description": "You type 'the Ashgrove trust' on the machine in Leonard Vance's office. Every lowercase 'e' prints with the same break at the top of the loop as the note on Pryor's blotter. June says the key has been chipped since March and Mr. Vance would not let it be sent out for repair.",
+      "found_in": "vance-office",
+      "points_to": ["vance"],
+      "is_red_herring": false
+    },
+    {
+      "id": "elevator-log",
+      "name": "Night elevator log",
+      "description": "Tommy Reyes's log for Sunday: '7.30 pm Mr. Pryor, up 6. 8.50 pm Mr. Vance, up 6. 9.08 pm Mr. Vance, down.' Nothing is written between 9.15 and 9.45. On Sundays the elevator is the only way up; the stairs are locked from the inside.",
+      "found_in": "lobby",
+      "points_to": ["vance"],
+      "is_red_herring": false
+    },
+    {
+      "id": "left-hand-desk",
+      "name": "A left-handed man's desk",
+      "description": "Everything on Martin Pryor's desk is laid out for his left hand: pen tray, inkwell, telephone, even the scissors. His uncapped pen lay on the left of the blotter. The revolver was found in his right hand, and the wound is on the right side of his head.",
+      "found_in": "pryor-office",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "revolver",
+      "name": "Pryor's revolver",
+      "description": "A .38 revolver licensed to Martin Pryor, kept in his desk drawer since a burglary in 1946. One chamber fired. The only clear prints on it are Pryor's own, pressed on in a way the police photographer thinks is too neat.",
+      "found_in": "pryor-office",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "trust-ledger",
+      "name": "Pryor's summary of the trust",
+      "description": "A summary sheet in Pryor's hand on top of a bundle of bank statements: 'Ashgrove Family Trust. Ledgers 1946 to 1950 do not match statements. Transfers to Harbor Trust acct. 4471, $182,000 in all. Acct. 4471: L. Vance.' Under it, pressed hard: 'Told L.V. Sat. 3 pm. Monday 9.'",
+      "found_in": "records-room",
+      "points_to": ["vance"],
+      "is_red_herring": false
+    },
+    {
+      "id": "dinner-program",
+      "name": "Dinner program",
+      "description": "The Harbor Commission dinner program, Sunday 11 June: '6.30 Reception. 7.15 Dinner. 9.00 Address: Miss Clara Ashgrove, Ashgrove Shipping. 9.30 The Commissioner.' Penciled in the margin, in Vance's neat hand: 'C.A. spoke well.'",
+      "found_in": "vance-office",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "clara-letter",
+      "name": "Clara's letter to Vance",
+      "description": "A letter in a strong, slanting hand, dated 1 June: 'Leonard, if my father's money is gone, I will see you ruined, and Pryor with you. I mean every word of it. C.A.'",
+      "found_in": "vance-office",
+      "points_to": ["clara"],
+      "is_red_herring": true
+    },
+    {
+      "id": "petty-cash",
+      "name": "Petty cash box",
+      "description": "The office petty cash box: eleven dollars and a stack of IOU slips signed 'J.H.', sixty dollars in all, the last two dated Sunday.",
+      "found_in": "records-room",
+      "points_to": ["june"],
+      "is_red_herring": true
+    },
+    {
+      "id": "rialto-stubs",
+      "name": "Rialto ticket stubs",
+      "description": "Two ticket stubs from the Rialto cinema for the seven o'clock show on Sunday, clipped to a carbon of Pryor's letter to the building management: 'Please replace the night elevator man, T. Reyes, who was found asleep and smelling of drink twice this month.'",
+      "found_in": "records-room",
+      "points_to": ["tommy"],
+      "is_red_herring": true
+    }
+  ],
+  "suspects": [
+    {
+      "id": "vance",
+      "name": "Leonard Vance",
+      "role": "Senior partner, Vance and Pryor; trustee of the Ashgrove Family Trust",
+      "age": 56,
+      "portrait": "man-glasses",
+      "color": "#6b7f99",
+      "personality": "Smooth, precise and unfailingly polite, a man who has spent thirty years making other people's trouble sound like paperwork. He has stood near four deaths in twenty months and walked away from each of them. He is grieving in public for the partner he shot, he does it very well, and he is more frightened than he has ever been.",
+      "speech_style": "Measured, lawyerly sentences: 'strictly speaking', 'as a matter of form', 'I would put it rather differently'. A Latin tag when he wants distance: res ipsa loquitur, de mortuis nil nisi bonum. Calls the detective 'Detective' with a faint smile, and answers a question with a question when he can. Becomes more courteous, not less, when cornered.",
+      "alibi": "On Sunday evening I was at the Harbor Commission dinner at the Yacht Club from half past six until after eleven. I heard Miss Ashgrove's address at nine o'clock.",
+      "public_facts": [
+        "Leonard Vance has been senior partner of Vance and Pryor for twenty-six years.",
+        "He has been trustee of the Ashgrove Family Trust since 1939.",
+        "He was at the Harbor Commission dinner at the Yacht Club on Sunday evening."
+      ],
+      "private_knowledge": [
+        "Martin has been working late in the records room for a fortnight.",
+        "Martin kept a revolver in his desk drawer after the burglary in 1946.",
+        "At the dinner you sat across the table from Miss Ashgrove."
+      ],
+      "lies": [
+        {
+          "topic": "Where he was on Sunday evening",
+          "claim": "I never left the Yacht Club. I heard every word of Miss Ashgrove's speech.",
+          "truth": "You left at 20:35, rode up to the office with the night man at 20:50, came down at 21:08 and were back at the club at 21:20."
+        },
+        {
+          "topic": "The trust",
+          "claim": "Martin handled the day-to-day work on the Ashgrove trust. I'm afraid the note speaks for itself.",
+          "truth": "You have taken a hundred and eighty-two thousand dollars from the trust since 1946, and on Saturday Martin told you he would take the proof to Clara Ashgrove and the District Attorney."
+        }
+      ],
+      "secrets": [
+        "The Harbor Trust account 4471 is in your name, and there is very little left in it."
+      ],
+      "never_reveal": [
+        "That you shot Martin with his own revolver and typed the note on your own machine.",
+        "That you have taken money from the Ashgrove Family Trust since 1946."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "vance-spirits",
+          "text": "Says Martin had been in very low spirits for a fortnight, working late in the records room on the Ashgrove trust and not saying why. In hindsight, he says, the signs were there.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "vance-papers",
+          "text": "Admits he left the dinner for half an hour and came up to the office at ten to nine 'to collect some papers for Monday'. He says Martin was alive and well, working in his office, when he left at eight minutes past nine.",
+          "condition": "shown_evidence:elevator-log"
+        },
+        {
+          "clue_id": "vance-clara",
+          "text": "Says Miss Ashgrove sat across from him at dinner all evening and gave her address at nine o'clock.",
+          "condition": "pressed"
+        }
+      ],
+      "breaks_on": ["elevator-log", "vance-typewriter", "pryor-letter", "trust-ledger"],
+      "patience": 14,
+      "deflections": [
+        "*adjusts a cufflink*  Strictly speaking, Detective, I'm not certain that is a proper question.",
+        "*with a small bow of the head*  De mortuis nil nisi bonum. He was my partner for twenty-six years.",
+        "*smiles faintly*  We have met rather often, you and I. You'll forgive me if I let you do the talking this time."
+      ],
+      "alibi_verification": {
+        "status": "broken",
+        "evidence_ids": ["elevator-log", "dinner-program"],
+        "clue_ids": ["clara-chair", "tommy-vance"],
+        "note": "The night man's log has him going up to the sixth floor at 20:50 and down at 21:08. Clara says his chair was empty during her address at nine, and Tommy took him up and down."
+      }
+    },
+    {
+      "id": "clara",
+      "name": "Clara Ashgrove",
+      "role": "Head of Ashgrove Shipping; beneficiary of the Ashgrove Family Trust",
+      "age": 34,
+      "portrait": "woman-bun",
+      "color": "#8c4a5a",
+      "personality": "Sharp, proud and controlled, and very tired of policemen. In twenty months she has lost her father, her husband, her chief clerk and her accountant, and every time Leonard Vance has been standing somewhere nearby with his condolences. She has suspected him for months and could never prove it. She is not going to let anyone call this a suicide.",
+      "speech_style": "Clipped, exact sentences with times and figures. Says 'my father's trust'. Corrects imprecision: 'Not quite, Detective.' Never says please. Gets quieter, not louder, when she is angry, and she is very quiet today.",
+      "alibi": "I was at the Harbor Commission dinner at the Yacht Club all evening. I gave the address at nine o'clock.",
+      "public_facts": [
+        "Clara Ashgrove has run Ashgrove Shipping since her father's death in 1948.",
+        "She is the main beneficiary of the Ashgrove Family Trust.",
+        "She spoke at the Harbor Commission dinner at the Yacht Club on Sunday evening."
+      ],
+      "private_knowledge": [
+        "In May you gave Gilbert Ames's folder on the trust to Martin Pryor, the one man at Vance and Pryor you trusted.",
+        "On Sunday morning a special delivery letter came from Martin Pryor. It is in your handbag.",
+        "During your address at nine o'clock, Leonard Vance's chair across the table was empty. He came back as people were applauding, at about twenty past nine."
+      ],
+      "lies": [
+        {
+          "topic": "Her letter to Vance",
+          "claim": "I have never threatened anyone, Detective. I have asked questions.",
+          "truth": "On 1 June you wrote to Vance that if your father's money was gone you would see him ruined, and Pryor with him."
+        }
+      ],
+      "secrets": [
+        "You were going to ask the District Attorney yourself this week whether Leonard Vance could be charged."
+      ],
+      "never_reveal": [
+        "That you once thought Martin Pryor might be in it with Vance, and wrote him into that letter."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "clara-letter-given",
+          "text": "Says that in May she gave Gilbert Ames's folder to Martin Pryor, and on Sunday morning a special delivery letter came from him. She takes it out of her handbag and hands it over.",
+          "condition": "shown_evidence:trust-ledger",
+          "evidence_id": "pryor-letter"
+        },
+        {
+          "clue_id": "clara-chair",
+          "text": "Says that during her address at nine o'clock she looked straight at Leonard Vance's chair across the table, and it was empty. He had gone out at about twenty-five to nine 'to telephone' and came back as people were applauding, at about twenty past nine.",
+          "condition": "shown_evidence:dinner-program"
+        },
+        {
+          "clue_id": "clara-threat",
+          "text": "Admits she wrote to Vance on 1 June and meant it. She put Pryor's name in because she did not know then which of them to trust. She says she knows now.",
+          "condition": "shown_evidence:clara-letter"
+        }
+      ],
+      "breaks_on": ["clara-letter"],
+      "patience": 12,
+      "deflections": [
+        "*evenly*  Not quite, Detective. Ask it properly.",
+        "*looks toward Vance's office*  Every time, he has been in the next room. Every single time.",
+        "*a thin, tired smile*  You know where I was. Half the harbor heard me."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": ["dinner-program"],
+        "clue_ids": ["vance-clara"],
+        "note": "The program has her address at nine o'clock in front of the whole Harbor Commission dinner, and Vance himself says she sat across from him all evening."
+      }
+    },
+    {
+      "id": "june",
+      "name": "June Hartley",
+      "role": "Secretary, Vance and Pryor",
+      "age": 28,
+      "portrait": "young-woman",
+      "color": "#a06a7a",
+      "personality": "Efficient, warm and badly shaken. She has worked for the firm for seven years and was very fond of Mr. Pryor, who was kind to her when her father was ill. She found him, and she has borrowed money from the petty cash, and she is sure both things will come out together.",
+      "speech_style": "Fast and precise, office talk: 'dictation', 'carbons', 'the files'. Calls them 'Mr. Pryor' and 'Mr. Vance'. Corrects her own grammar. When she is upset she starts listing facts in order, as if taking a letter.",
+      "alibi": "On Sunday I was at the office for an hour after lunch to finish some typing, and in the evening I went to the seven o'clock show at the Rialto with my sister.",
+      "public_facts": [
+        "June Hartley has been secretary at Vance and Pryor for seven years.",
+        "She found Mr. Pryor's body when she opened the office at half past eight on Monday.",
+        "She types the firm's letters and keeps its files."
+      ],
+      "private_knowledge": [
+        "Mr. Pryor was left-handed. He did everything with his left hand, from his pen to his tennis racquet.",
+        "Mr. Pryor never typed anything in his life. He wrote by hand and you typed it. He always signed 'Martin Pryor' in full, never initials.",
+        "The 'e' key on Mr. Vance's typewriter has been chipped since March. Mr. Vance would not let it go out for repair and types his own private letters on it."
+      ],
+      "lies": [
+        {
+          "topic": "The petty cash",
+          "claim": "The petty cash is all accounted for. I keep it very carefully.",
+          "truth": "You have borrowed sixty dollars from it in IOUs since April to pay your father's doctor, two of them on Sunday afternoon."
+        }
+      ],
+      "secrets": [
+        "Mr. Pryor knew about the IOUs and told you not to worry about them."
+      ],
+      "never_reveal": [
+        "That you cried in the ladies' room for twenty minutes before you telephoned the police."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "june-left",
+          "text": "Says Mr. Pryor was left-handed. He did everything with his left, his pen, the telephone, his tennis. She has never seen him pick anything up with his right hand if he could help it.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "june-note",
+          "text": "Says Mr. Pryor never typed a word in his life. He wrote everything by hand and she typed it, and he always signed 'Martin Pryor' in full, never initials. The broken 'e' on that note is the 'e' on Mr. Vance's machine.",
+          "condition": "shown_evidence:suicide-note"
+        },
+        {
+          "clue_id": "june-cash",
+          "text": "Admits the IOUs are hers, sixty dollars for her father's doctor. She came in on Sunday afternoon to finish a will and borrowed two more. Mr. Pryor knew and told her not to worry.",
+          "condition": "shown_evidence:petty-cash"
+        }
+      ],
+      "breaks_on": ["petty-cash"],
+      "patience": 12,
+      "deflections": [
+        "*straightens a pile of papers that is already straight*  I'm sorry. Could you repeat that?",
+        "*listing, as if taking a letter*  I opened the door at half past eight. The blind was down. He was in his chair.",
+        "*presses her lips together*  Mr. Pryor was kind to me. That's all I want to say about him."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": ["rialto-stubs"],
+        "clue_ids": [],
+        "note": "Her Rialto ticket stubs are for the seven o'clock show on Sunday, and the night man's log never has her going up after 19:00."
+      }
+    },
+    {
+      "id": "tommy",
+      "name": "Tommy Reyes",
+      "role": "Night elevator man, Harbor Exchange Building",
+      "age": 47,
+      "portrait": "man-cap",
+      "color": "#5a6a7a",
+      "personality": "Friendly, nervous and fond of a drink, a man who has lost two jobs to it and is about to lose a third. He watched the gate at Pier Seventeen the night Harold Pike died and has not had a good night's sleep since. He wants to help and is terrified of what helping will cost him.",
+      "speech_style": "Chatty and anxious, smells of peppermints. Calls the detective 'Detective, sir' and the lawyers 'Mr. V.' and 'Mr. P.'. Repeats himself when nervous. Goes quiet and looks at the floor when he is caught out.",
+      "alibi": "I was on the elevator all night Sunday, Detective, sir. Never left it. Every passenger's in the book.",
+      "public_facts": [
+        "Tommy Reyes runs the night elevator at the Harbor Exchange Building and keeps its log.",
+        "He used to be the night watchman at Pier Seventeen.",
+        "On Sundays the elevator is the only way up to the offices."
+      ],
+      "private_knowledge": [
+        "You took Mr. Pryor up to six at half past seven on Sunday evening.",
+        "You took Mr. Vance up to six at ten to nine and down again at eight minutes past. He gave you a dollar and said he had only come for some papers.",
+        "At about five to nine, while Mr. Vance was upstairs, you heard a sharp crack from somewhere above and took it for a car backfiring."
+      ],
+      "lies": [
+        {
+          "topic": "Whether he left the elevator",
+          "claim": "I never left the elevator, Detective, sir. Not for a minute.",
+          "truth": "From about 21:15 to 21:45 you were across the street in Mulligan's having a drink."
+        }
+      ],
+      "secrets": [
+        "Mr. Pryor wrote to the building management last week asking for you to be replaced for drinking."
+      ],
+      "never_reveal": [
+        "That you were drunk on the gate at Pier Seventeen the night Harold Pike died."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "tommy-vance",
+          "text": "Says he took Mr. Vance up to six at ten to nine and down at eight minutes past. Mr. V. gave him a dollar and said he had only come up for some papers. While he was up there, at about five to nine, Tommy heard a sharp crack from above and thought it was a backfire in the street.",
+          "condition": "pressed"
+        },
+        {
+          "clue_id": "tommy-mulligans",
+          "text": "Admits he left the elevator at about a quarter past nine and went across to Mulligan's for a drink until a quarter to ten. He says nobody came in the revolving door while he was gone; he could see it from Mulligan's window the whole time.",
+          "condition": "shown_evidence:elevator-log"
+        },
+        {
+          "clue_id": "tommy-pryor-up",
+          "text": "Says he took Mr. Pryor up at half past seven on Sunday evening with a big armful of ledgers. Mr. P. said he would be working late.",
+          "condition": "free"
+        }
+      ],
+      "breaks_on": ["elevator-log", "rialto-stubs"],
+      "patience": 12,
+      "deflections": [
+        "*unwraps a peppermint*  Detective, sir, I told you. Every passenger's in the book.",
+        "*looks at the floor*  I seen you before. At the pier. I'd rather not talk about the pier.",
+        "*fast*  Mr. P. was a gentleman. Always said good night. Always."
+      ],
+      "alibi_verification": {
+        "status": "broken",
+        "evidence_ids": ["elevator-log"],
+        "clue_ids": [],
+        "note": "He did leave the elevator, from about 21:15 to 21:45, but that was after the shot. His own log has him in the lobby taking Vance up and down from 20:50 to 21:08, when Pryor died."
+      }
+    }
+  ],
+  "hints": [
+    "Read the note on Pryor's blotter closely. Then look at how Martin Pryor laid out his own desk.",
+    "On Sundays there is only one way up to the sixth floor, and the man who runs it writes everybody down.",
+    "Ask Miss Hartley how Mr. Pryor wrote his letters and how he signed them. Then type something yourself on each machine in the office.",
+    "Pryor spent a fortnight in the records room. Find what he found, and show it to the person he wrote to about it.",
+    "Clara Ashgrove was making a speech at nine o'clock. Show her the dinner program and ask what she could see from the lectern.",
+    "This is the last case. You need four things on the board: the reason, the typewriter, the elevator log and the desk that proves it was not suicide. Press \"Check theory\" before you accuse.",
+    "Look hard at Leonard Vance. Pryor caught him stealing from the Ashgrove trust, the note was typed on his machine, the night man took him up at ten to nine, and Martin Pryor was left-handed."
+  ],
+  "endings": {
+    "correct": "Leonard Vance asks for a moment to straighten his cuffs, and you give it to him. The Harbor Trust freezes account 4471 by noon. Clara Ashgrove sits in Martin Pryor's chair for a long time after they take Vance away, reading his letter again. Then she thanks you, which she has never done before, and goes back to Pier Seventeen.",
+    "wrong_culprit": "You arrest the wrong person, and Leonard Vance thanks you for your diligence. He reads the eulogy at Martin Pryor's funeral. The Ashgrove trust is found to be short by an amount his dead partner confessed to taking, and the matter is closed with regret.",
+    "weak_proof": "You named the right man, and twenty-six years of courtrooms were waiting for you. A chipped letter, a dollar to a drunk, a dead man's habits. You needed the money, the typewriter, the elevator and the left hand together, Detective. He has walked away before."
   }
 }$case$, now())
 on conflict (id) do update set case_text = excluded.case_text, updated_at = now();

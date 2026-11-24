@@ -114,8 +114,8 @@ describe('story targets', () => {
     expect(get('pier-seventeen').suspects).toHaveLength(4);
   });
 
-  it('one character recurs across all three cases', () => {
-    const names = STORY_ORDER.map((id) => new Set(get(id).suspects.map((s) => s.name)));
+  it('one character recurs across the first three cases and returns for the last', () => {
+    const names = [...STORY_ORDER.slice(0, 3), STORY_ORDER[STORY_ORDER.length - 1]!].map((id) => new Set(get(id).suspects.map((s) => s.name)));
     const recurring = [...names[0]!].filter((n) => names.every((set) => set.has(n)));
     expect(recurring.length).toBeGreaterThanOrEqual(1);
   });

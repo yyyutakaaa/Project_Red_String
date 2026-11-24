@@ -1,0 +1,763 @@
+{
+  "schema_version": 1,
+  "id": "vance-and-pryor",
+  "title": "Vance and Pryor",
+  "tagline": "A partner shot at his desk, a typed confession, and a lawyer who has been near every case you've worked.",
+  "setting": "The offices of Vance and Pryor, attorneys, on the sixth floor of the Harbor Exchange Building",
+  "era": "June 1950",
+  "intro_briefing": [
+    "Monday, 12 June 1950. At half past eight this morning Miss June Hartley unlocked the offices of Vance and Pryor on the sixth floor of the Harbor Exchange Building and found Martin Pryor dead in his chair. His own revolver was in his hand and a typed note was on his blotter.",
+    "The note says he cannot face what he has done to the Ashgrove Family Trust. The police surgeon says Pryor died some time on Sunday evening, between seven and ten, from a single shot to the right temple at close range. The Captain would like to call it suicide and close the file. He sent you because of the name on the trust.",
+    "You know these people. Leonard Vance, Pryor's partner of twenty-six years, trustee of the Ashgrove trust since before the war, and somewhere in the background of every case you have worked since that night at Ashgrove House. Clara Ashgrove, whose father's money the note talks about. Miss June Hartley, the firm's secretary. And Tommy Reyes, who used to watch the gate at Pier Seventeen and now runs the night elevator here.",
+    "Search the lobby, both partners' offices and the records room. Question the four of them and show them what you find. If Martin Pryor did not write that note, somebody in this building wanted you to believe he did."
+  ],
+  "victim": {
+    "id": "pryor",
+    "name": "Martin Pryor",
+    "age": 61,
+    "description": "Junior name and senior conscience of Vance and Pryor for twenty-six years. A quiet, old-fashioned probate lawyer who wrote everything by hand, played tennis badly every Saturday, and trusted his partner completely until a fortnight ago.",
+    "cause_of_death": "A single gunshot to the right temple from his own revolver, fired at close range.",
+    "found_in": "pryor-office",
+    "found_at": "at about 08:30 on Monday, sitting at his desk with the revolver in his right hand"
+  },
+  "solution": {
+    "culprit_id": "vance",
+    "motive": "Martin Pryor had found that Leonard Vance had taken a hundred and eighty-two thousand dollars from the Ashgrove Family Trust, and he meant to tell Clara Ashgrove and the District Attorney on Monday morning.",
+    "method": "On Sunday evening Vance slipped away from the Yacht Club dinner, rode the elevator up to the office, shot Pryor with the revolver from Pryor's own desk, typed a confession on his own typewriter, put it on Pryor's blotter and the gun in his right hand, and was back at the dinner within the hour.",
+    "required_evidence": ["pryor-letter", "vance-typewriter", "elevator-log", "left-hand-desk"],
+    "reveal": "Leonard Vance began taking money from the Ashgrove Family Trust in 1946, a little at a time, and by this spring a hundred and eighty-two thousand dollars of Edmund Ashgrove's money had gone into an account at the Harbor Trust in his own name. Edmund nearly caught him in 1948 and died with the codicil that would have replaced him still unsigned. Harold Pike had a dossier, and Vance bought it back the night Pike died. Gilbert Ames got close, and Howard Fowler killed Ames for reasons of his own before he could finish. In May Clara Ashgrove gave Ames's folder to the one man she still trusted at Vance and Pryor. Martin Pryor spent a fortnight in the records room, and on Saturday afternoon he told his partner what he had found. He gave him until Monday at nine. Then he went home and wrote to Clara. On Sunday Vance went to the Harbor Commission dinner at the Yacht Club, made sure everyone saw him, and at twenty-five to nine said he had a call to make. He drove to the Exchange Building, rode up with the night man at ten to nine, and found Martin at his desk with the ledgers. He took the revolver Martin kept in his drawer and shot him at close range. Then he typed a confession on the machine in his own office, signed it with initials Martin never used, and put the gun in Martin's right hand. Martin Pryor did everything with his left. Vance was back at the Yacht Club by twenty past nine, in time to applaud the end of Clara's speech. Martin's letter to Clara gives the motive, the broken letter on Vance's typewriter is in the confession, the night man's log puts Vance in the building, and the dead man's own desk shows he could not have held that gun the way it was found."
+  },
+  "timeline": [
+    {
+      "day": 0,
+      "time": "15:00",
+      "location": "records-room",
+      "who": ["pryor", "vance"],
+      "what": "Saturday. In the records room Pryor shows Vance the Ashgrove trust ledgers and the bank statements side by side, and says he will take them to Clara Ashgrove and the District Attorney on Monday at nine.",
+      "visibility": "private",
+      "tags": ["motive"]
+    },
+    {
+      "day": 0,
+      "time": "17:00",
+      "location": "pryor-office",
+      "who": ["pryor"],
+      "what": "Saturday. Pryor writes to Clara Ashgrove by hand and sends it special delivery: he must see her on Monday at nine about her father's trust, and she is not to speak to his partner first.",
+      "visibility": "private",
+      "tags": ["motive"]
+    },
+    {
+      "day": 1,
+      "time": "14:00",
+      "location": "records-room",
+      "who": ["june"],
+      "what": "Sunday. June lets herself into the office for an hour to finish typing a will for Monday and puts two more IOUs in the petty cash box.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 1,
+      "time": "18:30",
+      "location": "yacht-club",
+      "who": ["vance", "clara"],
+      "what": "Sunday. The Harbor Commission dinner begins at the Harbor Yacht Club. Vance sits across the table from Clara.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 1,
+      "time": "19:00",
+      "location": "rialto",
+      "who": ["june"],
+      "what": "June goes to the seven o'clock show at the Rialto with her sister and stays until ten.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 1,
+      "time": "19:30",
+      "location": "lobby",
+      "who": ["pryor", "tommy"],
+      "what": "Tommy takes Pryor up to the sixth floor in the night elevator and writes it in his log.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 1,
+      "time": "20:35",
+      "location": "yacht-club",
+      "who": ["vance", "clara"],
+      "what": "Vance leaves the dinner table saying he has a telephone call to make. His chair stays empty through the fish course and Clara's speech.",
+      "visibility": "private",
+      "tags": ["alibi"]
+    },
+    {
+      "day": 1,
+      "time": "20:50",
+      "location": "lobby",
+      "who": ["vance", "tommy"],
+      "what": "Vance comes in through the revolving door and Tommy takes him up to the sixth floor. Tommy writes it in the log.",
+      "visibility": "private",
+      "tags": ["alibi"]
+    },
+    {
+      "day": 1,
+      "time": "20:55",
+      "location": "pryor-office",
+      "who": ["vance", "pryor"],
+      "what": "Vance takes the revolver from Pryor's desk drawer and shoots him at close range in the right temple.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "day": 1,
+      "time": "20:55",
+      "location": "lobby",
+      "who": ["tommy"],
+      "what": "Down in the lobby Tommy hears a sharp crack from somewhere above and takes it for a car backfiring in the street.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 1,
+      "time": "21:00",
+      "location": "yacht-club",
+      "who": ["clara"],
+      "what": "Clara gives her address to the Harbor Commission dinner. She looks at Vance's empty chair while she speaks.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 1,
+      "time": "21:00",
+      "location": "vance-office",
+      "who": ["vance"],
+      "what": "Vance types a confession on the typewriter in his own office, signs it 'M.P.', puts it on Pryor's blotter and closes Pryor's right hand round the revolver.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "day": 1,
+      "time": "21:08",
+      "location": "lobby",
+      "who": ["vance", "tommy"],
+      "what": "Tommy takes Vance down. Vance tells him he only came for some papers and gives him a dollar for his trouble.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 1,
+      "time": "21:15",
+      "location": "lobby",
+      "who": ["tommy"],
+      "what": "Tommy leaves the elevator and goes across to Mulligan's bar for a drink until 21:45.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 1,
+      "time": "21:20",
+      "location": "yacht-club",
+      "who": ["vance", "clara"],
+      "what": "Vance is back at the Yacht Club in time to applaud the end of Clara's speech.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 2,
+      "time": "08:30",
+      "location": "pryor-office",
+      "who": ["june", "pryor"],
+      "what": "Monday. June unlocks the office and finds Martin Pryor dead at his desk.",
+      "visibility": "public",
+      "tags": []
+    }
+  ],
+  "offstage_locations": [
+    { "id": "yacht-club", "name": "Harbor Yacht Club" },
+    { "id": "rialto", "name": "The Rialto cinema" }
+  ],
+  "rooms": [
+    {
+      "id": "lobby",
+      "name": "Exchange Building lobby",
+      "description": "A marble lobby with a bronze directory board, a revolving door onto Harbor Avenue, and one elevator kept running at night and on Sundays. The night man's stool and desk stand beside the elevator gate.",
+      "background": "lobby",
+      "hotspots": [
+        {
+          "id": "night-desk",
+          "label": "Night desk",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The night elevator man's desk, with the building's rule printed on a card: 'Every passenger after 6 pm and on Sundays to be entered in the log, with floor and time.' The log book is open.",
+          "evidence_id": "elevator-log"
+        },
+        {
+          "id": "directory",
+          "label": "Directory",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "The bronze directory board. '6th Floor. Vance and Pryor, Attorneys at Law. Suite 610.'",
+          "evidence_id": null
+        },
+        {
+          "id": "revolving-door",
+          "label": "Revolving door",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "The revolving door onto Harbor Avenue. Across the street is Mulligan's, with a clear view of this door from its front window.",
+          "evidence_id": null
+        },
+        {
+          "id": "elevator-gate",
+          "label": "Elevator",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "A brass gate and an old cage elevator. On Sundays it is the only way up. The stairs are locked at every floor from the inside, by the fire marshal's leave.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "pryor-office",
+      "name": "Martin Pryor's office",
+      "description": "A plain office with a worn carpet, a big desk under the window and shelves of probate reports. Two ledgers lie open on a side table. The body has been taken away, but the chair has not been moved.",
+      "background": "office",
+      "hotspots": [
+        {
+          "id": "desk-chair",
+          "label": "Desk chair",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "Where June found him, slumped to the right. The photographs from this morning show the revolver in his right hand, the muzzle burn on his right temple, and his fountain pen lying uncapped on the left side of the blotter.",
+          "evidence_id": "revolver"
+        },
+        {
+          "id": "blotter",
+          "label": "Blotter",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "A single typed sheet lies squarely on the blotter, as if placed there for whoever came in first.",
+          "evidence_id": "suicide-note"
+        },
+        {
+          "id": "desk-set",
+          "label": "Desk set",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "Pryor's pen tray, inkwell and telephone, all on the left-hand side of the desk. A pair of scissors in the drawer has the handles moulded the other way round.",
+          "evidence_id": "left-hand-desk"
+        },
+        {
+          "id": "tennis-photo",
+          "label": "Photograph",
+          "x": 10,
+          "y": 56,
+          "width": 26,
+          "height": 26,
+          "description": "A framed photograph of Pryor at the Harbor Tennis Club, holding a cup and his racquet, in his left hand. The caption reads: 'M. Pryor, veterans' doubles, runner-up, 1938.'",
+          "evidence_id": null
+        },
+        {
+          "id": "window",
+          "label": "Window",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "Six floors up over Harbor Avenue. The window is shut and latched. On a quiet Sunday a shot up here would sound like a backfire in the street.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "vance-office",
+      "name": "Leonard Vance's office",
+      "description": "The senior partner's room: Persian rug, leather chairs, a decanter, and a framed letter of thanks from the Harbor Commission. A typewriter sits on a stand by the desk. Vance types his own private letters, June says, and nobody else touches the machine.",
+      "background": "study",
+      "hotspots": [
+        {
+          "id": "typewriter",
+          "label": "Typewriter",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "A black office typewriter with a sheet of paper still in the roller. You type a line on it yourself.",
+          "evidence_id": "vance-typewriter"
+        },
+        {
+          "id": "desk",
+          "label": "Desk",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "A clean, polished desk. On it lies a dinner program from last night, folded in half, and a letter in a strong, slanting hand.",
+          "evidence_id": "clara-letter"
+        },
+        {
+          "id": "cufflink-box",
+          "label": "Cufflink box",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "A leather box of cufflinks, a dozen pairs. Vain about his cufflinks, as everyone says. One velvet slot is empty and has been for a year.",
+          "evidence_id": null
+        },
+        {
+          "id": "program",
+          "label": "Dinner program",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "The program from the Harbor Commission dinner at the Yacht Club last night, with the speeches and their times.",
+          "evidence_id": "dinner-program"
+        }
+      ]
+    },
+    {
+      "id": "records-room",
+      "name": "Records room",
+      "description": "A windowless room of steel cabinets and deed boxes. One cabinet labelled ASHGROVE FAMILY TRUST stands open, and its drawers are nearly empty. The missing ledgers are on Pryor's side table.",
+      "background": "archive",
+      "hotspots": [
+        {
+          "id": "trust-cabinet",
+          "label": "Trust cabinet",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The Ashgrove trust cabinet. In the bottom drawer, under the deed boxes, is a bundle of bank statements with Pryor's pencil ticks all down the margins, and a summary sheet in his hand.",
+          "evidence_id": "trust-ledger"
+        },
+        {
+          "id": "deed-boxes",
+          "label": "Deed boxes",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "Black tin deed boxes with clients' names in white paint. One is labelled 'ASHGROVE, E. Codicil (draft, unsigned) 1948'. Inside is the draft that would have replaced Leonard Vance as trustee with Clara.",
+          "evidence_id": null
+        },
+        {
+          "id": "work-table",
+          "label": "Work table",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "A plain table under a hanging lamp with two weeks of Pryor's working papers on it, all in his slanting left-handed script, the letters leaning backward.",
+          "evidence_id": null
+        },
+        {
+          "id": "reception-desk",
+          "label": "Secretary's desk",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "June Hartley's desk, which stands by the door between the records room and reception. In the petty cash box there are more slips of paper than dollars, and a cinema ticket stub is tucked in the corner of her blotter.",
+          "evidence_id": "petty-cash"
+        },
+        {
+          "id": "june-tray",
+          "label": "Letter tray",
+          "x": 10,
+          "y": 56,
+          "width": 26,
+          "height": 26,
+          "description": "June's letter tray, with a carbon of a letter Pryor dictated last week to the building management, and two ticket stubs from the Rialto clipped together.",
+          "evidence_id": "rialto-stubs"
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "pryor-letter",
+      "name": "Pryor's letter to Clara",
+      "description": "A handwritten letter on Vance and Pryor paper, in Pryor's backward-leaning script, delivered special delivery on Sunday morning: 'Dear Miss Ashgrove, I have been through the books with Mr. Ames's folder. Your father's trust is short by $182,000, and the money went into an account at the Harbor Trust in the name of L. Vance. I told Leonard on Saturday. I will bring everything to you and to the District Attorney at nine on Monday. Do not speak to him before then. I am more ashamed than I can say. Martin Pryor.'",
+      "found_in": "clara",
+      "points_to": ["vance"],
+      "is_red_herring": false
+    },
+    {
+      "id": "suicide-note",
+      "name": "Typed note",
+      "description": "A typed sheet: 'I cannot face what I have done to the Ashgrove Family Trust. The money is gone and I took it. Forgive me. M.P.' Every lowercase 'e' on the sheet prints with a break in the loop at the top. The initials are typed too, not signed.",
+      "found_in": "pryor-office",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "vance-typewriter",
+      "name": "Vance's typewriter",
+      "description": "You type 'the Ashgrove trust' on the machine in Leonard Vance's office. Every lowercase 'e' prints with the same break at the top of the loop as the note on Pryor's blotter. June says the key has been chipped since March and Mr. Vance would not let it be sent out for repair.",
+      "found_in": "vance-office",
+      "points_to": ["vance"],
+      "is_red_herring": false
+    },
+    {
+      "id": "elevator-log",
+      "name": "Night elevator log",
+      "description": "Tommy Reyes's log for Sunday: '7.30 pm Mr. Pryor, up 6. 8.50 pm Mr. Vance, up 6. 9.08 pm Mr. Vance, down.' Nothing is written between 9.15 and 9.45. On Sundays the elevator is the only way up; the stairs are locked from the inside.",
+      "found_in": "lobby",
+      "points_to": ["vance"],
+      "is_red_herring": false
+    },
+    {
+      "id": "left-hand-desk",
+      "name": "A left-handed man's desk",
+      "description": "Everything on Martin Pryor's desk is laid out for his left hand: pen tray, inkwell, telephone, even the scissors. His uncapped pen lay on the left of the blotter. The revolver was found in his right hand, and the wound is on the right side of his head.",
+      "found_in": "pryor-office",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "revolver",
+      "name": "Pryor's revolver",
+      "description": "A .38 revolver licensed to Martin Pryor, kept in his desk drawer since a burglary in 1946. One chamber fired. The only clear prints on it are Pryor's own, pressed on in a way the police photographer thinks is too neat.",
+      "found_in": "pryor-office",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "trust-ledger",
+      "name": "Pryor's summary of the trust",
+      "description": "A summary sheet in Pryor's hand on top of a bundle of bank statements: 'Ashgrove Family Trust. Ledgers 1946 to 1950 do not match statements. Transfers to Harbor Trust acct. 4471, $182,000 in all. Acct. 4471: L. Vance.' Under it, pressed hard: 'Told L.V. Sat. 3 pm. Monday 9.'",
+      "found_in": "records-room",
+      "points_to": ["vance"],
+      "is_red_herring": false
+    },
+    {
+      "id": "dinner-program",
+      "name": "Dinner program",
+      "description": "The Harbor Commission dinner program, Sunday 11 June: '6.30 Reception. 7.15 Dinner. 9.00 Address: Miss Clara Ashgrove, Ashgrove Shipping. 9.30 The Commissioner.' Penciled in the margin, in Vance's neat hand: 'C.A. spoke well.'",
+      "found_in": "vance-office",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "clara-letter",
+      "name": "Clara's letter to Vance",
+      "description": "A letter in a strong, slanting hand, dated 1 June: 'Leonard, if my father's money is gone, I will see you ruined, and Pryor with you. I mean every word of it. C.A.'",
+      "found_in": "vance-office",
+      "points_to": ["clara"],
+      "is_red_herring": true
+    },
+    {
+      "id": "petty-cash",
+      "name": "Petty cash box",
+      "description": "The office petty cash box: eleven dollars and a stack of IOU slips signed 'J.H.', sixty dollars in all, the last two dated Sunday.",
+      "found_in": "records-room",
+      "points_to": ["june"],
+      "is_red_herring": true
+    },
+    {
+      "id": "rialto-stubs",
+      "name": "Rialto ticket stubs",
+      "description": "Two ticket stubs from the Rialto cinema for the seven o'clock show on Sunday, clipped to a carbon of Pryor's letter to the building management: 'Please replace the night elevator man, T. Reyes, who was found asleep and smelling of drink twice this month.'",
+      "found_in": "records-room",
+      "points_to": ["tommy"],
+      "is_red_herring": true
+    }
+  ],
+  "suspects": [
+    {
+      "id": "vance",
+      "name": "Leonard Vance",
+      "role": "Senior partner, Vance and Pryor; trustee of the Ashgrove Family Trust",
+      "age": 56,
+      "portrait": "man-glasses",
+      "color": "#6b7f99",
+      "personality": "Smooth, precise and unfailingly polite, a man who has spent thirty years making other people's trouble sound like paperwork. He has stood near four deaths in twenty months and walked away from each of them. He is grieving in public for the partner he shot, he does it very well, and he is more frightened than he has ever been.",
+      "speech_style": "Measured, lawyerly sentences: 'strictly speaking', 'as a matter of form', 'I would put it rather differently'. A Latin tag when he wants distance: res ipsa loquitur, de mortuis nil nisi bonum. Calls the detective 'Detective' with a faint smile, and answers a question with a question when he can. Becomes more courteous, not less, when cornered.",
+      "alibi": "On Sunday evening I was at the Harbor Commission dinner at the Yacht Club from half past six until after eleven. I heard Miss Ashgrove's address at nine o'clock.",
+      "public_facts": [
+        "Leonard Vance has been senior partner of Vance and Pryor for twenty-six years.",
+        "He has been trustee of the Ashgrove Family Trust since 1939.",
+        "He was at the Harbor Commission dinner at the Yacht Club on Sunday evening."
+      ],
+      "private_knowledge": [
+        "Martin has been working late in the records room for a fortnight.",
+        "Martin kept a revolver in his desk drawer after the burglary in 1946.",
+        "At the dinner you sat across the table from Miss Ashgrove."
+      ],
+      "lies": [
+        {
+          "topic": "Where he was on Sunday evening",
+          "claim": "I never left the Yacht Club. I heard every word of Miss Ashgrove's speech.",
+          "truth": "You left at 20:35, rode up to the office with the night man at 20:50, came down at 21:08 and were back at the club at 21:20."
+        },
+        {
+          "topic": "The trust",
+          "claim": "Martin handled the day-to-day work on the Ashgrove trust. I'm afraid the note speaks for itself.",
+          "truth": "You have taken a hundred and eighty-two thousand dollars from the trust since 1946, and on Saturday Martin told you he would take the proof to Clara Ashgrove and the District Attorney."
+        }
+      ],
+      "secrets": [
+        "The Harbor Trust account 4471 is in your name, and there is very little left in it."
+      ],
+      "never_reveal": [
+        "That you shot Martin with his own revolver and typed the note on your own machine.",
+        "That you have taken money from the Ashgrove Family Trust since 1946."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "vance-spirits",
+          "text": "Says Martin had been in very low spirits for a fortnight, working late in the records room on the Ashgrove trust and not saying why. In hindsight, he says, the signs were there.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "vance-papers",
+          "text": "Admits he left the dinner for half an hour and came up to the office at ten to nine 'to collect some papers for Monday'. He says Martin was alive and well, working in his office, when he left at eight minutes past nine.",
+          "condition": "shown_evidence:elevator-log"
+        },
+        {
+          "clue_id": "vance-clara",
+          "text": "Says Miss Ashgrove sat across from him at dinner all evening and gave her address at nine o'clock.",
+          "condition": "pressed"
+        }
+      ],
+      "breaks_on": ["elevator-log", "vance-typewriter", "pryor-letter", "trust-ledger"],
+      "patience": 14,
+      "deflections": [
+        "*adjusts a cufflink*  Strictly speaking, Detective, I'm not certain that is a proper question.",
+        "*with a small bow of the head*  De mortuis nil nisi bonum. He was my partner for twenty-six years.",
+        "*smiles faintly*  We have met rather often, you and I. You'll forgive me if I let you do the talking this time."
+      ],
+      "alibi_verification": {
+        "status": "broken",
+        "evidence_ids": ["elevator-log", "dinner-program"],
+        "clue_ids": ["clara-chair", "tommy-vance"],
+        "note": "The night man's log has him going up to the sixth floor at 20:50 and down at 21:08. Clara says his chair was empty during her address at nine, and Tommy took him up and down."
+      }
+    },
+    {
+      "id": "clara",
+      "name": "Clara Ashgrove",
+      "role": "Head of Ashgrove Shipping; beneficiary of the Ashgrove Family Trust",
+      "age": 34,
+      "portrait": "woman-bun",
+      "color": "#8c4a5a",
+      "personality": "Sharp, proud and controlled, and very tired of policemen. In twenty months she has lost her father, her husband, her chief clerk and her accountant, and every time Leonard Vance has been standing somewhere nearby with his condolences. She has suspected him for months and could never prove it. She is not going to let anyone call this a suicide.",
+      "speech_style": "Clipped, exact sentences with times and figures. Says 'my father's trust'. Corrects imprecision: 'Not quite, Detective.' Never says please. Gets quieter, not louder, when she is angry, and she is very quiet today.",
+      "alibi": "I was at the Harbor Commission dinner at the Yacht Club all evening. I gave the address at nine o'clock.",
+      "public_facts": [
+        "Clara Ashgrove has run Ashgrove Shipping since her father's death in 1948.",
+        "She is the main beneficiary of the Ashgrove Family Trust.",
+        "She spoke at the Harbor Commission dinner at the Yacht Club on Sunday evening."
+      ],
+      "private_knowledge": [
+        "In May you gave Gilbert Ames's folder on the trust to Martin Pryor, the one man at Vance and Pryor you trusted.",
+        "On Sunday morning a special delivery letter came from Martin Pryor. It is in your handbag.",
+        "During your address at nine o'clock, Leonard Vance's chair across the table was empty. He came back as people were applauding, at about twenty past nine."
+      ],
+      "lies": [
+        {
+          "topic": "Her letter to Vance",
+          "claim": "I have never threatened anyone, Detective. I have asked questions.",
+          "truth": "On 1 June you wrote to Vance that if your father's money was gone you would see him ruined, and Pryor with him."
+        }
+      ],
+      "secrets": [
+        "You were going to ask the District Attorney yourself this week whether Leonard Vance could be charged."
+      ],
+      "never_reveal": [
+        "That you once thought Martin Pryor might be in it with Vance, and wrote him into that letter."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "clara-letter-given",
+          "text": "Says that in May she gave Gilbert Ames's folder to Martin Pryor, and on Sunday morning a special delivery letter came from him. She takes it out of her handbag and hands it over.",
+          "condition": "shown_evidence:trust-ledger",
+          "evidence_id": "pryor-letter"
+        },
+        {
+          "clue_id": "clara-chair",
+          "text": "Says that during her address at nine o'clock she looked straight at Leonard Vance's chair across the table, and it was empty. He had gone out at about twenty-five to nine 'to telephone' and came back as people were applauding, at about twenty past nine.",
+          "condition": "shown_evidence:dinner-program"
+        },
+        {
+          "clue_id": "clara-threat",
+          "text": "Admits she wrote to Vance on 1 June and meant it. She put Pryor's name in because she did not know then which of them to trust. She says she knows now.",
+          "condition": "shown_evidence:clara-letter"
+        }
+      ],
+      "breaks_on": ["clara-letter"],
+      "patience": 12,
+      "deflections": [
+        "*evenly*  Not quite, Detective. Ask it properly.",
+        "*looks toward Vance's office*  Every time, he has been in the next room. Every single time.",
+        "*a thin, tired smile*  You know where I was. Half the harbor heard me."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": ["dinner-program"],
+        "clue_ids": ["vance-clara"],
+        "note": "The program has her address at nine o'clock in front of the whole Harbor Commission dinner, and Vance himself says she sat across from him all evening."
+      }
+    },
+    {
+      "id": "june",
+      "name": "June Hartley",
+      "role": "Secretary, Vance and Pryor",
+      "age": 28,
+      "portrait": "young-woman",
+      "color": "#a06a7a",
+      "personality": "Efficient, warm and badly shaken. She has worked for the firm for seven years and was very fond of Mr. Pryor, who was kind to her when her father was ill. She found him, and she has borrowed money from the petty cash, and she is sure both things will come out together.",
+      "speech_style": "Fast and precise, office talk: 'dictation', 'carbons', 'the files'. Calls them 'Mr. Pryor' and 'Mr. Vance'. Corrects her own grammar. When she is upset she starts listing facts in order, as if taking a letter.",
+      "alibi": "On Sunday I was at the office for an hour after lunch to finish some typing, and in the evening I went to the seven o'clock show at the Rialto with my sister.",
+      "public_facts": [
+        "June Hartley has been secretary at Vance and Pryor for seven years.",
+        "She found Mr. Pryor's body when she opened the office at half past eight on Monday.",
+        "She types the firm's letters and keeps its files."
+      ],
+      "private_knowledge": [
+        "Mr. Pryor was left-handed. He did everything with his left hand, from his pen to his tennis racquet.",
+        "Mr. Pryor never typed anything in his life. He wrote by hand and you typed it. He always signed 'Martin Pryor' in full, never initials.",
+        "The 'e' key on Mr. Vance's typewriter has been chipped since March. Mr. Vance would not let it go out for repair and types his own private letters on it."
+      ],
+      "lies": [
+        {
+          "topic": "The petty cash",
+          "claim": "The petty cash is all accounted for. I keep it very carefully.",
+          "truth": "You have borrowed sixty dollars from it in IOUs since April to pay your father's doctor, two of them on Sunday afternoon."
+        }
+      ],
+      "secrets": [
+        "Mr. Pryor knew about the IOUs and told you not to worry about them."
+      ],
+      "never_reveal": [
+        "That you cried in the ladies' room for twenty minutes before you telephoned the police."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "june-left",
+          "text": "Says Mr. Pryor was left-handed. He did everything with his left, his pen, the telephone, his tennis. She has never seen him pick anything up with his right hand if he could help it.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "june-note",
+          "text": "Says Mr. Pryor never typed a word in his life. He wrote everything by hand and she typed it, and he always signed 'Martin Pryor' in full, never initials. The broken 'e' on that note is the 'e' on Mr. Vance's machine.",
+          "condition": "shown_evidence:suicide-note"
+        },
+        {
+          "clue_id": "june-cash",
+          "text": "Admits the IOUs are hers, sixty dollars for her father's doctor. She came in on Sunday afternoon to finish a will and borrowed two more. Mr. Pryor knew and told her not to worry.",
+          "condition": "shown_evidence:petty-cash"
+        }
+      ],
+      "breaks_on": ["petty-cash"],
+      "patience": 12,
+      "deflections": [
+        "*straightens a pile of papers that is already straight*  I'm sorry. Could you repeat that?",
+        "*listing, as if taking a letter*  I opened the door at half past eight. The blind was down. He was in his chair.",
+        "*presses her lips together*  Mr. Pryor was kind to me. That's all I want to say about him."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": ["rialto-stubs"],
+        "clue_ids": [],
+        "note": "Her Rialto ticket stubs are for the seven o'clock show on Sunday, and the night man's log never has her going up after 19:00."
+      }
+    },
+    {
+      "id": "tommy",
+      "name": "Tommy Reyes",
+      "role": "Night elevator man, Harbor Exchange Building",
+      "age": 47,
+      "portrait": "man-cap",
+      "color": "#5a6a7a",
+      "personality": "Friendly, nervous and fond of a drink, a man who has lost two jobs to it and is about to lose a third. He watched the gate at Pier Seventeen the night Harold Pike died and has not had a good night's sleep since. He wants to help and is terrified of what helping will cost him.",
+      "speech_style": "Chatty and anxious, smells of peppermints. Calls the detective 'Detective, sir' and the lawyers 'Mr. V.' and 'Mr. P.'. Repeats himself when nervous. Goes quiet and looks at the floor when he is caught out.",
+      "alibi": "I was on the elevator all night Sunday, Detective, sir. Never left it. Every passenger's in the book.",
+      "public_facts": [
+        "Tommy Reyes runs the night elevator at the Harbor Exchange Building and keeps its log.",
+        "He used to be the night watchman at Pier Seventeen.",
+        "On Sundays the elevator is the only way up to the offices."
+      ],
+      "private_knowledge": [
+        "You took Mr. Pryor up to six at half past seven on Sunday evening.",
+        "You took Mr. Vance up to six at ten to nine and down again at eight minutes past. He gave you a dollar and said he had only come for some papers.",
+        "At about five to nine, while Mr. Vance was upstairs, you heard a sharp crack from somewhere above and took it for a car backfiring."
+      ],
+      "lies": [
+        {
+          "topic": "Whether he left the elevator",
+          "claim": "I never left the elevator, Detective, sir. Not for a minute.",
+          "truth": "From about 21:15 to 21:45 you were across the street in Mulligan's having a drink."
+        }
+      ],
+      "secrets": [
+        "Mr. Pryor wrote to the building management last week asking for you to be replaced for drinking."
+      ],
+      "never_reveal": [
+        "That you were drunk on the gate at Pier Seventeen the night Harold Pike died."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "tommy-vance",
+          "text": "Says he took Mr. Vance up to six at ten to nine and down at eight minutes past. Mr. V. gave him a dollar and said he had only come up for some papers. While he was up there, at about five to nine, Tommy heard a sharp crack from above and thought it was a backfire in the street.",
+          "condition": "pressed"
+        },
+        {
+          "clue_id": "tommy-mulligans",
+          "text": "Admits he left the elevator at about a quarter past nine and went across to Mulligan's for a drink until a quarter to ten. He says nobody came in the revolving door while he was gone; he could see it from Mulligan's window the whole time.",
+          "condition": "shown_evidence:elevator-log"
+        },
+        {
+          "clue_id": "tommy-pryor-up",
+          "text": "Says he took Mr. Pryor up at half past seven on Sunday evening with a big armful of ledgers. Mr. P. said he would be working late.",
+          "condition": "free"
+        }
+      ],
+      "breaks_on": ["elevator-log", "rialto-stubs"],
+      "patience": 12,
+      "deflections": [
+        "*unwraps a peppermint*  Detective, sir, I told you. Every passenger's in the book.",
+        "*looks at the floor*  I seen you before. At the pier. I'd rather not talk about the pier.",
+        "*fast*  Mr. P. was a gentleman. Always said good night. Always."
+      ],
+      "alibi_verification": {
+        "status": "broken",
+        "evidence_ids": ["elevator-log"],
+        "clue_ids": [],
+        "note": "He did leave the elevator, from about 21:15 to 21:45, but that was after the shot. His own log has him in the lobby taking Vance up and down from 20:50 to 21:08, when Pryor died."
+      }
+    }
+  ],
+  "hints": [
+    "Read the note on Pryor's blotter closely. Then look at how Martin Pryor laid out his own desk.",
+    "On Sundays there is only one way up to the sixth floor, and the man who runs it writes everybody down.",
+    "Ask Miss Hartley how Mr. Pryor wrote his letters and how he signed them. Then type something yourself on each machine in the office.",
+    "Pryor spent a fortnight in the records room. Find what he found, and show it to the person he wrote to about it.",
+    "Clara Ashgrove was making a speech at nine o'clock. Show her the dinner program and ask what she could see from the lectern.",
+    "This is the last case. You need four things on the board: the reason, the typewriter, the elevator log and the desk that proves it was not suicide. Press \"Check theory\" before you accuse.",
+    "Look hard at Leonard Vance. Pryor caught him stealing from the Ashgrove trust, the note was typed on his machine, the night man took him up at ten to nine, and Martin Pryor was left-handed."
+  ],
+  "endings": {
+    "correct": "Leonard Vance asks for a moment to straighten his cuffs, and you give it to him. The Harbor Trust freezes account 4471 by noon. Clara Ashgrove sits in Martin Pryor's chair for a long time after they take Vance away, reading his letter again. Then she thanks you, which she has never done before, and goes back to Pier Seventeen.",
+    "wrong_culprit": "You arrest the wrong person, and Leonard Vance thanks you for your diligence. He reads the eulogy at Martin Pryor's funeral. The Ashgrove trust is found to be short by an amount his dead partner confessed to taking, and the matter is closed with regret.",
+    "weak_proof": "You named the right man, and twenty-six years of courtrooms were waiting for you. A chipped letter, a dollar to a drunk, a dead man's habits. You needed the money, the typewriter, the elevator and the left hand together, Detective. He has walked away before."
+  }
+}
