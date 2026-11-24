@@ -7,6 +7,7 @@
   "scripts": {
     "prepare:web": "node scripts/copy-web.mjs",
     "start": "npm run prepare:web && electron .",
+    "icon": "electron scripts/render-icon.cjs",
     "dist:mac": "npm run prepare:web && electron-builder --mac",
     "dist:win": "npm run prepare:web && electron-builder --win",
     "dist": "npm run prepare:web && electron-builder --mac --win"
@@ -21,6 +22,8 @@
     "files": [
       "main.cjs",
       "preload.cjs",
+      "updater.cjs",
+      "build/icon.png",
       "renderer/**/*",
       "package.json"
     ],
@@ -33,7 +36,8 @@
             "universal"
           ]
         }
-      ]
+      ],
+      "artifactName": "RedString-${version}-mac.${ext}"
     },
     "win": {
       "target": [
@@ -44,12 +48,14 @@
             "arm64"
           ]
         }
-      ]
+      ],
+      "artifactName": "RedString-${version}-windows-setup.${ext}"
     },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
-    }
+    },
+    "publish": null
   },
   "devDependencies": {
     "electron": "^45.4.1",
