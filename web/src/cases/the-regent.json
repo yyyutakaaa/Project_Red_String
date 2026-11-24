@@ -463,6 +463,7 @@
       ],
       "breaks_on": ["switchboard-log", "laundry-gloves", "audit-notes"],
       "patience": 13,
+      "temperament": { "holds_out": 3, "under_pressure": "charming" },
       "deflections": [
         "*shakes his head slowly*  Poor old Gil. I can't take it in.",
         "*looks at the window*  Did you see the fireworks over the river? Best I can remember.",
@@ -532,6 +533,7 @@
       ],
       "breaks_on": ["insurance-policy"],
       "patience": 12,
+      "temperament": { "holds_out": 2, "under_pressure": "fearful" },
       "deflections": [
         "*laughs, then covers her mouth*  I'm sorry. I mean to say, I don't know what I'm saying.",
         "*twists her handkerchief*  Gilbert would know. Gilbert always knew where everybody was.",
@@ -596,6 +598,7 @@
       ],
       "breaks_on": ["trust-memo"],
       "patience": 12,
+      "temperament": { "holds_out": 2, "under_pressure": "cold" },
       "deflections": [
         "*evenly*  Not quite, Detective. Try the question again.",
         "*looks at the ballroom doors*  I have two hundred guests to apologize to in the morning.",
@@ -660,6 +663,7 @@
       ],
       "breaks_on": ["trust-memo"],
       "patience": 14,
+      "temperament": { "holds_out": 2, "under_pressure": "cold" },
       "deflections": [
         "*adjusts a cufflink*  Strictly speaking, Detective, I'm not sure that is a proper question.",
         "*with a small bow of the head*  De mortuis nil nisi bonum. I'll say nothing against him.",

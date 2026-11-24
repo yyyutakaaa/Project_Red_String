@@ -73,6 +73,19 @@ export const AlibiVerification = z.strictObject({
 });
 export type AlibiVerification = z.infer<typeof AlibiVerification>;
 
+/**
+ * How a suspect stands up to evidence. holds_out: how many confrontations with a piece of evidence
+ * they get through before it breaks them (each showing of it, and each question that keeps pressing
+ * after it, is one). under_pressure: how they sound while they hold out.
+ */
+export const PRESSURE_STYLES = ['hostile', 'fearful', 'cold', 'charming'] as const;
+export const Temperament = z.strictObject({
+  holds_out: z.number().int().min(0).max(4),
+  under_pressure: z.enum(PRESSURE_STYLES),
+});
+export type Temperament = z.infer<typeof Temperament>;
+export const DEFAULT_TEMPERAMENT: Temperament = { holds_out: 1, under_pressure: 'cold' };
+
 export const Suspect = z.strictObject({
   id: Id,
   name: z.string().min(1),
@@ -92,6 +105,7 @@ export const Suspect = z.strictObject({
   revealable_clues: z.array(RevealableClue),
   breaks_on: z.array(Id),
   patience: z.number().int().min(4).max(40),
+  temperament: Temperament.optional(),
   /** Canned in-character lines used when the AI provider is unavailable. */
   deflections: z.array(z.string().min(1)).min(1),
   /** Not sent to the model: how the case proves or disproves the alibi. */

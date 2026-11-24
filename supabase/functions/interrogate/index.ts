@@ -11,9 +11,9 @@
 // so the client's "conversation" is accepted for compatibility but never trusted for the prompt.
 import { z } from 'zod';
 import { buildSuspectPrompt, buildUserTurn, MAX_PLAYER_MESSAGE_CHARS } from '../_shared/core/suspectPrompt.ts';
-import { resolveMood, resolveRevealedClues, normalizeMood, type ClueContext } from '../_shared/core/clues.ts';
+import { evidencePressure, resolveMood, resolveRevealedClues, normalizeMood, type ClueContext } from '../_shared/core/clues.ts';
 import { limitWords, parseReplyMeta, sanitizeReply, spokenPart, streamableText, visibleLength } from '../_shared/core/replyParsing.ts';
-import type { Mood } from '../_shared/core/caseSchema.ts';
+import { DEFAULT_TEMPERAMENT, type Mood } from '../_shared/core/caseSchema.ts';
 import { SseStream, clientIp, errorResponse, isUuid, json, originRejected, preflight, sha256Hex } from '../_shared/http.ts';
 import { claimQuestion, hitRateLimit, logUsage, recordTurn, releaseQuestion, reserveSpend, settleSpend, worstCaseCostUsd, type StoredTurn } from '../_shared/db.ts';
 import { chat, providerRejected, ProviderError, streamChat, type ChatMessage, type Usage } from '../_shared/omniakey.ts';
@@ -134,11 +134,17 @@ Deno.serve(async (req: Request): Promise<Response> => {
     });
   }
 
+  // Evidence does not break a suspect on sight: each showing, and each question that keeps pushing
+  // after it, is one confrontation, and their temperament says how many they get through.
+  const { pressure, pressing } = evidencePressure(claim.messages, shown?.id ?? null);
   const ctx: ClueContext = {
     patienceUsedBefore: claim.patienceUsedBefore,
     shownEvidenceNow: shown?.id ?? null,
     shownEvidenceBefore: claim.shownEvidence,
     alreadyRevealed: claim.revealedClues,
+    pressure,
+    pressing,
+    holdsOut: (suspect.temperament ?? DEFAULT_TEMPERAMENT).holds_out,
   };
   const prevMood: Mood = normalizeMood(claim.mood);
   const system = buildSuspectPrompt({ caseFile, suspectId: suspect.id, ctx, mood: prevMood, shownEvidence: shown });

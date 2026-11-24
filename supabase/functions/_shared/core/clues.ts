@@ -14,6 +14,47 @@ export interface ClueContext {
   shownEvidenceBefore: readonly string[];
   /** Clues this suspect already revealed. */
   alreadyRevealed: readonly string[];
+  /** Confrontations so far per piece of evidence, this message included (see evidencePressure). */
+  pressure?: Readonly<Record<string, number>>;
+  /** The evidence the detective is pressing right now: shown with this message, or still being pushed. */
+  pressing?: string | null;
+  /** Confrontations this suspect gets through before a piece of evidence breaks them (temperament). */
+  holdsOut?: number;
+}
+
+/**
+ * How hard each piece of evidence has been put to a suspect. Showing it is one confrontation, and so is
+ * every question after it, until other evidence goes on the table: the detective keeps pushing.
+ */
+export function evidencePressure(
+  turns: ReadonlyArray<{ role: string; shown_evidence_id?: string | null }>,
+  shownNow: string | null,
+): { pressure: Record<string, number>; pressing: string | null } {
+  const pressure: Record<string, number> = {};
+  let pressing: string | null = null;
+  const push = (shown: string | null | undefined) => {
+    if (shown) pressing = shown;
+    if (pressing) pressure[pressing] = (pressure[pressing] ?? 0) + 1;
+  };
+  for (const t of turns) if (t.role === 'detective') push(t.shown_evidence_id);
+  push(shownNow);
+  return { pressure, pressing };
+}
+
+/** Has this evidence been pushed hard enough to break the suspect? Without pressure data, showing it is enough. */
+export function cracked(evidenceId: string, ctx: ClueContext): boolean {
+  return (ctx.pressure?.[evidenceId] ?? 1) > (ctx.holdsOut ?? 0);
+}
+
+/** Evidence the detective is pressing that the suspect is still holding out against, or null. */
+export function holdingOut(suspect: Suspect, ctx: ClueContext): { evidenceId: string; confrontation: number } | null {
+  const e = ctx.pressing ?? ctx.shownEvidenceNow;
+  if (!e || cracked(e, ctx)) return null;
+  const guards = suspect.breaks_on.includes(e) || suspect.revealable_clues.some((c) => {
+    const cond = parseCondition(c.condition);
+    return cond.kind === 'shown_evidence' && cond.evidenceId === e && !ctx.alreadyRevealed.includes(c.clue_id);
+  });
+  return guards ? { evidenceId: e, confrontation: ctx.pressure?.[e] ?? 1 } : null;
 }
 
 export function isConditionMet(condition: string, ctx: ClueContext): boolean {
@@ -26,7 +67,7 @@ export function isConditionMet(condition: string, ctx: ClueContext): boolean {
         ctx.patienceUsedBefore >= PRESS_THRESHOLD || ctx.shownEvidenceNow !== null || ctx.shownEvidenceBefore.length > 0
       );
     case 'shown_evidence':
-      return ctx.shownEvidenceNow === cond.evidenceId || ctx.shownEvidenceBefore.includes(cond.evidenceId);
+      return (ctx.shownEvidenceNow === cond.evidenceId || ctx.shownEvidenceBefore.includes(cond.evidenceId)) && cracked(cond.evidenceId, ctx);
   }
 }
 
@@ -36,14 +77,15 @@ export function availableClues(suspect: Suspect, ctx: ClueContext): RevealableCl
 }
 
 /**
- * Clues the suspect must reveal now: shown_evidence clues triggered by the evidence shown with this message.
- * This makes evidence-gated clues deterministic, so no exact question phrasing is ever required.
+ * Clues the suspect must reveal now: shown_evidence clues for the evidence being pressed, once it has
+ * been pressed hard enough to break them. Deterministic, so no exact question phrasing is ever required.
  */
 export function forcedClues(suspect: Suspect, ctx: ClueContext): RevealableClue[] {
-  if (!ctx.shownEvidenceNow) return [];
+  const e = ctx.pressing ?? ctx.shownEvidenceNow;
+  if (!e || !cracked(e, ctx)) return [];
   return suspect.revealable_clues.filter((c) => {
     const cond = parseCondition(c.condition);
-    return cond.kind === 'shown_evidence' && cond.evidenceId === ctx.shownEvidenceNow && !ctx.alreadyRevealed.includes(c.clue_id);
+    return cond.kind === 'shown_evidence' && cond.evidenceId === e && isConditionMet(c.condition, ctx) && !ctx.alreadyRevealed.includes(c.clue_id);
   });
 }
 
@@ -73,8 +115,9 @@ export function normalizeMood(raw: unknown, fallback: Mood = 'calm'): Mood {
   return typeof raw === 'string' && (MOODS as readonly string[]).includes(raw) ? (raw as Mood) : fallback;
 }
 
-/** Mood after a reply: evidence in breaks_on always breaks the suspect. */
+/** Mood after a reply: evidence in breaks_on breaks the suspect once it has been pressed hard enough. */
 export function resolveMood(suspect: Suspect, proposed: unknown, ctx: ClueContext, previous: Mood = 'calm'): Mood {
-  if (ctx.shownEvidenceNow && suspect.breaks_on.includes(ctx.shownEvidenceNow)) return 'broken';
+  const e = ctx.pressing ?? ctx.shownEvidenceNow;
+  if (e && suspect.breaks_on.includes(e) && cracked(e, ctx)) return 'broken';
   return normalizeMood(proposed, previous);
 }

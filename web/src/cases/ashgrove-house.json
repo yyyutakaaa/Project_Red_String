@@ -619,6 +619,7 @@
       ],
       "breaks_on": ["torn-letter", "bank-letter"],
       "patience": 12,
+      "temperament": { "holds_out": 2, "under_pressure": "cold" },
       "deflections": [
         "*folds her hands very precisely in her lap*  I have answered that, Detective. Ask me something new.",
         "*looks toward the study door*  My father is lying in there under a sheet. Forgive me if I don't feel talkative.",
@@ -705,6 +706,7 @@
       ],
       "breaks_on": ["telephone-pad", "digitalis-bottle", "creditor-demand"],
       "patience": 14,
+      "temperament": { "holds_out": 3, "under_pressure": "charming" },
       "deflections": [
         "*laughs, a little too loudly, and straightens his tie*  Honestly, Detective, I've told you all I know. Which isn't much. Ask Clara, she's the clever one.",
         "*lights a cigarette with a hand that is not quite steady*  Can we do this in the morning, old man? It's been a ghastly night.",
@@ -785,6 +787,7 @@
       ],
       "breaks_on": ["draft-codicil"],
       "patience": 13,
+      "temperament": { "holds_out": 3, "under_pressure": "cold" },
       "deflections": [
         "*polishes his spectacles with a folded handkerchief*  Strictly speaking, Detective, I am not obliged to speculate.",
         "*smiles thinly*  De mortuis nil nisi bonum. Let us leave it there for tonight.",

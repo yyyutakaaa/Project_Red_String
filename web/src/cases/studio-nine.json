@@ -454,6 +454,7 @@
       ],
       "breaks_on": ["transcription-sleeve", "blackmail-ledger", "pearl-earring"],
       "patience": 13,
+      "temperament": { "holds_out": 3, "under_pressure": "cold" },
       "deflections": [
         "*takes a breath, as if before a line*  My dear, I have answered that already. Beautifully, I thought.",
         "*touches her ear, then lowers her hand*  It has been a very long evening.",
@@ -518,6 +519,7 @@
       ],
       "breaks_on": ["overtime-note"],
       "patience": 12,
+      "temperament": { "holds_out": 1, "under_pressure": "hostile" },
       "deflections": [
         "*cracks his knuckles*  Ask me something I can answer, chief.",
         "*snorts*  You want the sound of a man not caring? That's it.",
@@ -577,6 +579,7 @@
       ],
       "breaks_on": ["transcription-sleeve", "engineer-log"],
       "patience": 14,
+      "temperament": { "holds_out": 2, "under_pressure": "fearful" },
       "deflections": [
         "*adjusts his glasses*  I'd have to check the log.",
         "*looks at his hands*  I run the board. That's all I do.",
@@ -636,6 +639,7 @@
       ],
       "breaks_on": ["signed-photo"],
       "patience": 12,
+      "temperament": { "holds_out": 1, "under_pressure": "fearful" },
       "deflections": [
         "*laughs, then stops*  I'm sorry. I don't know why I'm laughing.",
         "*twists her gloves*  I mean, you know, I only came for an audition.",

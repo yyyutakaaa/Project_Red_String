@@ -526,6 +526,7 @@
         "divorce-letter"
       ],
       "patience": 12,
+      "temperament": { "holds_out": 3, "under_pressure": "charming" },
       "deflections": [
         "*touches the detective's sleeve*  You must be frozen. Let me have someone bring you a coffee.",
         "*dabs her eyes*  I can't, darling. Not tonight. Ask me tomorrow.",
@@ -597,6 +598,7 @@
         "cash-box"
       ],
       "patience": 12,
+      "temperament": { "holds_out": 1, "under_pressure": "hostile" },
       "deflections": [
         "*wipes her face with the back of her hand*  So what? Ask somebody who wasn't in that pond up to her knees.",
         "*laughs, wrong*  You want a song? I'm all out tonight.",
@@ -667,6 +669,7 @@
         "love-letters"
       ],
       "patience": 13,
+      "temperament": { "holds_out": 2, "under_pressure": "charming" },
       "deflections": [
         "*taps out a beat on his knee*  Give me a minute, friend. I'm counting.",
         "*grins, without much in it*  I'm a bandleader. I don't see anything after the downbeat.",
@@ -732,6 +735,7 @@
         "divorce-letter"
       ],
       "patience": 14,
+      "temperament": { "holds_out": 2, "under_pressure": "fearful" },
       "deflections": [
         "*takes off his glasses and polishes them*  Would you repeat the question, Detective?",
         "*stiffly*  I would not care to say, not without thinking about it.",
