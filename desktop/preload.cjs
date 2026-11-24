@@ -2,8 +2,12 @@
 // the few things the window needs from the game (and back).
 const { contextBridge, ipcRenderer } = require('electron');
 
+const shell = ipcRenderer.sendSync('red-string:shell') || {};
+
 contextBridge.exposeInMainWorld('redStringDesktop', {
   platform: process.platform,
+  /** Fingerprint and version of this app shell (see shellFingerprint in main.cjs). */
+  shell: { fingerprint: String(shell.fingerprint || ''), version: String(shell.version || '') },
   /** The game may draw its own title bar: this shell hides the system one. */
   titleBar: process.platform === 'darwin' || process.platform === 'win32',
   setTheme: (theme) => ipcRenderer.send('red-string:theme', theme === 'light' ? 'light' : 'dark'),

@@ -14,4 +14,8 @@ web/playwright-report
 supabase/.temp
 supabase/.branches
 supabase/seed
-/desktop
+# The desktop shell's own files stay: the web build fingerprints them (see web/vite.config.ts).
+/desktop/node_modules
+/desktop/release
+/desktop/renderer
+/desktop/build

@@ -8,3 +8,6 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+/** Fingerprint of the desktop shell this build belongs to (see vite.config.ts). */
+declare const __SHELL_FINGERPRINT__: string;
