@@ -23,59 +23,155 @@
   --verdict-glow: rgba(143, 179, 224, 0.28);
 }
 
+/* The front page */
+.frontPage {
+  position: relative;
+  width: min(54rem, 100%);
+  padding: clamp(1.25rem, 3vw, 2.5rem) clamp(1.25rem, 4vw, 3.25rem) clamp(1.5rem, 3vw, 2.5rem);
+  text-align: center;
+  color: var(--paper-ink);
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(255, 255, 255, 0.5), transparent 55%),
+    radial-gradient(ellipse at 90% 100%, rgba(120, 90, 40, 0.22), transparent 55%),
+    var(--paper-100);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(42, 34, 24, 0.25), 0 0 90px var(--verdict-glow);
+  animation: press 1150ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes press {
+  0% { transform: rotate(-760deg) scale(0.04); opacity: 0; filter: blur(6px); }
+  18% { opacity: 1; }
+  72% { transform: rotate(5deg) scale(1.05); filter: blur(0); }
+  100% { transform: rotate(-1.1deg) scale(1); filter: blur(0); }
+}
+
+.masthead {
+  border-bottom: 4px double var(--paper-ink);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-2);
+}
+.edition {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin: 0 0 var(--space-2);
+  padding-bottom: var(--space-1);
+  border-bottom: 1px solid var(--paper-ink);
+  font-family: var(--font-type);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--paper-ink-muted);
+}
+.paperName {
+  margin: 0;
+  font-family: 'UnifrakturCook', var(--font-display);
+  font-size: clamp(2rem, 6.5vw, 4.2rem);
+  line-height: 1.05;
+  color: var(--paper-ink);
+}
+.headline {
+  margin: 0 auto;
+  max-width: 18ch;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: clamp(2.1rem, 6.4vw, 4.4rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--paper-ink);
+}
+.deck {
+  margin: var(--space-3) auto var(--space-4);
+  max-width: 46ch;
+  padding: var(--space-2) 0;
+  border-top: 1px solid var(--paper-ink);
+  border-bottom: 1px solid var(--paper-ink);
+  font-style: italic;
+  font-size: var(--fs-lg);
+  color: var(--paper-ink-muted);
+}
+.story {
+  display: flex;
+  gap: var(--space-5);
+  align-items: flex-start;
+  text-align: left;
+}
+.photo {
+  flex: none;
+  margin: 0;
+  width: 190px;
+  filter: grayscale(1) contrast(1.15) sepia(0.25);
+}
+.photo figcaption {
+  margin-top: var(--space-2);
+  font-family: var(--font-type);
+  font-size: var(--fs-xs);
+  line-height: 1.4;
+  color: var(--paper-ink-muted);
+}
+.storyText {
+  flex: 1;
+  min-width: 0;
+}
+.accusedLine {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-type);
+  font-size: var(--fs-sm);
+  color: var(--paper-ink-muted);
+}
+.accusedLine strong {
+  color: var(--paper-ink);
+}
+.endingText {
+  margin: 0;
+  font-size: var(--fs-lg);
+  line-height: 1.65;
+  color: var(--paper-ink);
+}
+.endingText::first-letter {
+  float: left;
+  margin: 0.08em 0.1em 0 0;
+  font-family: var(--font-display);
+  font-size: 3.3em;
+  line-height: 0.8;
+}
+@media (max-width: 640px) {
+  .story { flex-direction: column; align-items: center; }
+  .edition span:nth-child(2) { display: none; }
+}
+
+/* The stamp comes down on the page once it has landed. */
 .stampWrap {
-  padding: var(--space-4) var(--space-2) var(--space-2);
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--space-2);
+  pointer-events: none;
 }
 .bigStamp {
+  --stamp-ink: var(--red-600);
   margin: 0;
-  font-size: clamp(2rem, 7vw, 3.8rem);
+  font-size: clamp(1.5rem, 4.4vw, 2.7rem);
   line-height: 1.1;
-  border-width: 6px;
+  border-width: 5px;
   padding: 0.12em 0.5em;
-  color: var(--verdict);
-  text-shadow: 0 0 18px var(--verdict-glow);
-  box-shadow: 0 0 26px var(--verdict-glow), inset 0 0 18px var(--verdict-glow);
-  transform: rotate(-6deg);
-  animation: stamp-in 380ms cubic-bezier(0.2, 0.9, 0.3, 1.15) 60ms both;
+  color: var(--stamp-ink);
+  border-color: var(--stamp-ink);
+  background: rgba(241, 232, 212, 0.55);
+  mix-blend-mode: multiply;
+  transform: rotate(-9deg);
+  animation: stamp-in 320ms cubic-bezier(0.2, 0.9, 0.3, 1.15) 1280ms both;
 }
+.correct .bigStamp { --stamp-ink: #1f6b3a; }
+.weak_proof .bigStamp { --stamp-ink: #8a5a0c; }
 @keyframes stamp-in {
   from {
     opacity: 0;
-    transform: rotate(-6deg) scale(1.22);
+    transform: rotate(-9deg) scale(2.4);
   }
   to {
-    opacity: 1;
-    transform: rotate(-6deg) scale(1);
+    opacity: 0.92;
+    transform: rotate(-9deg) scale(1);
   }
-}
-
-.headline {
-  margin: var(--space-3) 0 0;
-  font-size: var(--fs-2xl);
-  max-width: 28ch;
-  animation: global(fade-in) var(--dur-slow) var(--ease-out) 300ms both;
-}
-.accusedLine {
-  margin: 0;
-  font-family: var(--font-type);
-  font-size: var(--fs-sm);
-  color: var(--text-muted);
-  max-width: 70ch;
-}
-.accusedLine strong {
-  color: var(--text-strong);
-}
-.endingText {
-  max-width: 44rem;
-  padding: var(--space-5) var(--space-6);
-  text-align: left;
-  transform: rotate(-0.3deg);
-  animation: global(fade-up) var(--dur-slow) var(--ease-out) 450ms both;
-}
-.endingText p {
-  margin: 0;
-  font-size: var(--fs-lg);
-  line-height: 1.7;
 }
 
 /* Score and solution */

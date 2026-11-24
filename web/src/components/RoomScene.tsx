@@ -2,7 +2,7 @@
 // and set dressing, drawn as layered SVG in a 1000 x 600 viewBox (5:3). Hotspots are transparent buttons
 // laid over the drawing; their props come from Props.tsx. If real art is registered for the background key
 // (src/assets/art/rooms/<key>.webp) the image is used instead and the procedural drawing and props are skipped.
-import { useId, useMemo, useState, type ReactElement, type ReactNode } from 'react';
+import { useId, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactElement, type ReactNode } from 'react';
 import type { Hotspot } from '@shared/caseSchema.ts';
 import { backgroundArt } from '../assets/registry.ts';
 import { sfx } from '../audio/audio.ts';
@@ -2406,6 +2406,8 @@ export interface RoomSceneProps {
   /** Accessible name for the group of hotspots. */
   label?: string;
   className?: string;
+  /** Change this number to fire the photographer's flashbulb (evidence found). */
+  flashKey?: number;
 }
 
 export function RoomScene({
@@ -2418,7 +2420,9 @@ export function RoomScene({
   thumbnail = false,
   label,
   className,
+  flashKey = 0,
 }: RoomSceneProps) {
+  const sceneRef = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
   const animated = !reduced && !thumbnail;
   const u = `rs${useId().replace(/[^a-zA-Z0-9]/g, '')}`;
@@ -2471,9 +2475,30 @@ export function RoomScene({
 
   const classes = [styles.scene, thumbnail ? styles.thumb : '', className ?? ''].filter(Boolean).join(' ');
 
+  // The detective's torch: the room goes dim and a pool of light follows the pointer (or the
+  // hotspot that has keyboard focus). Set straight on the element so moving the mouse never re-renders.
+  const aimTorch = (xPct: number, yPct: number) => {
+    const el = sceneRef.current;
+    if (!el) return;
+    el.style.setProperty('--lx', `${xPct.toFixed(2)}%`);
+    el.style.setProperty('--ly', `${yPct.toFixed(2)}%`);
+    el.dataset.torch = '';
+  };
+  const onTorchMove = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== 'mouse') return;
+    const box = e.currentTarget.getBoundingClientRect();
+    aimTorch(((e.clientX - box.left) / box.width) * 100, ((e.clientY - box.top) / box.height) * 100);
+  };
+  const torchOff = () => {
+    if (sceneRef.current) delete sceneRef.current.dataset.torch;
+  };
+
   return (
     <div
+      ref={sceneRef}
       className={classes}
+      onPointerMove={interactive ? onTorchMove : undefined}
+      onPointerLeave={interactive ? torchOff : undefined}
       role={interactive ? 'group' : undefined}
       aria-label={interactive ? label : undefined}
       aria-hidden={interactive ? undefined : true}
@@ -2492,6 +2517,23 @@ export function RoomScene({
         )
       )}
       <div className={styles.grain} aria-hidden="true" />
+      {interactive && animated && (
+        <div className={styles.dust} aria-hidden="true">
+          {Array.from({ length: 18 }, (_, i) => (
+            <span
+              key={i}
+              style={{
+                left: `${(i * 37 + 11) % 100}%`,
+                top: `${(i * 53 + 7) % 92}%`,
+                animationDuration: `${14 + ((i * 7) % 11)}s`,
+                animationDelay: `${-((i * 13) % 17)}s`,
+              }}
+            />
+          ))}
+        </div>
+      )}
+      {interactive && <div className={styles.torch} aria-hidden="true" />}
+      {interactive && flashKey > 0 && <div key={flashKey} className={styles.flashbulb} aria-hidden="true" />}
       {interactive && (
         <div className={styles.hotspots}>
           {ordered.map((h) => {
@@ -2527,7 +2569,10 @@ export function RoomScene({
                   if (e.pointerType === 'mouse') sfx('hover');
                 }}
                 onPointerLeave={() => setHoverId((cur) => (cur === h.id ? null : cur))}
-                onFocus={() => setHoverId(h.id)}
+                onFocus={(e) => {
+                  setHoverId(h.id);
+                  if (e.currentTarget.matches(':focus-visible')) aimTorch(h.x + h.width / 2, h.y + h.height / 2);
+                }}
                 onBlur={() => setHoverId((cur) => (cur === h.id ? null : cur))}
               >
                 <span className={tagClass} aria-hidden="true">

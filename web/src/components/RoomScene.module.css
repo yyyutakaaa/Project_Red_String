@@ -44,6 +44,67 @@
   opacity: 0.1;
 }
 
+/* ---- The torch: the room dims and a pool of warm light follows the pointer ---- */
+.torch {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 600ms var(--ease-out);
+  background:
+    radial-gradient(ellipse 9% 15% at var(--lx, 50%) var(--ly, 50%), rgba(255, 232, 176, 0.2), rgba(255, 226, 160, 0) 100%),
+    radial-gradient(ellipse 24% 40% at var(--lx, 50%) var(--ly, 50%), rgba(255, 214, 140, 0.1), rgba(255, 214, 140, 0) 100%),
+    radial-gradient(ellipse 40% 66% at var(--lx, 50%) var(--ly, 50%), rgba(2, 3, 7, 0) 0%, rgba(2, 3, 7, 0) 34%, rgba(2, 3, 7, 0.5) 68%, rgba(2, 3, 7, 0.8) 100%);
+}
+.scene[data-torch] .torch {
+  opacity: 1;
+}
+@media (hover: none) {
+  .torch { display: none; }
+}
+
+/* Dust hanging in the air, catching the light. */
+.dust {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.dust span {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255, 236, 190, 0.7);
+  filter: blur(0.6px);
+  opacity: 0;
+  animation: dust 18s linear infinite;
+}
+.dust span:nth-child(3n) { width: 2px; height: 2px; }
+.dust span:nth-child(4n) { width: 4px; height: 4px; filter: blur(1.4px); }
+@keyframes dust {
+  0% { transform: translate(0, 0); opacity: 0; }
+  12% { opacity: 0.55; }
+  50% { transform: translate(26px, -34px); opacity: 0.2; }
+  78% { opacity: 0.6; }
+  100% { transform: translate(-14px, -78px); opacity: 0; }
+}
+
+/* The photographer's flashbulb when evidence turns up. */
+.flashbulb {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 45%, #ffffff 0%, rgba(255, 246, 222, 0.9) 35%, rgba(255, 240, 205, 0.55) 100%);
+  animation: bulb 900ms ease-out both;
+}
+@keyframes bulb {
+  0% { opacity: 0; }
+  5% { opacity: 1; }
+  16% { opacity: 0.55; }
+  22% { opacity: 0.85; }
+  100% { opacity: 0; }
+}
+
 /* ---- Hotspots ---- */
 
 .hotspots {

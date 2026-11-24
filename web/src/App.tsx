@@ -3,6 +3,7 @@ import { createBrowserRouter, Outlet, RouterProvider, ScrollRestoration, useNavi
 import { ToastHost } from './components/ToastHost.tsx';
 import { Boot } from './boot/Boot.tsx';
 import { LaunchOverlay } from './boot/LaunchOverlay.tsx';
+import { Cinema } from './cinema/Cinema.tsx';
 import { desktop } from './desktop/bridge.ts';
 import { TitleBar } from './desktop/TitleBar.tsx';
 import { usePresence } from './desktop/usePresence.ts';
@@ -62,6 +63,7 @@ function Root() {
     <>
       <Outlet />
       <LaunchOverlay />
+      <Cinema />
       <ToastHost />
       <ScrollRestoration />
     </>

@@ -1,48 +1,270 @@
-/* Fixed decorative layer behind the menu screens. z-index -1 keeps it under the page content
-   (#root is its own stacking context). */
+/* The living city behind the menu screens. Fixed, decorative, under the page content (z-index -1;
+   #root is its own stacking context). --mx / --my (-1..1) follow the pointer and shift the layers. */
 .backdrop {
+  --mx: 0;
+  --my: 0;
+  --window-warm: #f2c666;
+  --window-cool: #9fc3e6;
+  --neon: #ff4252;
   position: fixed;
   inset: 0;
   z-index: -1;
   overflow: hidden;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 90% 60% at 50% 0%, #16203a 0%, rgba(22, 32, 58, 0) 70%),
-    linear-gradient(180deg, #0b1120 0%, var(--ink-900) 55%, var(--ink-950) 100%);
+    /* the city's own light, hanging in the wet air above the roofs */
+    radial-gradient(ellipse 75% 34% at 50% 70%, rgba(86, 116, 190, 0.5) 0%, rgba(60, 84, 150, 0.22) 45%, rgba(40, 60, 120, 0) 75%),
+    radial-gradient(ellipse 30% 22% at 22% 74%, rgba(214, 150, 90, 0.2), transparent 70%),
+    radial-gradient(ellipse 80% 55% at 50% -5%, #1a2748 0%, rgba(26, 39, 72, 0) 70%),
+    linear-gradient(180deg, #060914 0%, #0a1020 28%, #131e3a 60%, #18264a 76%, #0c1322 90%, var(--ink-950) 100%);
+}
+.backdrop[data-intensity='soft'] {
+  filter: brightness(0.8) saturate(0.9);
 }
 
-.cityFar,
-.cityNear {
+/* ---- Sky ---- */
+.clouds {
   position: absolute;
-  left: 0;
-  bottom: 0;
+  inset: -10% -20% 40% -20%;
+  transform: translate3d(calc(var(--mx) * -6px), calc(var(--my) * -3px), 0);
+}
+.clouds span {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(74, 92, 138, 0.36), rgba(74, 92, 138, 0) 68%);
+  filter: blur(18px);
+  animation: cloud 90s linear infinite;
+}
+.clouds span:nth-child(1) { left: -10%; top: 4%; width: 70%; height: 46%; }
+.clouds span:nth-child(2) { left: 38%; top: 20%; width: 80%; height: 52%; animation-duration: 130s; animation-delay: -40s; opacity: 0.8; }
+.clouds span:nth-child(3) { left: 10%; top: 44%; width: 60%; height: 40%; animation-duration: 110s; animation-delay: -75s; opacity: 0.6; }
+@keyframes cloud {
+  from { transform: translateX(-9%); }
+  50% { transform: translateX(9%); }
+  to { transform: translateX(-9%); }
+}
+
+.flash {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 0%, rgba(214, 228, 255, 0.85), rgba(160, 190, 255, 0.18) 55%, transparent 80%),
+    rgba(150, 175, 230, 0.16);
+  mix-blend-mode: screen;
+}
+.bolt {
+  position: absolute;
+  inset: 0;
   width: 100%;
+  height: 100%;
+  opacity: 0;
+  filter: drop-shadow(0 0 6px #cfe0ff) drop-shadow(0 0 22px #7ea4ff);
+}
+.bolt path {
+  fill: none;
+  stroke: #f4f8ff;
+  stroke-width: 2.2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.backdrop[data-flash] .flash { animation: strike 850ms linear both; }
+.backdrop[data-flash] .bolt { animation: strike-bolt 850ms linear both; }
+.backdrop[data-flash='b'] .flash { animation-name: strike-b; }
+.backdrop[data-flash] .city { animation: lit 850ms linear both; }
+@keyframes strike {
+  0% { opacity: 0; }
+  4% { opacity: 1; }
+  12% { opacity: 0.15; }
+  18% { opacity: 0.9; }
+  36% { opacity: 0.25; }
+  100% { opacity: 0; }
+}
+@keyframes strike-b {
+  0% { opacity: 0; }
+  5% { opacity: 0.8; }
+  16% { opacity: 0.1; }
+  44% { opacity: 0; }
+  50% { opacity: 0.7; }
+  100% { opacity: 0; }
+}
+@keyframes strike-bolt {
+  0% { opacity: 0; }
+  4% { opacity: 1; }
+  14% { opacity: 0.2; }
+  19% { opacity: 1; }
+  30%, 100% { opacity: 0; }
+}
+@keyframes lit {
+  0%, 100% { filter: brightness(1); }
+  5%, 18% { filter: brightness(2.6); }
+  12% { filter: brightness(1.3); }
+}
+
+/* ---- Skylines ---- */
+.city {
+  position: absolute;
+  left: -3%;
+  bottom: 0;
+  width: 106%;
 }
 .cityFar {
-  height: 46%;
-  fill: #0d1423;
-  opacity: 0.9;
+  height: 58%;
+  fill: #16233f;
+  opacity: 0.95;
+  transform: translate3d(calc(var(--mx) * -5px), calc(var(--my) * -2px), 0);
+}
+.cityMid {
+  height: 47%;
+  fill: #0b1326;
+  transform: translate3d(calc(var(--mx) * -11px), calc(var(--my) * -4px), 0);
 }
 .cityNear {
-  height: 34%;
-  fill: #05080e;
-}
-.windows rect {
-  fill: var(--lamp-400);
+  height: 31%;
+  fill: #04070d;
+  transform: translate3d(calc(var(--mx) * -20px), calc(var(--my) * -6px), 0);
 }
 
-/* Street lamp */
+.windows rect {
+  fill: var(--window-warm);
+  opacity: 0.62;
+}
+.cityFar .windows rect { opacity: 0.3; }
+.windows .cool { fill: var(--window-cool); opacity: 0.5; }
+.windows .blink { animation: window-blink 12s steps(1, end) infinite; }
+@keyframes window-blink {
+  0%, 62% { opacity: 0.7; }
+  63%, 100% { opacity: 0; }
+}
+
+.beacon {
+  fill: #ff5560;
+  filter: drop-shadow(0 0 4px #ff3040);
+  animation: beacon 2.4s ease-in-out infinite;
+}
+@keyframes beacon {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 1; }
+}
+
+/* ---- Elevated line ---- */
+.el {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 21%;
+  height: 54px;
+  transform: translate3d(calc(var(--mx) * -15px), calc(var(--my) * -5px), 0);
+}
+.track {
+  position: absolute;
+  inset: 26px -4% 0 -4%;
+  background:
+    linear-gradient(180deg, #05080f 0 5px, transparent 5px),
+    repeating-linear-gradient(64deg, transparent 0 9px, #05080f 9px 11.5px, transparent 11.5px 20px),
+    repeating-linear-gradient(-64deg, transparent 0 9px, #05080f 9px 11.5px, transparent 11.5px 20px),
+    linear-gradient(180deg, transparent 0 23px, #05080f 23px);
+}
+.train {
+  position: absolute;
+  bottom: 28px;
+  left: 0;
+  display: flex;
+  gap: 5px;
+  transform: translateX(-120vw);
+  animation: train 31s linear 5s infinite;
+  will-change: transform;
+}
+.train span {
+  width: 190px;
+  height: 25px;
+  border-radius: 5px 5px 2px 2px;
+  background:
+    linear-gradient(180deg, transparent 0 6px, #05080f 6px 7px, transparent 7px 15px, #05080f 15px),
+    repeating-linear-gradient(90deg, #05080f 0 7px, var(--window-warm) 7px 21px),
+    #05080f;
+  box-shadow: 0 10px 26px rgba(242, 198, 102, 0.22);
+}
+@keyframes train {
+  0% { transform: translateX(-900px); }
+  19% { transform: translateX(110vw); }
+  100% { transform: translateX(110vw); }
+}
+
+/* ---- Neon sign ---- */
+.sign { filter: drop-shadow(0 0 5px var(--neon)) drop-shadow(0 0 18px rgba(255, 66, 82, 0.55)); }
+.signBack { fill: #06090f; }
+.signArm { fill: #06090f; }
+.signTube {
+  fill: none;
+  stroke: var(--neon);
+  stroke-width: 1.6;
+  opacity: 0.85;
+  animation: neon-tube 9s linear infinite;
+}
+.signLetter {
+  fill: #ffd9dc;
+  font-family: var(--font-display);
+  font-size: 25px;
+  text-anchor: middle;
+  animation: neon-tube 9s linear infinite;
+}
+.signFaulty { animation: neon-faulty 5.5s linear infinite; }
+@keyframes neon-tube {
+  0%, 100% { opacity: 1; }
+  47% { opacity: 1; }
+  48% { opacity: 0.55; }
+  49% { opacity: 1; }
+  82% { opacity: 0.92; }
+}
+@keyframes neon-faulty {
+  0%, 18% { opacity: 1; }
+  19% { opacity: 0.1; }
+  21% { opacity: 0.9; }
+  23% { opacity: 0.15; }
+  30%, 61% { opacity: 1; }
+  62%, 70% { opacity: 0.12; }
+  71%, 100% { opacity: 1; }
+}
+
+/* ---- Wet street ---- */
+.street {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 10%;
+  background:
+    repeating-linear-gradient(180deg, rgba(150, 175, 220, 0.05) 0 1px, transparent 1px 7px),
+    linear-gradient(180deg, rgba(8, 12, 22, 0) 0%, rgba(6, 9, 16, 0.92) 40%, #04060b 100%);
+}
+.signReflection {
+  position: absolute;
+  top: 12%;
+  bottom: 0;
+  width: 46px;
+  margin-left: -23px;
+  background: linear-gradient(180deg, rgba(255, 66, 82, 0.5), rgba(255, 66, 82, 0));
+  filter: blur(9px);
+  animation: neon-tube 9s linear infinite, shimmer 3.4s ease-in-out infinite alternate;
+  transform-origin: top;
+}
+@keyframes shimmer {
+  from { transform: scaleX(0.75) skewX(-3deg); }
+  to { transform: scaleX(1.25) skewX(3deg); }
+}
+
+/* ---- Street lamp, and the detective under it ---- */
 .lamp {
   position: absolute;
   bottom: 0;
   right: 7%;
   height: min(80vh, 760px);
   aspect-ratio: 1 / 3;
+  transform: translate3d(calc(var(--mx) * -30px), calc(var(--my) * -8px), 0);
 }
 .backdrop[data-lamp='left'] .lamp {
   right: auto;
   left: 7%;
-  transform: scaleX(-1);
+  transform: translate3d(calc(var(--mx) * -30px), calc(var(--my) * -8px), 0) scaleX(-1);
 }
 .post {
   position: absolute;
@@ -50,6 +272,7 @@
   width: 100%;
   height: 100%;
   color: #04060a;
+  overflow: visible;
 }
 .bulb {
   fill: var(--lamp-200);
@@ -63,7 +286,7 @@
   max-width: 1400px;
   aspect-ratio: 1;
   transform: translate(-50%, -50%);
-  background: radial-gradient(circle, rgba(242, 205, 122, 0.34) 0%, rgba(232, 181, 74, 0.12) 18%, rgba(232, 181, 74, 0.035) 40%, transparent 62%);
+  background: radial-gradient(circle, rgba(242, 205, 122, 0.36) 0%, rgba(232, 181, 74, 0.13) 18%, rgba(232, 181, 74, 0.04) 40%, transparent 62%);
   animation: global(lamp-flicker) 9s linear infinite;
 }
 .cone {
@@ -74,94 +297,182 @@
   height: 90.3%;
   transform: translateX(-50%);
   clip-path: polygon(48.6% 0, 51.4% 0, 100% 100%, 0 100%);
-  background: linear-gradient(180deg, rgba(242, 205, 122, 0.22) 0%, rgba(232, 181, 74, 0.07) 55%, rgba(232, 181, 74, 0.015) 100%);
+  background: linear-gradient(180deg, rgba(242, 205, 122, 0.24) 0%, rgba(232, 181, 74, 0.08) 55%, rgba(232, 181, 74, 0.02) 100%);
   animation: global(lamp-flicker) 9s linear infinite;
 }
-.backdrop[data-intensity='soft'] .glow,
-.backdrop[data-intensity='soft'] .cone {
-  opacity: 0.6;
+/* The lamp's light lying on the wet street. */
+.pool {
+  position: absolute;
+  left: 34%;
+  bottom: -2%;
+  width: 330%;
+  height: 9%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(242, 205, 122, 0.3), rgba(232, 181, 74, 0.08) 45%, transparent 70%);
+  filter: blur(6px);
+  animation: global(lamp-flicker) 9s linear infinite;
 }
 
-/* Rain */
+.detective { fill: #030509; }
+.shadow { fill: #000; opacity: 0.55; }
+.rim {
+  fill: none;
+  stroke: var(--lamp-300);
+  stroke-width: 0.5;
+  stroke-linecap: round;
+  opacity: 0.55;
+}
+.ember {
+  fill: #ff9a3d;
+  filter: drop-shadow(0 0 1.5px #ff7a1a) drop-shadow(0 0 4px #ff5a00);
+  animation: ember 5.2s ease-in-out infinite;
+}
+@keyframes ember {
+  0%, 62%, 100% { opacity: 0.45; }
+  70%, 80% { opacity: 1; }
+}
+.smoke {
+  position: absolute;
+  left: 35.6%;
+  top: 76.2%;
+  width: 0;
+  height: 0;
+}
+.smoke span {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 15px;
+  height: 15px;
+  margin: -7px;
+  border-radius: 50%;
+  background: rgba(214, 222, 240, 0.34);
+  filter: blur(5px);
+  opacity: 0;
+  animation: smoke 5.2s ease-out infinite;
+}
+.smoke span:nth-child(2) { animation-delay: 1.7s; }
+.smoke span:nth-child(3) { animation-delay: 3.4s; }
+@keyframes smoke {
+  0% { transform: translate(0, 0) scale(0.4); opacity: 0; }
+  12% { opacity: 0.75; }
+  100% { transform: translate(34px, -150px) scale(3.6); opacity: 0; }
+}
+
+/* ---- Rain, fog, vignette ---- */
 .rain {
   position: absolute;
-  inset: -12% -8%;
-  transform: rotate(9deg);
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
-.drop {
-  position: absolute;
-  top: -22%;
-  width: 1px;
-  height: var(--len);
-  background: linear-gradient(180deg, rgba(196, 210, 234, 0), rgba(196, 210, 234, var(--op)));
-  animation: fall var(--dur) linear var(--delay) infinite;
-  will-change: transform;
-}
-.rain[data-static] .drop {
-  top: var(--top);
-  animation: none;
-  will-change: auto;
-}
-@keyframes fall {
-  from { transform: translateY(0); }
-  to { transform: translateY(150vh); }
-}
-
 .fog {
   position: absolute;
   inset: auto 0 0 0;
-  height: 40%;
-  background: linear-gradient(0deg, rgba(42, 53, 73, 0.32), rgba(42, 53, 73, 0));
+  height: 46%;
+  overflow: hidden;
+}
+.fog span {
+  position: absolute;
+  bottom: -20%;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background:
+    radial-gradient(ellipse 30% 50% at 22% 78%, rgba(90, 108, 148, 0.3), transparent 70%),
+    radial-gradient(ellipse 36% 46% at 58% 88%, rgba(90, 108, 148, 0.26), transparent 70%),
+    radial-gradient(ellipse 28% 52% at 86% 74%, rgba(90, 108, 148, 0.26), transparent 70%);
+  animation: fog 70s linear infinite;
+}
+.fog span:nth-child(2) {
+  animation-duration: 105s;
+  animation-direction: reverse;
+  opacity: 0.7;
+  bottom: -32%;
+}
+@keyframes fog {
+  from { transform: translateX(-22%); }
+  50% { transform: translateX(22%); }
+  to { transform: translateX(-22%); }
 }
 .vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 50% 40%, transparent 45%, rgba(0, 0, 0, 0.6) 100%);
+  background: radial-gradient(ellipse at 50% 42%, transparent 42%, rgba(0, 0, 0, 0.66) 100%);
 }
 
 @media (max-width: 900px) {
   .lamp {
     right: -4%;
-    opacity: 0.75;
+    opacity: 0.8;
   }
   .backdrop[data-lamp='left'] .lamp {
     left: -4%;
   }
+  .el { display: none; }
 }
 
-/* Day shift: an overcast, rainy afternoon. The sky is pale, the city fades into the haze, the lamp
-   is switched off and the rain is grey instead of lit. */
+/* ---- Day shift: an overcast, rainy afternoon. Lamp and neon are off, the city fades into haze. ---- */
 :global([data-theme='light']) .backdrop {
+  --window-warm: #59616c;
+  --window-cool: #6d7682;
+  --neon: #8a5a60;
   background:
     radial-gradient(ellipse 90% 60% at 50% 0%, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 70%),
-    linear-gradient(180deg, #c7cfd6 0%, #dcdcd6 40%, var(--ink-900) 75%, var(--ink-950) 100%);
+    linear-gradient(180deg, #bcc5cd 0%, #d3d6d3 40%, var(--ink-900) 78%, var(--ink-950) 100%);
 }
-:global([data-theme='light']) .cityFar {
-  fill: #b9bec4;
-  opacity: 0.75;
+:global([data-theme='light']) .backdrop[data-intensity='soft'] {
+  filter: none;
 }
-:global([data-theme='light']) .cityNear {
-  fill: #8f959d;
+:global([data-theme='light']) .clouds span {
+  background: radial-gradient(ellipse at center, rgba(120, 130, 142, 0.4), rgba(120, 130, 142, 0) 68%);
 }
-:global([data-theme='light']) .windows rect {
-  fill: #5f666f;
+:global([data-theme='light']) .cityFar { fill: #bcc1c7; opacity: 0.8; }
+:global([data-theme='light']) .cityMid { fill: #a2a8b0; }
+:global([data-theme='light']) .cityNear { fill: #868d96; }
+:global([data-theme='light']) .windows rect { opacity: 0.4; }
+:global([data-theme='light']) .windows .blink { animation: none; }
+:global([data-theme='light']) .beacon { filter: none; }
+:global([data-theme='light']) .track {
+  background:
+    linear-gradient(180deg, #6f7680 0 5px, transparent 5px),
+    repeating-linear-gradient(64deg, transparent 0 9px, #6f7680 9px 11.5px, transparent 11.5px 20px),
+    repeating-linear-gradient(-64deg, transparent 0 9px, #6f7680 9px 11.5px, transparent 11.5px 20px),
+    linear-gradient(180deg, transparent 0 23px, #6f7680 23px);
 }
-:global([data-theme='light']) .post {
-  color: #3d424a;
+:global([data-theme='light']) .train span {
+  background:
+    linear-gradient(180deg, transparent 0 6px, #5d646e 6px 7px, transparent 7px 15px, #5d646e 15px),
+    repeating-linear-gradient(90deg, #5d646e 0 7px, #c9ced3 7px 21px),
+    #5d646e;
+  box-shadow: none;
 }
-:global([data-theme='light']) .bulb {
-  fill: #e4ddcd;
-  animation: none;
-}
+:global([data-theme='light']) .sign { filter: none; }
+:global([data-theme='light']) .signBack,
+:global([data-theme='light']) .signArm { fill: #5d646e; }
+:global([data-theme='light']) .signLetter { fill: #c9b9bb; animation: none; }
+:global([data-theme='light']) .signTube { animation: none; opacity: 0.6; }
+:global([data-theme='light']) .signReflection,
 :global([data-theme='light']) .glow,
-:global([data-theme='light']) .cone {
-  display: none;
+:global([data-theme='light']) .cone,
+:global([data-theme='light']) .pool { display: none; }
+:global([data-theme='light']) .street {
+  background:
+    repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0 1px, transparent 1px 7px),
+    linear-gradient(180deg, rgba(160, 166, 172, 0) 0%, rgba(150, 156, 163, 0.85) 45%, #8e959d 100%);
 }
-:global([data-theme='light']) .drop {
-  background: linear-gradient(180deg, rgba(70, 84, 104, 0), rgba(70, 84, 104, calc(var(--op) * 0.75)));
-}
-:global([data-theme='light']) .fog {
-  background: linear-gradient(0deg, rgba(235, 228, 214, 0.75), rgba(235, 228, 214, 0));
+:global([data-theme='light']) .post { color: #3d424a; }
+:global([data-theme='light']) .detective { fill: #343941; }
+:global([data-theme='light']) .rim { display: none; }
+:global([data-theme='light']) .shadow { opacity: 0.2; }
+:global([data-theme='light']) .bulb { fill: #e4ddcd; animation: none; }
+:global([data-theme='light']) .smoke span { background: rgba(90, 96, 104, 0.3); }
+:global([data-theme='light']) .fog span {
+  background:
+    radial-gradient(ellipse 30% 50% at 22% 78%, rgba(235, 228, 214, 0.7), transparent 70%),
+    radial-gradient(ellipse 36% 46% at 58% 88%, rgba(235, 228, 214, 0.65), transparent 70%),
+    radial-gradient(ellipse 28% 52% at 86% 74%, rgba(235, 228, 214, 0.65), transparent 70%);
 }
 :global([data-theme='light']) .vignette {
   background: radial-gradient(ellipse at 50% 40%, transparent 50%, rgba(110, 90, 55, 0.18) 100%);
