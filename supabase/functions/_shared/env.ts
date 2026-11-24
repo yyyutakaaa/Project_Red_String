@@ -22,7 +22,7 @@ export const config = {
   omniakeyKey: () => env('OMNIAKEY_API_KEY'),
   deepseekBaseUrl: () => env('DEEPSEEK_BASE_URL', 'https://api.deepseek.com').replace(/\/$/, ''),
   deepseekKey: () => env('DEEPSEEK_API_KEY'),
-  deepseekMaxOutputTokens: () => envNumber('DEEPSEEK_MAX_OUTPUT_TOKENS', 8192),
+  deepseekMaxOutputTokens: () => envNumber('DEEPSEEK_MAX_OUTPUT_TOKENS', 32_768),
   suspectModel: () => env('SUSPECT_MODEL', 'claude-haiku-5-5'),
   // claude-opus-5-5 was tried live on both routes and spent its whole output budget on thinking,
   // so the default writer is Haiku. Set GENERATOR_MODEL to try another model.

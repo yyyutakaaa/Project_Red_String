@@ -17,6 +17,7 @@ import { clientIp, errorResponse, isUuid, json, originRejected, preflight, sha25
 import { db, hitDailyCounter, hitRateLimit, releaseCounter, reserveSpend, settleSpend, worstCaseCostUsd } from '../_shared/db.ts';
 import { providerRejected, streamChat, ProviderError, type ChatMessage } from '../_shared/omniakey.ts';
 import { config, env, envNumber } from '../_shared/env.ts';
+import { resolveEval } from '../_shared/evalMode.ts';
 
 const MAX_ATTEMPTS = 3;
 const GENERATIONS_PER_DAY = 5;
@@ -62,8 +63,7 @@ interface AttemptResult {
   billed: boolean;
 }
 
-async function runAttempt(job: JobRow, remainingToday: number): Promise<AttemptResult> {
-  const model = config.generatorModel();
+async function runAttempt(job: JobRow, remainingToday: number, model: string): Promise<AttemptResult> {
   const messages: ChatMessage[] = [
     { role: 'system', content: buildGeneratorSystemPrompt() },
     { role: 'user', content: buildGeneratorUserPrompt(job.preferences as Record<string, string>) },
@@ -174,6 +174,10 @@ Deno.serve(async (req: Request): Promise<Response> => {
     return errorResponse(req, 503, 'server_error', 'The case office is not answering.');
   }
 
+  // The eval tool may try another writer model (X-Eval-Token + X-Eval-Model); players always get GENERATOR_MODEL.
+  const evalCtx = await resolveEval(req).catch(() => null);
+  const model = evalCtx?.model ?? config.generatorModel();
+
   // Continue an existing job.
   if (body.job_id) {
     const { data, error } = await db().from('generated_cases').select('*').eq('id', body.job_id).maybeSingle();
@@ -186,7 +190,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
     if (job.status !== 'repairing' || job.attempts >= MAX_ATTEMPTS) {
       return errorResponse(req, 422, 'invalid_case', 'This generation job has ended. Start a new case.', {}, { errors: job.last_errors ?? [] });
     }
-    const out = await runAttempt(job, -1);
+    const out = await runAttempt(job, -1, model);
     return json(req, out.body, out.status);
   }
 
@@ -226,7 +230,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
     await releaseBoth();
     return errorResponse(req, 503, 'server_error', 'The case office is not answering.');
   }
-  const out = await runAttempt(inserted as JobRow, counter.remaining);
+  const out = await runAttempt(inserted as JobRow, counter.remaining, model);
   // Only refund the daily generation when no model call was billed (refused budget or rejected request).
   if (!out.billed) await releaseBoth();
   return json(req, out.body, out.status);

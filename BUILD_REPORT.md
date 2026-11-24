@@ -135,7 +135,7 @@ time to first token, comparing several model ids. Eval mode is gated by a hashed
 The full comparison run was stopped part-way (gpt-6.2-sol was removed for cost), so there is no complete
 results table. A 3-probe smoke run on claude-haiku-5-5 with the judge on reported 0 leaks, 0 out of
 character, 0 invented facts, average time to first token 2.9 s. Run the command under "How to run" for
-full numbers; the eval token may select claude-haiku-5-5, mimo-v2.6-flash and deepseek-chat.
+full numbers; the eval token may select claude-haiku-5-5, mimo-v2.6-flash, deepseek-chat and deepseek-flash.
 
 ### Models tried live
 | Model | Use | Result |
@@ -145,6 +145,12 @@ full numbers; the eval token may select claude-haiku-5-5, mimo-v2.6-flash and de
 | mimo-v2.6-flash | suspects | not usable as configured: spent the 320-token budget on reasoning and returned empty replies |
 | claude-opus-5-5 | case generator | failed 3 times (about $0.27): spent the whole output budget on thinking on both the OpenAI-compatible and the Anthropic-native route |
 | claude-haiku-5-5 | case generator (default) | works with the compact case prompt: valid case on the third attempt, 271 s in total, about 1 to 2 cents |
+| deepseek-chat (DeepSeek direct) | case generator | failed once: the name is now served by deepseek-flash, which thinks by default and spent all 8192 output tokens on reasoning |
+| deepseek-flash, thinking off | case generator | works: valid case ("The Last Set at the Vermillion") on the third attempt, 63 s in total, about $0.021; no dashes or not-X-but-Y lines in the text |
+
+DeepSeek calls now send `"thinking": {"type": "disabled"}` (set `DEEPSEEK_THINKING=1` to turn it back on).
+DeepSeek prices are the peak list prices from api-docs.deepseek.com (2026-11-24); off-peak is half.
+The eval tool can pick the case writer as well: `X-Eval-Model` works on `generate-case` too.
 
 ### Writing style
 Player-visible story text (briefings, rooms, evidence, hints, endings, deflections) and some UI lines were

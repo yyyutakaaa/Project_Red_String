@@ -173,14 +173,15 @@ Deno.test('reads content-part arrays and skips thinking parts', async () => {
   );
 });
 
-Deno.test('routes deepseek- models to DeepSeek with its own key and output cap', async () => {
+Deno.test('routes deepseek- models to DeepSeek with its own key, output cap and thinking off', async () => {
   Deno.env.set('DEEPSEEK_API_KEY', 'ds-test');
   await withFetch(
     async (url, init) => {
       assert(url === 'https://api.deepseek.com/chat/completions', `unexpected url ${url}`);
       assert((init.headers as Record<string, string>).Authorization === 'Bearer ds-test', 'deepseek key not used');
       const body = JSON.parse(String(init.body));
-      assert(body.max_tokens === 8192, `max_tokens was ${body.max_tokens}`);
+      assert(body.max_tokens === 4096, `max_tokens was ${body.max_tokens}`);
+      assert(body.thinking?.type === 'disabled' && body.reasoning_effort === undefined, 'thinking must be off');
       return sseResponse([
         'data: {"choices":[{"delta":{"reasoning_content":"hm"}}]}\n\n',
         'data: {"choices":[{"delta":{"content":"Hi."}}]}\n\n',
@@ -188,7 +189,9 @@ Deno.test('routes deepseek- models to DeepSeek with its own key and output cap',
       ]);
     },
     async () => {
-      const r = await streamChat({ ...opts, model: 'deepseek-chat', maxTokens: 16000 }, () => {});
+      Deno.env.set('DEEPSEEK_MAX_OUTPUT_TOKENS', '4096');
+      const r = await streamChat({ ...opts, model: 'deepseek-flash', maxTokens: 16000, reasoningEffort: 'low' }, () => {});
+      Deno.env.delete('DEEPSEEK_MAX_OUTPUT_TOKENS');
       assert(r.text === 'Hi.', `text was ${r.text}`);
     },
   );

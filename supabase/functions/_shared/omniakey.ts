@@ -96,9 +96,11 @@ const PRICES: Record<string, { input: number; output: number }> = {
   'claude-opus-5-5': { input: 1.12, output: 5.6 },
   'mimo-v2.6-flash': { input: 0.0666, output: 0.133 },
   'gpt-6.2-sol': { input: 0.18, output: 0.9 },
-  // DeepSeek direct, list prices (cache miss). Check api-docs.deepseek.com; override with MODEL_PRICING_JSON.
-  'deepseek-chat': { input: 0.27, output: 1.1 },
-  'deepseek-reasoner': { input: 0.55, output: 2.19 },
+  // DeepSeek direct, peak list prices with cache miss (api-docs.deepseek.com/quick_start/pricing, 2026-11-24).
+  // Off-peak is half. "deepseek-chat" is the old name and is served by deepseek-flash.
+  'deepseek-flash': { input: 0.3, output: 1.2 },
+  'deepseek-chat': { input: 0.3, output: 1.2 },
+  'deepseek-v4-pro': { input: 1.32, output: 3.96 },
 };
 /** Unknown models are costed pessimistically so the spend ceiling stays safe. */
 const FALLBACK_PRICE = { input: 5, output: 25 };
@@ -193,7 +195,18 @@ function buildBody(opts: ChatOptions, stream: boolean, minimal: boolean): string
   };
   if (!minimal) {
     if (opts.temperature !== undefined && env('OMNIAKEY_SEND_TEMPERATURE') === '1') body.temperature = opts.temperature;
-    if (opts.reasoningEffort) body.reasoning_effort = opts.reasoningEffort;
+    if (provider.name === 'deepseek') {
+      // DeepSeek models think by default and can spend the whole output budget on it (seen live when
+      // writing a case). Thinking is off unless DEEPSEEK_THINKING=1.
+      if (env('DEEPSEEK_THINKING') === '1') {
+        body.thinking = { type: 'enabled' };
+        if (opts.reasoningEffort) body.reasoning_effort = opts.reasoningEffort;
+      } else {
+        body.thinking = { type: 'disabled' };
+      }
+    } else if (opts.reasoningEffort) {
+      body.reasoning_effort = opts.reasoningEffort;
+    }
     if (stream) body.stream_options = { include_usage: true };
   }
   return JSON.stringify(body);

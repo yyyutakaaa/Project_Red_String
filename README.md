@@ -110,7 +110,7 @@ Project: `hbwvybkpdqliusxheiyg` (eu-central-1). Edge function secrets: `OMNIAKEY
 | Secret | Default | Purpose |
 |---|---|---|
 | `SUSPECT_MODEL` | `claude-haiku-5-5` | model that plays suspects |
-| `GENERATOR_MODEL` | `claude-haiku-5-5` | model that writes new cases |
+| `GENERATOR_MODEL` | `claude-haiku-5-5` | model that writes new cases (`deepseek-flash` is about four times faster) |
 | `EVAL_JUDGE_MODEL` | `claude-haiku-5-5` | judge used by the eval tool |
 | `OMNIAKEY_BASE_URL` | `https://api.omniakey.com/v1` | OpenAI-compatible OmniaKey endpoint |
 | `ALLOWED_ORIGINS` | (none) | extra CORS origins, comma-separated, e.g. a custom domain |
@@ -135,8 +135,8 @@ The spend ceiling is race-free: before each model call the worst-case cost is re
 under a Postgres advisory lock and refused if it would pass `DAILY_SPEND_LIMIT_USD`; the row is settled
 to the real cost afterwards, and calls that fail after the provider accepted them keep their estimated cost.
 
-Model ids starting with `deepseek-` (for example `deepseek-chat`) are routed to the DeepSeek API with
-`DEEPSEEK_API_KEY`; every other id goes through OmniaKey. Switch models without code changes, for example:
+Model ids starting with `deepseek-` (for example `deepseek-flash`) are routed to the DeepSeek API with
+`DEEPSEEK_API_KEY`, with thinking off unless `DEEPSEEK_THINKING=1`; every other id goes through OmniaKey. Switch models without code changes, for example:
 
 ```powershell
 npx supabase secrets set SUSPECT_MODEL=mimo-v2.6-flash --project-ref hbwvybkpdqliusxheiyg
