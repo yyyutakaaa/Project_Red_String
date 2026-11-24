@@ -98,7 +98,7 @@
   position: relative;
   width: 100%;
   /* Keep the whole board on screen on short displays so pins can be dragged anywhere without scrolling. */
-  max-width: max(720px, calc((100svh - var(--titlebar-h) - var(--hud-height) - 2.5rem) * 1.58 + 36px));
+  max-width: max(720px, calc((100svh - var(--titlebar-h) - var(--hud-height) - 1.5rem) * 1.58 + 36px));
   margin: 0 auto;
   padding: clamp(10px, 1.5vw, 18px);
   border-radius: 8px;
@@ -289,7 +289,35 @@
 
 .paper { fill: var(--paper-100); stroke: var(--paper-300); stroke-width: 1; }
 .paperShadow { fill: rgba(0, 0, 0, 0.42); }
-.cardRule { stroke: #6f87a8; stroke-width: 1.2; opacity: 0.7; }
+.print { fill: #f3eee2; stroke: #cfc5ae; stroke-width: 1; }
+.printEdge { fill: none; stroke: rgba(20, 16, 10, 0.55); stroke-width: 1; }
+
+/* Set dressing behind the pins */
+.decor { pointer-events: none; }
+.mapShadow, .labelShadow { fill: rgba(0, 0, 0, 0.4); }
+.mapPaper { fill: #cdbf9d; opacity: 0.6; }
+.mapRiver { fill: #6f8aa0; opacity: 0.32; }
+.mapStreets { fill: none; stroke: #5b4a30; stroke-width: 2.2; opacity: 0.42; }
+.mapBlocks { fill: #5b4a30; opacity: 0.16; }
+.mapMark { fill: none; stroke: var(--red-500); stroke-width: 3; opacity: 0.75; }
+.mapTitle {
+  font-family: var(--font-type);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  fill: #4a3b24;
+  opacity: 0.7;
+}
+.labelPaper { fill: #e6dcc2; opacity: 0.9; }
+.labelText {
+  font-family: var(--font-type);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  fill: #3a2d1a;
+}
+.decorPin { fill: #9a2630; stroke: #5e1219; stroke-width: 1; }
+.coffee { fill: none; stroke: #2f1c0c; stroke-width: 5; opacity: 0.2; }
 .cardLabel {
   font-family: var(--font-type);
   font-size: 10px;
@@ -306,7 +334,7 @@
 
 .photoShadow { fill: rgba(0, 0, 0, 0.45); }
 .photoMount { fill: var(--paper-200); stroke: rgba(0, 0, 0, 0.35); stroke-width: 1; }
-.silhouette { fill: #07090e; opacity: 0.9; }
+.silhouette { opacity: 0.95; }
 .photoGloss {
   fill: none;
   stroke: rgba(255, 255, 255, 0.12);

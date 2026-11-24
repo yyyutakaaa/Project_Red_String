@@ -1,7 +1,8 @@
 import type { CSSProperties } from 'react';
+import { Link } from 'react-router-dom';
 import { ScreenFrame } from '../components/ScreenFrame.tsx';
 import { ButtonLink } from '../components/Button.tsx';
-import { Portrait } from '../components/Portrait.tsx';
+import { Figure, Portrait } from '../components/Portrait.tsx';
 import { casePath, useCaseContext } from '../hooks/useCase.ts';
 import { useAmbience } from '../hooks/useAmbience.ts';
 import { ambienceForBackground } from '../audio/audio.ts';
@@ -18,6 +19,7 @@ export function Suspects() {
 
   return (
     <ScreenFrame
+      wide
       kicker={caseFile.title}
       title="The lineup"
       actions={
@@ -32,6 +34,52 @@ export function Suspects() {
       <p className={styles.lede}>
         {caseFile.suspects.length} people with a reason to lie tonight. Each one has a story ready. Find the one that does not hold.
       </p>
+
+      {/* The lineup room, seen through the one-way glass. A picture of the list below; wide screens only. */}
+      <div className={styles.room} aria-hidden="true">
+        <div className={styles.roomMarks}>
+          {HEIGHT_MARKS.map((m) => (
+            <span key={m}>{m}</span>
+          ))}
+        </div>
+        <div className={`${styles.roomMarks} ${styles.roomMarksRight}`}>
+          {HEIGHT_MARKS.map((m) => (
+            <span key={m}>{m}</span>
+          ))}
+        </div>
+        <ul className={styles.row}>
+          {caseFile.suspects.map((s, i) => {
+            const conv = getConversation(progress, caseFile, s.id);
+            // People are not all the same height. Stable per suspect.
+            const tall = 0.9 + ((s.id.length * 7 + s.age) % 12) / 100;
+            return (
+              <li key={s.id} className={styles.stand} data-mood={conv.mood} style={{ '--tall': tall, '--tint': s.color } as CSSProperties}>
+                <span className={styles.roomBeam} />
+                <span className={styles.roomShade} />
+                <Link to={casePath(caseKey, `interrogate/${s.id}`)} tabIndex={-1} className={styles.figureLink}>
+                  <svg viewBox="0 0 200 240" className={styles.figure} focusable="false">
+                    <defs>
+                      <linearGradient id={`lineup-${s.id}`} x1="0" y1="0" x2="1" y2="0.2">
+                        <stop offset="0%" stopColor="#04060a" />
+                        <stop offset="70%" stopColor="#0b0f18" />
+                        <stop offset="100%" stopColor="#1d2638" />
+                      </linearGradient>
+                    </defs>
+                    <Figure kind={s.portrait} fill={`url(#lineup-${s.id})`} rim="#f2cd7a" />
+                  </svg>
+                  <span className={styles.slate}>
+                    <span className={styles.slateNo}>No. {i + 1}</span>
+                    <span className={styles.slateName}>{s.name}</span>
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+        <div className={styles.floor} />
+        <div className={styles.glass} />
+        <p className={styles.roomLabel}>One-way glass</p>
+      </div>
 
       <ol className={styles.lineup}>
         {caseFile.suspects.map((s, i) => {

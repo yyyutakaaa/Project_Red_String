@@ -19,6 +19,31 @@ describe('red-string board', () => {
     expect(b.pins).toHaveLength(4);
   });
 
+  it('gives every print its own spot when evidence turns up one piece at a time', () => {
+    const ids = c.evidence.map((e) => e.id);
+    // Found in reverse order: placing by list index would stack them.
+    let b = emptyBoard();
+    const found: string[] = [];
+    for (const id of [...ids].reverse()) {
+      found.push(id);
+      b = syncPins(b, c, found);
+    }
+    const spots = b.pins.filter((p) => p.kind === 'evidence').map((p) => `${p.x},${p.y}`);
+    expect(new Set(spots).size).toBe(ids.length);
+  });
+
+  it('pulls apart prints that an older save stacked on one spot', () => {
+    const ids = c.evidence.map((e) => e.id).slice(0, 2);
+    const b0 = syncPins(emptyBoard(), c, ids);
+    const first = b0.pins.find((p) => p.id === ids[0])!;
+    const stacked = { ...b0, pins: b0.pins.map((p) => (p.id === ids[1] ? { ...p, x: first.x, y: first.y } : p)) };
+    const fixed = syncPins(stacked, c, ids);
+    const a = fixed.pins.find((p) => p.id === ids[0])!;
+    const z = fixed.pins.find((p) => p.id === ids[1])!;
+    expect(a).toMatchObject({ x: first.x, y: first.y });
+    expect(`${z.x},${z.y}`).not.toBe(`${a.x},${a.y}`);
+  });
+
   it('adds, deduplicates and removes links', () => {
     let b = syncPins(emptyBoard(), c, ['pawn-ticket', 'racing-slips']);
     b = addLink(b, 'nora', 'pawn-ticket');

@@ -301,6 +301,10 @@ The game is staged like a film noir picture. All of it is code: no image files.
 - **Interview room**: a lamp swings over the suspect, and its light takes the colour of their mood.
 - **Case files**: each file carries a photograph of its crime scene. Sealed files are taped shut.
 - **The verdict**: a newspaper front page spins in, and the stamp lands on it.
+- **Evidence photographs** ([`EvidencePhoto.tsx`](web/src/components/EvidencePhoto.tsx)): every piece of evidence gets a picture of the object on a dark table, with a numbered police marker. They are drawn from the evidence name with the same prop drawings the rooms use, and appear on the board, in the notebook, in the evidence picker and on the accusation screen.
+- **The board**: evidence hangs as photo prints, suspects show their own silhouette, and a street map and file label are pinned up behind them.
+- **The notebook**: wire binding down the edge, a stack of pages underneath, cards stuck in a little crooked.
+- **The lineup**: all suspects stand against the height chart behind one-way glass, each under a lamp in the colour of their mood. Narrow screens keep the small wall on each card.
 
 With reduced motion everything stands still: one frame of rain, no lightning, no train, no blinds. The light theme turns the city into an overcast afternoon.
 

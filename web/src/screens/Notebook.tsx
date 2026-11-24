@@ -94,11 +94,11 @@ function EvidencePanel({ caseFile, caseKey, found, shownTo }: { caseFile: CaseFi
           </Empty>
         ) : (
           <ul className={styles.evidenceGrid}>
-            {found.map((e) => {
+            {found.map((e, index) => {
               const shown = shownTo.get(e.id);
               return (
                 <li key={e.id} className={styles.evidenceItem}>
-                  <EvidenceCard evidence={e} caseFile={caseFile} />
+                  <EvidenceCard evidence={e} caseFile={caseFile} exhibit={index + 1} />
                   {shown && shown.length > 0 && <p className={styles.shownTo}>Shown to {shown.join(', ')}</p>}
                 </li>
               );

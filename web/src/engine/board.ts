@@ -18,7 +18,8 @@ function defaultPosition(kind: PinKind, index: number): { x: number; y: number }
   }
   const col = index % 6;
   const row = Math.floor(index / 6);
-  return { x: 110 + col * 190 + (row % 2) * 60, y: 380 + row * 140 };
+  // Evidence prints are about 150 tall; rows sit far enough apart not to overlap.
+  return { x: 110 + col * 190 + (row % 2) * 60, y: 320 + row * 185 };
 }
 
 /** Ensure every suspect and every found evidence item has a pin; keeps existing positions. */
@@ -27,7 +28,26 @@ export function syncPins(board: BoardState, c: CaseFile, foundEvidence: readonly
   const pins: BoardPin[] = [];
   c.suspects.forEach((s, i) => pins.push(existing.get(s.id) ?? { id: s.id, kind: 'suspect', ...defaultPosition('suspect', i) }));
   const evidenceIds = c.evidence.map((e) => e.id).filter((id) => foundEvidence.includes(id));
-  evidenceIds.forEach((id, i) => pins.push(existing.get(id) ?? { id, kind: 'evidence', ...defaultPosition('evidence', i) }));
+  // Evidence turns up one piece at a time, so a new print takes the first default spot that is still
+  // free. (Placing it by its index in the list would drop it right on top of an earlier one.)
+  const taken = (pos: { x: number; y: number }) => pins.some((p) => Math.abs(p.x - pos.x) < 90 && Math.abs(p.y - pos.y) < 90);
+  for (const id of evidenceIds) {
+    const kept = existing.get(id);
+    if (!kept) continue;
+    // Older saves can hold two prints on exactly the same spot (see above). Treat the second as new.
+    const stacked = pins.some((p) => p.kind === 'evidence' && Math.abs(p.x - kept.x) < 1 && Math.abs(p.y - kept.y) < 1);
+    if (stacked) existing.delete(id);
+    else pins.push(kept);
+  }
+  for (const id of evidenceIds) {
+    if (existing.has(id)) continue;
+    let slot = 0;
+    while (slot < 60 && taken(defaultPosition('evidence', slot))) slot += 1;
+    pins.push({ id, kind: 'evidence', ...defaultPosition('evidence', slot) });
+  }
+  // Keep the case file's order, whatever order the pins were added in.
+  const order = new Map<string, number>([...c.suspects.map((s) => s.id), ...evidenceIds].map((id, i) => [id, i]));
+  pins.sort((a, b) => (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0));
   const pinIds = new Set(pins.map((p) => p.id));
   const links = board.links.filter((l) => pinIds.has(l.from) && pinIds.has(l.to));
   const unchanged = pins.length === board.pins.length && links.length === board.links.length && pins.every((p, i) => p === board.pins[i]);

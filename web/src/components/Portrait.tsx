@@ -40,7 +40,7 @@ const MOOD_COLOR: Record<Mood, string> = {
 };
 
 /** Head, hair and headwear shapes per portrait key, drawn in a 200x240 box. */
-function Figure({ kind, fill, rim }: { kind: string; fill: string; rim: string }) {
+export function Figure({ kind, fill, rim }: { kind: string; fill: string; rim: string }) {
   const female = kind.startsWith('woman') || kind === 'elder-woman' || kind === 'young-woman';
   const elder = kind.startsWith('elder');
   const shoulders = female
