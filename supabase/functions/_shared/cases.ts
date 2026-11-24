@@ -76,3 +76,23 @@ export async function storyCaseDiagnostics(): Promise<Record<string, { valid: bo
   }
   return out;
 }
+
+/**
+ * Store a story case in public.story_cases. Only text whose canonical hash equals the hash compiled into
+ * this function is accepted, so this can only load the exact cases the repository was deployed with.
+ */
+export async function seedStoryCase(id: string, text: string): Promise<{ ok: boolean; error?: string }> {
+  const expected = STORY_CASE_HASHES[id];
+  if (!expected) return { ok: false, error: 'unknown story case id' };
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(text);
+  } catch {
+    return { ok: false, error: 'not valid JSON' };
+  }
+  if ((await canonicalHash(parsed)) !== expected) return { ok: false, error: 'content does not match the deployed hash' };
+  const { error } = await db().from('story_cases').upsert({ id, case_text: JSON.stringify(parsed), updated_at: new Date().toISOString() });
+  if (error) return { ok: false, error: error.message };
+  cache.delete(id);
+  return { ok: true };
+}

@@ -34,6 +34,18 @@ export const VALIDATOR_RULES = [
   'Every revealable clue must be reachable (a shown_evidence clue needs obtainable evidence).',
 ];
 
+/** Prose rules for every player-visible string and every suspect sheet, so the text reads as written by a person. */
+export const WRITING_STYLE = [
+  'Writing style, for every string in the case: write like a working crime novelist, concrete and plain.',
+  '- No em dashes or en dashes anywhere; use commas, full stops or colons. Straight quotes only.',
+  '- No "not X but Y" or "it was not just X, it was Y" contrasts. State the point.',
+  '- No groups of three for rhythm, no aphorisms, no one-line paragraph that restates the one before it.',
+  '- Do not explain what a detail means after showing it. Describe what the detective sees and stop.',
+  '- Avoid these words: quietly, testament, tapestry, pivotal, crucial, vibrant, intricate, landscape (figurative), delve, underscore, showcase.',
+  '- Vary sentence length. Prefer "is" and "has" to "serves as" and "boasts". Each sentence must add a fact.',
+  '- Give each suspect a distinct way of talking in speech_style and deflections, with ordinary spoken rhythm.',
+].join('\n');
+
 export function buildGeneratorSystemPrompt(): string {
   return [
     'You are an expert mystery designer writing a complete, fair, self-contained murder case for "Project Red String", a noir detective game. The player examines clickable rooms, interrogates AI-played suspects by typing freely, connects evidence on a board and accuses a culprit with 2 to 4 pieces of evidence.',
@@ -44,6 +56,7 @@ export function buildGeneratorSystemPrompt(): string {
     `Allowed room background keys: ${BACKGROUND_KEYS.join(', ')}.`,
     `Allowed portrait keys: ${PORTRAIT_KEYS.join(', ')}. Suspect color is a dark-to-mid hex colour like #6b7f99.`,
     'Size and style: 3 or 4 suspects, 4 rooms, 7 to 9 evidence items (2 red herrings), 10 to 16 timeline events, 5 hints from gentle to explicit, intro_briefing of 3 short paragraphs. Keep every description to 1 or 2 sentences. Patience 10 to 14 per suspect, 3 deflections per suspect (short in-character lines for when they refuse to talk), 2 or 3 revealable clues per suspect mixing free, pressed and shown_evidence conditions. Hotspot labels are 1 to 3 concrete words (desk, coat, decanter, ledger, window ...). Noir voice, no emojis, no graphic gore. The player is an unnamed police detective.',
+    WRITING_STYLE,
     'Design for fairness: there must be a moment where the evidence clicks; each lie must be breakable by an evidence item in that suspect\'s breaks_on; red herrings must have innocent explanations that interrogation can reveal.',
   ].join('\n\n');
 }

@@ -103,7 +103,7 @@ const LEAK_MARKERS = [
  * whether the reply looks like it broke character or echoed its instructions.
  */
 export function sanitizeReply(text: string, clueIds: readonly string[]): { text: string; suspicious: boolean } {
-  let out = text;
+  let out = plainPunctuation(text);
   for (const id of clueIds) out = out.split(`[${id}]`).join('').split(id).join('');
   out = out
     .split('\n')
@@ -113,4 +113,23 @@ export function sanitizeReply(text: string, clueIds: readonly string[]): { text:
     .trim();
   const suspicious = LEAK_MARKERS.some((re) => re.test(out));
   return { text: out, suspicious };
+}
+
+/**
+ * Plain punctuation for spoken replies: dashes used as connectors become commas and curly quotes become
+ * straight ones. Applied to streamed text and to the final reply, in every language.
+ */
+export function plainPunctuation(text: string): string {
+  return text
+    .replace(/\s*[—–]\s*/g, ', ')
+    .replace(/\s+--\s+/g, ', ')
+    .replace(/[“”]/g, '"')
+    .replace(/[‘’]/g, "'")
+    .replace(/,\s*,/g, ',')
+    .replace(/,\s*([.!?])/g, '$1');
+}
+
+/** The part of a streaming reply that is safe to clean and show: trailing spaces and dashes are held back. */
+export function streamableText(visible: string): string {
+  return plainPunctuation(visible.replace(/[\s—–,-]+$/, ''));
 }

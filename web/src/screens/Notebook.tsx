@@ -90,7 +90,7 @@ function EvidencePanel({ caseFile, caseKey, found, shownTo }: { caseFile: CaseFi
               </ButtonLink>
             }
           >
-            The bag is empty. Rooms do not search themselves.
+            The bag is empty. Go and search the scenes.
           </Empty>
         ) : (
           <ul className={styles.evidenceGrid}>
@@ -119,7 +119,7 @@ function CluesPanel({ caseFile, groups, uid }: { caseFile: CaseFile; groups: Clu
       </header>
       <div data-testid="notebook-clues" className={styles.clueGroups}>
         {groups.length === 0 ? (
-          <Empty>Nobody has talked yet. Lean on them. Show them what you found.</Empty>
+          <Empty>Nobody has talked yet. Lean on them and show them what you found.</Empty>
         ) : (
           groups.map(({ suspect, clues }) => (
             <section key={suspect.id} className={styles.clueGroup} aria-labelledby={`${uid}-clues-${suspect.id}`}>

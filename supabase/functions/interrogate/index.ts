@@ -12,13 +12,13 @@
 import { z } from 'zod';
 import { buildSuspectPrompt, buildUserTurn, MAX_PLAYER_MESSAGE_CHARS } from '../_shared/core/suspectPrompt.ts';
 import { resolveMood, resolveRevealedClues, normalizeMood, type ClueContext } from '../_shared/core/clues.ts';
-import { limitWords, parseReplyMeta, sanitizeReply, spokenPart, visibleLength } from '../_shared/core/replyParsing.ts';
+import { limitWords, parseReplyMeta, sanitizeReply, spokenPart, streamableText, visibleLength } from '../_shared/core/replyParsing.ts';
 import type { Mood } from '../_shared/core/caseSchema.ts';
 import { SseStream, clientIp, errorResponse, isUuid, json, originRejected, preflight, sha256Hex } from '../_shared/http.ts';
 import { claimQuestion, hitRateLimit, logUsage, recordTurn, releaseQuestion, reserveSpend, settleSpend, worstCaseCostUsd, type StoredTurn } from '../_shared/db.ts';
 import { chat, providerRejected, ProviderError, streamChat, type ChatMessage, type Usage } from '../_shared/omniakey.ts';
 import { config } from '../_shared/env.ts';
-import { resolveCase, storyCaseDiagnostics } from '../_shared/cases.ts';
+import { resolveCase, seedStoryCase, storyCaseDiagnostics } from '../_shared/cases.ts';
 import { judgeModel, judgeReply, resolveEval, type JudgeVerdict } from '../_shared/evalMode.ts';
 
 const MAX_OUTPUT_TOKENS = 320;
@@ -55,6 +55,15 @@ Deno.serve(async (req: Request): Promise<Response> => {
     return json(req, { ok: true, service: 'interrogate', suspect_model: config.suspectModel(), cases: await storyCaseDiagnostics() });
   }
   if (req.method !== 'POST') return errorResponse(req, 405, 'bad_request', 'Use POST.');
+
+  // Maintenance: load a story case into the database (web/scripts/seed-cases.mjs). Needs a valid eval
+  // token, and the content must match the hash compiled into this deployment.
+  const seedId = new URL(req.url).searchParams.get('seed');
+  if (seedId) {
+    if (!(await resolveEval(req))) return errorResponse(req, 403, 'bad_request', 'Not allowed.');
+    const result = await seedStoryCase(seedId, await req.text());
+    return result.ok ? json(req, { ok: true, seeded: seedId }) : errorResponse(req, 400, 'bad_request', result.error ?? 'Seed failed.');
+  }
 
   let body: z.infer<typeof Body>;
   try {
@@ -169,10 +178,12 @@ Deno.serve(async (req: Request): Promise<Response> => {
         (piece) => {
           if (firstTokenMs === null) firstTokenMs = performance.now() - started;
           full += piece;
-          const vis = visibleLength(full);
-          if (vis > emitted) {
-            sse.send('delta', { text: full.slice(emitted, vis) });
-            emitted = vis;
+          // Stream cleaned text (no dashes as connectors); trailing spaces and dashes are held back so
+          // what was already sent never changes.
+          const clean = streamableText(full.slice(0, visibleLength(full)));
+          if (clean.length > emitted) {
+            sse.send('delta', { text: clean.slice(emitted) });
+            emitted = clean.length;
           }
         },
       );

@@ -296,7 +296,7 @@
           "y": 8,
           "width": 10,
           "height": 16,
-          "description": "A green-shaded lamp on a long flex over the binding table, still burning when the watchman came in at six. Its light makes the dust hang like smoke. Every page Pike ever checked, he checked under this lamp.",
+          "description": "A green-shaded lamp on a long flex over the binding table, still burning when the watchman came in at six. Its light makes the dust hang like smoke.",
           "evidence_id": null
         },
         {
@@ -316,7 +316,7 @@
           "y": 40,
           "width": 24,
           "height": 40,
-          "description": "Steep iron stairs drop to the lower stacks, and a chalk outline lies at the bottom. The police surgeon's note is pinned to the rail: one deep wound to the left temple, a broken neck, and not one of the iron edges shows blood or hair. A man who falls breaks his neck. He does not usually dent his own temple on the way down.",
+          "description": "Steep iron stairs drop to the lower stacks, and a chalk outline lies at the bottom. The police surgeon's note is pinned to the rail: one deep wound to the left temple, a broken neck, and not one of the iron edges shows blood or hair.",
           "evidence_id": null
         }
       ]
@@ -382,7 +382,7 @@
           "y": 12,
           "width": 20,
           "height": 28,
-          "description": "Coils of manila rope and a rack of longshoremen's iron cargo hooks: twelve pegs and twelve hooks, each one dull with oil and none of them marked. Whatever hit Harold Pike, it was not one of these.",
+          "description": "Coils of manila rope and a rack of longshoremen's iron cargo hooks: twelve pegs and twelve hooks, each one dull with oil and none of them marked.",
           "evidence_id": null
         },
         {
@@ -430,7 +430,7 @@
           "y": 10,
           "width": 24,
           "height": 30,
-          "description": "From the watchman's stool the window takes in the whole pier: the main gate, the office door, the lamp halfway down, the warehouse wicket at the far end. In fog you would see a shape and a color under that lamp, never a face. The stool is worn smooth.",
+          "description": "From the watchman's stool the window takes in the whole pier: the main gate, the office door, the lamp halfway down, the warehouse wicket at the far end. In fog you would see a shape and a color under that lamp and no face. The stool is worn smooth.",
           "evidence_id": null
         },
         {
@@ -544,7 +544,7 @@
     {
       "id": "watch-dial",
       "name": "Watchman's clock dial",
-      "description": "The paper dial from Tommy's watchman's clock. Stations punched at 20:00, 20:30 and 21:00. Then nothing at all until 05:30: eight and a half hours of blank ring on a night a man died on his pier.",
+      "description": "The paper dial from Tommy's watchman's clock. Stations punched at 20:00, 20:30 and 21:00. Then nothing at all until 05:30.",
       "found_in": "gatehouse",
       "points_to": ["tommy"],
       "is_red_herring": true
@@ -560,7 +560,7 @@
     {
       "id": "gate-phone-pad",
       "name": "Gatehouse telephone pad",
-      "description": "The pad by the gatehouse telephone, in Tommy's shaky capitals: '11 PM. MISS ASHGROVE FROM MARINERS CLUB. CLUB OPERATOR PUT HER THROUGH. IS MR PIKE STILL IN. TOLD HER LIGHTS ON.' Why the head of the firm was checking on her clerk at eleven at night, the pad does not say.",
+      "description": "The pad by the gatehouse telephone, in Tommy's shaky capitals: '11 PM. MISS ASHGROVE FROM MARINERS CLUB. CLUB OPERATOR PUT HER THROUGH. IS MR PIKE STILL IN. TOLD HER LIGHTS ON.'",
       "found_in": "gatehouse",
       "points_to": ["clara", "tommy"],
       "is_red_herring": true
@@ -597,7 +597,7 @@
         {
           "topic": "The Ashgrove Family Trust",
           "claim": "The trust is in perfect order and audited every year. Mr. Pike had no business with it.",
-          "truth": "You have quietly borrowed more than twenty thousand dollars from it, and Pike had the proof in a folder with your initials on it."
+          "truth": "You have borrowed more than twenty thousand dollars from it, and Pike had the proof in a folder with your initials on it."
         }
       ],
       "secrets": [
@@ -684,7 +684,7 @@
         }
       ],
       "secrets": [
-        "In January you quietly mortgaged Ashgrove House, your father's house on the cliffs, to meet the firm's payroll. The board does not know."
+        "In January you mortgaged Ashgrove House, your father's house on the cliffs, to meet the firm's payroll. The board does not know."
       ],
       "never_reveal": [
         "That Ashgrove Shipping will be bankrupt by the summer without the coastal mail contracts."
@@ -896,16 +896,16 @@
   ],
   "hints": [
     "Harold Pike had somewhere to be at nine this morning. Find out where, and about what: his typewriter in the front office and his tally desk in the warehouse both have something to say.",
-    "Most of the lies on this pier are not about murder. Pin every story to the clock: the police surgeon's window runs from 22:45 to 23:30.",
+    "Most of these people are lying about something smaller than murder. Pin every story to the clock: the police surgeon's window runs from 22:45 to 23:30.",
     "Leonard Vance has the loudest motive and a cufflink in the archive. Show him the cufflink, then read the ferry slip tally book on the dock and the ferry clock beside it. Where was he when the window opened?",
     "Tommy's watchman's clock says he never walked a round after nine. Show him the dial. A man who sat at the gatehouse window all night saw more than he admits.",
-    "Clara Ashgrove buried a warning about the manifests, but the gatehouse telephone pad says where she was at eleven. A motive without a window is not a case.",
+    "Clara Ashgrove buried a warning about the manifests, but the gatehouse telephone pad says where she was at eleven. She had a motive and no time to act on it.",
     "The weapon went back on its shelf. Look at the color smeared on its grip and ask whose gloves carry that color every working day, then check who signed out of where, and when.",
     "Look hard at Ruth Calloway. Put together the carbon copy manifest from the warehouse tally desk, the iron ledger press from the archive shelf, the Customs House night book from the office counter, and Tommy's sighting of the caped figure."
   ],
   "endings": {
-    "correct": "Ruth Calloway takes the cuffs the way she took everything else, precisely, without a wasted word. The Harbor Commission gets Harold Pike's carbon at nine after all, and by noon six Ashgrove sailings are coming apart in the evening papers. Out on Pier Seventeen the fog lifts for the first time in three days, and nobody feels any cleaner for it.",
-    "wrong_culprit": "You make the arrest and the papers make the rest. Somewhere uptown a navy rain cape dries on its hook, and next week another freighter's crates sail through a clearance signed in a neat, upright hand. Harold Pike kept a carbon of everything; you missed the one that mattered.",
-    "weak_proof": "You had the right name and a thin file. The waterfront is full of good lawyers, and one of them walks Ruth Calloway out of the station before the coffee is cold. Motive, means, a broken alibi and a witness who saw her on the pier: the case needed all of it, and you came up short."
+    "correct": "Ruth Calloway takes the cuffs without a word. The Harbor Commission gets Harold Pike's carbon at nine after all, and by noon six Ashgrove sailings are coming apart in the evening papers. Out on Pier Seventeen the fog lifts for the first time in three days.",
+    "wrong_culprit": "You make the arrest and the papers make the rest. Somewhere uptown a navy rain cape dries on its hook, and next week another freighter's crates sail through a clearance signed in a neat, upright hand. Harold Pike kept a carbon of everything, and you missed this one.",
+    "weak_proof": "You had the right name and a thin file. The waterfront is full of good lawyers, and one of them walks Ruth Calloway out of the station before the coffee is cold. The case needed the motive, the weapon, the broken alibi and the witness who saw her on the pier."
   }
 }

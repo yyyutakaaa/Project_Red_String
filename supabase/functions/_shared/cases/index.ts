@@ -2,7 +2,7 @@
 // SHA-256 of JSON.stringify(case) for each story case. The functions load cases from public.story_cases
 // and only use a case whose stored text matches this hash.
 export const STORY_CASE_HASHES: Record<string, string> = {
-  'ashgrove-house': '314afa80168e87e9104abe5b8e87e78e6e258f6cf5c947f4c05ad67bc1dcb17f',
-  'blue-lantern': '881a06c5cce25422127251ee705654d235a5a01ca3032a867874ccc9fd1c905d',
-  'pier-seventeen': 'e5f346acc04f8939a03db0c4e581d0c0bca845dc2031b57e758e3be866ee2485',
+  'ashgrove-house': '059b8da70d4ea136a6ac7923b9f3b9b7180bb301f514d848325328809683c47a',
+  'blue-lantern': '0387606d726a30f645dda4c4da8f57f422eab118890eec05fe9b75ccf541ad7e',
+  'pier-seventeen': 'dec4d712c01da0f40918a434fb859f011265b85bd9a549545909b67ccd777f0a',
 };

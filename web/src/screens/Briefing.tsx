@@ -132,7 +132,7 @@ export function Briefing() {
         </section>
 
         <footer className={styles.foot}>
-          <p className={styles.signoff}>Walk the rooms. Ask your questions. Bring proof.</p>
+          <p className={styles.signoff}>Walk the rooms, question the people in them, and bring back proof.</p>
           <Button variant="primary" size="large" onClick={begin} data-testid="begin-investigation">
             {seen ? 'Return to the investigation' : 'Begin investigation'}
           </Button>

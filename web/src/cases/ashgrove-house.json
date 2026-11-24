@@ -9,13 +9,13 @@
     "Saturday, 16 October 1948. The storm came in off the Sound at dusk and has not let up since. Ashgrove House sits on the cliffs twelve miles north of Calder City, at the end of a road that is more mud than gravel tonight, and the telephone line to the house is down.",
     "Edmund Ashgrove, sixty-five today, founder of Ashgrove Shipping, is dead in his study. He had a bad heart and lived on digitalis drops. The police surgeon who rode up with you sniffed his brandy glass and shook his head: the old man's heart did not give out on its own. Somebody gave him enough digitalis to stop a horse.",
     "Three people sat down to his birthday dinner, and the uniforms at the door are keeping all of them here: his daughter Clara Ashgrove, who has run his Pier Seventeen offices for years; her husband Simon Whitlock, a charming man with expensive habits; and Leonard Vance, the family attorney and trustee, who drove down the cliff road through the storm to telephone for you. The cook, Mrs. Dunne, has already told the uniforms what little she saw from the kitchen wing.",
-    "Walk the rooms, Detective. Examine whatever looks out of place, question the three of them, and put what you find in front of them. When you can prove who did it, why they did it and how they managed it, make your accusation. You get one chance. Make it count."
+    "Walk the rooms, Detective. Examine whatever looks out of place, question the three of them, and put what you find in front of them. When you can prove who did it, why, and how, make your accusation. You only get to make it once."
   ],
   "victim": {
     "id": "edmund",
     "name": "Edmund Ashgrove",
     "age": 65,
-    "description": "Founder of Ashgrove Shipping and its master for forty years; a hard, proud, careful man who wrote everything down. He had a weak heart and was kept going on digitalis drops. Tonight was his sixty-fifth birthday.",
+    "description": "Founder of Ashgrove Shipping and its master for forty years. He was hard and proud, and he wrote everything down. He had a weak heart and was kept going on digitalis drops. Tonight was his sixty-fifth birthday.",
     "cause_of_death": "Heart failure from a massive overdose of digitalis, taken in his after-dinner brandy.",
     "found_in": "study",
     "found_at": "at about 21:55, slumped in his leather armchair by the study fire"
@@ -238,7 +238,7 @@
           "y": 28,
           "width": 22,
           "height": 34,
-          "description": "The fire has burned low. Caught behind the andiron, where the flames never quite reached, are several torn scraps of cream notepaper, scorched at the edges. Someone wanted them gone and did not wait to watch them burn.",
+          "description": "The fire has burned low. Caught behind the andiron, where the flames never quite reached, are several torn scraps of cream notepaper, scorched at the edges. Whoever threw them in did not wait to watch them burn.",
           "evidence_id": "torn-letter"
         },
         {
@@ -440,7 +440,7 @@
           "y": 26,
           "width": 10,
           "height": 40,
-          "description": "Wet coats and hats: Vance's good black overcoat with a cigar case in the pocket, Clara's oilskin, and Simon's camel-hair coat, which is bone dry. Whatever Simon did tonight, he did it indoors.",
+          "description": "Wet coats and hats: Vance's good black overcoat with a cigar case in the pocket, Clara's oilskin, and Simon's camel-hair coat, which is bone dry.",
           "evidence_id": null
         },
         {
@@ -450,7 +450,7 @@
           "y": 22,
           "width": 10,
           "height": 40,
-          "description": "A tall-case clock ticking loudly in the empty hall. It keeps good time; Edmund wound it himself every Sunday and set it by the time signal on the radio. Every clock in the house is set by this one.",
+          "description": "A tall-case clock ticking loudly in the empty hall. It keeps good time. Edmund wound it himself every Sunday and set it by the time signal on the radio, and every other clock in the house is set by this one.",
           "evidence_id": null
         },
         {
@@ -480,7 +480,7 @@
     {
       "id": "torn-letter",
       "name": "Scorched torn letter",
-      "description": "Scraps of cream notepaper from the dining room grate, scorched but legible, in a sharp, slanting hand: 'Father, ten years I have given that company... and you hand it to a stranger from Boston as if I were the office girl... I will make you regret this, I swear it.' Unsigned and never sent. Whoever wrote it was in a fury with Edmund tonight.",
+      "description": "Scraps of cream notepaper from the dining room grate, scorched but legible, in a sharp, slanting hand: 'Father, ten years I have given that company... and you hand it to a stranger from Boston as if I were the office girl... I will make you regret this, I swear it.' Unsigned and never sent.",
       "found_in": "dining-room",
       "points_to": ["clara"],
       "is_red_herring": true
@@ -496,7 +496,7 @@
     {
       "id": "brandy-glass",
       "name": "Edmund's brandy glass",
-      "description": "A heavy cut-crystal balloon glass engraved 'E.A.', the one glass in the house nobody else was allowed to use. A finger of brandy remains, with a greenish-brown film on the bottom and a sharp, bitter, herbal smell under the spirit. The other brandy glasses of the set are clean and dry; the only other glasses used tonight are two plain whisky tumblers. The poison was in his glass and only his, so it was put there by someone who knew his habits.",
+      "description": "A heavy cut-crystal balloon glass engraved 'E.A.', the one glass in the house nobody else was allowed to use. A finger of brandy remains, with a greenish-brown film on the bottom and a sharp, bitter, herbal smell under the spirit. The other brandy glasses of the set are clean and dry; the only other glasses used tonight are two plain whisky tumblers.",
       "found_in": "study",
       "points_to": [],
       "is_red_herring": false
@@ -512,7 +512,7 @@
     {
       "id": "digitalis-bottle",
       "name": "Bottle in a handkerchief",
-      "description": "Dug out of the disturbed soil of the conservatory palm: a small brown pharmacy bottle, empty, labeled 'Digitalis tincture - E. Ashgrove - Mercer's Pharmacy', wrapped in a white linen handkerchief embroidered 'S.W.' in blue thread at one corner. The neck still smells bitter. Somebody carried Edmund's heart drops down from his bathroom and buried them here in a handkerchief marked with those initials.",
+      "description": "Dug out of the disturbed soil of the conservatory palm: a small brown pharmacy bottle, empty, labeled 'Digitalis tincture - E. Ashgrove - Mercer's Pharmacy', wrapped in a white linen handkerchief embroidered 'S.W.' in blue thread at one corner. The neck still smells bitter.",
       "found_in": "conservatory",
       "points_to": ["simon"],
       "is_red_herring": false
@@ -528,7 +528,7 @@
     {
       "id": "draft-codicil",
       "name": "Draft codicil",
-      "description": "A typed draft from Vance's briefcase headed 'Codicil to the Will of Edmund Ashgrove', dated today. It removes 'Leonard Vance, Esquire' as sole trustee of the Ashgrove Family Trust, appoints 'my daughter Clara Ashgrove' in his place from 1 January 1949, and calls for a full accounting of the trust. Edmund's pencil corrections and initials are on every page; it is unsigned and unwitnessed. Tonight Edmund was taking the family money out of Vance's hands.",
+      "description": "A typed draft from Vance's briefcase headed 'Codicil to the Will of Edmund Ashgrove', dated today. It removes 'Leonard Vance, Esquire' as sole trustee of the Ashgrove Family Trust, appoints 'my daughter Clara Ashgrove' in his place from 1 January 1949, and calls for a full accounting of the trust. Edmund's pencil corrections and initials are on every page; it is unsigned and unwitnessed.",
       "found_in": "hallway",
       "points_to": ["vance"],
       "is_red_herring": true
@@ -536,7 +536,7 @@
     {
       "id": "creditor-demand",
       "name": "Brokers' final demand",
-      "description": "A crumpled letter on Kittredge and Lowe letterhead, dated 1 October 1948 and addressed to Mr. Simon Whitlock: his margin account is in default, $38,400 falls due on 1 November, and failing payment the firm will 'proceed through the courts without further notice.' It is signed by Ambrose Kittredge himself. The man it was sent to was desperate for money and on anything but friendly terms with his broker.",
+      "description": "A crumpled letter on Kittredge and Lowe letterhead, dated 1 October 1948 and addressed to Mr. Simon Whitlock: his margin account is in default, $38,400 falls due on 1 November, and failing payment the firm will 'proceed through the courts without further notice.' It is signed by Ambrose Kittredge himself.",
       "found_in": "clara",
       "points_to": ["simon"],
       "is_red_herring": false
@@ -579,7 +579,7 @@
       ],
       "secrets": [
         "You have been meeting the Halvorsen Line in secret about leaving Ashgrove Shipping and taking two of its biggest contracts with you.",
-        "You quietly moved your own savings into an account in your maiden name this summer, because you no longer trust your husband with money."
+        "You moved your own savings into an account in your maiden name this summer, because you no longer trust your husband with money."
       ],
       "never_reveal": [
         "That you wept alone in the dining room after the quarrel. You will never admit to anyone that you cried."
@@ -745,7 +745,7 @@
         }
       ],
       "secrets": [
-        "Since the spring of 1945 you have quietly borrowed about eighteen thousand dollars from the Ashgrove Family Trust to cover your own losses, always meaning to pay it back. A full accounting would expose you.",
+        "Since the spring of 1945 you have borrowed about eighteen thousand dollars from the Ashgrove Family Trust to cover your own losses, always meaning to pay it back. A full accounting would expose you.",
         "You have a quiet financial interest in the Blue Lantern, a jazz club in the Riverside district of Calder City, and its owner keeps a private set of books for you. Your name is on none of it."
       ],
       "never_reveal": [
@@ -802,7 +802,7 @@
     "Walk every room before you question anyone. Click on whatever catches your eye; anything that matters goes straight into your case file.",
     "The poison was in Edmund's own glass. Find out when that glass was last seen clean, and who was out of everyone's sight between then and half past nine.",
     "In an interrogation, press \"Show evidence\" and put an item on the table. A suspect confronted with the right item has to answer to it, and some will hand you something new. Try showing each of them the papers you find.",
-    "Two people had good reason to be furious with Edmund tonight, and their papers prove it. Fury is not poison. Ask each of them where they were between nine and half past, and who can vouch for them.",
+    "Two people had good reason to be furious with Edmund tonight, and their papers prove it. Being angry is a long way from poisoning a man, so ask each of them where they were between nine and half past, and who can vouch for them.",
     "Edmund wrote everything down. Read the hall telephone pad, then remember who told you they spent those twenty minutes on that very telephone.",
     "Use the red-string board: pin the items that belong together, connect them with string, and press \"Check theory\" to test your reasoning before you accuse. You want one item for motive, one for means and one that breaks an alibi.",
     "Look hard at Simon Whitlock. Combine the Harbor Trust letter, the bottle wrapped in the S.W. handkerchief from the conservatory palm, and Edmund's note on the hall telephone pad, then make your accusation."
@@ -810,6 +810,6 @@
   "endings": {
     "correct": "Simon Whitlock goes out into the rain in handcuffs, still explaining. He forged an old man's name to buy himself a little time, and when the old man found out, he bought some more with a bottle of heart drops. The storm cut the telephone line at half past eight, and with it the only alibi he had. Clara does not watch the car go.",
     "wrong_culprit": "The cuffs close on the wrong wrists, and the hand that emptied the bottle shakes yours at the door and thanks you for your trouble. By the time the line is mended and the cliff road is clear, the truth has gone down the rocks with the rain. Somewhere in Calder City a man with a monogram on his handkerchief sleeps just fine.",
-    "weak_proof": "You have the right man and not enough to hold him. His lawyer will call it a lost handkerchief, a family loan and a faulty line, and a jury will believe two of the three. Come back with motive, means and a broken alibi, Detective, or don't come back at all."
+    "weak_proof": "You have the right man and not enough to hold him. His lawyer will call it a lost handkerchief, a family loan and a faulty line, and a jury will believe two of the three. You needed the motive, the means and the broken alibi, Detective, and you brought two."
   }
 }

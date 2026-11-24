@@ -282,7 +282,7 @@ export function NewCase() {
         <div className={styles.layout}>
           <div className={styles.formColumn}>
             <div className={styles.intro}>
-              <p>The case office types up a murder nobody has solved before: new victim, new suspects, new lies.</p>
+              <p>The case office types up a murder nobody has solved before, with its own victim and suspects.</p>
               <p>Tell them where it happened if you like. Leave it blank and they pick.</p>
             </div>
 

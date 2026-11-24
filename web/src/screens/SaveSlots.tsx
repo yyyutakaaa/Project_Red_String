@@ -106,7 +106,7 @@ export function SaveSlots() {
           </ButtonLink>
         }
       >
-        <p className={styles.lede}>Three drawers, one detective. The game files itself after every move you make.</p>
+        <p className={styles.lede}>You have three drawers. The game saves itself after every move you make.</p>
 
         <ol className={styles.grid} aria-label="Save slots">
           {Array.from({ length: SLOT_COUNT }, (_, i) => i + 1).map((n) => {

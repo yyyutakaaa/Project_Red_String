@@ -6,8 +6,8 @@
   "setting": "The Blue Lantern, a jazz club in the Riverside district of Calder City",
   "era": "February 1949",
   "intro_briefing": [
-    "February 1949. It has rained on Calder City for three days straight, and tonight it hammers the tin awning of the Blue Lantern, the best jazz room in the Riverside district. It was a packed Saturday show: a full house, a hot band and a singer who can make a stevedore cry into his beer.",
-    "At five past midnight the bartender found the owner, Victor Kale, slumped behind the desk in his office behind the stage, shot once in the chest. Somewhere in a room full of horns and laughter a gun went off, and not one soul admits to hearing it.",
+    "February 1949. It has rained on Calder City for three days straight, and tonight it hammers the tin awning of the Blue Lantern, the best jazz room in the Riverside district. It was a packed Saturday show, with a hot band and a singer who can make a stevedore cry into his beer.",
+    "At five past midnight the bartender found the owner, Victor Kale, slumped behind the desk in his office behind the stage, shot once in the chest. A gun went off in a room full of horns and laughter, and nobody admits to hearing it.",
     "The uniforms have locked the doors and sent the crowd home. Four people who matter are waiting for you: Kale's manager, Frank Dellow; his singer and former flame, Lena Marsh; her kid brother Danny, who tends the bar; and Kale's attorney, Leonard Vance, who came back through the rain when Frank telephoned him with the news.",
     "Search the main floor, the bar, Kale's office, the dressing room and the alley out back. Question them, show them what you find, and pin it all to the board. When you know who pulled the trigger, make your accusation with proof that will stand up in court, Detective."
   ],
@@ -15,7 +15,7 @@
     "id": "kale",
     "name": "Victor Kale",
     "age": 49,
-    "description": "Owner of the Blue Lantern. A former rum-runner who bought his respectability one liquor license at a time: generous with drinks, merciless with debts, and trusting of nobody.",
+    "description": "Owner of the Blue Lantern. A former rum-runner who bought his respectability one liquor license at a time. He was generous with drinks and merciless with debts, and he trusted nobody.",
     "cause_of_death": "A single .38 bullet to the chest, fired at close range. The coroner puts death between 23:30 and 23:50. Nobody in the packed club reported hearing a shot.",
     "found_in": "office",
     "found_at": "at 00:05 by the bartender, Danny Marsh, slumped behind his desk"
@@ -315,7 +315,7 @@
           "y": 52,
           "width": 26,
           "height": 28,
-          "description": "Kale's desk, with the chalk outline behind it. Every drawer has been yanked out and pawed through, papers everywhere, yet the cash box in the bottom drawer is still locked and heavy with money. Whoever searched this desk wanted something other than cash. On top of the mess lies a signed IOU.",
+          "description": "Kale's desk, with the chalk outline behind it. Every drawer has been yanked out and pawed through, papers everywhere, yet the cash box in the bottom drawer is still locked and heavy with money. On top of the mess lies a signed IOU.",
           "evidence_id": "danny-iou"
         },
         {
@@ -373,7 +373,7 @@
           "y": 50,
           "width": 16,
           "height": 20,
-          "description": "A portable record player on a stool, a stack of torch-song records beside it. The record on the turntable has played through, and the needle is hissing in the run-out groove. One side of a record like that plays for three minutes, no more; after that, anyone passing in the corridor hears only the hiss.",
+          "description": "A portable record player on a stool, a stack of torch-song records beside it. The record on the turntable has played through, and the needle is hissing in the run-out groove. One side of a record like that plays for about three minutes. After that, anyone passing in the corridor hears only the hiss.",
           "evidence_id": null
         }
       ]
@@ -401,7 +401,7 @@
           "y": 14,
           "width": 14,
           "height": 40,
-          "description": "The steel back door of Kale's office. It can only be opened from the inside, and tonight somebody drew the bolt. Wet cinders are scuffed across the sill, tracked outward into the alley rather than in.",
+          "description": "The steel back door of Kale's office. It can only be opened from the inside, and tonight somebody drew the bolt. Wet cinders are scuffed across the sill, tracked outward into the alley.",
           "evidence_id": null
         },
         {
@@ -449,7 +449,7 @@
     {
       "id": "safe-revolver",
       "name": "Revolver from the rain barrel",
-      "description": "A .38 revolver from the bottom of the rain barrel at the dead end of the alley, two steps from the back door of Kale's office. One chamber has been fired. A brass tag wired through the trigger guard is stamped 'BLUE LANTERN - BAR SAFE'. The water has taken any prints, but whoever dropped it here first had to get it out of a locked safe.",
+      "description": "A .38 revolver from the bottom of the rain barrel at the dead end of the alley, two steps from the back door of Kale's office. One chamber has been fired. A brass tag wired through the trigger guard is stamped 'BLUE LANTERN - BAR SAFE'. The water has taken any prints.",
       "found_in": "alley",
       "points_to": ["frank"],
       "is_red_herring": false
@@ -473,7 +473,7 @@
     {
       "id": "vance-tab",
       "name": "Booth 9 bar chit",
-      "description": "A chit from the bar's tab ledger for Booth 9, initialled 'L.V.' in a small, precise hand. Two brandies punched by the bar's time clock at 23:22, then one brandy and a soda punched at 23:58. Whoever sat in Booth 9 was still ordering long after the drum solo was over.",
+      "description": "A chit from the bar's tab ledger for Booth 9, initialled 'L.V.' in a small, precise hand. Two brandies punched by the bar's time clock at 23:22, then one brandy and a soda punched at 23:58. The second round was punched after the drum solo was over.",
       "found_in": "bar",
       "points_to": ["vance"],
       "is_red_herring": true
@@ -481,7 +481,7 @@
     {
       "id": "green-ledger",
       "name": "Parcel for L.V.",
-      "description": "A parcel in brown paper and string from the top of the filing cabinet, marked 'L.V. - after the show' in Kale's scrawl. Inside is a green cloth ledger: two years of large deposits from 'L.V.', paid out again a few weeks later as 'band fees' to orchestras that never played the Blue Lantern. Somebody has been moving a great deal of money through this club, and Kale kept the books on it.",
+      "description": "A parcel in brown paper and string from the top of the filing cabinet, marked 'L.V. - after the show' in Kale's scrawl. Inside is a green cloth ledger: two years of large deposits from 'L.V.', paid out again a few weeks later as 'band fees' to orchestras that never played the Blue Lantern.",
       "found_in": "office",
       "points_to": ["vance"],
       "is_red_herring": true
@@ -489,7 +489,7 @@
     {
       "id": "danny-iou",
       "name": "Danny Marsh's IOU",
-      "description": "An IOU for $400 signed 'Danny Marsh', payable to V. Kale, lying on top of the rifled desk drawers. Underneath, in Kale's scrawl: 'Saturday midnight. Or the hands.' The bartender had a debt falling due at the very hour his boss died.",
+      "description": "An IOU for $400 signed 'Danny Marsh', payable to V. Kale, lying on top of the rifled desk drawers. Underneath, in Kale's scrawl: 'Saturday midnight. Or the hands.'",
       "found_in": "office",
       "points_to": ["danny"],
       "is_red_herring": true
@@ -497,7 +497,7 @@
     {
       "id": "lipstick-glass",
       "name": "Lipstick-marked glass",
-      "description": "A highball glass from the side table in Kale's office, a finger of rye left in it and a crisp crimson lipstick print on the rim. The shade is dark and expensive, the kind a singer wears under stage lights. The ice melted long ago; the glass has been standing a good while.",
+      "description": "A highball glass from the side table in Kale's office, a finger of rye left in it and a crisp crimson lipstick print on the rim. The shade is dark and expensive, the kind a singer wears under stage lights. The ice melted long ago.",
       "found_in": "office",
       "points_to": ["lena"],
       "is_red_herring": true
@@ -513,7 +513,7 @@
     {
       "id": "wet-shoes",
       "name": "Wet stage shoes",
-      "description": "A pair of silver satin stage shoes from under the dressing chair, soaked dark to the ankle straps and gritty with black alley cinders. Everything else in the dressing room is dry. Whoever wore them tonight stood outside in the rain.",
+      "description": "A pair of silver satin stage shoes from under the dressing chair, soaked dark to the ankle straps and gritty with black alley cinders. Everything else in the dressing room is dry.",
       "found_in": "dressing-room",
       "points_to": ["lena"],
       "is_red_herring": true
@@ -650,7 +650,7 @@
         }
       ],
       "secrets": [
-        "The money that has passed through the Blue Lantern's books is not really yours: you have been quietly borrowing it from the Ashgrove Family Trust you administer, and running it through Kale's club so no auditor could follow it.",
+        "The money that has passed through the Blue Lantern's books is not really yours: you have been borrowing it from the Ashgrove Family Trust you administer, and running it through Kale's club so no auditor could follow it.",
         "Since Edmund Ashgrove died last October, his daughter Clara has twice asked you for a full accounting of the Ashgrove trust. You came for the green ledger tonight to get it out of Kale's hands before anyone audits you."
       ],
       "never_reveal": [
@@ -855,14 +855,14 @@
     "Nobody in a packed club heard a shot. Find out when the room was at its loudest: the bandstand can tell you, and so can the coroner's window.",
     "Every one of these four has lied about where they were during the drum solo. Pin each story to the board, then search each room for the thing that contradicts it: a bar chit, a pair of shoes, an envelope in the rain.",
     "The gun went into the water, but it came out of a safe. Search the alley, then read the cards on the bar safe and ask the bartender who can open it.",
-    "Kale's desk was torn apart but his cash box was left full. Whoever searched it wanted a document, not money, and Kale was the kind of man who hid things behind other things.",
+    "Kale's desk was torn apart but his cash box was left full. Whoever searched it was after a document, and Kale was the kind of man who hid things behind other things.",
     "Leonard Vance swears he went home before 23:30. The bar's time clock says otherwise. Show him his own chit and ask what he saw from Booth 9.",
-    "Lena and Danny Marsh are covering for each other, not for a killer. Show either of them the bank envelope from the laundry doorway, then ask yourself who walked past them in the rain, and who came back in through the front soaking wet.",
+    "Lena and Danny Marsh are covering for each other. Show either of them the bank envelope from the laundry doorway, then ask yourself who walked past them in the rain, and who came back in through the front soaking wet.",
     "Look hard at Frank Dellow: combine the black notebook behind the painting, the revolver from the rain barrel, and Leonard Vance's signed statement."
   ],
   "endings": {
-    "correct": "Frank Dellow takes the cuffs like a man settling a tab he always knew would come due. The black notebook, the gun from the rain barrel and the lawyer's statement close the books on the Blue Lantern for good. Outside, the rain keeps falling on Riverside, and for once it washes something clean.",
-    "wrong_culprit": "The cuffs close on the wrong wrists, and the real killer holds the door for you on your way out. By Monday the Blue Lantern has a new owner, a new set of books and a manager who smiles at you every time you pass. In this city the rain never stops, and neither do the mistakes.",
+    "correct": "Frank Dellow takes the cuffs like a man settling a tab he always knew would come due. The black notebook, the gun from the rain barrel and the lawyer's statement close the books on the Blue Lantern for good. Outside, the rain keeps falling on Riverside.",
+    "wrong_culprit": "The cuffs close on the wrong wrists, and the real killer holds the door for you on your way out. By Monday the Blue Lantern has a new owner, a new set of books and a manager who smiles at you every time you pass.",
     "weak_proof": "You have the right man, and he knows it, but any lawyer in Calder City could drive a truck through your case. Without the motive, the gun and a witness who saw him leave the door, the District Attorney will not touch it. Frank Dellow walks out into the rain whistling, and you go back inside to find what you missed."
   }
 }

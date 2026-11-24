@@ -47,7 +47,7 @@ export function Accusation() {
   return (
     <ScreenFrame title="The accusation" kicker={caseFile.title}>
       <p className={styles.lede}>
-        One name. Two to four pieces of proof. Once you say it out loud the case is closed, right or wrong.
+        Name one person and back it with two to four pieces of proof. Once you say it out loud the case is closed, right or wrong.
       </p>
 
       <form
@@ -104,7 +104,7 @@ export function Accusation() {
           </p>
           {found.length === 0 ? (
             <div className={styles.nothing}>
-              <p>Your evidence bag is empty. Nobody gets convicted on a hunch.</p>
+              <p>Your evidence bag is empty. Search the scenes before you accuse anyone.</p>
               <ButtonLink to={casePath(caseKey, 'rooms')}>Back to the scenes</ButtonLink>
             </div>
           ) : (
