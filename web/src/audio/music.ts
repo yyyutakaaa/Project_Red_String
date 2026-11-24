@@ -604,6 +604,38 @@ export function notesForBar(piece: Piece, bar: number, seed: number, mood: CaseM
 }
 
 /** Which piece, and which way of playing it, belongs to an ambience. `null` means silence. */
+/** Bars per phrase: a piece that comes back starts at the top of a phrase, not halfway through one. */
+export const PHRASE_BARS = 4;
+
+/** The first bar of the next phrase after `bar`. */
+export function nextPhraseBar(bar: number): number {
+  return Math.ceil((bar + 1) / PHRASE_BARS) * PHRASE_BARS;
+}
+
+/**
+ * How a piece stops when the player leaves: one held chord on its own key note, so the music ends
+ * instead of being cut off. Beats are counted from the beat the ending starts on. Lengths run past
+ * one bar on purpose; the instruments' own releases and the fade-out take care of the tail.
+ */
+export function endingFor(piece: Piece): NoteEvent[] {
+  if (piece.id === 'menu') {
+    const home = MENU_FORM[0]!; // Cm9
+    return [
+      { voice: 'bass', midi: home.bass, beat: 0, dur: 4, vel: 0.62 },
+      ...home.keys.map((midi, i) => ({ voice: 'keys' as const, midi, beat: i * 0.06, dur: 6, vel: 0.5 })),
+      // the trumpet's last word: the fifth, held, under a fading vibrato
+      { voice: 'lead', midi: 67, beat: 0.5, dur: 3.5, vel: 0.42 },
+    ];
+  }
+  const home = CASE_A[0]!; // Dm(add9)
+  return [
+    { voice: 'bass', midi: 38, beat: 0, dur: 4, vel: 0.6 },
+    ...home.pad.map((midi) => ({ voice: 'pad' as const, midi, beat: 0, dur: 7, vel: 0.5 })),
+    // one vibraphone note on the ninth, left hanging: the case is not closed yet
+    { voice: 'vibes', midi: 76, beat: 1, dur: 4, vel: 0.45 },
+  ];
+}
+
 export function musicForAmbience(kind: string): { piece: PieceId; mood: CaseMood } | null {
   switch (kind) {
     case 'menu':

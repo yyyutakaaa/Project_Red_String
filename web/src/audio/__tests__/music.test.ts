@@ -18,6 +18,8 @@ import {
   type Piece,
   type ScheduledNote,
 } from '../music.ts';
+import { PHRASE_BARS, VOICE_RANGE as RANGE_FOR_ENDING, endingFor, nextPhraseBar } from '../music.ts';
+import { MIX } from '../musicPlayer.ts';
 
 const SEED = 1947;
 const MOODS: CaseMood[] = ['rain', 'house', 'harbor', 'club'];
@@ -328,5 +330,31 @@ describe('the transport (look-ahead scheduler)', () => {
     expect(resumed.bar).toBe(tr.bar + 1);
     expect(first.length).toBeGreaterThan(0);
     expect(first[0]!.time).toBeCloseTo(100, 1);
+  });
+});
+
+describe('leaving and coming back', () => {
+  it('ends each piece on its own key note, with voices the piece really has', () => {
+    for (const piece of [PIECES.menu, PIECES.case]) {
+      const notes = endingFor(piece);
+      expect(notes.length).toBeGreaterThan(2);
+      const bass = notes.find((n) => n.voice === 'bass')!;
+      expect(((bass.midi % 12) + 12) % 12).toBe(piece.tonic);
+      for (const n of notes) {
+        expect(MIX[piece.id][n.voice], `${piece.id} has a ${n.voice}`).toBeDefined();
+        const [lo, hi] = RANGE_FOR_ENDING[n.voice];
+        expect(n.midi).toBeGreaterThanOrEqual(lo);
+        expect(n.midi).toBeLessThanOrEqual(hi);
+        expect(n.dur).toBeGreaterThan(0);
+        expect(n.beat).toBeGreaterThanOrEqual(0);
+      }
+    }
+  });
+
+  it('comes back at the top of the next phrase', () => {
+    expect(nextPhraseBar(0)).toBe(PHRASE_BARS);
+    expect(nextPhraseBar(PHRASE_BARS - 1)).toBe(PHRASE_BARS);
+    expect(nextPhraseBar(PHRASE_BARS)).toBe(PHRASE_BARS * 2);
+    expect(nextPhraseBar(13) % PHRASE_BARS).toBe(0);
   });
 });

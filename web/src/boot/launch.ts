@@ -3,6 +3,7 @@
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { create } from 'zustand';
+import { audio } from '../audio/audio.ts';
 
 export const LAUNCH_MIN_MS = 2000;
 
@@ -48,6 +49,9 @@ export function useLaunch() {
     async (to: string, info: LaunchInfo) => {
       if (useLaunchState.getState().active) return;
       useLaunchState.setState({ active: true, leaving: false, kicker: info.kicker ?? '', title: info.title, startedAt: performance.now() });
+      // Going into a case: the music hands over during the loading screen, so the case opens with
+      // its own music already playing. The case screen then sets the exact mood of the room.
+      if (to.startsWith('/case/')) audio.setAmbience('rain');
       await Promise.all([delay(LAUNCH_MIN_MS), preloadCaseScreens(), info.prepare?.().catch(() => undefined)]);
       navigate(to);
       // Cover the first paint of the new screen, then fade out.

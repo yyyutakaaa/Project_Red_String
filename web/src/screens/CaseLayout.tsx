@@ -4,7 +4,7 @@ import { Hud } from '../components/Hud.tsx';
 import { ScreenFrame } from '../components/ScreenFrame.tsx';
 import { ButtonLink } from '../components/Button.tsx';
 import { casePath, resolveCase, type CaseContextValue } from '../hooks/useCase.ts';
-import { useGame, useProgress } from '../store/game.ts';
+import { startCaseClock, stopCaseClock, useGame, useProgress } from '../store/game.ts';
 import { STORY_ORDER, isStoryUnlocked, type StoryCaseId } from '../engine/caseLoader.ts';
 import { continueSlot } from '../engine/save.ts';
 
@@ -25,6 +25,15 @@ export function CaseLayout() {
   useEffect(() => {
     if (resolved && !progress && !locked) ensureProgress(caseKey, resolved.source);
   }, [resolved, progress, caseKey, ensureProgress, locked]);
+
+  // The case clock runs while the case is open and not yet closed.
+  const runId = progress?.runId;
+  const closed = Boolean(progress?.accusation);
+  useEffect(() => {
+    if (!runId || closed || locked) return;
+    startCaseClock(caseKey);
+    return () => stopCaseClock();
+  }, [caseKey, runId, closed, locked]);
 
   useEffect(() => {
     document.title = resolved ? `${resolved.caseFile.title} - Project Red String` : 'Project Red String';

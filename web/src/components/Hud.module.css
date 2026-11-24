@@ -68,6 +68,24 @@
   white-space: nowrap;
 }
 .counter strong { font-size: var(--fs-md); color: var(--lamp-200); }
+.timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 5.6em;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--ink-400);
+  color: var(--text);
+  font-family: var(--font-type);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.timer svg { width: 1em; height: 1em; color: var(--lamp-400); }
+.timerStopped { border-color: var(--red-500); }
+.timerStopped svg { color: var(--red-400); }
 .hintText {
   font-family: var(--font-type);
   font-size: var(--fs-lg);

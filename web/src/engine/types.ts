@@ -66,6 +66,8 @@ export interface AccusationRecord {
   score: number;
   rank: string;
   at: number;
+  /** Time spent on the case when the accusation was made, in ms (missing in older saves). */
+  timeMs?: number;
   /** Score breakdown frozen at the moment of the accusation (missing in older saves). */
   breakdown?: ScoreSnapshot;
 }
@@ -92,6 +94,8 @@ export interface CaseProgress {
   hintsUsed: number;
   notes: string;
   accusation: AccusationRecord | null;
+  /** Time actually spent on this run, in ms: a case screen open, the window in view, the player not idle. */
+  playMs?: number;
 }
 
 export interface CompletionRecord {
@@ -100,6 +104,8 @@ export interface CompletionRecord {
   lastOutcome: AccusationOutcome;
   solved: boolean;
   completedAt: number;
+  /** Fastest time in which the case was solved correctly, in ms. */
+  bestTimeMs?: number;
 }
 
 export interface SaveSlotData {

@@ -80,6 +80,7 @@ export function newCaseProgress(caseKey: string, source: CaseProgress['source'],
     hintsUsed: 0,
     notes: '',
     accusation: null,
+    playMs: 0,
   };
 }
 
@@ -100,6 +101,7 @@ export function parseSlot(raw: string | null, slot: number): SaveSlotData | null
       const p = { ...base, ...(value as Partial<CaseProgress>), caseKey: key } as CaseProgress;
       if (!isObject(p.board) || !Array.isArray(p.board.pins) || !Array.isArray(p.board.links)) p.board = emptyBoard();
       if (!isObject(p.conversations)) p.conversations = {};
+      if (typeof p.playMs !== 'number' || !Number.isFinite(p.playMs) || p.playMs < 0) p.playMs = 0;
       progress[key] = p;
     }
     const completions: Record<string, CompletionRecord> = {};
@@ -170,15 +172,20 @@ export function recordCompletion(
   score: number,
   rank: string,
   now = Date.now(),
+  timeMs?: number,
 ): SaveSlotData {
   const prev = slot.completions[caseKey];
   const better = !prev || score > prev.bestScore;
+  // Only a correct solve counts as cracking the case, so only that can set a best time.
+  const timed = outcome === 'correct' && typeof timeMs === 'number' && timeMs > 0;
+  const bestTimeMs = timed ? Math.min(timeMs, prev?.bestTimeMs ?? Infinity) : prev?.bestTimeMs;
   const rec: CompletionRecord = {
     bestScore: better ? score : prev.bestScore,
     bestRank: better ? rank : prev.bestRank,
     lastOutcome: outcome,
     solved: (prev?.solved ?? false) || outcome === 'correct',
     completedAt: now,
+    ...(bestTimeMs !== undefined ? { bestTimeMs } : {}),
   };
   return { ...slot, completions: { ...slot.completions, [caseKey]: rec } };
 }

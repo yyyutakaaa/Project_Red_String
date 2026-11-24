@@ -62,6 +62,7 @@ The server decides what a suspect is allowed to reveal, so you can't talk the an
 - [Loading screens](#loading-screens)
 - [The film look](#the-film-look)
 - [Music](#music)
+- [Case clock](#case-clock)
 - [Desktop app](#desktop-app-macos-and-windows)
 - [Your own art and sound](#your-own-art-and-sound)
 - [Accessibility](#accessibility)
@@ -318,10 +319,14 @@ All sound is made in the browser with the Web Audio API ([`web/src/audio/`](web/
 
 - **Menu, "Last Call"**: slow noir jazz in C minor at 66 bpm. Electric piano, upright bass, a muted trumpet that plays one of two written takes or lays out, and brushes in the second half. Sixteen bars, about a minute per pass.
 - **On a case, "Paper Trail"**: suspense in D minor at 84 bpm. Low strings, plucked bass, vibraphone and celesta over a pedal note, in an A A B A form of thirty-two bars. Each eight bars it chooses between the written theme and improvised figures, so it does not sound like a short loop. The kind of place colours it: a club gets a brush backbeat, the harbour is sparser and darker.
-- The two pieces crossfade when you go from the menu into a case and back, and each resumes where it left off. Music pauses while the window is hidden.
+- Changing piece is staged like a film cut with a sound bridge. On its next beat the old piece plays an ending (one held chord on its key note), then a low-pass filter closes over it like a door. The new piece comes in a moment later with its filter opening, and a piece that comes back starts at the top of a phrase. Opening a case starts the handover during the loading screen. Music pauses while the window is hidden.
 - There is no rain or noise bed any more. Short noise bursts remain only inside sound effects (a stamp, a page).
 
 The composition lives in [`music.ts`](web/src/audio/music.ts) as plain data with unit tests; [`instruments.ts`](web/src/audio/instruments.ts) holds the voices and [`musicPlayer.ts`](web/src/audio/musicPlayer.ts) the scheduler and the mix.
+
+## Case clock
+
+The case bar shows how long you have been on a case, so you can see how fast you crack it. It counts only time actually spent: a case screen open, the window in view, and some input in the last three minutes (a case left open overnight does not count). The time is kept in the save, so it carries on when you come back, and it stops the moment you make the accusation. The verdict shows the time and your fastest correct solve, and the case files list shows the fastest solve on each closed case. The clock lives in [`game.ts`](web/src/store/game.ts) (`startCaseClock`, `useCaseClock`).
 
 ## Light mode
 

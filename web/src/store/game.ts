@@ -343,6 +343,8 @@ export function hintsShown(c: CaseFile, p: CaseProgress): string[] {
 
 /** Close the case. Records the accusation, the score and the completion (which unlocks the next case). */
 export function accuse(c: CaseFile, caseKey: string, culpritId: string, evidenceIds: string[]): AccusationRecord | null {
+  // The clock stops the moment the name is said.
+  stopCaseClock();
   const p = G().slot?.progress[caseKey];
   if (!p) return null;
   const verdict = evaluateAccusation(c, culpritId, evidenceIds);
@@ -354,6 +356,7 @@ export function accuse(c: CaseFile, caseKey: string, culpritId: string, evidence
     score: score.total,
     rank: score.rank,
     at: Date.now(),
+    timeMs: p.playMs ?? 0,
     breakdown: {
       base: score.base,
       thoroughness: score.thoroughness,
@@ -371,7 +374,7 @@ export function accuse(c: CaseFile, caseKey: string, culpritId: string, evidence
     ...slot,
     progress: { ...slot.progress, [caseKey]: { ...p, accusation: record, updatedAt: Date.now() } },
   };
-  const withCompletion = recordCompletion(withProgress, caseKey, verdict.outcome, score.total, score.rank);
+  const withCompletion = recordCompletion(withProgress, caseKey, verdict.outcome, score.total, score.rank, Date.now(), record.timeMs);
   try {
     const stamped = writeSlot(G().storage, withCompletion);
     useGame.setState({ slot: stamped, lastSavedAt: stamped.updatedAt });
@@ -385,4 +388,95 @@ export function accuse(c: CaseFile, caseKey: string, culpritId: string, evidence
 
 export function moodLabel(m: Mood): string {
   return { calm: 'Calm', nervous: 'Nervous', angry: 'Angry', broken: 'Broken' }[m];
+}
+
+// ---------------------------------------------------------------------------
+// The case clock: how long the player has been on a case, to see how fast they can crack it.
+//
+// It counts only time actually spent: a case screen open, the window in view, and some input in
+// the last IDLE_MS. Seconds tick in a tiny store of their own (useCaseClock), so the case screens
+// do not re-render every second; the total is written into the save every SAVE_EVERY_MS, and when
+// the player leaves the case, hides the window or makes the accusation.
+
+const TICK_MS = 1000;
+const SAVE_EVERY_MS = 30_000;
+const IDLE_MS = 3 * 60_000;
+
+interface CaseClockState {
+  /** Total for the case being played, including the part not written to the save yet. */
+  ms: number;
+  caseKey: string | null;
+}
+export const useCaseClock = create<CaseClockState>(() => ({ ms: 0, caseKey: null }));
+
+interface Running {
+  caseKey: string;
+  runId: string;
+  /** Counted but not saved yet. */
+  pending: number;
+  last: number;
+  lastSaved: number;
+  timer: ReturnType<typeof setInterval>;
+}
+let running: Running | null = null;
+let lastInput = Date.now();
+let listening = false;
+
+const savedMs = (caseKey: string) => G().slot?.progress[caseKey]?.playMs ?? 0;
+
+/** Write what has been counted into the save. Ignored when the run changed meanwhile (a restart). */
+function commitClock(): void {
+  if (!running || running.pending <= 0) return;
+  const { caseKey, runId, pending } = running;
+  running.pending = 0;
+  running.lastSaved = Date.now();
+  G().update(caseKey, (p) => (p.runId === runId ? { ...p, playMs: (p.playMs ?? 0) + pending } : p));
+}
+
+function tickClock(): void {
+  if (!running) return;
+  const now = Date.now();
+  const step = now - running.last;
+  running.last = now;
+  const visible = typeof document === 'undefined' || document.visibilityState === 'visible';
+  // A step much longer than a tick means the computer slept: that time does not count.
+  if (visible && now - lastInput < IDLE_MS && step < TICK_MS * 5) running.pending += step;
+  useCaseClock.setState({ ms: savedMs(running.caseKey) + running.pending, caseKey: running.caseKey });
+  if (now - running.lastSaved >= SAVE_EVERY_MS) commitClock();
+}
+
+function listenForActivity(): void {
+  if (listening || typeof window === 'undefined') return;
+  listening = true;
+  const seen = () => {
+    lastInput = Date.now();
+  };
+  for (const type of ['pointerdown', 'pointermove', 'keydown', 'wheel', 'touchstart']) window.addEventListener(type, seen, { passive: true });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') commitClock();
+    else if (running) running.last = Date.now();
+  });
+  window.addEventListener('pagehide', commitClock);
+}
+
+/** Start counting for a case that is open and not yet closed. Safe to call again for the same case. */
+export function startCaseClock(caseKey: string): void {
+  const p = G().slot?.progress[caseKey];
+  if (!p || p.accusation) return;
+  if (running?.caseKey === caseKey && running.runId === p.runId) return;
+  stopCaseClock();
+  listenForActivity();
+  lastInput = Date.now();
+  const now = Date.now();
+  running = { caseKey, runId: p.runId, pending: 0, last: now, lastSaved: now, timer: setInterval(tickClock, TICK_MS) };
+  useCaseClock.setState({ ms: p.playMs ?? 0, caseKey });
+}
+
+/** Stop counting and save the total. */
+export function stopCaseClock(): void {
+  if (!running) return;
+  tickClock();
+  commitClock();
+  clearInterval(running.timer);
+  running = null;
 }

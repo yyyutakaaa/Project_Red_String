@@ -4,7 +4,8 @@ import type { CaseFile } from '@shared/caseSchema.ts';
 import type { CaseProgress } from '../engine/types.ts';
 import { HINT_COST, discoveredCount, totalDiscoverables } from '../engine/scoring.ts';
 import { SLOT_COUNT } from '../engine/save.ts';
-import { hintsShown, takeHint, useGame } from '../store/game.ts';
+import { hintsShown, takeHint, useCaseClock, useGame } from '../store/game.ts';
+import { formatDuration, spokenDuration } from '../lib/format.ts';
 import { casePath } from '../hooks/useCase.ts';
 import { Button } from './Button.tsx';
 import { Modal } from './Modal.tsx';
@@ -14,6 +15,28 @@ interface HudProps {
   caseFile: CaseFile;
   caseKey: string;
   progress: CaseProgress;
+}
+
+/** The case clock. Only this re-renders every second. */
+function CaseTimer({ caseKey, progress }: { caseKey: string; progress: CaseProgress }) {
+  const live = useCaseClock((s) => (s.caseKey === caseKey ? s.ms : null));
+  const closed = progress.accusation !== null;
+  const ms = closed ? (progress.accusation?.timeMs ?? progress.playMs ?? 0) : (live ?? progress.playMs ?? 0);
+  return (
+    <span
+      className={`${styles.timer} ${closed ? styles.timerStopped : ''}`}
+      role="timer"
+      aria-label={`${closed ? 'Case closed in' : 'Time on the case'}: ${spokenDuration(ms)}`}
+      title={closed ? 'Time it took to close the case' : 'Time on the case. It pauses when you step away.'}
+      data-testid="case-timer"
+    >
+      <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+        <circle cx="10" cy="11.5" r="7" fill="none" stroke="currentColor" strokeWidth="1.8" />
+        <path d="M8 2.5h4M10 2.5v2M10 11.5V7.5M15.2 5.2l1.3-1.3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      </svg>
+      <span aria-hidden="true">{formatDuration(ms)}</span>
+    </span>
+  );
 }
 
 export function Hud({ caseFile, caseKey, progress }: HudProps) {
@@ -79,6 +102,7 @@ export function Hud({ caseFile, caseKey, progress }: HudProps) {
         <span className={styles.counter} aria-label={`Clues found: ${discovered} of ${total}`} data-testid="clue-counter">
           Clues <strong>{discovered}</strong>/{total}
         </span>
+        <CaseTimer caseKey={caseKey} progress={progress} />
         <Button size="small" onClick={() => setHintOpen(true)} aria-haspopup="dialog">
           Hint
         </Button>

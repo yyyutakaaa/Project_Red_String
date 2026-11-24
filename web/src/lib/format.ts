@@ -15,6 +15,26 @@ export function sourceLabel(c: CaseFile, e: Evidence): string {
   return '';
 }
 
+/** A stopwatch reading: 4:07 under an hour, 1:04:07 above. */
+export function formatDuration(ms: number): string {
+  const total = Math.max(0, Math.floor(ms / 1000));
+  const h = Math.floor(total / 3600);
+  const m = Math.floor((total % 3600) / 60);
+  const s = total % 60;
+  const ss = String(s).padStart(2, '0');
+  return h > 0 ? `${h}:${String(m).padStart(2, '0')}:${ss}` : `${m}:${ss}`;
+}
+
+/** The same, read aloud: "4 minutes 7 seconds". */
+export function spokenDuration(ms: number): string {
+  const total = Math.max(0, Math.floor(ms / 1000));
+  const h = Math.floor(total / 3600);
+  const m = Math.floor((total % 3600) / 60);
+  const s = total % 60;
+  const part = (n: number, one: string) => `${n} ${one}${n === 1 ? '' : 's'}`;
+  return [h ? part(h, 'hour') : '', m ? part(m, 'minute') : '', !h && (s || !m) ? part(s, 'second') : ''].filter(Boolean).join(' ');
+}
+
 export function formatDate(ts: number): string {
   try {
     return new Date(ts).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });

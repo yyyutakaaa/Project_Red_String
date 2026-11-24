@@ -11,6 +11,7 @@ import { discoveredCount, questionsUsed, scoreProgress, totalDiscoverables, tota
 import type { AccusationOutcome, AccusationRecord, CaseProgress, ScoreSnapshot } from '../engine/types.ts';
 import { evidenceName, useGame } from '../store/game.ts';
 import { sfx } from '../audio/audio.ts';
+import { formatDuration } from '../lib/format.ts';
 import styles from './Ending.module.css';
 
 const STAMP: Record<AccusationOutcome, string> = {
@@ -108,6 +109,11 @@ export function Ending() {
     ensureProgress(nextId, 'story');
     navigate(casePath(nextId));
   };
+
+  // Time: older saves have none. A record is a correct solve that set (or matched) the fastest time.
+  const timeMs = accusation.timeMs ?? null;
+  const bestTimeMs = completions?.[caseKey]?.bestTimeMs;
+  const newRecord = outcome === 'correct' && timeMs !== null && bestTimeMs !== undefined && timeMs <= bestTimeMs;
 
   const rows: Array<{ label: string; value: number; note: string }> = [
     { label: 'Verdict', value: breakdown.base, note: STAMP[outcome] },
@@ -221,6 +227,21 @@ export function Ending() {
               <dt>Hints taken</dt>
               <dd>{breakdown.hintsUsed}</dd>
             </div>
+            {timeMs !== null && (
+              <div>
+                <dt>Time on the case</dt>
+                <dd data-testid="case-time">{formatDuration(timeMs)}</dd>
+              </div>
+            )}
+            {bestTimeMs !== undefined && (
+              <div>
+                <dt>Fastest solve</dt>
+                <dd>
+                  {formatDuration(bestTimeMs)}
+                  {newRecord && <span className={styles.record}>New record</span>}
+                </dd>
+              </div>
+            )}
           </dl>
         </section>
 

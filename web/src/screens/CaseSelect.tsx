@@ -9,6 +9,7 @@ import { casePath, resolveCase } from '../hooks/useCase.ts';
 import { RoomScene } from '../components/RoomScene.tsx';
 import type { CaseFile } from '@shared/caseSchema.ts';
 import { useLaunch } from '../boot/launch.ts';
+import { formatDuration } from '../lib/format.ts';
 import { STORY_ORDER, getStoryCase, isStoryUnlocked } from '../engine/caseLoader.ts';
 import type { CaseProgress, CaseSource, CompletionRecord } from '../engine/types.ts';
 import { useGame } from '../store/game.ts';
@@ -90,6 +91,11 @@ function CompletionStamp({ completion }: { completion: CompletionRecord | undefi
   return (
     <div className={styles.record}>
       <span className={`stamp ${completion.solved ? styles.stampSolved : styles.stampClosed}`}>{completion.solved ? 'Solved' : 'Closed'}</span>
+      {completion.bestTimeMs !== undefined && (
+        <span className={styles.best} title="Fastest correct solve">
+          {formatDuration(completion.bestTimeMs)}
+        </span>
+      )}
       <span className={styles.best}>
         Best {completion.bestScore}
         <span className={styles.rank} aria-label={`rank ${completion.bestRank}`}>

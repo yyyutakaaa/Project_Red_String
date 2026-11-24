@@ -146,6 +146,9 @@ test('case 1 can be solved end to end with the interrogation mocked', async ({ p
 
   await expect(page.getByTestId('ending-outcome')).toHaveAttribute('data-outcome', 'correct');
   await expect(page.getByTestId('final-score')).toContainText(/\d/);
+  // the case clock stopped at the accusation and shows on the verdict, and in the case bar
+  await expect(page.getByTestId('case-time')).toHaveText(/^\d+:\d\d$/);
+  await expect(page.getByTestId('case-timer')).toHaveAttribute('aria-label', /^Case closed in: /);
 
   // The save survives a reload and the next case is unlocked.
   await page.goto('/cases');
