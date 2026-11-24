@@ -21,7 +21,7 @@ export function EvidenceCard({ evidence, caseFile, compact, selected, onToggle, 
   const body = (
     <>
       <span className={styles.photo} aria-hidden="true">
-        <EvidencePhoto name={evidence.name} marker={exhibit} />
+        <EvidencePhoto name={evidence.name} description={evidence.description} marker={exhibit} />
       </span>
       <span className={styles.name}>{evidence.name}</span>
       {!compact && <span className={styles.desc}>{evidence.description}</span>}

@@ -1,67 +1,108 @@
-// Procedural audio with the Web Audio API: rain ambience, a slow noir pad and small UI sounds.
-// No audio files are required. If real recordings are dropped into src/assets/art/audio
-// (see the asset registry), they replace the generated ambience and music.
+// Sound for the whole game, made in the browser with the Web Audio API: the music and the small UI sounds.
+// No audio files are required. The music is written out in music.ts, played by musicPlayer.ts on the
+// instruments in instruments.ts. There is no rain or other noise bed: the only noise left is the short
+// burst inside some sound effects and the brush taps in the music.
+// If real recordings are dropped into src/assets/art/audio (see the asset registry), they replace the
+// generated music, and an ambience recording plays alongside.
 import { audioArt } from '../assets/registry.ts';
+import { musicForAmbience } from './music.ts';
+import { MusicPlayer } from './musicPlayer.ts';
 
 export type SfxName = 'click' | 'hover' | 'pickup' | 'clue' | 'type' | 'pin' | 'string' | 'snap' | 'stamp' | 'error' | 'page';
+/** What a screen asks for. 'menu' plays the menu theme; 'rain', 'club', 'harbor' and 'house' play the case music, each in its own mood. */
 export type Ambience = 'none' | 'menu' | 'rain' | 'club' | 'harbor' | 'house';
 
 type Ctx = AudioContext;
 
-const CHORDS: number[][] = [
-  // A minor 9, F major 7, D minor 9, E7 flat 9 (MIDI note numbers)
-  [45, 57, 60, 64, 71],
-  [41, 57, 60, 64, 69],
-  [38, 53, 57, 60, 64],
-  [40, 56, 59, 62, 65],
-];
+// Music bus gain with the music slider at full. At the default sliders (master 0.8, music 0.5) the
+// music then averages about -36 dBFS and peaks near -20 dBFS: under the sound effects (a stamp peaks
+// around -12 dBFS), and far from clipping even with every slider at full.
+const MUSIC_TRIM = 1.3;
 
-const midiToHz = (m: number) => 440 * Math.pow(2, (m - 69) / 12);
+// A limiter on the way out, so music plus a loud effect can never clip. It does nothing below -3 dB.
+// Browsers add a fixed make-up gain to a compressor: 0.6 times the reduction a full-scale signal would
+// get, which with a hard knee is threshold * (1 - 1/ratio) dB. LIMITER_TRIM takes exactly that off
+// again, so quiet sound passes through at its own level.
+const LIMITER_THRESHOLD_DB = -3;
+const LIMITER_RATIO = 20;
+const LIMITER_TRIM = Math.pow(10, (0.6 * LIMITER_THRESHOLD_DB * (1 - 1 / LIMITER_RATIO)) / 20);
+
+/** After the tab is hidden the sound fades for this long, then the audio clock is stopped. */
+const SUSPEND_AFTER_MS = 200;
+
+/** A recording from the asset registry, playing in a loop. */
+interface LoopFile {
+  url: string;
+  el: HTMLAudioElement;
+}
 
 class AudioEngine {
   private ctx: Ctx | null = null;
   private master: GainNode | null = null;
   private musicBus: GainNode | null = null;
   private sfxBus: GainNode | null = null;
-  private ambienceBus: GainNode | null = null;
   private noiseBuffer: AudioBuffer | null = null;
-  private rainNodes: AudioNode[] = [];
-  private musicTimer: ReturnType<typeof setInterval> | null = null;
-  private bassTimer: ReturnType<typeof setInterval> | null = null;
-  private chordIndex = 0;
+  private player: MusicPlayer | null = null;
   private current: Ambience = 'none';
   private wanted: Ambience = 'none';
-  private fileMusic: HTMLAudioElement | null = null;
-  private fileRain: HTMLAudioElement | null = null;
+  private fileMusic: LoopFile | null = null;
+  private fileAmbience: LoopFile | null = null;
   private volumes = { master: 0.8, music: 0.5, sfx: 0.7 };
   private lastTypeAt = 0;
+  /** True while the tab is hidden: everything is silent and the music is not being scheduled. */
+  private asleep = false;
+  private suspendTimer: ReturnType<typeof setTimeout> | null = null;
 
   /** Must be called from a user gesture at least once (browsers block audio before that). */
   unlock(): void {
     if (typeof window === 'undefined') return;
-    if (!this.ctx) {
-      const AC: typeof AudioContext | undefined =
-        window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-      if (!AC) return;
-      try {
-        this.ctx = new AC();
-      } catch {
-        return;
-      }
-      const ctx = this.ctx;
-      this.master = ctx.createGain();
-      this.musicBus = ctx.createGain();
-      this.sfxBus = ctx.createGain();
-      this.ambienceBus = ctx.createGain();
-      this.musicBus.connect(this.master);
-      this.ambienceBus.connect(this.master);
-      this.sfxBus.connect(this.master);
-      this.master.connect(ctx.destination);
-      this.noiseBuffer = this.makeNoise(ctx, 2.5);
-      this.applyVolumes();
+    if (!this.ctx && !this.build()) return;
+    const ctx = this.ctx;
+    if (!ctx) return;
+    if (ctx.state === 'suspended' && !this.asleep) void ctx.resume().catch(() => undefined);
+    this.applyAmbience();
+  }
+
+  /** Create the audio context and the fixed part of the graph. False when the browser has no Web Audio. */
+  private build(): boolean {
+    const AC: typeof AudioContext | undefined =
+      window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    if (!AC) return false;
+    let ctx: Ctx;
+    try {
+      ctx = new AC();
+    } catch {
+      return false;
     }
-    if (this.ctx.state === 'suspended') void this.ctx.resume();
-    if (this.wanted !== this.current) this.setAmbience(this.wanted);
+    this.ctx = ctx;
+    // music and effects -> master (the master slider) -> limiter -> speakers
+    const master = ctx.createGain();
+    const musicBus = ctx.createGain();
+    const sfxBus = ctx.createGain();
+    const limiter = ctx.createDynamicsCompressor();
+    limiter.threshold.value = LIMITER_THRESHOLD_DB;
+    limiter.knee.value = 0;
+    limiter.ratio.value = LIMITER_RATIO;
+    limiter.attack.value = 0.003;
+    limiter.release.value = 0.25;
+    const trim = ctx.createGain();
+    trim.gain.value = LIMITER_TRIM;
+    musicBus.connect(master);
+    sfxBus.connect(master);
+    master.connect(limiter).connect(trim).connect(ctx.destination);
+    // Start at the chosen volumes instead of gliding there from full.
+    master.gain.value = this.volumes.master;
+    musicBus.gain.value = this.volumes.music * MUSIC_TRIM;
+    sfxBus.gain.value = this.volumes.sfx;
+    this.master = master;
+    this.musicBus = musicBus;
+    this.sfxBus = sfxBus;
+    this.noiseBuffer = this.makeNoise(ctx, 2.5);
+    this.player = new MusicPlayer(ctx, musicBus, this.noiseBuffer);
+    this.asleep = document.visibilityState === 'hidden';
+    if (this.asleep) this.player.pause();
+    document.addEventListener('visibilitychange', this.onVisibility);
+    return true;
   }
 
   get unlocked(): boolean {
@@ -73,17 +114,19 @@ class AudioEngine {
     this.applyVolumes();
   }
 
+  // The sliders work on gain nodes after the instruments, so a change is heard at once, also on notes
+  // that are already sounding. The short glide keeps a dragged slider from crackling.
   private applyVolumes(): void {
     const { master, music, sfx } = this.volumes;
     const t = this.ctx?.currentTime ?? 0;
-    this.master?.gain.setTargetAtTime(master, t, 0.05);
-    this.musicBus?.gain.setTargetAtTime(music * 0.55, t, 0.1);
-    this.ambienceBus?.gain.setTargetAtTime(music * 0.7, t, 0.1);
+    this.master?.gain.setTargetAtTime(this.asleep ? 0 : master, t, 0.05);
+    this.musicBus?.gain.setTargetAtTime(music * MUSIC_TRIM, t, 0.1);
     this.sfxBus?.gain.setTargetAtTime(sfx, t, 0.02);
-    if (this.fileMusic) this.fileMusic.volume = Math.min(1, master * music);
-    if (this.fileRain) this.fileRain.volume = Math.min(1, master * music * 0.8);
+    if (this.fileMusic) this.fileMusic.el.volume = Math.min(1, master * music);
+    if (this.fileAmbience) this.fileAmbience.el.volume = Math.min(1, master * music * 0.8);
   }
 
+  // Noise for the short bursts in the sound effects and the brush taps. It is never played as a loop.
   private makeNoise(ctx: Ctx, seconds: number): AudioBuffer {
     const buf = ctx.createBuffer(1, Math.floor(ctx.sampleRate * seconds), ctx.sampleRate);
     const data = buf.getChannelData(0);
@@ -96,146 +139,89 @@ class AudioEngine {
     return buf;
   }
 
+  /**
+   * Choose the music for the current screen. Asking for what already plays changes nothing, so moving
+   * between two menu screens (or two screens of a case) never restarts the music.
+   */
   setAmbience(kind: Ambience): void {
     this.wanted = kind;
-    if (!this.ctx || !this.unlocked) return;
+    // Before the first click or key press there is no audio context yet; unlock() picks this up.
+    if (this.ctx) this.applyAmbience();
+  }
+
+  private applyAmbience(): void {
+    const kind = this.wanted;
     if (kind === this.current) return;
-    this.stopAmbience();
     this.current = kind;
-    if (kind === 'none') return;
-    const fileMusic = audioArt(`music-${kind}`) ?? audioArt('music');
-    const fileRain = audioArt(`ambience-${kind}`) ?? audioArt('ambience-rain');
-    if (fileRain) this.fileRain = this.playFile(fileRain);
-    else if (kind !== 'club') this.startRain(kind === 'harbor' ? 0.75 : kind === 'house' ? 0.55 : 0.6);
-    else this.startRain(0.25);
-    if (fileMusic) this.fileMusic = this.playFile(fileMusic);
-    else this.startPad(kind === 'club');
+    const musicUrl = kind === 'none' ? null : (audioArt(`music-${kind}`) ?? audioArt('music'));
+    const ambienceUrl = kind === 'none' ? null : (audioArt(`ambience-${kind}`) ?? audioArt('ambience-rain'));
+    this.fileMusic = this.swapFile(this.fileMusic, musicUrl);
+    this.fileAmbience = this.swapFile(this.fileAmbience, ambienceUrl);
+    // A recording replaces the generated music. Otherwise the player crossfades to the right piece.
+    const music = musicUrl ? null : musicForAmbience(kind);
+    this.player?.play(music?.piece ?? null, music?.mood);
     this.applyVolumes();
   }
 
-  private playFile(url: string): HTMLAudioElement | null {
+  /** Keep a recording playing when the next screen wants the same one; otherwise stop it and start the new one. */
+  private swapFile(playing: LoopFile | null, url: string | null): LoopFile | null {
+    if (playing && playing.url === url) return playing;
+    playing?.el.pause();
+    if (!url) return null;
     try {
       const el = new Audio(url);
       el.loop = true;
-      void el.play().catch(() => undefined);
-      return el;
+      if (!this.asleep) void el.play().catch(() => undefined);
+      return { url, el };
     } catch {
       return null;
     }
   }
 
-  private stopAmbience(): void {
+  // A hidden tab runs its timers about once a second, far too slow to schedule music, so nothing plays
+  // while hidden: fade out, stop scheduling, stop the audio clock. Because the clock stands still, the
+  // music carries on from the same bar when the tab comes back, with no pile of late notes.
+  private onVisibility = (): void => {
     const ctx = this.ctx;
-    for (const n of this.rainNodes) {
-      try {
-        if (n instanceof AudioBufferSourceNode) n.stop(ctx ? ctx.currentTime + 0.6 : 0);
-        else if (n instanceof GainNode && ctx) n.gain.setTargetAtTime(0, ctx.currentTime, 0.2);
-      } catch {
-        /* already stopped */
-      }
+    if (!ctx) return;
+    if (this.suspendTimer !== null) clearTimeout(this.suspendTimer);
+    this.suspendTimer = null;
+    this.asleep = document.visibilityState === 'hidden';
+    if (this.asleep) {
+      this.player?.pause();
+      this.fileMusic?.el.pause();
+      this.fileAmbience?.el.pause();
+      this.applyVolumes(); // glides the master to silence
+      this.suspendTimer = setTimeout(() => {
+        if (this.asleep) void ctx.suspend().catch(() => undefined);
+      }, SUSPEND_AFTER_MS);
+    } else {
+      // If the browser refuses to resume without a gesture, the next click does it (see unlock).
+      void ctx.resume().catch(() => undefined);
+      this.applyVolumes();
+      this.player?.resume();
+      void this.fileMusic?.el.play().catch(() => undefined);
+      void this.fileAmbience?.el.play().catch(() => undefined);
     }
-    this.rainNodes = [];
-    if (this.musicTimer) clearInterval(this.musicTimer);
-    if (this.bassTimer) clearInterval(this.bassTimer);
-    this.musicTimer = null;
-    this.bassTimer = null;
-    this.fileMusic?.pause();
-    this.fileRain?.pause();
+  };
+
+  /** Stop everything and release the audio context. Only used when the module is replaced during development. */
+  shutdown(): void {
+    if (typeof document !== 'undefined') document.removeEventListener('visibilitychange', this.onVisibility);
+    if (this.suspendTimer !== null) clearTimeout(this.suspendTimer);
+    this.suspendTimer = null;
+    this.player?.dispose();
+    this.player = null;
+    this.fileMusic?.el.pause();
+    this.fileAmbience?.el.pause();
     this.fileMusic = null;
-    this.fileRain = null;
-  }
-
-  private startRain(level: number): void {
-    const ctx = this.ctx!;
-    const src = ctx.createBufferSource();
-    src.buffer = this.noiseBuffer;
-    src.loop = true;
-    const hp = ctx.createBiquadFilter();
-    hp.type = 'highpass';
-    hp.frequency.value = 500;
-    const lp = ctx.createBiquadFilter();
-    lp.type = 'lowpass';
-    lp.frequency.value = 5200;
-    const g = ctx.createGain();
-    g.gain.value = 0;
-    g.gain.setTargetAtTime(0.16 * level, ctx.currentTime, 1.2);
-    src.connect(hp).connect(lp).connect(g).connect(this.ambienceBus!);
-
-    const rumbleSrc = ctx.createBufferSource();
-    rumbleSrc.buffer = this.noiseBuffer;
-    rumbleSrc.loop = true;
-    rumbleSrc.playbackRate.value = 0.5;
-    const rl = ctx.createBiquadFilter();
-    rl.type = 'lowpass';
-    rl.frequency.value = 220;
-    const rg = ctx.createGain();
-    rg.gain.value = 0;
-    rg.gain.setTargetAtTime(0.22 * level, ctx.currentTime, 2);
-    rumbleSrc.connect(rl).connect(rg).connect(this.ambienceBus!);
-    src.start();
-    rumbleSrc.start();
-    this.rainNodes.push(src, rumbleSrc, g, rg);
-  }
-
-  private startPad(club: boolean): void {
-    const ctx = this.ctx!;
-    const playChord = () => {
-      if (!this.ctx) return;
-      const chord = CHORDS[this.chordIndex % CHORDS.length]!;
-      this.chordIndex++;
-      const now = ctx.currentTime;
-      const dur = 7.5;
-      chord.forEach((note, i) => {
-        const osc = ctx.createOscillator();
-        osc.type = i === 0 ? 'sine' : 'triangle';
-        osc.frequency.value = midiToHz(note);
-        osc.detune.value = (Math.random() - 0.5) * 8;
-        const lfo = ctx.createOscillator();
-        lfo.frequency.value = 4.5 + Math.random();
-        const lfoGain = ctx.createGain();
-        lfoGain.gain.value = 3;
-        lfo.connect(lfoGain).connect(osc.detune);
-        const lp = ctx.createBiquadFilter();
-        lp.type = 'lowpass';
-        lp.frequency.value = 1100;
-        const g = ctx.createGain();
-        const peak = (i === 0 ? 0.07 : 0.035) * (club ? 0.8 : 1);
-        g.gain.setValueAtTime(0, now);
-        g.gain.linearRampToValueAtTime(peak, now + 2.2);
-        g.gain.setTargetAtTime(0, now + dur - 2, 1.1);
-        osc.connect(lp).connect(g).connect(this.musicBus!);
-        osc.start(now);
-        lfo.start(now);
-        osc.stop(now + dur + 3);
-        lfo.stop(now + dur + 3);
-      });
-    };
-    playChord();
-    this.musicTimer = setInterval(playChord, 7000);
-    if (club) {
-      let step = 0;
-      const walk = [0, 3, 5, 7, 10, 7, 5, 3];
-      this.bassTimer = setInterval(() => {
-        if (!this.ctx) return;
-        const root = CHORDS[(this.chordIndex - 1 + CHORDS.length) % CHORDS.length]![0]!;
-        this.pluck(midiToHz(root - 12 + walk[step % walk.length]!), 0.12);
-        step++;
-      }, 875);
-    }
-  }
-
-  private pluck(freq: number, level: number): void {
-    const ctx = this.ctx!;
-    const now = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    osc.type = 'sine';
-    osc.frequency.value = freq;
-    const g = ctx.createGain();
-    g.gain.setValueAtTime(level, now);
-    g.gain.exponentialRampToValueAtTime(0.0001, now + 0.7);
-    osc.connect(g).connect(this.musicBus!);
-    osc.start(now);
-    osc.stop(now + 0.75);
+    this.fileAmbience = null;
+    void this.ctx?.close().catch(() => undefined);
+    this.ctx = null;
+    this.master = null;
+    this.musicBus = null;
+    this.sfxBus = null;
+    this.current = 'none';
   }
 
   private tone(freq: number, dur: number, level: number, type: OscillatorType = 'sine', delay = 0): void {
@@ -334,4 +320,10 @@ export function ambienceForBackground(key: string | undefined): Ambience {
   if (['dock', 'warehouse', 'alley'].includes(key)) return 'harbor';
   if (['dining-room', 'study', 'conservatory', 'bedroom', 'hallway', 'library', 'kitchen', 'bathroom'].includes(key)) return 'house';
   return 'rain';
+}
+
+// During development Vite replaces this module when it (or the music) is edited. Without this the old
+// engine would keep playing next to the new one.
+if (import.meta.hot) {
+  import.meta.hot.dispose(() => audio.shutdown());
 }

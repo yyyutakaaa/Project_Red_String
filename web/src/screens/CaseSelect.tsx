@@ -68,7 +68,12 @@ function ScenePhoto({ caseFile, sealed = false }: { caseFile: CaseFile; sealed?:
   if (!room) return null;
   return (
     <div className={`${styles.photo} ${sealed ? styles.photoSealed : ''}`} aria-hidden="true">
-      <RoomScene background={room.background} hotspots={room.hotspots} thumbnail />
+      <RoomScene
+        background={room.background}
+        hotspots={room.hotspots}
+        thumbnail
+        place={{ name: room.name, description: room.description, setting: caseFile.setting }}
+      />
       {sealed && (
         <>
           <span className={styles.tape}>Sealed · Sealed · Sealed · Sealed · Sealed</span>

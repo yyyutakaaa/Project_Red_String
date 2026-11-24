@@ -61,6 +61,8 @@ interface PinShape {
   box: Box;
   tilt: number;
   suspect: Suspect | null;
+  /** Evidence: the description, for the photograph. */
+  detail?: string;
 }
 
 interface PinView {
@@ -204,6 +206,7 @@ function evidenceShape(e: Evidence, scale: number): PinShape {
     box: { left: -CARD_W / 2 - 2, right: CARD_W / 2 + 4, top: pushY - 10, bottom: height / 2 + 7 },
     tilt: (hash(e.id) % 50) / 10 - 2.5,
     suspect: null,
+    detail: e.description,
   };
 }
 
@@ -340,7 +343,7 @@ function EvidenceBody({ shape, exhibit }: { shape: PinShape; exhibit: number }) 
     <g transform={`rotate(${r1(shape.tilt)})`}>
       <rect className={styles.paperShadow} x={left + 3} y={top + 7} width={w} height={h} rx={2} />
       <rect className={styles.print} x={left} y={top} width={w} height={h} rx={2} />
-      <EvidencePhoto name={shape.name} marker={exhibit} x={left + CARD_EDGE} y={top + CARD_EDGE} width={photoW} height={PHOTO_H} />
+      <EvidencePhoto name={shape.name} description={shape.detail} marker={exhibit} x={left + CARD_EDGE} y={top + CARD_EDGE} width={photoW} height={PHOTO_H} />
       <rect className={styles.printEdge} x={left + CARD_EDGE} y={top + CARD_EDGE} width={photoW} height={PHOTO_H} />
       <text className={styles.cardName} style={{ fontSize: shape.font }}>
         {shape.lines.map((line, i) => (

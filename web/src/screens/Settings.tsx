@@ -42,7 +42,7 @@ type VolumeKey = 'masterVolume' | 'musicVolume' | 'sfxVolume';
 
 const VOLUMES: Array<{ key: VolumeKey; label: string; note: string }> = [
   { key: 'masterVolume', label: 'Master volume', note: 'Everything at once.' },
-  { key: 'musicVolume', label: 'Music and rain', note: 'The piano and the weather.' },
+  { key: 'musicVolume', label: 'Music', note: 'Slow jazz in the menus, suspense on a case.' },
   { key: 'sfxVolume', label: 'Sound effects', note: 'Paper, pins and stamps.' },
 ];
 

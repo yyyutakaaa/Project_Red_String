@@ -79,7 +79,13 @@ export function RoomSelect() {
           return (
             <li key={room.id} className={styles.card} data-state={state}>
               <div className={styles.thumb}>
-                <RoomScene background={room.background} hotspots={room.hotspots} thumbnail className={styles.scene} />
+                <RoomScene
+                  background={room.background}
+                  hotspots={room.hotspots}
+                  thumbnail
+                  className={styles.scene}
+                  place={{ name: room.name, description: room.description, setting: caseFile.setting }}
+                />
                 <span className={styles.number} aria-hidden="true">
                   {String(i + 1).padStart(2, '0')}
                 </span>
