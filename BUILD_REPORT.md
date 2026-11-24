@@ -2,9 +2,8 @@
 
 > Question suspects in your own words. They can lie. You have to prove it.
 
-Build date: 24 November 2026. Repository: `C:/Users/User/Documents/project-red-string` (8 commits on
-`main`). Supabase project `hbwvybkpdqliusxheiyg` (eu-central-1): 5 migrations applied, story cases seeded,
-`interrogate` v3 and `generate-case` v2 deployed and live.
+Build date: 24 November 2026. Repository: `C:/Users/User/Documents/project-red-string` (local git only, nothing pushed). Supabase project `hbwvybkpdqliusxheiyg` (eu-central-1): 5 migrations applied, story cases seeded,
+`interrogate` v6 and `generate-case` v8 deployed and live.
 
 ## What was built, per system
 
@@ -76,7 +75,8 @@ Build date: 24 November 2026. Repository: `C:/Users/User/Documents/project-red-s
   or `input_tokens`/`output_tokens` (estimated when absent). It also parses content-part arrays and
   Responses-style events. The docs do not mention structured output, so the client uses fenced JSON plus
   one retry for the metadata. Model ids are config: `SUSPECT_MODEL` (default `claude-haiku-5-5`) and
-  `GENERATOR_MODEL` (default `claude-opus-5-5`).
+  `GENERATOR_MODEL` (default `claude-haiku-5-5`; see "Models tried live" below). Model ids starting
+  with `deepseek-` are sent straight to the DeepSeek API with the `DEEPSEEK_API_KEY` secret.
 - The OmniaKey key exists only as a Supabase secret. The frontend has only the Supabase URL and the
   publishable key. `check-secrets.mjs` runs in the Vercel build and fails it if anything secret-looking
   reaches `web/dist`.
@@ -132,7 +132,26 @@ reports leaks, culprit naming, out-of-character replies, invented facts (judge),
 time to first token, comparing several model ids. Eval mode is gated by a hashed token in
 `public.eval_tokens`; a token for this machine is in `tools/eval/.env.local` (gitignored).
 
-EVAL_RESULTS_PLACEHOLDER
+The full comparison run was stopped part-way (gpt-6.2-sol was removed for cost), so there is no complete
+results table. A 3-probe smoke run on claude-haiku-5-5 with the judge on reported 0 leaks, 0 out of
+character, 0 invented facts, average time to first token 2.9 s. Run the command under "How to run" for
+full numbers; the eval token may select claude-haiku-5-5, mimo-v2.6-flash and deepseek-chat.
+
+### Models tried live
+| Model | Use | Result |
+|---|---|---|
+| claude-haiku-5-5 | suspects (default) | works; first token about 2.6 to 3.3 s; about $0.0004 per question |
+| deepseek-chat (DeepSeek direct) | suspects | works; first token 1.2 to 1.5 s; answered in Dutch to a Dutch question and stayed in character on an "ignore your instructions" probe |
+| mimo-v2.6-flash | suspects | not usable as configured: spent the 320-token budget on reasoning and returned empty replies |
+| claude-opus-5-5 | case generator | failed 3 times (about $0.27): spent the whole output budget on thinking on both the OpenAI-compatible and the Anthropic-native route |
+| claude-haiku-5-5 | case generator (default) | works with the compact case prompt: valid case on the third attempt, 271 s in total, about 1 to 2 cents |
+
+### Writing style
+Player-visible story text (briefings, rooms, evidence, hints, endings, deflections) and some UI lines were
+edited against a list of AI-writing patterns: 40 passages rewritten, mostly sentences that explained a clue
+after showing it and staged closing lines. Suspect sheets beyond the deflections, and most UI copy, were
+pattern-scanned but not edited line by line. The suspect prompt and the generator prompt carry the same
+style rules, and the server replaces dash connectors and curly quotes in every reply.
 
 ## Verification performed
 
@@ -142,11 +161,11 @@ EVAL_RESULTS_PLACEHOLDER
 | `npm run lint` | 0 errors, 0 warnings |
 | `npm test` (Vitest) | 76 tests in 8 files pass: validator (valid and broken cases), all three story cases, save and load round trip, scoring, board link checks, clue filtering, prompt hygiene, reply parsing, generator prompt |
 | Deno type check of both functions | passes (`npm run check:functions`) |
-| Deno tests of the OmniaKey client | 7 pass (`npm run test:functions`) |
+| Deno tests of the model client | 10 pass (`npm run test:functions`) |
 | `npm run build` + `check-secrets` | builds; no secrets in `dist` |
 | Playwright (`npm run test:e2e`) | 6 pass: full case 1 playthrough with the interrogate endpoint mocked, sealed-case guard and offline handling, each at desktop (1280x800) and tablet (820x1180, touch) |
 | Live interrogate (deployed) | streams in character (first token about 2.6 s); showing the telephone pad broke Simon, forced the evidence clue, and recovered the earlier clue in `all_revealed_clue_ids`; spend reserved and settled (about $0.0004 per question on Haiku) |
-| Live generate-case (deployed) | GENERATION_RESULT_PLACEHOLDER |
+| Live generate-case (deployed) | works with claude-haiku-5-5: "The Alder Ridge Nightcap" (3 suspects, 3 rooms, 6 evidence) passed the validator on attempt 3 after two repairs, 271 s in total; a suspect in that generated case then answered in character |
 | Database | RPCs exercised directly: patience limit, device mismatch, transcript trimming, save forks, spend reservation refusal |
 | Adversarial review | 3 reviewers plus 3 skeptic verifiers; 23 confirmed findings, all fixed except the CORS note below |
 
@@ -209,13 +228,13 @@ CLI alternative: `npx vercel login`, then `npx vercel` and `npx vercel --prod` f
 
 - The whole case, including the solution, ships to the browser (scoring is local). A player who reads the
   bundle can spoil a case. The server only protects the AI prompts.
-- Suspects are a language model playing a sheet; the eval shows the residual rate of slips. The sanitiser
+- Suspects are a language model playing a sheet; the full adversarial eval has not been run to completion, so the rate of slips is not measured. The sanitiser
   replaces replies that echo instructions, but streamed text is visible before the final event replaces
   it.
 - Rate limits trust a client-chosen device id; the per-IP limits and the global spend ceiling are the real
   backstops. CORS also allows `localhost` so local development works against the live backend; CORS is
   not a security boundary against scripts.
-- Generated cases depend on the generator model producing a valid case within 135 s and 3 attempts; a
+- Generated cases are compact (3 suspects, 3 rooms, 6 evidence, about 15 to 20 minutes) so the model can finish inside the time limit. The one live success needed all 3 attempts and 4.5 minutes; a
   failure says so and can be retried (it may count toward the daily 5).
 - Placeholder art is procedural SVG; no human-made art or recorded audio is included.
 - Story case data lives in both `web/src/cases` (source of truth) and `public.story_cases`; after editing
