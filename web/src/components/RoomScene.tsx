@@ -2,7 +2,18 @@
 // and set dressing, drawn as layered SVG in a 1000 x 600 viewBox (5:3). Hotspots are transparent buttons
 // laid over the drawing; their props come from Props.tsx. If real art is registered for the background key
 // (src/assets/art/rooms/<key>.webp) the image is used instead and the procedural drawing and props are skipped.
-import { useId, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactElement, type ReactNode } from 'react';
+import {
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  type FocusEvent as ReactFocusEvent,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type MouseEvent as ReactMouseEvent,
+  type PointerEvent as ReactPointerEvent,
+  type ReactElement,
+  type ReactNode,
+} from 'react';
 import type { Hotspot } from '@shared/caseSchema.ts';
 import { backgroundArt } from '../assets/registry.ts';
 import { sfx } from '../audio/audio.ts';
@@ -12,6 +23,8 @@ import { sceneKeyFor, type ScenePlace } from './sceneKey.ts';
 import { placeProps, type Placed } from './scenePlacement.ts';
 import styles from './RoomScene.module.css';
 import { englishOf } from '../i18n/caseText.ts';
+import { t } from '../i18n/index.ts';
+import { decoysFor } from './sceneDecoys.ts';
 
 const W = 1000;
 const H = 600;
@@ -2761,6 +2774,13 @@ export interface RoomSceneProps {
   place?: ScenePlace | null;
   /** Change this number to fire the photographer's flashbulb (evidence found). */
   flashKey?: number;
+  /**
+   * Show the places worth searching: outlined on hover, named, and reachable with Tab. Without it
+   * the room is only a drawing (with ordinary things in it too) and every click is answered, hit or miss.
+   */
+  searchAid?: boolean;
+  /** A click (or Enter) that found nothing worth searching, at this point of the scene in percent. */
+  onMiss?: (at: { x: number; y: number }) => void;
 }
 
 export function RoomScene({
@@ -2775,6 +2795,8 @@ export function RoomScene({
   className,
   flashKey = 0,
   place = null,
+  searchAid = true,
+  onMiss,
 }: RoomSceneProps) {
   const sceneRef = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
@@ -2792,7 +2814,9 @@ export function RoomScene({
   const spec = useMemo(() => specFor(sceneKey), [sceneKey]);
   // Furniture is picked from the English hotspot labels, so a room looks the same in every language.
   const drawnHotspots = useMemo(() => hotspots.map((h) => englishOf(h)), [hotspots]);
-  const layout = useMemo(() => computeLayout(spec, drawnHotspots, sceneKey), [spec, drawnHotspots, sceneKey]);
+  // Ordinary things drawn alongside, so the drawing does not point at the places worth searching.
+  const decoys = useMemo(() => decoysFor(sceneKey, drawnHotspots), [sceneKey, drawnHotspots]);
+  const layout = useMemo(() => computeLayout(spec, [...drawnHotspots, ...decoys], sceneKey), [spec, drawnHotspots, decoys, sceneKey]);
   const layers = useMemo(() => (art ? null : buildLayers(spec, layout, u, animated)), [art, spec, layout, u, animated]);
   // Hit areas in percent of the scene, from where each prop was seated. Real art keeps the authored boxes.
   const hitById = useMemo(() => {
@@ -2810,6 +2834,10 @@ export function RoomScene({
     [hotspots, hitById],
   );
   const interactive = !thumbnail && onExamine !== undefined;
+  // Hidden search: the places worth searching are not marked; every click gets an answer.
+  const hiddenSearch = interactive && !searchAid;
+  const [ping, setPing] = useState<{ x: number; y: number; n: number } | null>(null);
+  const aim = useRef({ x: 50, y: 58 });
 
   const paint: PropPaint = useMemo(
     () => ({
@@ -2921,6 +2949,55 @@ export function RoomScene({
     if (sceneRef.current) delete sceneRef.current.dataset.torch;
   };
 
+  /** The place worth searching under a point of the scene (in percent), the smallest one if several overlap. */
+  const hotspotAt = (x: number, y: number): Hotspot | null => {
+    let best: Hotspot | null = null;
+    let area = Infinity;
+    for (const h of hotspots) {
+      const r = hitById.get(h.id) ?? { x: h.x, y: h.y, w: h.width, h: h.height };
+      if (x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h && r.w * r.h < area) {
+        best = h;
+        area = r.w * r.h;
+      }
+    }
+    return best;
+  };
+  const showPing = (x: number, y: number) => {
+    if (animated) setPing((p) => ({ x, y, n: (p?.n ?? 0) + 1 }));
+  };
+  const searchAt = (x: number, y: number) => {
+    showPing(x, y);
+    const h = hotspotAt(x, y);
+    if (h) onExamine?.(h);
+    else onMiss?.({ x, y });
+  };
+  const pointIn = (e: ReactMouseEvent<HTMLElement>, box: DOMRect) => ({
+    x: ((e.clientX - box.left) / box.width) * 100,
+    y: ((e.clientY - box.top) / box.height) * 100,
+  });
+  // A click on the bare drawing (the places worth searching catch their own clicks).
+  const onSceneClick = (e: ReactMouseEvent<HTMLDivElement>) => {
+    const p = pointIn(e, e.currentTarget.getBoundingClientRect());
+    showPing(p.x, p.y);
+    onMiss?.(p);
+  };
+  // Keyboard: the arrows move the torch, Enter or Space looks where it points.
+  const onSceneKey = (e: ReactKeyboardEvent<HTMLDivElement>) => {
+    const step = e.shiftKey ? 10 : 3;
+    const a = aim.current;
+    if (e.key === 'ArrowLeft') a.x = Math.max(1, a.x - step);
+    else if (e.key === 'ArrowRight') a.x = Math.min(99, a.x + step);
+    else if (e.key === 'ArrowUp') a.y = Math.max(1, a.y - step);
+    else if (e.key === 'ArrowDown') a.y = Math.min(99, a.y + step);
+    else if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      searchAt(a.x, a.y);
+      return;
+    } else return;
+    e.preventDefault();
+    aimTorch(a.x, a.y);
+  };
+
   return (
     <div
       ref={sceneRef}
@@ -2963,7 +3040,24 @@ export function RoomScene({
       {interactive && <div className={styles.torch} aria-hidden="true" />}
       {interactive && flashKey > 0 && <div key={flashKey} className={styles.flashbulb} aria-hidden="true" />}
       {interactive && (
-        <div className={styles.hotspots}>
+        <div
+          className={`${styles.hotspots} ${hiddenSearch ? styles.hiddenSearch : ''}`}
+          {...(hiddenSearch
+            ? {
+                role: 'button',
+                tabIndex: 0,
+                'aria-label': t('room.searchArea'),
+                'data-testid': 'search-area',
+                onClick: onSceneClick,
+                onKeyDown: onSceneKey,
+                onFocus: (e: ReactFocusEvent<HTMLDivElement>) => {
+                  if (e.currentTarget.matches(':focus-visible')) aimTorch(aim.current.x, aim.current.y);
+                },
+              }
+            : {})}
+        >
+          {hiddenSearch && <span className={styles.aimMark} aria-hidden="true" />}
+          {ping && <span key={ping.n} className={styles.ping} style={{ left: `${ping.x}%`, top: `${ping.y}%` }} aria-hidden="true" />}
           {ordered.map((h) => {
             const examined = examinedIds?.has(h.id) ?? false;
             const active = activeId === h.id;
@@ -2990,26 +3084,45 @@ export function RoomScene({
                   // A glass on a desk sits inside the desk's own area: smaller things go on top, so both can be clicked.
                   zIndex: hit.w * hit.h < 120 ? 3 : hit.w * hit.h < 420 ? 2 : 1,
                 }}
-                aria-label={h.label}
-                aria-controls={controlsId}
                 data-testid={`hotspot-${h.id}`}
                 data-examined={examined || undefined}
                 data-active={active || undefined}
-                onClick={() => onExamine?.(h)}
-                onPointerEnter={(e) => {
-                  setHoverId(h.id);
-                  if (e.pointerType === 'mouse') sfx('hover');
-                }}
-                onPointerLeave={() => setHoverId((cur) => (cur === h.id ? null : cur))}
-                onFocus={(e) => {
-                  setHoverId(h.id);
-                  if (e.currentTarget.matches(':focus-visible')) aimTorch(hit.x + hit.w / 2, hit.y + hit.h / 2);
-                }}
-                onBlur={() => setHoverId((cur) => (cur === h.id ? null : cur))}
+                {...(hiddenSearch
+                  ? {
+                      // Not marked and not in the Tab order: found by looking, like the rest of the room.
+                      tabIndex: -1,
+                      'aria-hidden': true,
+                      onClick: (e: ReactMouseEvent<HTMLButtonElement>) => {
+                        e.stopPropagation();
+                        const parent = e.currentTarget.parentElement;
+                        if (parent) {
+                          const p = pointIn(e, parent.getBoundingClientRect());
+                          showPing(p.x, p.y);
+                        }
+                        onExamine?.(h);
+                      },
+                    }
+                  : {
+                      'aria-label': h.label,
+                      'aria-controls': controlsId,
+                      onClick: () => onExamine?.(h),
+                      onPointerEnter: (e: ReactPointerEvent<HTMLButtonElement>) => {
+                        setHoverId(h.id);
+                        if (e.pointerType === 'mouse') sfx('hover');
+                      },
+                      onPointerLeave: () => setHoverId((cur) => (cur === h.id ? null : cur)),
+                      onFocus: (e: ReactFocusEvent<HTMLButtonElement>) => {
+                        setHoverId(h.id);
+                        if (e.currentTarget.matches(':focus-visible')) aimTorch(hit.x + hit.w / 2, hit.y + hit.h / 2);
+                      },
+                      onBlur: () => setHoverId((cur) => (cur === h.id ? null : cur)),
+                    })}
               >
-                <span className={tagClass} aria-hidden="true">
-                  {h.label}
-                </span>
+                {!hiddenSearch && (
+                  <span className={tagClass} aria-hidden="true">
+                    {h.label}
+                  </span>
+                )}
                 {examined && <span className={styles.mark} aria-hidden="true" />}
               </button>
             );

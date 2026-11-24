@@ -174,6 +174,7 @@ export function SettingsScreen() {
   const discordNoteId = useId();
   const statsNoteId = useId();
   const languageNoteId = useId();
+  const searchNoteId = useId();
   // Only desktop shells with presence support (v1.0.5 and later) can talk to Discord.
   const [hasDiscord] = useState(() => Boolean(desktop()?.setPresence));
 
@@ -198,6 +199,11 @@ export function SettingsScreen() {
     { value: 'full', label: t('settings.discordFull'), note: t('settings.discordFullNote') },
     { value: 'minimal', label: t('settings.discordMinimal'), note: t('settings.discordMinimalNote') },
     { value: 'off', label: t('settings.discordOff'), note: t('settings.discordOffNote') },
+  ];
+
+  const searchOptions: Array<{ value: 'hidden' | 'shown'; label: string; note: string }> = [
+    { value: 'hidden', label: t('settings.searchHidden'), note: t('settings.searchHiddenNote') },
+    { value: 'shown', label: t('settings.searchShown'), note: t('settings.searchShownNote') },
   ];
 
   const statsOptions: Array<{ value: 'on' | 'off'; label: string; note: string }> = [
@@ -363,6 +369,24 @@ export function SettingsScreen() {
               options={motionOptions}
               onChange={(reducedMotion) => patch({ reducedMotion })}
               describedBy={motionNoteId}
+              stack
+            />
+          </section>
+
+          <section className={styles.panel} aria-labelledby="search-heading">
+            <h2 id="search-heading" className={styles.panelTitle}>
+              {t('settings.search')}
+            </h2>
+            <p id={searchNoteId} className={styles.panelNote}>
+              {t('settings.searchNote')}
+            </p>
+            <RadioCards
+              legend={t('settings.searchLegend')}
+              name="search"
+              value={settings.searchAid ? 'shown' : 'hidden'}
+              options={searchOptions}
+              onChange={(v) => patch({ searchAid: v === 'shown' })}
+              describedBy={searchNoteId}
               stack
             />
           </section>

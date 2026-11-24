@@ -52,7 +52,8 @@ test('an up-to-date app sees no banner, and gets Discord settings and status', a
 
   await page.goto('/settings');
   await expect(page.getByRole('heading', { name: 'Discord' })).toBeVisible();
-  await page.getByText('Hidden', { exact: true }).click();
+  // Settings has more than one 'Hidden' option (Discord status, places to search): pick the Discord one.
+  await page.getByRole('group', { name: 'Discord status' }).getByText('Hidden', { exact: true }).click();
   await expect.poll(() => page.evaluate(() => (window as unknown as { __presence: unknown[] }).__presence.at(-1))).toBeNull();
 });
 

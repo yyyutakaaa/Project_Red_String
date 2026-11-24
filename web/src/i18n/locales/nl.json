@@ -655,5 +655,21 @@
   "presence.closedRank": "Zaak gesloten. Rang {rank}",
   "presence.closedFailed": "Zaak gesloten. Het hield geen stand",
   "presence.onCase": "Op de zaak",
-  "presence.case": "Zaak: {title}"
+  "presence.case": "Zaak: {title}",
+  "room.searchArea": "De kamer. Beweeg het licht met de pijltjestoetsen, Enter om beter te kijken.",
+  "room.helpHidden": "Laat het licht over de kamer gaan en klik waar je beter wilt kijken. Toetsenbord: Tab naar de kamer, pijltjes om te richten, Enter om te kijken.",
+  "room.missKicker": "Niets bijzonders",
+  "room.miss.0": "Hier ligt alleen stof.",
+  "room.miss.1": "Je kijkt beter. Het is precies wat het lijkt.",
+  "room.miss.2": "Niets. Wat er vannacht ook gebeurde, het gebeurde niet hier.",
+  "room.miss.3": "Gewoon een deel van de kamer. Niets om in te pakken.",
+  "room.miss.4": "Je laat het licht erover gaan en vindt niets.",
+  "room.miss.5": "Niets wat het opschrijven waard is.",
+  "settings.search": "Zoeken",
+  "settings.searchNote": "Hoe een kamer de plekken toont die het doorzoeken waard zijn.",
+  "settings.searchLegend": "Plekken om te doorzoeken",
+  "settings.searchHidden": "Verborgen",
+  "settings.searchHiddenNote": "Alleen de tekening. Klik waar je wilt kijken en je hoort of het de moeite waard was.",
+  "settings.searchShown": "Toon de plekken",
+  "settings.searchShownNote": "Elke plek die het doorzoeken waard is, licht op en heeft een naam. Makkelijker, en zo speel je met een schermlezer."
 }

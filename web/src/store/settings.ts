@@ -20,6 +20,8 @@ export interface Settings {
   discordPresence: DiscordPref;
   /** Send anonymous play statistics (src/lib/telemetry.ts). */
   shareStats: boolean;
+  /** Mark the places worth searching in a room. Off: the room is only a drawing and every click is answered. */
+  searchAid: boolean;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -32,6 +34,7 @@ export const DEFAULT_SETTINGS: Settings = {
   theme: 'dark',
   discordPresence: 'full',
   shareStats: true,
+  searchAid: false,
 };
 
 const KEY = 'redstring.settings';
@@ -65,6 +68,7 @@ export function parseSettings(raw: string | null): Settings {
         ? (d.discordPresence as DiscordPref)
         : DEFAULT_SETTINGS.discordPresence,
       shareStats: typeof d.shareStats === 'boolean' ? d.shareStats : DEFAULT_SETTINGS.shareStats,
+      searchAid: typeof d.searchAid === 'boolean' ? d.searchAid : DEFAULT_SETTINGS.searchAid,
     };
   } catch {
     return { ...DEFAULT_SETTINGS };
@@ -107,6 +111,7 @@ function persist(s: Settings): void {
     theme: s.theme,
     discordPresence: s.discordPresence,
     shareStats: s.shareStats,
+    searchAid: s.searchAid,
   };
   try {
     globalThis.localStorage?.setItem(KEY, JSON.stringify(data));

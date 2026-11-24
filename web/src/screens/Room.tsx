@@ -8,10 +8,10 @@ import { casePath, useCaseContext } from '../hooks/useCase.ts';
 import { useAmbience } from '../hooks/useAmbience.ts';
 import { ambienceForBackground, sfx } from '../audio/audio.ts';
 import { evidenceName, examineHotspot, visitRoom } from '../store/game.ts';
-import { useReducedMotion } from '../store/settings.ts';
+import { useReducedMotion, useSettings } from '../store/settings.ts';
 import type { CaseProgress } from '../engine/types.ts';
 import styles from './Room.module.css';
-import { scenePlaceOf, useT } from '../i18n/index.ts';
+import { scenePlaceOf, useT, type MessageKey } from '../i18n/index.ts';
 import { rich } from '../i18n/rich.tsx';
 
 const DESCRIPTION_ID = 'hotspot-description';
@@ -107,7 +107,10 @@ function RoomView({ room, caseFile, caseKey, progress }: RoomViewProps) {
 /** Scene and field notes for one room. Keyed by room id, so the open note resets per room. */
 function RoomSearch({ room, caseFile, caseKey, progress }: RoomViewProps) {
   const [activeId, setActiveId] = useState<string | null>(null);
+  // How many times the detective has looked at something that holds nothing (each miss gets its own line).
+  const [misses, setMisses] = useState(0);
   const [flashKey, setFlashKey] = useState(0);
+  const searchAid = useSettings((s) => s.searchAid);
   const panelRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
   const examined = useMemo(() => examinedIn(progress.examinedHotspots, room.id), [progress.examinedHotspots, room.id]);
@@ -117,15 +120,26 @@ function RoomSearch({ room, caseFile, caseKey, progress }: RoomViewProps) {
   const left = room.hotspots.length - examined.size;
   const { t, tn } = useT();
 
+  // On narrow screens the notes sit under the scene; bring them into view without moving focus.
+  const showNotes = () => {
+    if (typeof window !== 'undefined' && window.matchMedia?.('(max-width: 899px)').matches) {
+      panelRef.current?.scrollIntoView({ block: 'nearest', behavior: reducedMotion ? 'auto' : 'smooth' });
+    }
+  };
+
   const onExamine = (h: Hotspot) => {
     setActiveId(h.id);
     const found = examineHotspot(caseFile, caseKey, room.id, h);
     if (found) setFlashKey((k) => k + 1);
     else sfx('page');
-    // On narrow screens the notes sit under the scene; bring them into view without moving focus.
-    if (typeof window !== 'undefined' && window.matchMedia?.('(max-width: 899px)').matches) {
-      panelRef.current?.scrollIntoView({ block: 'nearest', behavior: reducedMotion ? 'auto' : 'smooth' });
-    }
+    showNotes();
+  };
+
+  const onMiss = () => {
+    setActiveId(null);
+    setMisses((n) => n + 1);
+    sfx('hover');
+    showNotes();
   };
 
   return (
@@ -144,9 +158,13 @@ function RoomSearch({ room, caseFile, caseKey, progress }: RoomViewProps) {
           label={t('room.placesLabel', { room: room.name })}
           flashKey={flashKey}
           place={scenePlaceOf(room, caseFile)}
+          searchAid={searchAid}
+          onMiss={onMiss}
         />
         <p className={styles.help}>
-          {rich(t('room.help'), { tab: <span>{t('room.helpTab')}</span>, enter: <span>{t('room.helpEnter')}</span>, space: <span>{t('room.helpSpace')}</span> })}
+          {searchAid
+            ? rich(t('room.help'), { tab: <span>{t('room.helpTab')}</span>, enter: <span>{t('room.helpEnter')}</span>, space: <span>{t('room.helpSpace')}</span> })
+            : t('room.helpHidden')}
         </p>
       </section>
 
@@ -165,6 +183,11 @@ function RoomSearch({ room, caseFile, caseKey, progress }: RoomViewProps) {
                     <strong>{evidenceName(caseFile, active.evidence_id)}</strong>
                   </p>
                 )}
+              </div>
+            ) : misses > 0 ? (
+              <div key={`miss-${misses}`} className={`${styles.noteEntry} fade-up`} data-testid="search-miss">
+                <p className={styles.noteKicker}>{t('room.missKicker')}</p>
+                <h2 className={styles.noteTitle}>{t(`room.miss.${misses % 6}` as MessageKey)}</h2>
               </div>
             ) : (
               <div className={`${styles.noteEntry} fade-up`}>
