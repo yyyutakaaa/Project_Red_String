@@ -13,13 +13,14 @@ import { MainMenu } from './screens/MainMenu.tsx';
 import { NotFound } from './screens/NotFound.tsx';
 // Loaded eagerly: it has to render even when a screen's chunk could not be fetched.
 import { RouteError } from './screens/RouteError.tsx';
+import { t } from './i18n/index.ts';
 
 // Screens load on demand so the menu appears quickly; story case data ships with the case screens.
 function screen<K extends string>(load: () => Promise<Record<K, ComponentType>>, name: K) {
   const C: ComponentType = lazy(() => load().then((m) => ({ default: m[name] as ComponentType })));
   return <C />;
 }
-const page = (node: ReactNode) => <Suspense fallback={<div className="route-loading" role="status" aria-live="polite">Opening the file...</div>}>{node}</Suspense>;
+const page = (node: ReactNode) => <Suspense fallback={<div className="route-loading" role="status" aria-live="polite">{t('route.opening')}</div>}>{node}</Suspense>;
 
 function Root() {
   const navigate = useNavigate();

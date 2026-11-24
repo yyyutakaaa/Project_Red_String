@@ -25,6 +25,11 @@
   font-size: var(--fs-xl);
   color: var(--lamp-200);
 }
+.panelTitleNote {
+  font-size: var(--fs-sm);
+  color: var(--text-muted, currentColor);
+  opacity: 0.75;
+}
 .panel > :global(button) {
   align-self: flex-start;
 }

@@ -5,6 +5,7 @@
 // Non-streaming errors come back as JSON: {"error": {"code": "...", "message": "..."}}.
 import type { Mood } from '@shared/caseSchema.ts';
 import { BACKEND_CONFIGURED, FUNCTIONS_URL, SUPABASE_PUBLISHABLE_KEY } from './config.ts';
+import { t, useLanguage } from '../i18n/index.ts';
 
 export type ApiErrorCode =
   | 'offline'
@@ -196,23 +197,22 @@ export async function checkBackend(timeoutMs = 6000): Promise<boolean> {
 }
 
 export function describeApiError(err: unknown): string {
-  if (!(err instanceof ApiError)) return 'Something went wrong. Try again.';
+  if (!(err instanceof ApiError)) return t('api.generic');
   switch (err.code) {
     case 'offline':
-      return 'The interrogation room is unreachable right now. Rooms, notebook and board still work offline.';
+      return t('api.offline');
     case 'not_configured':
-      return 'This build has no interrogation service configured. Rooms, notebook and board still work.';
+      return t('api.notConfigured');
     case 'rate_limited':
-      return err.retryAfterSeconds
-        ? `Easy, Detective. Too many questions too fast. Try again in ${err.retryAfterSeconds} seconds.`
-        : 'Easy, Detective. Too many questions too fast. Try again shortly.';
+      return err.retryAfterSeconds ? t('api.rateLimitedIn', { n: err.retryAfterSeconds }) : t('api.rateLimited');
     case 'patience_exhausted':
-      return 'This suspect will not answer any more questions.';
+      return t('api.patience');
     case 'spend_limit':
-      return 'The precinct is out of budget for today. Interrogations reopen tomorrow.';
+      return t('api.spendLimit');
     case 'timeout':
-      return 'The suspect took too long to answer. Try again.';
+      return t('api.timeout');
     default:
-      return err.message || 'Something went wrong. Try again.';
+      // Server messages are English; the player gets the generic line in their own language.
+      return useLanguage.getState().language === 'en' && err.message ? err.message : t('api.generic');
   }
 }

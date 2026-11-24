@@ -27,6 +27,8 @@ import { EvidencePhoto } from '../components/EvidencePhoto.tsx';
 import { Figure } from '../components/Portrait.tsx';
 import styles from './Board.module.css';
 import { track } from '../lib/telemetry.ts';
+import { englishOf, t, tn, useT, type MessageKey } from '../i18n/index.ts';
+import { rich } from '../i18n/rich.tsx';
 
 // ---------------------------------------------------------------------------
 // Geometry (all in board units, the SVG viewBox is BOARD_WIDTH x BOARD_HEIGHT)
@@ -62,7 +64,8 @@ interface PinShape {
   box: Box;
   tilt: number;
   suspect: Suspect | null;
-  /** Evidence: the description, for the photograph. */
+  /** Evidence: the English name and description, which pick the photograph's drawing in every language. */
+  photoName?: string;
   detail?: string;
 }
 
@@ -207,7 +210,8 @@ function evidenceShape(e: Evidence, scale: number): PinShape {
     box: { left: -CARD_W / 2 - 2, right: CARD_W / 2 + 4, top: pushY - 10, bottom: height / 2 + 7 },
     tilt: (hash(e.id) % 50) / 10 - 2.5,
     suspect: null,
-    detail: e.description,
+    photoName: englishOf(e).name,
+    detail: englishOf(e).description,
   };
 }
 
@@ -264,29 +268,29 @@ function pinAt(views: readonly PinView[], pt: Pt, exclude: string | null): strin
 type StatusKey = 'supported' | 'unsupported' | 'neutral' | 'unchecked';
 const statusKey = (s: LinkStatus): StatusKey => s ?? 'unchecked';
 
-const STATUS_LABEL: Record<StatusKey, string> = {
-  supported: 'Supported by the evidence',
-  unsupported: 'Not supported',
-  neutral: 'Between people, needs evidence',
-  unchecked: 'Not checked yet',
+const STATUS_LABEL: Record<StatusKey, MessageKey> = {
+  supported: 'board.statusSupported',
+  unsupported: 'board.statusUnsupported',
+  neutral: 'board.statusNeutral',
+  unchecked: 'board.statusUnchecked',
 };
 
 function summaryText(s: TheorySummary, total: number): string {
-  if (total === 0) return 'No strings on the board. Nothing to check.';
+  if (total === 0) return t('board.noStrings');
   const parts = [
-    `${s.supported} ${s.supported === 1 ? 'link' : 'links'} supported by the evidence`,
-    `${s.unsupported} not supported`,
-    `${s.neutral} between people (needs evidence)`,
+    tn('board.sumSupported', s.supported),
+    t('board.sumUnsupported', { count: s.unsupported }),
+    t('board.sumNeutral', { count: s.neutral }),
   ];
-  if (s.unchecked > 0) parts.push(`${s.unchecked} tied since the last check`);
+  if (s.unchecked > 0) parts.push(t('board.sumUnchecked', { count: s.unchecked }));
   return `${parts.join(', ')}.`;
 }
 
 function verdictLine(s: TheorySummary, total: number): string {
   if (total === 0) return '';
-  if (s.supported === 0) return 'Nothing on this board would stand up in court.';
-  if (s.unsupported === 0 && s.unchecked === 0) return 'The string holds. For now.';
-  return 'Some of it holds. Cut what does not.';
+  if (s.supported === 0) return t('board.verdictNothing');
+  if (s.unsupported === 0 && s.unchecked === 0) return t('board.verdictHolds');
+  return t('board.verdictSome');
 }
 
 // ---------------------------------------------------------------------------
@@ -344,7 +348,7 @@ function EvidenceBody({ shape, exhibit }: { shape: PinShape; exhibit: number }) 
     <g transform={`rotate(${r1(shape.tilt)})`}>
       <rect className={styles.paperShadow} x={left + 3} y={top + 7} width={w} height={h} rx={2} />
       <rect className={styles.print} x={left} y={top} width={w} height={h} rx={2} />
-      <EvidencePhoto name={shape.name} description={shape.detail} marker={exhibit} x={left + CARD_EDGE} y={top + CARD_EDGE} width={photoW} height={PHOTO_H} />
+      <EvidencePhoto name={shape.photoName ?? shape.name} description={shape.detail} marker={exhibit} x={left + CARD_EDGE} y={top + CARD_EDGE} width={photoW} height={PHOTO_H} />
       <rect className={styles.printEdge} x={left + CARD_EDGE} y={top + CARD_EDGE} width={photoW} height={PHOTO_H} />
       <text className={styles.cardName} style={{ fontSize: shape.font }}>
         {shape.lines.map((line, i) => (
@@ -359,7 +363,7 @@ function EvidenceBody({ shape, exhibit }: { shape: PinShape; exhibit: number }) 
 
 /** Set dressing behind the pins: a street map of Calder City, a file label, a coffee ring. */
 function BoardDecor({ title, era }: { title: string; era: string }) {
-  const label = `FILE: ${title.toUpperCase()} · ${era.toUpperCase()}`.slice(0, 44);
+  const label = t('board.fileLabel', { title, era }).toUpperCase().slice(0, 44);
   // 14px Courier with 0.14em tracking: about 10.4 units a character.
   const labelW = Math.round(label.length * 10.4 + 30);
   return (
@@ -379,7 +383,7 @@ function BoardDecor({ title, era }: { title: string; era: string }) {
         <circle className={styles.mapMark} cx={202} cy={116} r={13} />
         <path className={styles.mapMark} d="M194 108l16 16M210 108l-16 16" />
         <text className={styles.mapTitle} x={14} y={284}>
-          CALDER CITY · HARBOR WARD
+          {t('board.mapTitle')}
         </text>
         <circle className={styles.decorPin} cx={205} cy={10} r={6} />
       </g>
@@ -419,6 +423,7 @@ function LegendSwatch({ status }: { status: StatusKey }) {
 export function Board() {
   const { caseFile, caseKey, progress } = useCaseContext();
   useAmbience('rain');
+  useT();
   const reducedMotion = useReducedMotion();
   const fontSize = useSettings((s) => s.fontSize);
   const [boardWidth, setBoardWidth] = useState(0);
@@ -499,7 +504,7 @@ export function Board() {
       setConnecting(null);
       setPointer(null);
       setHoverId(null);
-      setAnnouncement((a) => ({ text: 'String put away.', n: a.n + 1 }));
+      setAnnouncement((a) => ({ text: t('board.putAway'), n: a.n + 1 }));
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -513,7 +518,7 @@ export function Board() {
 
   const cancelConnect = () => {
     clearConnect();
-    announce('String put away.');
+    announce(t('board.putAway'));
   };
 
   const tie = (a: string, b: string) => {
@@ -521,7 +526,7 @@ export function Board() {
     if (a === b) return;
     const current = latestBoard();
     if (hasLink(current, a, b)) {
-      announce(`${nameOf(a)} and ${nameOf(b)} are already tied.`);
+      announce(t('board.alreadyTied', { a: nameOf(a), b: nameOf(b) }));
       return;
     }
     const next = addLink(current, a, b);
@@ -529,13 +534,13 @@ export function Board() {
     setBoard(caseKey, next);
     sfx('string');
     if (!reducedMotion) setFresh(linkId(a, b));
-    announce(`String tied: ${nameOf(a)} to ${nameOf(b)}.`);
+    announce(t('board.tied', { a: nameOf(a), b: nameOf(b) }));
   };
 
   const cut = (link: BoardLink) => {
     setBoard(caseKey, removeLink(latestBoard(), link.id));
     sfx('snap');
-    announce(`String cut: ${nameOf(link.from)} to ${nameOf(link.to)}.`);
+    announce(t('board.cut', { a: nameOf(link.from), b: nameOf(link.to) }));
   };
 
   /** Click, tap, Enter or Space on a pin: start a string here, or finish the one in hand. */
@@ -543,7 +548,7 @@ export function Board() {
     if (!connecting) {
       setConnecting({ from: id, via: 'select' });
       setHoverId(null);
-      announce(`Tying from ${nameOf(id)}. Pick the other end, or press Escape.`);
+      announce(t('board.tyingFrom', { name: nameOf(id) }));
       return;
     }
     if (connecting.from === id) {
@@ -640,7 +645,7 @@ export function Board() {
     if (target) tie(s.id, target);
     else {
       clearConnect();
-      announce('The string falls loose. Drop it on a pin.');
+      announce(t('board.loose'));
     }
   };
 
@@ -765,7 +770,7 @@ export function Board() {
     clearConnect();
     setFresh(null);
     sfx('snap');
-    announce('Board cleared. Every string is down.');
+    announce(t('board.cleared'));
     // The dialog would hand focus back to "Clear strings", which is now disabled.
     requestAnimationFrame(() => document.getElementById(checkId)?.focus());
   };
@@ -788,23 +793,22 @@ export function Board() {
   return (
     <ScreenFrame
       wide
-      title="The board"
+      title={t('board.title')}
       kicker={caseFile.title}
       actions={
         <>
           <Button id={checkId} variant="primary" data-testid="check-theory" onClick={onCheck}>
-            Check theory
+            {t('board.check')}
           </Button>
           <Button onClick={() => setConfirmClear(true)} disabled={linkCount === 0} aria-haspopup="dialog">
-            Clear strings
+            {t('board.clear')}
           </Button>
         </>
       }
     >
       <div className={styles.layout}>
         <p id={instructionsId} className={styles.instructions}>
-          Drag a pin to move it. Drag from a red knob to another pin to tie a string, or tap two pins in turn. Tap a
-          string to cut it. Keyboard: Tab to a pin, arrows move it, Enter ties, Escape lets go.
+          {t('board.instructions')}
         </p>
 
         <div
@@ -815,23 +819,20 @@ export function Board() {
         >
           {checked ? (
             <>
-              <span className={styles.summaryLabel}>Theory checked:</span>{' '}
+              <span className={styles.summaryLabel}>{t('board.checked')}</span>{' '}
               <span className={styles.summaryText}>{summaryText(summary, linkCount)}</span>{' '}
               {verdictLine(summary, linkCount) && <span className={styles.summaryVerdict}>{verdictLine(summary, linkCount)}</span>}
             </>
           ) : (
-            <span className={styles.summaryText}>No verdict yet. Tie your strings, then check the theory.</span>
+            <span className={styles.summaryText}>{t('board.noVerdict')}</span>
           )}
         </div>
 
         {progress.foundEvidence.length === 0 && (
-          <aside className={styles.tip} aria-label="Tip">
-            <p>
-              Only faces on the cork so far. Search the scenes; whatever you find gets pinned here. Strings between
-              people prove nothing on their own.
-            </p>
+          <aside className={styles.tip} aria-label={t('board.tip')}>
+            <p>{t('board.tipText')}</p>
             <ButtonLink to={casePath(caseKey, 'rooms')} size="small" variant="lamp">
-              Search the scenes
+              {t('notebook.searchScenes')}
             </ButtonLink>
           </aside>
         )}
@@ -841,17 +842,17 @@ export function Board() {
           {connecting ? (
             <>
               <span>
-                Tying from <strong>{nameOf(connecting.from)}</strong>.{' '}
-                {connecting.via === 'drag' ? 'Drop it on another pin.' : 'Pick the other end.'}
+                {rich(t('board.tyingFromName'), { name: <strong>{nameOf(connecting.from)}</strong> })}{' '}
+                {connecting.via === 'drag' ? t('board.dropIt') : t('board.pickOther')}
               </span>
               {connecting.via === 'select' && (
                 <Button size="small" variant="ghost" onClick={cancelConnect}>
-                  Cancel
+                  {t('common.cancel')}
                 </Button>
               )}
             </>
           ) : (
-            <span>No string in hand.</span>
+            <span>{t('board.noString')}</span>
           )}
         </div>
 
@@ -862,7 +863,7 @@ export function Board() {
               className={styles.svg}
               viewBox={`0 0 ${BOARD_WIDTH} ${BOARD_HEIGHT}`}
               role="group"
-              aria-label="Red-string board"
+              aria-label={t('board.label')}
               aria-describedby={instructionsId}
               data-connecting={connecting ? 'true' : undefined}
               onPointerMove={onBoardPointerMove}
@@ -894,7 +895,7 @@ export function Board() {
                       className={`${styles.link} ${styles[status] ?? ''} ${isFresh ? styles.fresh : ''}`}
                       tabIndex={0}
                       role="button"
-                      aria-label={`String from ${nameOf(link.from)} to ${nameOf(link.to)}. Press Delete to remove.`}
+                      aria-label={t('board.stringLabel', { a: nameOf(link.from), b: nameOf(link.to) })}
                       data-testid={`link-${link.id}`}
                       data-link-id={link.id}
                       data-status={status}
@@ -902,7 +903,7 @@ export function Board() {
                       onKeyDown={(e) => onLinkKeyDown(e, link)}
                       onAnimationEnd={() => setFresh((f) => (f === link.id ? null : f))}
                     >
-                      <title>{`${STATUS_LABEL[status]}. Click to cut.`}</title>
+                      <title>{t('board.stringTitle', { status: t(STATUS_LABEL[status]) })}</title>
                       <path className={styles.balance} d={geo.balance} />
                       <path className={styles.shadowWide} d={geo.d} transform="translate(3 7)" />
                       <path className={styles.shadow} d={geo.d} transform="translate(2 5)" pathLength={isFresh ? 1 : undefined} />
@@ -949,7 +950,7 @@ export function Board() {
                       transform={`translate(${r1(v.x)} ${r1(v.y)})`}
                       tabIndex={0}
                       role="button"
-                      aria-label={`${shape.name}, ${shape.kind}. Press Enter to connect, arrow keys to move.`}
+                      aria-label={t('board.pinLabel', { name: shape.name, kind: t(shape.kind === 'suspect' ? 'board.kindSuspect' : 'board.kindEvidence') })}
                       data-testid={`pin-${id}`}
                       data-pin-id={id}
                       data-kind={shape.kind}
@@ -993,21 +994,21 @@ export function Board() {
           </div>
         </div>
 
-        <ul className={styles.legend} aria-label="Legend">
+        <ul className={styles.legend} aria-label={t('board.legend')}>
           {(['unchecked', 'supported', 'unsupported', 'neutral'] as const).map((s) => (
             <li key={s}>
               <LegendSwatch status={s} />
-              <span>{STATUS_LABEL[s]}</span>
+              <span>{t(STATUS_LABEL[s])}</span>
             </li>
           ))}
         </ul>
 
         <section ref={connectionsRef} className={styles.connections} aria-labelledby={connectionsId}>
           <h2 id={connectionsId} tabIndex={-1}>
-            Connections <span className={styles.count}>({linkCount})</span>
+            {t('board.connections')} <span className={styles.count}>({linkCount})</span>
           </h2>
           {linkCount === 0 ? (
-            <p className={styles.empty}>No string up yet. Tie a suspect to the evidence that names them.</p>
+            <p className={styles.empty}>{t('board.noConnections')}</p>
           ) : (
             <ul className={styles.connectionList}>
               {board.links.map((link) => {
@@ -1015,16 +1016,16 @@ export function Board() {
                 return (
                   <li key={link.id} className={styles.connection}>
                     <span className={styles.connectionNames}>
-                      {nameOf(link.from)} <span className={styles.connectionTo}>to</span> {nameOf(link.to)}
+                      {nameOf(link.from)} <span className={styles.connectionTo}>{t('board.to')}</span> {nameOf(link.to)}
                     </span>
-                    <span className={`${styles.connectionStatus} ${styles[`status_${status}`] ?? ''}`}>{STATUS_LABEL[status]}</span>
+                    <span className={`${styles.connectionStatus} ${styles[`status_${status}`] ?? ''}`}>{t(STATUS_LABEL[status])}</span>
                     <Button
                       variant="ghost"
                       onClick={() => onRemoveFromList(link)}
                       data-remove-id={link.id}
-                      aria-label={`Remove string from ${nameOf(link.from)} to ${nameOf(link.to)}`}
+                      aria-label={t('board.removeLabel', { a: nameOf(link.from), b: nameOf(link.to) })}
                     >
-                      Remove
+                      {t('board.remove')}
                     </Button>
                   </li>
                 );
@@ -1041,22 +1042,21 @@ export function Board() {
 
       <Modal
         open={confirmClear}
-        title="Pull down every string?"
+        title={t('board.clearTitle')}
         onClose={() => setConfirmClear(false)}
         footer={
           <>
             <Button variant="ghost" onClick={() => setConfirmClear(false)}>
-              Keep them
+              {t('board.keep')}
             </Button>
             <Button variant="primary" onClick={onClear}>
-              Clear strings
+              {t('board.clear')}
             </Button>
           </>
         }
       >
         <p>
-          {linkCount === 1 ? 'One string comes down.' : `${linkCount} strings come down.`} The pins stay where they are.
-          There is no undo.
+          {tn('board.comeDown', linkCount)} {t('board.clearNote')}
         </p>
       </Modal>
     </ScreenFrame>

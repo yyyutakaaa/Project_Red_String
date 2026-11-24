@@ -19,20 +19,21 @@ import { Portrait } from '../components/Portrait.tsx';
 import { casePath, useCaseContext } from '../hooks/useCase.ts';
 import { useAmbience } from '../hooks/useAmbience.ts';
 import { HINT_COST } from '../engine/scoring.ts';
-import { clueById, evidenceName, getConversation, hintsShown, moodLabel, setNotes } from '../store/game.ts';
+import { clueById, evidenceName, getConversation, hintsShown, setNotes } from '../store/game.ts';
 import { sfx } from '../audio/audio.ts';
 import styles from './Notebook.module.css';
+import { t, tn, useT, type MessageKey } from '../i18n/index.ts';
 
 type TabKey = 'evidence' | 'clues' | 'suspects' | 'timeline' | 'notes' | 'hints';
 
 const TAB_ORDER: readonly TabKey[] = ['evidence', 'clues', 'suspects', 'timeline', 'notes', 'hints'];
-const TAB_LABEL: Record<TabKey, string> = {
-  evidence: 'Evidence',
-  clues: 'Clues',
-  suspects: 'Suspects',
-  timeline: 'Timeline',
-  notes: 'Notes',
-  hints: 'Hints',
+const TAB_LABEL: Record<TabKey, MessageKey> = {
+  evidence: 'notebook.tabEvidence',
+  clues: 'notebook.tabClues',
+  suspects: 'notebook.tabSuspects',
+  timeline: 'notebook.tabTimeline',
+  notes: 'notebook.tabNotes',
+  hints: 'notebook.tabHints',
 };
 
 const isTab = (v: string | null): v is TabKey => v !== null && (TAB_ORDER as readonly string[]).includes(v);
@@ -78,19 +79,19 @@ function EvidencePanel({ caseFile, caseKey, found, shownTo }: { caseFile: CaseFi
   return (
     <>
       <header className={styles.panelHead}>
-        <h2>Evidence bag</h2>
-        <p className={styles.intro}>Everything you have bagged, in the order you found it.</p>
+        <h2>{t('notebook.evidenceTitle')}</h2>
+        <p className={styles.intro}>{t('notebook.evidenceIntro')}</p>
       </header>
       <div data-testid="notebook-evidence">
         {found.length === 0 ? (
           <Empty
             action={
               <ButtonLink to={casePath(caseKey, 'rooms')} size="small">
-                Search the scenes
+                {t('notebook.searchScenes')}
               </ButtonLink>
             }
           >
-            The bag is empty. Go and search the scenes.
+            {t('notebook.bagEmpty')}
           </Empty>
         ) : (
           <ul className={styles.evidenceGrid}>
@@ -99,7 +100,7 @@ function EvidencePanel({ caseFile, caseKey, found, shownTo }: { caseFile: CaseFi
               return (
                 <li key={e.id} className={styles.evidenceItem}>
                   <EvidenceCard evidence={e} caseFile={caseFile} exhibit={index + 1} />
-                  {shown && shown.length > 0 && <p className={styles.shownTo}>Shown to {shown.join(', ')}</p>}
+                  {shown && shown.length > 0 && <p className={styles.shownTo}>{t('notebook.shownTo', { names: shown.join(', ') })}</p>}
                 </li>
               );
             })}
@@ -114,19 +115,19 @@ function CluesPanel({ caseFile, groups, uid }: { caseFile: CaseFile; groups: Clu
   return (
     <>
       <header className={styles.panelHead}>
-        <h2>What they told you</h2>
-        <p className={styles.intro}>Testimony worth keeping, filed under whoever let it slip.</p>
+        <h2>{t('notebook.cluesTitle')}</h2>
+        <p className={styles.intro}>{t('notebook.cluesIntro')}</p>
       </header>
       <div data-testid="notebook-clues" className={styles.clueGroups}>
         {groups.length === 0 ? (
-          <Empty>Nobody has talked yet. Lean on them and show them what you found.</Empty>
+          <Empty>{t('notebook.noClues')}</Empty>
         ) : (
           groups.map(({ suspect, clues }) => (
             <section key={suspect.id} className={styles.clueGroup} aria-labelledby={`${uid}-clues-${suspect.id}`}>
               <h3 id={`${uid}-clues-${suspect.id}`} className={styles.groupTitle}>
                 {suspect.name}
                 <span className={styles.groupMeta}>
-                  {clues.length} {clues.length === 1 ? 'clue' : 'clues'}
+                  {tn('notebook.clueCount', clues.length)}
                 </span>
               </h3>
               <ol className={styles.clueList}>
@@ -135,7 +136,7 @@ function CluesPanel({ caseFile, groups, uid }: { caseFile: CaseFile; groups: Clu
                     <p className={styles.clueText}>{cl.text}</p>
                     {cl.evidence_id && (
                       <p className={styles.handed}>
-                        <span className={styles.label}>Handed over</span> {evidenceName(caseFile, cl.evidence_id)}
+                        <span className={styles.label}>{t('notebook.handedOver')}</span> {evidenceName(caseFile, cl.evidence_id)}
                       </p>
                     )}
                   </li>
@@ -164,8 +165,8 @@ function SuspectsPanel({
   return (
     <>
       <header className={styles.panelHead}>
-        <h2>The people</h2>
-        <p className={styles.intro}>What each of them claims, what is on record, and what you have pried loose.</p>
+        <h2>{t('notebook.peopleTitle')}</h2>
+        <p className={styles.intro}>{t('notebook.peopleIntro')}</p>
       </header>
       <ul className={styles.suspectList}>
         {caseFile.suspects.map((s) => {
@@ -178,15 +179,15 @@ function SuspectsPanel({
               <div className={styles.suspectBody}>
                 <h3 className={styles.suspectName}>{s.name}</h3>
                 <p className={styles.role}>
-                  {s.role}, {s.age}
+                  {t('notebook.roleAge', { role: s.role, age: s.age })}
                 </p>
                 <dl className={styles.facts}>
                   <div>
-                    <dt>Claims</dt>
+                    <dt>{t('notebook.claims')}</dt>
                     <dd className={styles.alibi}>{s.alibi}</dd>
                   </div>
                   <div>
-                    <dt>On record</dt>
+                    <dt>{t('notebook.onRecord')}</dt>
                     <dd>
                       <ul className={styles.bullets}>
                         {s.public_facts.map((f, i) => (
@@ -196,10 +197,10 @@ function SuspectsPanel({
                     </dd>
                   </div>
                   <div>
-                    <dt>Gave up</dt>
+                    <dt>{t('notebook.gaveUp')}</dt>
                     <dd>
                       {theirClues.length === 0 ? (
-                        <span className={styles.muted}>Nothing yet.</span>
+                        <span className={styles.muted}>{t('notebook.nothingYet')}</span>
                       ) : (
                         <ul className={styles.bullets}>
                           {theirClues.map((cl) => (
@@ -211,23 +212,21 @@ function SuspectsPanel({
                   </div>
                   <div className={styles.inlineFacts}>
                     <div>
-                      <dt>Questions</dt>
-                      <dd>
-                        {conv.patienceUsed} of {conv.patienceMax} used
-                      </dd>
+                      <dt>{t('notebook.questions')}</dt>
+                      <dd>{t('notebook.questionsUsed', { used: conv.patienceUsed, max: conv.patienceMax })}</dd>
                     </div>
                     <div>
-                      <dt>Mood</dt>
+                      <dt>{t('notebook.mood')}</dt>
                       <dd className={styles.mood}>
                         <span className={styles.moodDot} data-mood={conv.mood} aria-hidden="true" />
-                        {questioned ? moodLabel(conv.mood) : `${moodLabel(conv.mood)}, not questioned yet`}
+                        {questioned ? t(`mood.${conv.mood}`) : t('notebook.notQuestioned', { mood: t(`mood.${conv.mood}`) })}
                       </dd>
                     </div>
                   </div>
                 </dl>
                 {!closed && (
                   <ButtonLink to={casePath(caseKey, `interrogate/${s.id}`)} size="small">
-                    Question {firstName(s.name)}
+                    {t('notebook.question', { name: firstName(s.name) })}
                   </ButtonLink>
                 )}
               </div>
@@ -244,17 +243,17 @@ function TimelinePanel({ caseFile, events }: { caseFile: CaseFile; events: Timel
   return (
     <>
       <header className={styles.panelHead}>
-        <h2>The night, as everyone tells it</h2>
-        <p className={styles.intro}>Common knowledge only. The parts nobody admits to are for you to fill in.</p>
+        <h2>{t('notebook.timelineTitle')}</h2>
+        <p className={styles.intro}>{t('notebook.timelineIntro')}</p>
       </header>
       {events.length === 0 ? (
-        <Empty>No agreed timeline. Everybody remembers it differently.</Empty>
+        <Empty>{t('notebook.noTimeline')}</Empty>
       ) : (
         <ol className={styles.timeline}>
           {events.map((e, i) => (
             <li key={`${e.day}-${e.time}-${i}`} className={styles.event}>
               <p className={styles.when}>
-                {multiDay && <span className={styles.day}>Day {e.day + 1}</span>}
+                {multiDay && <span className={styles.day}>{t('notebook.day', { n: e.day + 1 })}</span>}
                 <time className={styles.time} dateTime={e.time}>
                   {e.time}
                 </time>
@@ -264,7 +263,7 @@ function TimelinePanel({ caseFile, events }: { caseFile: CaseFile; events: Timel
                 <p className={styles.eventText}>{e.what}</p>
                 {e.who.length > 0 && (
                   <p className={styles.who}>
-                    <span className={styles.label}>Involved</span> {e.who.map((id) => personName(caseFile, id)).join(', ')}
+                    <span className={styles.label}>{t('notebook.involved')}</span> {e.who.map((id) => personName(caseFile, id)).join(', ')}
                   </p>
                 )}
               </div>
@@ -311,15 +310,15 @@ function NotesPanel({ caseKey, initial }: { caseKey: string; initial: string }) 
     }, NOTES_DEBOUNCE_MS);
   };
 
-  const statusText = status === 'pending' ? 'Writing...' : status === 'saved' ? 'Saved.' : 'Filed with the case.';
+  const statusText = status === 'pending' ? t('notebook.writing') : status === 'saved' ? t('notebook.saved') : t('notebook.filed');
 
   return (
     <>
       <header className={styles.panelHead}>
         <h2>
-          <label htmlFor={id}>Your notes</label>
+          <label htmlFor={id}>{t('notebook.yourNotes')}</label>
         </h2>
-        <p className={styles.intro}>Hunches, contradictions, times that do not add up. Saved as you type.</p>
+        <p className={styles.intro}>{t('notebook.notesIntro')}</p>
       </header>
       <textarea
         id={id}
@@ -332,7 +331,7 @@ function NotesPanel({ caseKey, initial }: { caseKey: string; initial: string }) 
         rows={14}
         spellCheck
         aria-describedby={statusId}
-        placeholder="Who was where at nine? Who is lying about it?"
+        placeholder={t('notebook.notesPlaceholder')}
       />
       <p id={statusId} className={`${styles.saved} ${status === 'saved' ? styles.savedDone : ''}`} role="status" aria-live="polite">
         {statusText}
@@ -346,13 +345,11 @@ function HintsPanel({ caseFile, hints }: { caseFile: CaseFile; hints: string[] }
   return (
     <>
       <header className={styles.panelHead}>
-        <h2>The Captain&rsquo;s hints</h2>
-        <p className={styles.intro}>
-          {remaining} of {caseFile.hints.length} left. Each one costs {HINT_COST} points; ask with the Hint button up top.
-        </p>
+        <h2>{t('notebook.hintsTitle')}</h2>
+        <p className={styles.intro}>{t('notebook.hintsIntro', { remaining, total: caseFile.hints.length, cost: HINT_COST })}</p>
       </header>
       {hints.length === 0 ? (
-        <Empty>No hints taken. Your pride is intact, for now.</Empty>
+        <Empty>{t('notebook.noHints')}</Empty>
       ) : (
         <ol className={styles.hintList}>
           {hints.map((h, i) => (
@@ -369,6 +366,7 @@ function HintsPanel({ caseFile, hints }: { caseFile: CaseFile; hints: string[] }
 export function Notebook() {
   const { caseFile, caseKey, progress } = useCaseContext();
   useAmbience('rain');
+  useT();
   const uid = `n${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`;
   const [params, setParams] = useSearchParams();
   const tabParam = params.get('tab');
@@ -465,16 +463,16 @@ export function Notebook() {
 
   return (
     <ScreenFrame
-      title="Notebook"
+      title={t('notebook.title')}
       kicker={caseFile.title}
       actions={
         <ButtonLink to={casePath(caseKey, 'board')} variant="ghost">
-          To the board
+          {t('notebook.toBoard')}
         </ButtonLink>
       }
     >
       <div className={styles.notebook}>
-        <div role="tablist" aria-label="Notebook sections" className={styles.tabs}>
+        <div role="tablist" aria-label={t('notebook.sections')} className={styles.tabs}>
           {TAB_ORDER.map((key) => {
             const selected = key === active;
             const count = counts[key];
@@ -494,7 +492,7 @@ export function Notebook() {
                 onClick={() => select(key)}
                 onKeyDown={(e) => onTabKeyDown(e, key)}
               >
-                <span>{TAB_LABEL[key]}</span>
+                <span>{t(TAB_LABEL[key])}</span>
                 {count !== null && (
                   <>
                     <span className={styles.count} aria-hidden="true">

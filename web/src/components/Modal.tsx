@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, type ReactNode } from 'react';
 import styles from './Modal.module.css';
 import { Button } from './Button.tsx';
+import { t } from '../i18n/index.ts';
 
 interface ModalProps {
   open: boolean;
@@ -47,7 +48,7 @@ export function Modal({ open, title, onClose, children, footer, wide }: ModalPro
         <>
           <div className={styles.header}>
             <h2 id={titleId}>{title}</h2>
-            <Button variant="ghost" size="small" onClick={onClose} aria-label="Close dialog">
+            <Button variant="ghost" size="small" onClick={onClose} aria-label={t('modal.close')}>
               Close
             </Button>
           </div>

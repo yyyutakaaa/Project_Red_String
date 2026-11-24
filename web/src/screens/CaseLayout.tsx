@@ -8,11 +8,16 @@ import { startCaseClock, stopCaseClock, useGame, useProgress } from '../store/ga
 import { STORY_ORDER, isStoryUnlocked, type StoryCaseId } from '../engine/caseLoader.ts';
 import { continueSlot } from '../engine/save.ts';
 import { track } from '../lib/telemetry.ts';
+import { useLanguage, useT } from '../i18n/index.ts';
 
 /** Wraps every /case/:caseKey/* screen: resolves the case, ensures progress exists, renders the HUD. */
 export function CaseLayout() {
   const { caseKey = '' } = useParams();
-  const resolved = useMemo(() => resolveCase(caseKey), [caseKey]);
+  const { t, language } = useT();
+  // The case in the player's language: a new object when the language changes, the same one otherwise.
+  const casesLoaded = useLanguage((s) => s.cases);
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- resolveCase reads the language store; re-run it when that changes
+  const resolved = useMemo(() => resolveCase(caseKey), [caseKey, language, casesLoaded]);
   const ensureProgress = useGame((s) => s.ensureProgress);
   const slot = useGame((s) => s.slot);
   const progress = useProgress(resolved ? caseKey : undefined);
@@ -51,18 +56,18 @@ export function CaseLayout() {
 
   if (!resolved) {
     return (
-      <ScreenFrame title="Case not found" kicker="Records office">
-        <p>This case file is missing or could not be read.</p>
-        <ButtonLink to="/cases">Back to cases</ButtonLink>
+      <ScreenFrame title={t('layout.notFound')} kicker={t('common.recordsOffice')}>
+        <p>{t('layout.notFoundText')}</p>
+        <ButtonLink to="/cases">{t('layout.backToCases')}</ButtonLink>
       </ScreenFrame>
     );
   }
   if (locked) {
     return (
-      <ScreenFrame title="Case sealed" kicker={resolved.caseFile.title}>
-        <p>This file stays sealed until you close the previous case.</p>
+      <ScreenFrame title={t('layout.sealed')} kicker={resolved.caseFile.title}>
+        <p>{t('layout.sealedText')}</p>
         <ButtonLink to="/cases" variant="lamp">
-          Back to the case files
+          {t('layout.backToFiles')}
         </ButtonLink>
       </ScreenFrame>
     );

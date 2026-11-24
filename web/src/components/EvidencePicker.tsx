@@ -4,6 +4,7 @@ import { Button } from './Button.tsx';
 import { EvidenceCard } from './EvidenceCard.tsx';
 import { Modal } from './Modal.tsx';
 import styles from './Interrogation.parts.module.css';
+import { t } from '../i18n/index.ts';
 
 interface EvidencePickerProps {
   open: boolean;
@@ -70,30 +71,30 @@ export function EvidencePicker({
   return (
     <Modal
       open={open}
-      title="Show evidence"
+      title={t('picker.title')}
       onClose={onClose}
       wide
       footer={
         <>
           {selectedId && (
             <Button variant="ghost" onClick={() => pick(null)}>
-              Put it away
+              {t('picker.putAway')}
             </Button>
           )}
           <Button id={doneId} onClick={onClose}>
-            Done
+            {t('picker.done')}
           </Button>
         </>
       }
     >
       {items.length === 0 ? (
-        <p className={styles.pickerEmpty}>Your evidence bag is empty. Search the scenes first.</p>
+        <p className={styles.pickerEmpty}>{t('picker.empty')}</p>
       ) : (
         <>
           <p className={styles.pickerIntro}>
-            Pick one item to slide across the table with your next question. Watch how {suspectName} takes it.
+            {t('picker.intro', { name: suspectName })}
           </p>
-          <ul className={styles.pickerList} aria-label="Evidence you have found">
+          <ul className={styles.pickerList} aria-label={t('picker.list')}>
             {items.map((e) => {
               const selected = e.id === selectedId;
               const shown = shownIds.includes(e.id);
@@ -109,7 +110,7 @@ export function EvidencePicker({
                   </div>
                   {(selected || shown) && (
                     <p className={`${styles.pickerNote} ${selected ? styles.pickerNoteSelected : ''}`}>
-                      {selected ? 'On the table for your next question.' : `${suspectName} has seen this already.`}
+                      {selected ? t('picker.onTable') : t('picker.seen', { name: suspectName })}
                     </p>
                   )}
                 </li>

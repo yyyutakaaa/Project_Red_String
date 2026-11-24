@@ -3,6 +3,7 @@
 import { LogoEye } from './LogoEye.tsx';
 import { RainBackdrop } from './RainBackdrop.tsx';
 import styles from './LoadingScreen.module.css';
+import { t } from '../i18n/index.ts';
 
 interface LoadingScreenProps {
   progress: number;
@@ -39,7 +40,7 @@ export function LoadingScreen({ progress, kicker, title, status, leaving = false
         <div
           className={styles.bar}
           role="progressbar"
-          aria-label={masthead ? title : `Opening ${title}`}
+          aria-label={masthead ? title : t('loading.opening', { title })}
           aria-valuemin={0}
           aria-valuemax={100}
           aria-valuenow={pct}

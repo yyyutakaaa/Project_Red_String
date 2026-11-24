@@ -8,6 +8,8 @@ import { useAmbience } from '../hooks/useAmbience.ts';
 import { ambienceForBackground, sfx } from '../audio/audio.ts';
 import { evidenceName } from '../store/game.ts';
 import styles from './RoomSelect.module.css';
+import { scenePlaceOf, useT } from '../i18n/index.ts';
+import { rich } from '../i18n/rich.tsx';
 
 /** Where the victim was found: a room name, an offstage location name, or the raw id. */
 function foundLocationLabel(c: CaseFile): string {
@@ -31,32 +33,33 @@ export function RoomSelect() {
   const examinedSet = new Set(progress.examinedHotspots);
   const searchedTotal = caseFile.rooms.reduce((n, r) => n + r.hotspots.filter((h) => examinedSet.has(`${r.id}/${h.id}`)).length, 0);
   const { victim } = caseFile;
+  const { t } = useT();
 
   return (
     <ScreenFrame
       kicker={caseFile.title}
-      title="The scenes"
+      title={t('scenes.title')}
       actions={
         <>
           <ButtonLink to={casePath(caseKey, 'briefing')} variant="ghost">
-            Briefing
+            {t('nav.briefing')}
           </ButtonLink>
-          <ButtonLink to={casePath(caseKey, 'suspects')}>Suspects</ButtonLink>
-          <ButtonLink to={casePath(caseKey, 'board')}>Board</ButtonLink>
+          <ButtonLink to={casePath(caseKey, 'suspects')}>{t('nav.suspects')}</ButtonLink>
+          <ButtonLink to={casePath(caseKey, 'board')}>{t('nav.board')}</ButtonLink>
         </>
       }
     >
       <section className={styles.victim} aria-labelledby="victim-heading">
         <div className={styles.victimTag} aria-hidden="true">
           <span className={styles.tagHole} />
-          <span>Deceased</span>
+          <span>{t('scenes.deceased')}</span>
         </div>
         <div className={styles.victimText}>
           <h2 id="victim-heading" className={styles.victimName}>
-            {victim.name}, {victim.age}
+            {t('scenes.victim', { name: victim.name, age: victim.age })}
           </h2>
           <p className={styles.victimWhere}>
-            Found in <strong data-testid="victim-location">{foundLocationLabel(caseFile)}</strong>, {victim.found_at}.
+            {rich(t('scenes.foundIn'), { place: <strong data-testid="victim-location">{foundLocationLabel(caseFile)}</strong>, when: victim.found_at })}
           </p>
           <p className={styles.victimCause}>{victim.cause_of_death}</p>
         </div>
@@ -64,7 +67,7 @@ export function RoomSelect() {
           <span className={styles.overallNum}>
             {searchedTotal}/{totalSpots}
           </span>
-          <span>places searched</span>
+          <span>{t('scenes.placesSearched')}</span>
         </p>
       </section>
 
@@ -84,12 +87,12 @@ export function RoomSelect() {
                   hotspots={room.hotspots}
                   thumbnail
                   className={styles.scene}
-                  place={{ name: room.name, description: room.description, setting: caseFile.setting }}
+                  place={scenePlaceOf(room, caseFile)}
                 />
                 <span className={styles.number} aria-hidden="true">
                   {String(i + 1).padStart(2, '0')}
                 </span>
-                {bodyHere && <span className={`stamp ${styles.stamp}`}>Body found</span>}
+                {bodyHere && <span className={`stamp ${styles.stamp}`}>{t('scenes.bodyFound')}</span>}
               </div>
               <div className={styles.body}>
                 <h2 className={styles.name}>
@@ -100,9 +103,9 @@ export function RoomSelect() {
                 <p className={styles.desc}>{room.description}</p>
                 <div className={styles.meta}>
                   <span className={styles.count}>
-                    Searched {searched} of {total}
+                    {t('scenes.searched', { n: searched, total })}
                   </span>
-                  <span className={styles.status}>{state === 'done' ? 'Turned over' : visited ? 'Visited' : 'Not yet visited'}</span>
+                  <span className={styles.status}>{state === 'done' ? t('scenes.turnedOver') : visited ? t('scenes.visited') : t('scenes.notVisited')}</span>
                 </div>
                 <div className={styles.meter} aria-hidden="true">
                   <span style={{ width: `${total ? (searched / total) * 100 : 0}%` }} />
@@ -110,10 +113,10 @@ export function RoomSelect() {
                 <p className={styles.found}>
                   {found.length > 0 ? (
                     <>
-                      <span className={styles.foundLabel}>Found here:</span> {found.map((id) => evidenceName(caseFile, id)).join(', ')}
+                      <span className={styles.foundLabel}>{t('scenes.foundHere')}</span> {found.map((id) => evidenceName(caseFile, id)).join(', ')}
                     </>
                   ) : (
-                    <span className={styles.foundNone}>Nothing turned up yet.</span>
+                    <span className={styles.foundNone}>{t('scenes.nothingYet')}</span>
                   )}
                 </p>
               </div>

@@ -2,16 +2,17 @@
 // loading screen never just flashes. Runs once per page load; progress goes to a small store.
 import { create } from 'zustand';
 import { useAccount } from '../store/account.ts';
+import { initialLanguage, setLanguage, type MessageKey } from '../i18n/index.ts';
 
 export const BOOT_MIN_MS = 1500;
 
 interface BootState {
   progress: number;
-  status: string;
+  status: MessageKey;
   done: boolean;
 }
 
-export const useBoot = create<BootState>(() => ({ progress: 0, status: 'Lighting the lamps...', done: false }));
+export const useBoot = create<BootState>(() => ({ progress: 0, status: 'boot.lamps', done: false }));
 
 const delay = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
@@ -28,16 +29,18 @@ function fontsReady(): Promise<unknown> {
 }
 
 interface Task {
-  status: string;
+  status: MessageKey;
   run: () => Promise<unknown>;
   capMs: number;
 }
 
 const TASKS: Task[] = [
-  { status: 'Lighting the lamps...', run: fontsReady, capMs: 3000 },
-  { status: 'Checking your badge...', run: () => useAccount.getState().init(), capMs: 8000 },
+  // The language first: the rest of this screen is written in it.
+  { status: 'boot.lamps', run: () => setLanguage(initialLanguage(), false), capMs: 6000 },
+  { status: 'boot.lamps', run: fontsReady, capMs: 3000 },
+  { status: 'boot.badge', run: () => useAccount.getState().init(), capMs: 8000 },
   {
-    status: 'Pulling the case files...',
+    status: 'boot.files',
     run: () =>
       Promise.all([
         import('../screens/CaseSelect.tsx'),
@@ -58,7 +61,7 @@ export function runBoot(): Promise<void> {
     let finished = 0;
     const doneFlags = TASKS.map(() => false);
     // Step through the labels with the bar, but never past a task that is still running.
-    const labels = [...TASKS.map((t) => t.status), 'Unlocking the office...'];
+    const labels: MessageKey[] = [...TASKS.map((t) => t.status), 'boot.office'];
     const status = (shown: number) => {
       const byBar = Math.min(labels.length - 1, Math.floor(shown * labels.length));
       const firstOpen = doneFlags.indexOf(false);
@@ -87,7 +90,7 @@ export function runBoot(): Promise<void> {
     const left = BOOT_MIN_MS - (performance.now() - started);
     if (left > 0) await delay(left);
     cancelAnimationFrame(raf);
-    useBoot.setState({ progress: 1, status: 'Unlocking the office...' });
+    useBoot.setState({ progress: 1, status: 'boot.office' });
     await delay(350); // let the keyhole light up
     useBoot.setState({ done: true });
   })();

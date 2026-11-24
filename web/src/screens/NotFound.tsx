@@ -1,12 +1,14 @@
 import { ScreenFrame } from '../components/ScreenFrame.tsx';
 import { ButtonLink } from '../components/Button.tsx';
+import { useT } from '../i18n/index.ts';
 
 export function NotFound() {
+  const { t } = useT();
   return (
-    <ScreenFrame title="Wrong address" kicker="Dead end">
-      <p className="muted">Nothing here but rain on the pavement.</p>
+    <ScreenFrame title={t('notFound.title')} kicker={t('notFound.kicker')}>
+      <p className="muted">{t('notFound.text')}</p>
       <ButtonLink to="/" variant="lamp">
-        Back to the main menu
+        {t('notFound.back')}
       </ButtonLink>
     </ScreenFrame>
   );

@@ -64,6 +64,7 @@ The server decides what a suspect is allowed to reveal, so you can't talk the an
 - [Music](#music)
 - [Case clock](#case-clock)
 - [Play statistics](#play-statistics)
+- [Languages](#languages)
 - [Desktop app](#desktop-app-macos-and-windows)
 - [Your own art and sound](#your-own-art-and-sound)
 - [Accessibility](#accessibility)
@@ -346,6 +347,18 @@ select * from play_evidence_shows order by shows desc;  -- which evidence was sh
 ```
 
 Your own devices count too; leave them out with `where device_id <> '<your id>'` on `play_events` (the id is `redstring.deviceId` in the browser's local storage).
+
+## Languages
+
+The game plays in English, Dutch, French, German and Spanish. Settings → Language switches it; on the first start the game picks the browser's language when it has it. The menus, the case files (briefings, rooms, evidence, clues, hints, endings) and the Discord status are translated. The suspects' sheets stay English: the model reads them in English and answers in the language the player types in, and showing evidence without typing sends the default line in the player's language.
+
+- [`web/src/i18n/en.ts`](web/src/i18n/en.ts) holds every interface string, by key. Components read them with `t('key', { vars })`, counts with `tn('key', n)` (`key.one` / `key.other`), and sentences with an element inside with `rich()`.
+- Translations live in `web/src/i18n/locales/<lang>.json` and, per case, `web/src/cases/i18n/<lang>/<case>.json` ([`caseText.ts`](web/src/i18n/caseText.ts) lists which fields count). A missing string falls back to English. Each language is its own chunk, so a player downloads only theirs.
+- Drawings are chosen from the English room names, hotspot labels and evidence names (`englishOf()`), so a room and its evidence photographs look the same in every language.
+
+Translations are made by a model, not by hand. `npm run translate` (in `web/`) sends new or changed English text to the `translate` edge function, which asks `TRANSLATE_MODEL` (default `claude-opus-5-5`) with a style guide for the noir voice and keeps names and `{placeholders}` as they are. Its cost counts against the same daily ceiling as interrogations; all five languages from scratch cost about 2 USD. It needs an admin token in `RED_STRING_TRANSLATE_TOKEN` or `web/scripts/translate.env.local` (git ignores it): a row in `public.eval_tokens`, like the eval tool's. Edit a translation by hand in its JSON file; the script only replaces strings whose English changed (`web/src/i18n/sources/` records what each one was made from).
+
+To add a language: add it to [`languages.ts`](web/src/i18n/languages.ts) (and to `LANGUAGES` in `supabase/functions/translate/index.ts` if it is not there yet), then run `npm run translate -- --lang <code>`. Latin-script languages work with the current fonts; others need fonts with their glyphs.
 
 ## Light mode
 

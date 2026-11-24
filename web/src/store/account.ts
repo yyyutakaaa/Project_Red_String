@@ -12,6 +12,7 @@ import type { SaveSlotData } from '../engine/types.ts';
 import { createAccount, signIn as authSignIn, usernameFromEmail } from '../lib/account.ts';
 import { supabase } from '../lib/supabase.ts';
 import { saveEvents, useGame } from './game.ts';
+import { t } from '../i18n/index.ts';
 
 export type SyncState = 'local' | 'syncing' | 'synced' | 'offline';
 
@@ -188,7 +189,7 @@ let listening = false;
 /** Sign-out refused: some moves have not reached the cloud yet and would be lost. */
 export class SignOutBlocked extends Error {
   constructor() {
-    super('Your latest moves have not reached your account yet. Get back online first, or they will be lost.');
+    super(t('account.signOutBlocked'));
     this.name = 'SignOutBlocked';
   }
 }
