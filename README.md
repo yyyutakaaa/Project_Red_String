@@ -110,7 +110,8 @@ Project: `hbwvybkpdqliusxheiyg` (eu-central-1). Edge function secrets: `OMNIAKEY
 | Secret | Default | Purpose |
 |---|---|---|
 | `SUSPECT_MODEL` | `claude-haiku-5-5` | model that plays suspects |
-| `GENERATOR_MODEL` | `claude-haiku-5-5` | model that writes new cases (`deepseek-flash` is about four times faster) |
+| `GENERATOR_MODEL` | `deepseek-flash` | model that writes new cases |
+| `GENERATOR_THINKING` | `1` | DeepSeek case writer thinks first (21k token budget); `0` turns it off |
 | `EVAL_JUDGE_MODEL` | `claude-haiku-5-5` | judge used by the eval tool |
 | `OMNIAKEY_BASE_URL` | `https://api.omniakey.com/v1` | OpenAI-compatible OmniaKey endpoint |
 | `ALLOWED_ORIGINS` | (none) | extra CORS origins, comma-separated, e.g. a custom domain |
@@ -136,7 +137,7 @@ under a Postgres advisory lock and refused if it would pass `DAILY_SPEND_LIMIT_U
 to the real cost afterwards, and calls that fail after the provider accepted them keep their estimated cost.
 
 Model ids starting with `deepseek-` (for example `deepseek-flash`) are routed to the DeepSeek API with
-`DEEPSEEK_API_KEY`, with thinking off unless `DEEPSEEK_THINKING=1`; every other id goes through OmniaKey. Switch models without code changes, for example:
+`DEEPSEEK_API_KEY`, with thinking off for suspects (unless `DEEPSEEK_THINKING=1`) and on for the case writer; every other id goes through OmniaKey. Switch models without code changes, for example:
 
 ```powershell
 npx supabase secrets set SUSPECT_MODEL=mimo-v2.6-flash --project-ref hbwvybkpdqliusxheiyg

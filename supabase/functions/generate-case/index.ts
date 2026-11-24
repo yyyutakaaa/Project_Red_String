@@ -23,6 +23,10 @@ const MAX_ATTEMPTS = 3;
 const GENERATIONS_PER_DAY = 5;
 // Sized so a complete case can finish inside the provider timeout.
 const MAX_OUTPUT_TOKENS = 9_000;
+// DeepSeek thinks before writing (GENERATOR_THINKING=0 turns it off). Its reasoning counts against
+// max_tokens, so it gets room for about 12k tokens of thinking on top of the case.
+const THINKING_OUTPUT_TOKENS = 21_000;
+const generatorThinks = (model: string) => model.startsWith('deepseek-') && env('GENERATOR_THINKING', '1') !== '0';
 const IP_LIMITS = { perMinute: 3, perDay: 15 };
 const globalGenerationsPerDay = () => envNumber('GLOBAL_GENERATIONS_PER_DAY', 60);
 const PROVIDER_TIMEOUT_MS = 140_000;
@@ -75,8 +79,10 @@ async function runAttempt(job: JobRow, remainingToday: number, model: string): P
 
   const attempt = job.attempts + 1;
   const inputChars = messages.reduce((n, m) => n + m.content.length, 0);
+  const thinking = generatorThinks(model);
+  const maxTokens = thinking ? THINKING_OUTPUT_TOKENS : MAX_OUTPUT_TOKENS;
   // Reserve the worst-case cost against the daily ceiling before calling the model (atomic, no race).
-  const reservation = await reserveSpend(job.device_id, 'generate-case', model, worstCaseCostUsd(model, inputChars, MAX_OUTPUT_TOKENS));
+  const reservation = await reserveSpend(job.device_id, 'generate-case', model, worstCaseCostUsd(model, inputChars, maxTokens));
   if (reservation === null) {
     if (job.attempts === 0) await db().from('generated_cases').update({ status: 'failed', updated_at: new Date().toISOString() }).eq('id', job.id);
     return { status: 503, body: { error: { code: 'spend_limit', message: 'The daily budget is used up. Try again tomorrow.' } }, billed: false };
@@ -85,7 +91,7 @@ async function runAttempt(job: JobRow, remainingToday: number, model: string): P
   let text: string;
   try {
     const result = await streamChat(
-      { model, messages, maxTokens: MAX_OUTPUT_TOKENS, temperature: 0.9, reasoningEffort: config.generatorReasoningEffort(), anthropicNative: env('GENERATOR_ANTHROPIC_ROUTE') === '1', timeoutMs: PROVIDER_TIMEOUT_MS },
+      { model, messages, maxTokens, thinking, temperature: 0.9, reasoningEffort: config.generatorReasoningEffort(), anthropicNative: env('GENERATOR_ANTHROPIC_ROUTE') === '1', timeoutMs: PROVIDER_TIMEOUT_MS },
       () => {},
     );
     text = result.text;

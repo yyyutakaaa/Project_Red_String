@@ -25,6 +25,8 @@ export interface ChatOptions {
   reasoningEffort?: string;
   /** Use the Anthropic-native /v1/messages route for claude-* models (thinking disabled). */
   anthropicNative?: boolean;
+  /** DeepSeek only: think before answering. Defaults to DEEPSEEK_THINKING=1, otherwise off. */
+  thinking?: boolean;
   timeoutMs: number;
   signal?: AbortSignal;
 }
@@ -197,8 +199,8 @@ function buildBody(opts: ChatOptions, stream: boolean, minimal: boolean): string
     if (opts.temperature !== undefined && env('OMNIAKEY_SEND_TEMPERATURE') === '1') body.temperature = opts.temperature;
     if (provider.name === 'deepseek') {
       // DeepSeek models think by default and can spend the whole output budget on it (seen live when
-      // writing a case). Thinking is off unless DEEPSEEK_THINKING=1.
-      if (env('DEEPSEEK_THINKING') === '1') {
+      // writing a case with an 8k budget). Callers turn it on with `thinking`, or set DEEPSEEK_THINKING=1.
+      if (opts.thinking ?? env('DEEPSEEK_THINKING') === '1') {
         body.thinking = { type: 'enabled' };
         if (opts.reasoningEffort) body.reasoning_effort = opts.reasoningEffort;
       } else {

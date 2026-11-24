@@ -75,7 +75,7 @@ Build date: 24 November 2026. Repository: `C:/Users/User/Documents/project-red-s
   or `input_tokens`/`output_tokens` (estimated when absent). It also parses content-part arrays and
   Responses-style events. The docs do not mention structured output, so the client uses fenced JSON plus
   one retry for the metadata. Model ids are config: `SUSPECT_MODEL` (default `claude-haiku-5-5`) and
-  `GENERATOR_MODEL` (default `claude-haiku-5-5`; see "Models tried live" below). Model ids starting
+  `GENERATOR_MODEL` (default `deepseek-flash`; see "Models tried live" below). Model ids starting
   with `deepseek-` are sent straight to the DeepSeek API with the `DEEPSEEK_API_KEY` secret.
 - The OmniaKey key exists only as a Supabase secret. The frontend has only the Supabase URL and the
   publishable key. `check-secrets.mjs` runs in the Vercel build and fails it if anything secret-looking
@@ -148,7 +148,12 @@ full numbers; the eval token may select claude-haiku-5-5, mimo-v2.6-flash, deeps
 | deepseek-chat (DeepSeek direct) | case generator | failed once: the name is now served by deepseek-flash, which thinks by default and spent all 8192 output tokens on reasoning |
 | deepseek-flash, thinking off | case generator | works: valid case ("The Last Set at the Vermillion") on the third attempt, 63 s in total, about $0.021; no dashes or not-X-but-Y lines in the text |
 
-DeepSeek calls now send `"thinking": {"type": "disabled"}` (set `DEEPSEEK_THINKING=1` to turn it back on).
+| deepseek-flash, thinking on (default writer) | case generator | works: valid case ("The Alhambra Late Show") on the first attempt, 115 s, 14.5k output tokens of which about 10k thinking, $0.018 |
+
+Suspects on DeepSeek send `"thinking": {"type": "disabled"}` (set `DEEPSEEK_THINKING=1` to change that).
+The case writer thinks first with a 21k token budget (`GENERATOR_THINKING=0` turns it off). At the
+measured speed of about 125 tokens per second a call that uses the whole budget would pass the 140 s
+provider timeout, so a long think ends in a timeout and the player has to start again.
 DeepSeek prices are the peak list prices from api-docs.deepseek.com (2026-11-24); off-peak is half.
 The eval tool can pick the case writer as well: `X-Eval-Model` works on `generate-case` too.
 
