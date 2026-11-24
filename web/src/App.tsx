@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, type ComponentType, type ReactNode } from 'react';
 import { createBrowserRouter, Outlet, RouterProvider, ScrollRestoration, useNavigate } from 'react-router-dom';
 import { ToastHost } from './components/ToastHost.tsx';
+import { TooSmall } from './components/TooSmall.tsx';
 import { Boot } from './boot/Boot.tsx';
 import { LaunchOverlay } from './boot/LaunchOverlay.tsx';
 import { Cinema } from './cinema/Cinema.tsx';
@@ -110,6 +111,7 @@ export function App() {
       <Boot>
         <RouterProvider router={router} />
       </Boot>
+      <TooSmall />
     </>
   );
 }

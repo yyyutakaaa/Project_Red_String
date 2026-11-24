@@ -1,5 +1,9 @@
+/* The paper fills the screen and scrolls; the page around it does not. */
 .file {
   position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overscroll-behavior: contain;
   padding: var(--space-6) clamp(1.25rem, 4vw, 3rem) var(--space-5);
   animation: global(fade-up) var(--dur-slow) var(--ease-out) both;
 }
