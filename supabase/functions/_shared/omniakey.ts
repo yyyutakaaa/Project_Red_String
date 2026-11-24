@@ -23,6 +23,8 @@ export interface ChatOptions {
    * on it; a low effort leaves room for the answer. Dropped automatically if the gateway rejects it.
    */
   reasoningEffort?: string;
+  /** Use the Anthropic-native /v1/messages route for claude-* models (thinking disabled). */
+  anthropicNative?: boolean;
   timeoutMs: number;
   signal?: AbortSignal;
 }
@@ -199,7 +201,29 @@ function buildBody(opts: ChatOptions, stream: boolean, minimal: boolean): string
 
 /** A 400 that names a request parameter: worth one retry with the minimal body. */
 function isParameterError(status: number, detail: string): boolean {
-  return status === 400 && /(temperature|stream_options|include_usage|reasoning|unsupported|not support|unknown parameter|unrecognized)/i.test(detail);
+  return status === 400 && /(temperature|stream_options|include_usage|reasoning|thinking|unsupported|not support|unknown parameter|unrecognized)/i.test(detail);
+}
+
+/**
+ * Claude models can be called on OmniaKey's Anthropic-native route (POST /v1/messages). There thinking
+ * is off unless requested, which matters for long outputs: on the OpenAI-compatible route
+ * claude-opus-5-5 spent its whole output budget on reasoning (seen live, twice).
+ */
+function useAnthropicRoute(opts: ChatOptions, provider: Provider): boolean {
+  return Boolean(opts.anthropicNative) && provider.name === 'omniakey' && opts.model.startsWith('claude-');
+}
+
+function buildAnthropicBody(opts: ChatOptions, stream: boolean, minimal: boolean): string {
+  const system = opts.messages.filter((m) => m.role === 'system').map((m) => m.content).join('\n\n');
+  const body: Record<string, unknown> = {
+    model: opts.model,
+    max_tokens: opts.maxTokens,
+    messages: opts.messages.filter((m) => m.role !== 'system').map((m) => ({ role: m.role, content: m.content })),
+    stream,
+  };
+  if (system) body.system = system;
+  if (!minimal) body.thinking = { type: 'disabled' };
+  return JSON.stringify(body);
 }
 
 /** Models that rejected an optional parameter in this function instance: send them the minimal body. */
@@ -213,14 +237,16 @@ async function post(opts: ChatOptions, stream: boolean, controller: AbortControl
   for (const minimal of variants) {
     let res: Response;
     try {
-      res = await fetch(`${provider.baseUrl}/chat/completions`, {
+      const native = useAnthropicRoute(opts, provider);
+      res = await fetch(native ? `${provider.baseUrl}/messages` : `${provider.baseUrl}/chat/completions`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${key}`,
           'Content-Type': 'application/json',
           Accept: stream ? 'text/event-stream' : 'application/json',
+          ...(native ? { 'anthropic-version': '2023-06-01' } : {}),
         },
-        body: buildBody(opts, stream, minimal),
+        body: native ? buildAnthropicBody(opts, stream, minimal) : buildBody(opts, stream, minimal),
         signal: controller.signal,
       });
     } catch (err) {
@@ -257,7 +283,7 @@ export async function streamChat(opts: ChatOptions, onDelta: (text: string) => v
   const { controller, clear } = withTimeout(opts);
   let firstTokenMs: number | null = null;
   let text = '';
-  let usage: { input: number; output: number } | null = null;
+  let usage = null as { input: number; output: number } | null;
   // A few raw payloads, kept only to explain an empty completion in the logs (no secrets are in them).
   const samples: string[] = [];
   let finishReason: string | null = null;
@@ -318,8 +344,12 @@ export async function streamChat(opts: ChatOptions, onDelta: (text: string) => v
           } catch {
             continue;
           }
-          const u = readUsage((parsed as Record<string, unknown>)?.usage);
-          if (u) usage = u;
+          // OpenAI sends one usage object; Anthropic sends input counts in message_start and output
+          // counts in message_delta, so keep the largest value seen for each.
+          const ev = parsed as Record<string, unknown>;
+          for (const u of [readUsage(ev?.usage), readUsage((ev?.message as Record<string, unknown> | undefined)?.usage)]) {
+            if (u) usage = { input: Math.max(usage?.input ?? 0, u.input), output: Math.max(usage?.output ?? 0, u.output) };
+          }
           const fr = ((parsed as Record<string, unknown>)?.choices as Array<Record<string, unknown>> | undefined)?.[0]?.finish_reason;
           if (typeof fr === 'string') finishReason = fr;
           const piece = deltaText(parsed);

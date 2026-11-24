@@ -85,7 +85,7 @@ async function runAttempt(job: JobRow, remainingToday: number): Promise<AttemptR
   let text: string;
   try {
     const result = await streamChat(
-      { model, messages, maxTokens: MAX_OUTPUT_TOKENS, temperature: 0.9, reasoningEffort: config.generatorReasoningEffort(), timeoutMs: PROVIDER_TIMEOUT_MS },
+      { model, messages, maxTokens: MAX_OUTPUT_TOKENS, temperature: 0.9, reasoningEffort: config.generatorReasoningEffort(), anthropicNative: true, timeoutMs: PROVIDER_TIMEOUT_MS },
       () => {},
     );
     text = result.text;

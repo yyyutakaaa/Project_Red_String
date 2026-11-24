@@ -194,6 +194,31 @@ Deno.test('routes deepseek- models to DeepSeek with its own key and output cap',
   );
 });
 
+Deno.test('uses the Anthropic-native route for claude models when asked', async () => {
+  await withFetch(
+    async (url, init) => {
+      assert(url.endsWith('/v1/messages'), `unexpected url ${url}`);
+      const body = JSON.parse(String(init.body));
+      assert(body.system === 'sys' && body.messages.length === 1 && body.messages[0].role === 'user', 'system must be split out');
+      assert(body.thinking?.type === 'disabled', 'thinking disabled');
+      return sseResponse([
+        'event: message_start\ndata: {"type":"message_start","message":{"usage":{"input_tokens":40,"output_tokens":1}}}\n\n',
+        'event: content_block_delta\ndata: {"type":"content_block_delta","delta":{"type":"text_delta","text":"Case"}}\n\n',
+        'event: content_block_delta\ndata: {"type":"content_block_delta","delta":{"type":"text_delta","text":" file."}}\n\n',
+        'event: message_delta\ndata: {"type":"message_delta","delta":{"stop_reason":"end_turn"},"usage":{"output_tokens":7}}\n\n',
+      ]);
+    },
+    async () => {
+      const r = await streamChat(
+        { ...opts, model: 'claude-opus-5-5', anthropicNative: true, messages: [{ role: 'system', content: 'sys' }, { role: 'user', content: 'go' }] },
+        () => {},
+      );
+      assert(r.text === 'Case file.', `text was ${r.text}`);
+      assert(r.usage.inputTokens === 40 && r.usage.outputTokens === 7, `usage ${JSON.stringify(r.usage)}`);
+    },
+  );
+});
+
 Deno.test('prices known and unknown models', () => {
   const known = estimateCostUsd('claude-haiku-5-5', { inputTokens: 1_000_000, outputTokens: 1_000_000, estimated: false });
   assert(Math.abs(known - 0.48) < 1e-9, `haiku cost ${known}`);
