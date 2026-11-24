@@ -63,6 +63,7 @@ The server decides what a suspect is allowed to reveal, so you can't talk the an
 - [The film look](#the-film-look)
 - [Music](#music)
 - [Case clock](#case-clock)
+- [Play statistics](#play-statistics)
 - [Desktop app](#desktop-app-macos-and-windows)
 - [Your own art and sound](#your-own-art-and-sound)
 - [Accessibility](#accessibility)
@@ -327,6 +328,24 @@ The composition lives in [`music.ts`](web/src/audio/music.ts) as plain data with
 ## Case clock
 
 The case bar shows how long you have been on a case, so you can see how fast you crack it. It counts only time actually spent: a case screen open, the window in view, and some input in the last three minutes (a case left open overnight does not count). The time is kept in the save, so it carries on when you come back, and it stops the moment you make the accusation. The verdict shows the time and your fastest correct solve, and the case files list shows the fastest solve on each closed case. The clock lives in [`game.ts`](web/src/store/game.ts) (`startCaseClock`, `useCaseClock`).
+
+## Play statistics
+
+To see where players get stuck, the game sends anonymous events about what they do in a case: the case started, the briefing read, rooms opened, evidence found (by searching or from a clue), each question asked (to whom, which evidence was shown, how many clues it revealed, patience used, the length of the question), errors in the interrogation room, hints, theory checks, which case screen is open, and the accusation with its outcome, score, time and counts. Each event carries the random device id the game already uses for interrogations (so the rows join `usage_log`), a session id for one launch, the build commit and `web` or `desktop-<platform>`. Nothing typed, no names, no account details: the events function only accepts ids, numbers and short labels.
+
+- **Opt-out:** Settings → Play statistics → Keep to myself. Turning it off drops anything not sent yet.
+- **When it is off anyway:** development builds (unless `VITE_TELEMETRY=1`), runs under test automation (`navigator.webdriver`, so Playwright never writes to the live table; set `localStorage['redstring.telemetry.test'] = '1'` to test it on purpose) and builds without a backend.
+- **How it travels:** [`telemetry.ts`](web/src/lib/telemetry.ts) queues events and sends them every 15 seconds or 40 events to the [`events`](supabase/functions/events/index.ts) function, and once more with `keepalive` when the page is hidden or closed. The function checks every field, rate-limits per device and per network, and writes to `play_events`, which only the service role can read or write.
+
+Read it in the Supabase SQL editor:
+
+```sql
+select * from play_case_funnel;           -- per case: how many players reached each step, from "opened a room" to "solved"
+select * from play_last_step order by last_seen desc;   -- players who left a case without accusing: their last action
+select * from play_evidence_shows order by shows desc;  -- which evidence was shown to whom, and how often it revealed a clue
+```
+
+Your own devices count too; leave them out with `where device_id <> '<your id>'` on `play_events` (the id is `redstring.deviceId` in the browser's local storage).
 
 ## Light mode
 

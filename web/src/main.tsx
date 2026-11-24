@@ -4,11 +4,13 @@ import './styles/tokens.css';
 import { App } from './App.tsx';
 import { applySettingsToDocument, useSettings } from './store/settings.ts';
 import { initDesktopDocument } from './desktop/bridge.ts';
+import { initTelemetry } from './lib/telemetry.ts';
 
 // Theme, type size and motion go on <html> before the first paint, so the start-up screen is
 // already in the right colours.
 initDesktopDocument();
 applySettingsToDocument(useSettings.getState());
+initTelemetry();
 
 // After a deploy, an open tab may ask for screen chunks that no longer exist. Reload once to pick up the
 // new build; the timestamp guard stops a reload loop when the chunk is missing for some other reason, and

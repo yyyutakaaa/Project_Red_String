@@ -24,6 +24,7 @@ import type { ChatMessage } from '../engine/types.ts';
 import { useAmbience } from '../hooks/useAmbience.ts';
 import { casePath, useCaseContext } from '../hooks/useCase.ts';
 import { ApiError, checkBackend, describeApiError, interrogate, type ConversationTurn } from '../lib/api.ts';
+import { track } from '../lib/telemetry.ts';
 import {
   addChatMessage,
   applyRevealedClues,
@@ -399,6 +400,17 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
         true,
       );
       applyRevealedClues(caseFile, caseKey, allRevealed);
+      track('question', caseKey, {
+        suspect: suspect.id,
+        shown: evidenceId,
+        clues: revealed.length,
+        used: final.patience_used,
+        max: final.patience_max,
+        mood: final.mood,
+        silent: final.silent,
+        len: message.length,
+        retry: Boolean(retryOfId),
+      });
 
       const latest = liveConversation(caseFile, caseKey, suspect.id);
       const shownBefore = latest?.shownEvidence ?? [];
@@ -419,6 +431,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
       if (!stillActive()) return;
       removeChatMessage(caseFile, caseKey, suspect.id, placeholderId);
       const code = err instanceof ApiError ? err.code : null;
+      track('interrogation_error', caseKey, { suspect: suspect.id, code: code ?? 'unknown', shown: evidenceId });
       if (code === 'patience_exhausted') {
         const latest = liveConversation(caseFile, caseKey, suspect.id);
         if (latest) setConversationState(caseFile, caseKey, suspect.id, { patienceUsed: latest.patienceMax });
