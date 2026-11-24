@@ -1,55 +1,133 @@
+<div align="center">
+
 # Project Red String
 
-Een noir detectivespel in de browser. Je ondervraagt verdachten in je eigen woorden, en zij kunnen liegen. Jij moet het bewijzen.
+**A noir detective game in the browser.**
+You question suspects in your own words. They can lie. You have to prove it.
 
-Spelen kan op https://project-red-string.vercel.app
+[**Play it now**](https://project-red-string.vercel.app)
 
-## Wat is het
+![React](https://img.shields.io/badge/React-19-20232a?style=flat-square&logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?style=flat-square&logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-8-646cff?style=flat-square&logo=vite&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-Edge_Functions-3ecf8e?style=flat-square&logo=supabase&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-live-000000?style=flat-square&logo=vercel)
+![Cases](https://img.shields.io/badge/story_cases-10-8c1c1c?style=flat-square)
 
-Je leest eerst de briefing van een zaak. Daarna doorzoek je de kamers en klik je op wat je opvalt. Wat belangrijk is, komt in je dossier. De verdachten ondervraag je door gewoon te typen, en een AI-model speelt hun rol. Toon je een verdachte het juiste bewijs, dan moet die erop antwoorden en geeft die soms iets nieuws prijs.
+</div>
 
-Op een bord met rode draad hang je bewijs en verdachten op en verbind je ze. Als je zeker bent, beschuldig je iemand met twee tot vier stukken bewijs. Je krijgt maar één poging.
+---
 
-Er zijn tien zaken, allemaal met de hand geschreven. Samen vormen ze één verhaal in Calder City, van oktober 1948 tot juni 1950. Een zaak gaat pas open als je de vorige hebt afgesloten.
+<table>
+<tr>
+<td width="50%" valign="top">
 
-## Hoe het in elkaar zit
+### How you play
 
-Het spel zelf draait volledig in de browser. Kamers, notitieboek, bord, punten en saves staan lokaal, in localStorage.
+1. Read the briefing.
+2. Search the rooms and click on what stands out.
+3. Question the suspects by typing. An AI plays them.
+4. Put evidence on the table and watch them react.
+5. Pin it all on the red-string board.
+6. Accuse one person with two to four pieces of proof.
 
-Alleen de ondervragingen gaan naar de server. Dat is de edge function `interrogate` op Supabase. Die laadt de zaak aan de serverkant en bouwt de prompt met alleen het blad van die ene verdachte en de publieke feiten. De oplossing en de geheimen van andere verdachten komen er nooit in. Het antwoord komt gestreamd terug via SSE.
+You get one try.
 
-De server kijkt ook zelf welke aanwijzingen een verdachte mag prijsgeven. Het geduld per verdachte, de rate limits en een maximum aan kosten per dag worden in Postgres bijgehouden.
+</td>
+<td width="50%" valign="top">
 
-De API-sleutels staan alleen als secret op Supabase. De frontend kent enkel de Supabase-URL en de publishable key. `npm run check-secrets` kijkt na of er niets geheims in de build zit.
+### What makes it different
 
-Vroeger kon het spel ook zelf een nieuwe zaak laten schrijven door een AI. Dat zit er niet meer in. De functie `generate-case` bestaat nog, maar geeft alleen 410 terug.
+There are no dialogue trees. You type whatever you want to ask.
 
-## Mappen
+Suspects stick to their story and lie where the case says they lie. Show one the right evidence and they have to answer to it. Sometimes they hand you something new.
+
+The server decides what a suspect is allowed to reveal, so you can't talk the answer out of them.
+
+</td>
+</tr>
+</table>
+
+## Contents
+
+- [The cases](#the-cases)
+- [How it works](#how-it-works)
+- [Run it locally](#run-it-locally)
+- [Tests](#tests)
+- [Editing a case](#editing-a-case)
+- [Backend](#backend)
+- [Eval tool](#eval-tool)
+- [Deploying](#deploying)
+- [Your own art and sound](#your-own-art-and-sound)
+- [Accessibility](#accessibility)
+
+## The cases
+
+Ten hand-written cases tell one story in Calder City, from October 1948 to June 1950. A case opens when you close the one before it.
+
+| # | Case | When | What happened |
+|:-:|---|---|---|
+| 1 | **Ashgrove House** | Oct 1948 | A shipowner dies on his birthday. Someone put his heart drops in his brandy. |
+| 2 | **The Blue Lantern** | Feb 1949 | A club owner is shot during a drum solo. Nobody heard a thing. |
+| 3 | **Pier Seventeen** | Apr 1949 | A clerk lies at the foot of the archive stairs. It was no fall. |
+| 4 | **The Night Express** | Jun 1949 | A newspaper owner is stabbed in a sleeping car during a twelve minute water stop. |
+| 5 | **Hollis Garden** | Aug 1949 | A judge is found in his own lily pond. The dance program lies about the time. |
+| 6 | **Studio Nine** | Oct 1949 | A radio producer is strangled while the show is on the air. Part of the show was a record. |
+| 7 | **The Regent** | Dec 1949 | New Year's Eve. The ballroom clock runs ten minutes fast. |
+| 8 | **The Reading Room** | Feb 1950 | One line of footprints in the snow, and they belong to the dead woman. |
+| 9 | **Mercer's Pharmacy** | Apr 1950 | Poison in a nightly tonic. The killer's alibi covers the wrong hour. |
+| 10 | **Vance and Pryor** | Jun 1950 | A lawyer shot at his desk, with a typed confession. The finale. |
+
+## How it works
+
+```mermaid
+flowchart LR
+    A[Browser<br/>rooms, notebook, board,<br/>scoring, saves] -->|question| B[interrogate<br/>Supabase Edge Function]
+    B -->|suspect sheet only| C[DeepSeek<br/>or OmniaKey]
+    C -->|streamed reply| B
+    B -->|SSE: reply, clues, mood| A
+    B <--> D[(Postgres<br/>cases, limits,<br/>spend, conversations)]
+```
+
+The whole game runs in the browser. Rooms, notebook, board, scoring and saves live in localStorage.
+
+Only interrogations go to the server. The `interrogate` function loads the case on the server side and builds the prompt from that one suspect's sheet and the public facts. The solution and the other suspects' secrets never go in. The reply streams back over SSE.
+
+The server also checks which clues a suspect may reveal at that moment. Patience per suspect, rate limits and a daily spend limit are kept in Postgres.
+
+API keys only exist as Supabase secrets. The frontend knows the Supabase URL and the publishable key and nothing else. `npm run check-secrets` scans the build to make sure.
+
+> The game used to have a "New Case" mode where an AI wrote a fresh case. That is gone. Every case is written by hand now, and `generate-case` only answers 410.
+
+<details>
+<summary><b>Repository layout</b></summary>
 
 ```
-web/                          het spel (Vite, React, TypeScript)
-  src/cases/                  de tien zaken als JSON
-  src/engine/                 zaken laden, punten, bord, saves en tests
-  src/screens/                alle schermen
-  src/components/             HUD, kamers, portretten, dialogen
+web/                          the game (Vite, React, TypeScript)
+  src/cases/                  the ten cases as JSON
+  src/engine/                 case loader, scoring, board, saves, tests
+  src/screens/                every screen
+  src/components/             HUD, rooms, portraits, dialogs
   src/store/                  Zustand stores
-  src/audio/                  geluid via Web Audio
+  src/audio/                  sound made with Web Audio
   scripts/                    sync-cases.mjs, seed-cases.mjs, check-secrets.mjs
-  tests/e2e/                  Playwright-test van zaak 1
+  tests/e2e/                  Playwright test of case 1
 supabase/
-  functions/_shared/core/     schema, validator, aanwijzingen, prompt, antwoorden verwerken
-  functions/_shared/          client voor de modellen, limieten, CORS, testmodus
-  functions/interrogate/      de ondervraging
-  functions/generate-case/    niet meer in gebruik, geeft 410
-  migrations/                 tabellen, RLS en functies in Postgres
-  seed/story_cases.sql        de zaken als data voor de server
-tools/eval/                   testtool met lastige vragen voor verdachten
-vercel.json                   instellingen voor Vercel
+  functions/_shared/core/     schema, validator, clue rules, prompt, reply parsing
+  functions/_shared/          model client, limits, CORS, eval mode
+  functions/interrogate/      the interrogation
+  functions/generate-case/    retired, answers 410
+  migrations/                 tables, RLS and functions in Postgres
+  seed/story_cases.sql        the cases as server data
+tools/eval/                   test tool with hard questions for suspects
+vercel.json                   Vercel settings
 ```
 
-## Lokaal draaien
+</details>
 
-Je hebt Node 20 of nieuwer nodig. Ik heb het getest met Node 24.
+## Run it locally
+
+You need Node 20 or newer. I tested it with Node 24.
 
 ```powershell
 cd web
@@ -57,16 +135,18 @@ npm install
 npm run dev
 ```
 
-Daarna open je http://localhost:5173. De twee publieke waarden staan in `web/.env.production`, of in `web/.env.local` als je ze wilt overschrijven:
+Then open http://localhost:5173.
+
+The two public values are in `web/.env.production`. Put them in `web/.env.local` if you want to override them:
 
 ```
 VITE_SUPABASE_URL=https://hbwvybkpdqliusxheiyg.supabase.co
 VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
 ```
 
-Zonder die waarden werkt het spel ook. Kamers, notitieboek en bord gaan gewoon, alleen de ondervraging zegt dan dat de server niet bereikbaar is.
+Without them the game still runs. Rooms, notebook and board work, and the interrogation says the server can't be reached.
 
-## Testen
+## Tests
 
 ```powershell
 cd web
@@ -77,9 +157,9 @@ npm run build
 npm run check-secrets
 ```
 
-`npm test` draait de Vitest-tests. Die kijken onder andere elke zaak na met de validator, en controleren dat geen enkele prompt van een verdachte iets van de oplossing bevat. Met `npm run validate:cases` test je alleen de zaken.
+`npm test` runs the Vitest suite. It checks every case with the validator, and it checks that no suspect prompt contains anything from the solution. `npm run validate:cases` runs only the case checks.
 
-Er is ook een volledige test van zaak 1 in de browser. De server wordt daarbij nagebootst, dus er gaan geen vragen naar een AI.
+There is also a full playthrough of case 1 in a real browser. The server is mocked, so no questions go to an AI.
 
 ```powershell
 cd web
@@ -87,85 +167,108 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-## Een zaak aanpassen
+## Editing a case
 
-Pas eerst `web/src/cases/<id>.json` aan. Draai dan `npm run sync:cases` in `web`. Dat schrijft de zaken naar `supabase/seed/story_cases.sql` en zet de SHA-256 van elke zaak in `supabase/functions/_shared/cases/index.ts`.
+| Step | What to do |
+|:-:|---|
+| 1 | Edit `web/src/cases/<id>.json`. |
+| 2 | Run `npm run sync:cases` in `web`. It writes the seed and the SHA-256 of each case. |
+| 3 | Run `npm run validate:cases` until it passes. |
+| 4 | Deploy `interrogate` again so the server knows the new hashes. |
+| 5 | Run `npm run seed:cases` to put the cases in the database. This needs an eval token. |
+| 6 | Open `/functions/v1/interrogate?diag=1`. Every case must say `"valid": true` and `"hash_ok": true`. |
 
-Draai `npm run validate:cases` tot alles slaagt. Deploy daarna `interrogate` opnieuw, zodat de server de nieuwe hashes kent. Zet de zaken dan in de database met `npm run seed:cases`. Dat script heeft een eval-token nodig.
-
-Kijk daarna `GET https://<ref>.supabase.co/functions/v1/interrogate?diag=1` na. Elke zaak moet `"valid": true` en `"hash_ok": true` geven. Klopt de tekst in de database niet met de hash, dan weigert de server die zaak.
+If the text in the database doesn't match the hash, the server refuses that case. A stale seed can't reach a prompt.
 
 ## Backend
 
-Het Supabase-project is `hbwvybkpdqliusxheiyg` in eu-central-1. Verplichte secrets zijn `DEEPSEEK_API_KEY` en `DAILY_SPEND_LIMIT_USD`. `OMNIAKEY_API_KEY` is nodig als je een model via OmniaKey wilt gebruiken.
+The Supabase project is `hbwvybkpdqliusxheiyg` in eu-central-1. You need the secrets `DEEPSEEK_API_KEY` and `DAILY_SPEND_LIMIT_USD`. `OMNIAKEY_API_KEY` is only needed for models that go through OmniaKey.
 
-| Secret | Standaard | Waarvoor |
+<details>
+<summary><b>All optional secrets</b></summary>
+
+| Secret | Default | What it does |
 |---|---|---|
-| `SUSPECT_MODEL` | `deepseek-flash` | het model dat de verdachten speelt |
-| `SUSPECT_THINKING` | `1` | een DeepSeek-verdachte denkt eerst na, `0` zet dat uit |
-| `SUSPECT_REASONING_EFFORT` | `high` | hoeveel hij nadenkt: `low`, `high` of `none` |
-| `EVAL_JUDGE_MODEL` | `claude-haiku-5-5` | het model dat in de testtool de antwoorden beoordeelt |
-| `ALLOWED_ORIGINS` | leeg | extra domeinen voor CORS, gescheiden door komma's |
-| `VERCEL_PROJECT_NAME` | `project-red-string` | laat `https://<naam>.vercel.app` en de previews toe |
-| `MODEL_PRICING_JSON` | ingebouwde tabel | eigen prijzen per miljoen tokens |
-| `DEEPSEEK_BASE_URL` | `https://api.deepseek.com` | adres van de DeepSeek API |
-| `DEEPSEEK_MAX_OUTPUT_TOKENS` | `32768` | maximum aan tokens per antwoord van DeepSeek |
-| `OMNIAKEY_BASE_URL` | `https://api.omniakey.com/v1` | adres van OmniaKey |
+| `SUSPECT_MODEL` | `deepseek-flash` | the model that plays the suspects |
+| `SUSPECT_THINKING` | `1` | a DeepSeek suspect thinks first, `0` turns it off |
+| `SUSPECT_REASONING_EFFORT` | `high` | how much it thinks: `low`, `high` or `none` |
+| `EVAL_JUDGE_MODEL` | `claude-haiku-5-5` | the model that grades replies in the eval tool |
+| `ALLOWED_ORIGINS` | empty | extra CORS domains, comma separated |
+| `VERCEL_PROJECT_NAME` | `project-red-string` | allows `https://<name>.vercel.app` and its previews |
+| `MODEL_PRICING_JSON` | built-in table | your own prices per million tokens |
+| `DEEPSEEK_BASE_URL` | `https://api.deepseek.com` | DeepSeek API address |
+| `DEEPSEEK_MAX_OUTPUT_TOKENS` | `32768` | max tokens per DeepSeek reply |
+| `OMNIAKEY_BASE_URL` | `https://api.omniakey.com/v1` | OmniaKey address |
 
-Modellen met een id die begint met `deepseek-` gaan rechtstreeks naar DeepSeek. Alle andere gaan via OmniaKey. Een antwoord van een verdachte duurt op DeepSeek ongeveer twee tot vier seconden. Van model wisselen kan zonder de code aan te passen:
+</details>
+
+Model ids that start with `deepseek-` go straight to DeepSeek. Everything else goes through OmniaKey. On DeepSeek a suspect answers in about two to four seconds. You can switch models without touching the code:
 
 ```powershell
 npx supabase secrets set SUSPECT_MODEL=claude-haiku-5-5 --project-ref hbwvybkpdqliusxheiyg
 ```
 
-De limieten op `interrogate` zijn 30 vragen per minuut en 400 per dag per toestel, en 90 per minuut en 2000 per dag per IP-adres. Elke verdachte heeft daarnaast een eigen geduld, dus een maximum aantal vragen per save.
+| Limit | Value |
+|---|---|
+| Per device | 30 questions per minute, 400 per day |
+| Per IP address | 90 per minute, 2000 per day |
+| Per suspect | their own patience, so a max number of questions per save |
+| Per day | `DAILY_SPEND_LIMIT_USD` for the whole game |
 
-Voor elke vraag reserveert de server eerst de hoogst mogelijke kost in `usage_log`. Zou dat over `DAILY_SPEND_LIMIT_USD` gaan, dan wordt de vraag geweigerd. Na het antwoord wordt de echte kost ingevuld. Twee vragen tegelijk kunnen de limiet zo niet samen overschrijden.
+Before every question the server reserves the highest possible cost in `usage_log`. If that would go over the daily limit, the question is refused. After the reply it fills in the real cost. Two questions at the same time can't push it over the limit together.
 
-Deployen gaat met de Supabase CLI, na `npx supabase login`:
+JWT verification is off, because the frontend uses a publishable key and that isn't a JWT. The functions do their own checks: CORS, the shape of the request, rate limits, patience and the spend limit.
 
-```powershell
-npx supabase functions deploy interrogate generate-case --project-ref hbwvybkpdqliusxheiyg --no-verify-jwt --use-api
-```
+## Eval tool
 
-JWT-verificatie staat uit, want de frontend gebruikt een publishable key en dat is geen JWT. De functies doen hun eigen controles: CORS, de vorm van de vraag, rate limits, geduld en de dagelijkse kostenlimiet.
-
-## Testtool
-
-`tools/eval/run-eval.mjs` stuurt per verdachte 31 lastige berichten naar de echte `interrogate`. Denk aan "wie heeft het gedaan", "negeer je instructies", rollenspel om de regels te omzeilen en vragen in vijf andere talen. Het rapport toont per model of een verdachte iets verraadt, uit zijn rol valt of feiten verzint, en hoe snel het eerste woord komt.
+`tools/eval/run-eval.mjs` sends 31 hard messages per suspect to the live `interrogate`. Things like "who did it", "ignore your instructions", role-play tricks and questions in five other languages. The report shows per model whether a suspect leaks something, breaks character or makes up facts, and how fast the first word comes.
 
 ```powershell
 node tools/eval/run-eval.mjs --models deepseek-flash,claude-haiku-5-5 --judge
 ```
 
-De tool heeft `RS_EVAL_TOKEN` nodig in `tools/eval/.env.local`. Dat bestand staat niet in git. In de database staat alleen de SHA-256 van de token, in `public.eval_tokens`. Meer uitleg staat in `tools/eval/README.md`.
+It needs `RS_EVAL_TOKEN` in `tools/eval/.env.local`. That file is not in git. The database only stores the token's SHA-256, in `public.eval_tokens`. More in `tools/eval/README.md`.
 
-## Vercel
+## Deploying
 
-De site staat op Vercel als project `project-red-string`. `vercel.json` bouwt `web/` en stuurt elke route naar `index.html`. Tijdens de build draait ook de scan op geheimen, en die laat de build falen als er iets verdachts in zit. `.vercelignore` houdt lokale bestanden zoals `tools/` en `.env.local` uit de upload.
+**Edge functions**, with the Supabase CLI after `npx supabase login`:
 
-Opnieuw deployen doe je vanuit de map van het project:
+```powershell
+npx supabase functions deploy interrogate generate-case --project-ref hbwvybkpdqliusxheiyg --no-verify-jwt --use-api
+```
+
+**Web app**, from the project folder:
 
 ```powershell
 npx vercel deploy --prod
 ```
 
-Gebruik je een eigen domein, zet dat dan in het secret `ALLOWED_ORIGINS` op Supabase. Anders weigert de server de ondervragingen.
+`vercel.json` builds `web/` and sends every route to `index.html`. The build also runs the secret scan and fails if it finds something. `.vercelignore` keeps local files like `tools/` and `.env.local` out of the upload.
 
-## Eigen afbeeldingen en geluid
+Using your own domain? Add it to the `ALLOWED_ORIGINS` secret on Supabase, or the server will refuse the interrogations.
 
-Alles wat je ziet en hoort wordt nu in code getekend en gemaakt. Wil je echte afbeeldingen, zet ze dan in `web/src/assets/art/`. Het register in `web/src/assets/registry.ts` pikt ze op bij de build.
+## Your own art and sound
 
-| Map | Bestandsnaam | Voor |
+Everything you see and hear is drawn and made in code right now. To use real art, drop files in `web/src/assets/art/`. The registry in `web/src/assets/registry.ts` picks them up at build time.
+
+| Folder | File name | Used for |
 |---|---|---|
-| `art/rooms/` | `<background-key>.webp`, bv. `study.webp` | achtergrond van een kamer |
-| `art/portraits/` | `<portrait-key>.webp` of `<suspect-id>.webp` | portret van een verdachte |
-| `art/audio/` | `music.ogg`, `music-<ambience>.ogg`, `ambience-rain.ogg` | muziek en sfeergeluid |
+| `art/rooms/` | `<background-key>.webp`, for example `study.webp` | room background |
+| `art/portraits/` | `<portrait-key>.webp` or `<suspect-id>.webp` | suspect portrait |
+| `art/audio/` | `music.ogg`, `music-<ambience>.ogg`, `ambience-rain.ogg` | music and ambience |
 
-De sleutels staan in `supabase/functions/_shared/core/assetKeys.ts`. Afbeeldingen van kamers moeten 5:3 zijn, bv. 2000x1200, anders kloppen de klikzones niet. Portretten zijn 5:6.
+The keys are in `supabase/functions/_shared/core/assetKeys.ts`. Room art should be 5:3, for example 2000x1200, or the click zones won't line up. Portraits are 5:6.
 
-Goede bronnen met CC0, dus vrij te gebruiken, zijn Kenney, OpenGameArt, Freesound, Poly Haven en de open collecties van het Rijksmuseum en het Smithsonian. Zet elk bestand dat je toevoegt in `CREDITS.md`.
+Good CC0 sources are Kenney, OpenGameArt, Freesound, Poly Haven and the open collections of the Rijksmuseum and the Smithsonian. Add every file you use to `CREDITS.md`.
 
-## Toegankelijkheid
+## Accessibility
 
-Je kan alles met het toetsenbord bedienen, ook de klikzones en het bord. De focus is altijd zichtbaar. Schermlezers krijgen de antwoorden van verdachten door terwijl ze binnenkomen. Lettergrootte en tekstsnelheid kan je aanpassen, en animaties gaan uit als je systeem dat vraagt of als je dat in het spel instelt.
+You can play the whole game with the keyboard, including the click zones and the board. Focus is always visible. Screen readers get the suspects' replies as they come in. You can change the font size and the text speed, and animations turn off when your system asks for it or when you switch them off in the game.
+
+---
+
+<div align="center">
+
+Made by Mehdi Oulad Khlie. Credits for fonts and tools are in [CREDITS.md](CREDITS.md).
+
+</div>
