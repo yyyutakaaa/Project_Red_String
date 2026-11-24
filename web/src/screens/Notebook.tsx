@@ -210,6 +210,23 @@ function SuspectsPanel({
                       )}
                     </dd>
                   </div>
+                  {(conv.caughtLies?.length ?? 0) > 0 && (
+                    <div data-testid={`caught-lies-${s.id}`}>
+                      <dt>{t('notebook.caughtLying')}</dt>
+                      <dd>
+                        <ul className={styles.bullets}>
+                          {(conv.caughtLies ?? []).map((lie) => (
+                            <li key={lie.at}>
+                              “{lie.statement}”{' '}
+                              <span className={styles.muted}>
+                                {t('notebook.disprovedBy', { evidence: caseFile.evidence.find((e) => e.id === lie.evidenceId)?.name ?? lie.evidenceId })}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      </dd>
+                    </div>
+                  )}
                   <div className={styles.inlineFacts}>
                     <div>
                       <dt>{t('notebook.questions')}</dt>
@@ -381,9 +398,12 @@ export function Notebook() {
   const shownTo = useMemo(() => {
     const m = new Map<string, string[]>();
     for (const s of caseFile.suspects) {
-      for (const ev of progress.conversations[s.id]?.shownEvidence ?? []) {
+      const conv = progress.conversations[s.id];
+      for (const ev of conv?.shownEvidence ?? []) {
         const list = m.get(ev) ?? [];
-        if (!list.includes(s.name)) list.push(s.name);
+        // Evidence that meant nothing to someone is marked, so nobody shows it to them twice.
+        const entry = conv?.evidenceEffects?.[ev] === 'none' ? t('notebook.nothingNew', { name: s.name }) : s.name;
+        if (!list.includes(entry)) list.push(entry);
         m.set(ev, list);
       }
     }

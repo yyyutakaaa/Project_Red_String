@@ -323,7 +323,7 @@ export function setConversationState(
   c: CaseFile,
   caseKey: string,
   suspectId: string,
-  patch: Partial<Pick<ConversationState, 'patienceUsed' | 'patienceMax' | 'mood' | 'shownEvidence'>>,
+  patch: Partial<Pick<ConversationState, 'patienceUsed' | 'patienceMax' | 'mood' | 'shownEvidence' | 'evidenceEffects' | 'caughtLies'>>,
 ): void {
   G().update(caseKey, (p) => {
     const conv = getConversation(p, c, suspectId);
@@ -333,6 +333,11 @@ export function setConversationState(
 
 export function setBoard(caseKey: string, board: BoardState, save = true): void {
   G().update(caseKey, (p) => ({ ...p, board }), save);
+}
+
+/** Having the strings on the board marked costs as much as a hint. */
+export function payBoardReveal(caseKey: string): void {
+  G().update(caseKey, (p) => ({ ...p, boardReveals: (p.boardReveals ?? 0) + 1 }));
 }
 
 export function setNotes(caseKey: string, notes: string): void {
@@ -378,7 +383,7 @@ export function accuse(c: CaseFile, caseKey: string, culpritId: string, evidence
       discoverable: totalDiscoverables(c),
       questionsUsed: questionsUsed(p),
       questionBudget: totalPatience(c),
-      hintsUsed: p.hintsUsed,
+      hintsUsed: p.hintsUsed + (p.boardReveals ?? 0),
     },
   };
   const slot = G().slot!;

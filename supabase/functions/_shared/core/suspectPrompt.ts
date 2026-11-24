@@ -1,7 +1,7 @@
 // Builds the system prompt for one suspect from ONLY that suspect's sheet plus public case facts.
 // It never reads case.solution, hidden timeline events, other suspects' private data or alibi verification.
 import { DEFAULT_TEMPERAMENT, type CaseFile, type Evidence, type Mood, type Suspect, type Temperament } from './caseSchema.ts';
-import { availableClues, cracked, forcedClues, holdingOut, type ClueContext } from './clues.ts';
+import { availableClues, cracked, evidenceMatters, forcedClues, holdingOut, type ClueContext } from './clues.ts';
 
 /** How a suspect sounds while they hold out against evidence. */
 const UNDER_PRESSURE: Record<Temperament['under_pressure'], string> = {
@@ -21,6 +21,17 @@ export interface PromptInput {
   mood: Mood;
   /** Evidence shown with the current message. */
   shownEvidence: Evidence | null;
+  /** The detective called one of the suspect's earlier statements a lie, with the evidence on the table. */
+  challenge?: Challenge | null;
+}
+
+export interface Challenge {
+  /** What the suspect said, word for word. */
+  statement: string;
+  /** Caught: the statement was one of their lies and the evidence disproves it. */
+  caught: boolean;
+  /** The truth behind the lie they were caught in. */
+  truth?: string;
 }
 
 function list(items: readonly string[], empty = '(none)'): string {
@@ -57,7 +68,7 @@ export function ownPrivateEvents(c: CaseFile, s: Suspect): string[] {
 }
 
 export function buildSuspectPrompt(input: PromptInput): string {
-  const { caseFile: c, suspectId, ctx, mood, shownEvidence } = input;
+  const { caseFile: c, suspectId, ctx, mood, shownEvidence, challenge } = input;
   const s = c.suspects.find((x) => x.id === suspectId);
   if (!s) throw new Error(`Unknown suspect ${suspectId}`);
   const clues = availableClues(s, ctx);
@@ -106,6 +117,19 @@ export function buildSuspectPrompt(input: PromptInput): string {
   }
   if (shownEvidence) {
     sections.push(`# Evidence on the table right now\n${shownEvidence.name}: ${shownEvidence.description}`);
+    if (!evidenceMatters(s, shownEvidence.id) && !challenge) {
+      sections.push(
+        '# This evidence means nothing to you\nIt has nothing to do with you and you know nothing about it. Say so in one short sentence, a little puzzled or bored, and add nothing. Do not invent a connection to it.',
+      );
+    }
+  }
+  if (challenge) {
+    const said = challenge.statement.replace(/\s+/g, ' ').slice(0, 400);
+    sections.push(
+      challenge.caught
+        ? `# You have been caught in a lie\nEarlier you told the detective: "${said}"\nThe detective has put ${shownEvidence?.name ?? 'the evidence'} on the table and it proves that was false. You cannot keep it up. Admit it now, in your own words and your own manner. The truth you admit: ${challenge.truth ?? 'what really happened, as written in this sheet'}\nAdmit only this. You still never reveal the items under "Never reveal".`
+        : `# The detective says you lied\nThe detective points at something you said earlier ("${said}") and puts ${shownEvidence?.name ?? 'the evidence'} on the table as if it proved you lied. It does not prove that. Stand by what you said, in your manner under pressure, and do not change your story.`,
+    );
   }
   sections.push(
     `# Current mood\n${mood}`,

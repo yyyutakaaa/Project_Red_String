@@ -822,7 +822,7 @@ insert into public.story_cases (id, case_text, updated_at) values ('ashgrove-hou
 }$case$, now())
 on conflict (id) do update set case_text = excluded.case_text, updated_at = now();
 
--- blue-lantern (sha256 of the minified JSON: c1cff116ebd915892c828dbf1b2a7f0362d0038e41b8c6bd0023cff1c6135e75)
+-- blue-lantern (sha256 of the minified JSON: 3394a555d366b3f5555ac83464098df28ca258f0868aa67e0db6279591f98b32)
 insert into public.story_cases (id, case_text, updated_at) values ('blue-lantern', $case${
   "schema_version": 1,
   "id": "blue-lantern",
@@ -831,10 +831,10 @@ insert into public.story_cases (id, case_text, updated_at) values ('blue-lantern
   "setting": "The Blue Lantern, a jazz club in the Riverside district of Calder City",
   "era": "February 1949",
   "intro_briefing": [
-    "February 1949. It has rained on Calder City for three days straight, and tonight it hammers the tin awning of the Blue Lantern, the best jazz room in the Riverside district. It was a packed Saturday show, with a hot band and a singer who can make a stevedore cry into his beer.",
+    "February 1949. It has rained on Calder City for three days straight, and tonight it hammers the tin awning of the Blue Lantern, the best jazz room in the Riverside district.",
     "At five past midnight the bartender found the owner, Victor Kale, slumped behind the desk in his office behind the stage, shot once in the chest. A gun went off in a room full of horns and laughter, and nobody admits to hearing it.",
     "The uniforms have locked the doors and sent the crowd home. Four people who matter are waiting for you: Kale's manager, Frank Dellow; his singer and former flame, Lena Marsh; her kid brother Danny, who tends the bar; and Kale's attorney, Leonard Vance, who came back through the rain when Frank telephoned him with the news.",
-    "Search the main floor, the bar, Kale's office, the dressing room and the alley out back. Question them, show them what you find, and pin it all to the board. When you know who pulled the trigger, make your accusation with proof that will stand up in court, Detective."
+    "Question them, show them what you find, and pin it all to the board. When you know who pulled the trigger, make your accusation with proof that will stand up in court, Detective."
   ],
   "victim": {
     "id": "kale",
@@ -1697,7 +1697,7 @@ insert into public.story_cases (id, case_text, updated_at) values ('blue-lantern
 }$case$, now())
 on conflict (id) do update set case_text = excluded.case_text, updated_at = now();
 
--- hollis-garden (sha256 of the minified JSON: 77575efaadf7267126883fd6e1f544a9c9019093e5c26635ac3e43899e4d317f)
+-- hollis-garden (sha256 of the minified JSON: 6a23ece1fb0ede63eb1c4f4c5f3dcf79671d842cff55f204d451fa72b06310bf)
 insert into public.story_cases (id, case_text, updated_at) values ('hollis-garden', $case${
   "schema_version": 1,
   "id": "hollis-garden",
@@ -1709,7 +1709,7 @@ insert into public.story_cases (id, case_text, updated_at) values ('hollis-garde
     "Saturday, 13 August 1949. Every August Judge Arthur Hollis throws open his garden in the Heights for the people who matter in Calder City. There was a dance band on the terrace, champagne on the lawn, and fireworks at twenty past ten. When the first rocket went up, his daughter found him in the lily pond at the bottom of the garden.",
     "The judge was sixty-six and the chairman of the Waterfront Commission since the hearings in June. The police surgeon says he was struck once on the back of the head and went into the water alive. He did not get out again. A croquet mallet is missing from the rack on the lawn.",
     "The guests have been sent home with their names taken. Four people are still here: his wife, Beatrice Hollis; his daughter, Celia, who sang with the band tonight; the bandleader, Rex Danner; and the judge's nephew and law clerk, Philip Hollis. The cook, Mrs. Ortega, has given a statement to the patrolman in the kitchen.",
-    "Search the terrace, the garden, the judge's library and the kitchen. Question the four of them and show them what you find. Keep a close eye on the clock. At a party everyone remembers the music, and hardly anyone remembers the time."
+    "Question the four of them and show them what you find. Keep a close eye on the clock. At a party everyone remembers the music, and hardly anyone remembers the time."
   ],
   "victim": {
     "id": "judge",
@@ -2468,7 +2468,7 @@ insert into public.story_cases (id, case_text, updated_at) values ('hollis-garde
 }$case$, now())
 on conflict (id) do update set case_text = excluded.case_text, updated_at = now();
 
--- mercers-pharmacy (sha256 of the minified JSON: 616637e39f5fb025c511781668cb38fd76cb30e8aa547b377a4f1fff4dd69f62)
+-- mercers-pharmacy (sha256 of the minified JSON: e4e27f91c1d164d2271e828422ed4bdf18663afa6e7287a2d5cbde5a53e23694)
 insert into public.story_cases (id, case_text, updated_at) values ('mercers-pharmacy', $case${
   "schema_version": 1,
   "id": "mercers-pharmacy",
@@ -2477,10 +2477,10 @@ insert into public.story_cases (id, case_text, updated_at) values ('mercers-phar
   "setting": "Mercer's Pharmacy on Calloway Street, with Dr. Pell's surgery on the floor above",
   "era": "April 1950",
   "intro_briefing": [
-    "Friday, 14 April 1950. Mercer's Pharmacy has stood on Calloway Street since 1911. Half the city has had a prescription filled there, including, eighteen months ago, a bottle of digitalis drops for a shipowner on the cliffs at Ashgrove. At ten past nine tonight its owner fell down behind the dispensary counter, and he was dead before the ambulance came.",
+    "Friday, 14 April 1950. Mercer's Pharmacy has stood on Calloway Street since 1911. At ten past nine tonight its owner fell down behind the dispensary counter, and he was dead before the ambulance came.",
     "Edgar Mercer was sixty-three. The police surgeon smelled the nerve tonic Mercer took every night before he locked up, looked at the arch of his back, and said strychnine. The police chemist has already confirmed it in the bottle. The question is when it got there.",
     "Four people had their hands near that bottle today: his son and partner, Nathan Mercer; his wife, Lucille; Helen Voss, who runs the soda fountain; and Dr. Raymond Pell, whose surgery is upstairs and whose prescriptions the shop has filled for twelve years. Dr. Pell has come over from St. Columba's Hospital, where he spent the evening delivering a baby.",
-    "Search the shop, the dispensary, the cellar and Dr. Pell's surgery. Question the four of them and show them what you find. Do not ask them where they were at nine o'clock. Ask them where they were when the poison went in."
+    "Question the four of them and show them what you find. Do not ask them where they were at nine o'clock. Ask them where they were when the poison went in."
   ],
   "victim": {
     "id": "edgar",
@@ -3163,7 +3163,7 @@ insert into public.story_cases (id, case_text, updated_at) values ('mercers-phar
 }$case$, now())
 on conflict (id) do update set case_text = excluded.case_text, updated_at = now();
 
--- night-express (sha256 of the minified JSON: 16e8c79d894366f77fb20deb48ce381f781e4c1eb5f7ed1b7c2b2beb898b6ae4)
+-- night-express (sha256 of the minified JSON: 848133a42deb9bc58bad685120834fa0a3914a956d1a09472b5e517f9fda3243)
 insert into public.story_cases (id, case_text, updated_at) values ('night-express', $case${
   "schema_version": 1,
   "id": "night-express",
@@ -3175,7 +3175,7 @@ insert into public.story_cases (id, case_text, updated_at) values ('night-expres
     "Thursday, 9 June 1949. The Calder Limited left Calder City at nine last night with one sleeping car, one dining car and a lounge car on the back. It was due into Harmon Junction at seven. At five past midnight the porter brought a cup of coffee to Compartment C and found Walter Brandt dead in his berth.",
     "Brandt owned the Calder Courier, the paper that ran the Pier Seventeen story in April and kept running it. He was on his way to Harmon to give evidence to the state Waterfront Commission at ten this morning. Somebody stabbed him once, under the ribs, with a knife that is not in the compartment.",
     "The railroad stopped the train at Ferris Crossing and telephoned the city. You came out on the engine of the milk train. Nobody has left the sleeping car. In it you have his wife, Irene Brandt; his star reporter, Paul Sutter, who was carrying the Courier's half of the file; Conrad Teague, the waterfront contractor whose name is all over that file, travelling to the same hearing; and the porter, Gus Malloy, who has worked this car for twenty-two years.",
-    "Search the compartment, the corridor, the dining car and the lounge car. Question the four of them and put what you find on the table in front of them. When you can show who went into Compartment C, and why, make your accusation."
+    "Question the four of them and put what you find on the table in front of them. When you can show who went into Compartment C, and why, make your accusation."
   ],
   "victim": {
     "id": "walter",
@@ -3916,7 +3916,7 @@ insert into public.story_cases (id, case_text, updated_at) values ('night-expres
 }$case$, now())
 on conflict (id) do update set case_text = excluded.case_text, updated_at = now();
 
--- pier-seventeen (sha256 of the minified JSON: 00f9822cd79d8431cd22efd1ba9758652f77a521e5c188ca37769cd9444a761f)
+-- pier-seventeen (sha256 of the minified JSON: d2f9bc9cf6fffd8d3ef6dc2a83e6bb9be9d195fb36428ef6280aaaeb073959ac)
 insert into public.story_cases (id, case_text, updated_at) values ('pier-seventeen', $case${
   "schema_version": 1,
   "id": "pier-seventeen",
@@ -3928,7 +3928,7 @@ insert into public.story_cases (id, case_text, updated_at) values ('pier-sevente
     "April 1949. The fog has sat on the Calder City waterfront for three days, thick enough to lose a freighter in. At six this morning the night watchman at Pier Seventeen found Harold Pike, 58, chief clerk of Ashgrove Shipping for thirty-one years, at the foot of the iron stairs in the ledger archive.",
     "It was phoned in as a fall. The police surgeon does not like it: one deep blow to the left temple that the steps did not give him. He puts death between a quarter to eleven and half past eleven last night.",
     "Four people are waiting for you in the harbor office. Clara Ashgrove, who has run Ashgrove Shipping since her father's death. Leonard Vance of Vance and Pryor, the firm's attorney, whom Clara telephoned before she telephoned anyone else. Inspector Ruth Calloway of Harbor Customs, here since dawn to seal the bonded warehouse as regulation requires. And Tommy Reyes, the watchman, who smells of peppermints at seven in the morning.",
-    "Patrolman Duffy took first statements at dawn and has been checking what he could; anything he brought back is on the front office counter. Search the office, the archive, the warehouse, the dock and the gatehouse. Question all four, show them what you find, and pin every story to the clock. When you know who sent Harold Pike down those stairs, and can prove it, make your accusation."
+    "Patrolman Duffy took first statements at dawn and has been checking what he could; anything he brought back is on the front office counter. Question all four, show them what you find, and pin every story to the clock. When you know who sent Harold Pike down those stairs, and can prove it, make your accusation."
   ],
   "victim": {
     "id": "pike",
@@ -4834,7 +4834,7 @@ insert into public.story_cases (id, case_text, updated_at) values ('pier-sevente
 }$case$, now())
 on conflict (id) do update set case_text = excluded.case_text, updated_at = now();
 
--- reading-room (sha256 of the minified JSON: 10b8bb43b6e1056a4ca8d9cdc53608e9f2e8fac72aee0e1fd316d5b177e2eac3)
+-- reading-room (sha256 of the minified JSON: ecdeb03223488d68217ddd532ae31e5ec97b8f5e77e6a57633c6773f93aef626)
 insert into public.story_cases (id, case_text, updated_at) values ('reading-room', $case${
   "schema_version": 1,
   "id": "reading-room",
@@ -4846,7 +4846,7 @@ insert into public.story_cases (id, case_text, updated_at) values ('reading-room
     "Friday, 17 February 1950. It started snowing at a quarter to eight and has not stopped. The Calder City Public Library stays open late on Fridays, and tonight almost nobody came. At twenty-five past nine the night porter and a visitor crossed the courtyard to the rare book annex and found Miss Agnes Thorne dead at her desk.",
     "Miss Thorne was sixty-one and had kept the library's rare books for thirty years. Someone struck her on the head with the heavy brass book press from her own desk. The police surgeon puts it between half past eight and nine o'clock.",
     "There is one line of footprints across the snow in the courtyard before the porter's: hers, going in, at about ten to eight. Nobody else crossed. The people who were in the library tonight are waiting in the reading room: Graham Oakes, the deputy librarian, who was on the reference desk; Oliver Prentice, a rare book dealer who had an appointment with her at nine; Rosa Lindqvist, a student who reads at the window table every night; and Abe Kowalski, the night porter. Miss Peabody from the circulation desk has given the patrolman a statement.",
-    "Search the reading room, the courtyard, the annex and the cellars. Question the four of them and show them what you find. Somebody reached that annex without walking on the snow."
+    "Question the four of them and show them what you find. Somebody reached that annex without walking on the snow."
   ],
   "victim": {
     "id": "agnes",
@@ -5509,7 +5509,7 @@ insert into public.story_cases (id, case_text, updated_at) values ('reading-room
 }$case$, now())
 on conflict (id) do update set case_text = excluded.case_text, updated_at = now();
 
--- studio-nine (sha256 of the minified JSON: 02593c642e4d5c63b2ffe0f93ce35946ec1561f24f62f02d48550923a6f0d26d)
+-- studio-nine (sha256 of the minified JSON: 33159a4a337bb8a5b1cde538b2fa81193da696f7d61fa7ec720ec436d21aff07)
 insert into public.story_cases (id, case_text, updated_at) values ('studio-nine', $case${
   "schema_version": 1,
   "id": "studio-nine",
@@ -5521,7 +5521,7 @@ insert into public.story_cases (id, case_text, updated_at) values ('studio-nine'
     "Friday, 14 October 1949. Every Friday at half past nine Radio Calder puts out 'Nightbeat', a crime serial played live from Studio Nine on the ninth floor of the Courier Building. Tonight's episode went out on time and finished on time. At five past ten an actress waiting for an appointment walked into the producer's office and found him dead.",
     "Vernon Clay, forty-seven, produced and directed 'Nightbeat' and half the station's other shows. Someone strangled him at his desk with a length of microphone cable. The police surgeon puts it between half past nine and ten, the half hour the show was on the air.",
     "Four people are still on the floor: Dorothy Vale, the star of the serial; Eddie Fenn, the sound-effects man; Sam Okada, the engineer who ran the board tonight; and Nora Quill, the young actress who found him. The night receptionist, Mrs. Gage, has gone home after giving a statement, and the lobby sign-in book is still on her desk.",
-    "Search the studio, Clay's office, the record library and the lobby. Question the four of them and show them what you find. Everybody in the building says they were somewhere they can prove. One of them is counting on a record."
+    "Question the four of them and show them what you find. Everybody in the building says they were somewhere they can prove. One of them is counting on a record."
   ],
   "victim": {
     "id": "vernon",
@@ -6182,7 +6182,7 @@ insert into public.story_cases (id, case_text, updated_at) values ('studio-nine'
 }$case$, now())
 on conflict (id) do update set case_text = excluded.case_text, updated_at = now();
 
--- the-regent (sha256 of the minified JSON: e9060b6f0373ab702753ad9079ec5dbfc743d5bad34fc074c5aa6a957524962c)
+-- the-regent (sha256 of the minified JSON: 4b2a9f2e5e764ad769af359faedbb8aad802bdc457e3c347c9907214def98ca3)
 insert into public.story_cases (id, case_text, updated_at) values ('the-regent', $case${
   "schema_version": 1,
   "id": "the-regent",
@@ -6194,7 +6194,7 @@ insert into public.story_cases (id, case_text, updated_at) values ('the-regent',
     "Saturday, 31 December 1949. Ashgrove Shipping took the whole Starlight Ballroom at the Regent Hotel to see out the year, with a band, a countdown and fireworks over the river at midnight. At ten past twelve the hotel's house detective let himself into Suite 1204 and found a guest dead beside the telephone.",
     "The dead man is Gilbert Ames, fifty, an accountant of Ames and Fowler. Clara Ashgrove hired him in December to go through the books of the Ashgrove Family Trust. Someone hit him on the head with a champagne magnum. A minute before, he had rung the switchboard and asked for the house detective.",
     "Four people from the Ashgrove table are waiting in the manager's office: his wife, Lorraine Ames; his partner, Howard Fowler; Clara Ashgrove, who invited him; and Leonard Vance of Vance and Pryor, the trustee whose books Ames was going through. All four say they were in the ballroom at midnight, and all four are telling the truth about the countdown.",
-    "Search the lobby, the suite, the ballroom and the hotel laundry. Question the four of them and show them what you find. Find out exactly when midnight was in each room of this hotel."
+    "Question the four of them and show them what you find. Find out exactly when midnight was in each room of this hotel."
   ],
   "victim": {
     "id": "gilbert",
@@ -6879,7 +6879,7 @@ insert into public.story_cases (id, case_text, updated_at) values ('the-regent',
 }$case$, now())
 on conflict (id) do update set case_text = excluded.case_text, updated_at = now();
 
--- vance-and-pryor (sha256 of the minified JSON: b4956b474419ac8a005aed9bf9cff658e0a7e97f1b25a993c7098379ae81191c)
+-- vance-and-pryor (sha256 of the minified JSON: 6f8dcd1d99f337a987ed8ad91003b3f33918b6cb17d88eb618d23d0446bcbe84)
 insert into public.story_cases (id, case_text, updated_at) values ('vance-and-pryor', $case${
   "schema_version": 1,
   "id": "vance-and-pryor",
@@ -6891,7 +6891,7 @@ insert into public.story_cases (id, case_text, updated_at) values ('vance-and-pr
     "Monday, 12 June 1950. At half past eight this morning Miss June Hartley unlocked the offices of Vance and Pryor on the sixth floor of the Harbor Exchange Building and found Martin Pryor dead in his chair. His own revolver was in his hand and a typed note was on his blotter.",
     "The note says he cannot face what he has done to the Ashgrove Family Trust. The police surgeon says Pryor died some time on Sunday evening, between seven and ten, from a single shot to the right temple at close range. The Captain would like to call it suicide and close the file. He sent you because of the name on the trust.",
     "You know these people. Leonard Vance, Pryor's partner of twenty-six years, trustee of the Ashgrove trust since before the war, and somewhere in the background of every case you have worked since that night at Ashgrove House. Clara Ashgrove, whose father's money the note talks about. Miss June Hartley, the firm's secretary. And Tommy Reyes, who used to watch the gate at Pier Seventeen and now runs the night elevator here.",
-    "Search the lobby, both partners' offices and the records room. Question the four of them and show them what you find. If Martin Pryor did not write that note, somebody in this building wanted you to believe he did."
+    "Question the four of them and show them what you find. If Martin Pryor did not write that note, somebody in this building wanted you to believe he did."
   ],
   "victim": {
     "id": "pryor",

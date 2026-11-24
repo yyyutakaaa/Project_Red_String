@@ -4,6 +4,7 @@
 //   event: error  data: {"code": "...", "message": "..."}
 // Non-streaming errors come back as JSON: {"error": {"code": "...", "message": "..."}}.
 import type { Mood } from '@shared/caseSchema.ts';
+import type { EvidenceEffect } from '@shared/clues.ts';
 import { BACKEND_CONFIGURED, FUNCTIONS_URL, SUPABASE_PUBLISHABLE_KEY } from './config.ts';
 import { t, useLanguage } from '../i18n/index.ts';
 
@@ -13,6 +14,7 @@ export type ApiErrorCode =
   | 'rate_limited'
   | 'patience_exhausted'
   | 'spend_limit'
+  | 'network_limit'
   | 'bad_request'
   | 'not_found'
   | 'invalid_case'
@@ -46,6 +48,8 @@ export interface InterrogateRequest {
   device_id: string;
   /** The run this save was copied from, so the server can carry its interrogation state over. */
   parent_save_id?: string | null;
+  /** "Catch a lie": something this suspect said, word for word, that the shown evidence is said to disprove. */
+  challenge_statement?: string | null;
 }
 
 export interface InterrogateFinal {
@@ -59,6 +63,10 @@ export interface InterrogateFinal {
   patience_max: number;
   /** True when the provider failed: the reply is a canned deflection and no patience was used. */
   silent: boolean;
+  /** What the evidence on the table did to the suspect: nothing, they hold out, or they gave way. */
+  evidence_effect?: EvidenceEffect | null;
+  /** The outcome of calling a statement a lie, when the question did that. */
+  challenge?: 'caught' | 'failed' | null;
 }
 
 function headers(): HeadersInit {
@@ -209,6 +217,8 @@ export function describeApiError(err: unknown): string {
       return t('api.patience');
     case 'spend_limit':
       return t('api.spendLimit');
+    case 'network_limit':
+      return t('api.networkLimit');
     case 'timeout':
       return t('api.timeout');
     default:

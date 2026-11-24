@@ -86,6 +86,7 @@ export function scoreProgress(c: CaseFile, p: CaseProgress, outcome: AccusationO
     discoverable: totalDiscoverables(c),
     questionsUsed: questionsUsed(p),
     questionBudget: totalPatience(c),
-    hintsUsed: p.hintsUsed,
+    // Having the board marked costs the same as a hint.
+    hintsUsed: p.hintsUsed + (p.boardReveals ?? 0),
   });
 }

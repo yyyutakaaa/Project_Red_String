@@ -6,10 +6,10 @@
   "setting": "The Blue Lantern, a jazz club in the Riverside district of Calder City",
   "era": "February 1949",
   "intro_briefing": [
-    "February 1949. It has rained on Calder City for three days straight, and tonight it hammers the tin awning of the Blue Lantern, the best jazz room in the Riverside district. It was a packed Saturday show, with a hot band and a singer who can make a stevedore cry into his beer.",
+    "February 1949. It has rained on Calder City for three days straight, and tonight it hammers the tin awning of the Blue Lantern, the best jazz room in the Riverside district.",
     "At five past midnight the bartender found the owner, Victor Kale, slumped behind the desk in his office behind the stage, shot once in the chest. A gun went off in a room full of horns and laughter, and nobody admits to hearing it.",
     "The uniforms have locked the doors and sent the crowd home. Four people who matter are waiting for you: Kale's manager, Frank Dellow; his singer and former flame, Lena Marsh; her kid brother Danny, who tends the bar; and Kale's attorney, Leonard Vance, who came back through the rain when Frank telephoned him with the news.",
-    "Search the main floor, the bar, Kale's office, the dressing room and the alley out back. Question them, show them what you find, and pin it all to the board. When you know who pulled the trigger, make your accusation with proof that will stand up in court, Detective."
+    "Question them, show them what you find, and pin it all to the board. When you know who pulled the trigger, make your accusation with proof that will stand up in court, Detective."
   ],
   "victim": {
     "id": "kale",

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { CaseFile } from '@shared/caseSchema.ts';
-import { cracked, evidencePressure, filterRevealedClues, forcedClues, isConditionMet, resolveMood, resolveRevealedClues, type ClueContext } from '@shared/clues.ts';
+import { CAUGHT_PRESSURE, cracked, evidenceEffect, evidenceMatters, evidencePressure, filterRevealedClues, forcedClues, isConditionMet, resolveMood, resolveRevealedClues, type ClueContext } from '@shared/clues.ts';
+import { parseLieVerdict, sameStatement } from '@shared/lies.ts';
 import { miniCase } from './fixtures/miniCase.ts';
 
 const c = CaseFile.parse(miniCase());
@@ -70,5 +71,40 @@ describe('suspects hold out against evidence', () => {
     expect(cracked('letter', { ...base, shownEvidenceNow: null, pressure: { letter: 3 }, pressing: 'letter' })).toBe(true);
     // Without pressure data the old rule holds: showing it is enough.
     expect(cracked('letter', { patienceUsedBefore: 0, shownEvidenceNow: 'letter', shownEvidenceBefore: [], alreadyRevealed: [] })).toBe(true);
+  });
+
+  it('breaks at once when the detective catches a lie with the evidence', () => {
+    const caught = evidencePressure([], 'letter', true);
+    expect(caught.pressure.letter).toBe(CAUGHT_PRESSURE);
+    // The catch is remembered in the transcript, so they stay broken on the next question.
+    const later = evidencePressure([{ role: 'detective', shown_evidence_id: 'letter', caught: true }], null);
+    expect(cracked('letter', { patienceUsedBefore: 1, shownEvidenceNow: null, shownEvidenceBefore: ['letter'], alreadyRevealed: [], holdsOut: 4, ...later })).toBe(true);
+  });
+
+  it('tells the player what the evidence did: nothing, holding out, or gave way', () => {
+    const base = { patienceUsedBefore: 0, shownEvidenceBefore: [] as string[], alreadyRevealed: [] as string[], holdsOut: 1 };
+    expect(evidenceEffect(nora, { ...base, shownEvidenceNow: null })).toBeNull();
+    // Evidence nothing on her sheet waits for.
+    expect(evidenceMatters(nora, 'racing-slips')).toBe(false);
+    expect(evidenceEffect(nora, { ...base, shownEvidenceNow: 'racing-slips', pressure: { 'racing-slips': 1 }, pressing: 'racing-slips' })).toBe('none');
+    expect(evidenceEffect(nora, { ...base, shownEvidenceNow: 'pawn-ticket', pressure: { 'pawn-ticket': 1 }, pressing: 'pawn-ticket' })).toBe('holding');
+    expect(evidenceEffect(nora, { ...base, shownEvidenceNow: null, pressure: { 'pawn-ticket': 2 }, pressing: 'pawn-ticket' })).toBe('gave');
+  });
+});
+
+describe('catching a lie', () => {
+  it('matches a pinned statement to the transcript whatever the spacing', () => {
+    expect(sameStatement('I was  in the lounge.\n', ' i was in the Lounge.')).toBe(true);
+    expect(sameStatement('I was in the lounge.', 'I was in the bar.')).toBe(false);
+    expect(sameStatement('', '')).toBe(false);
+  });
+
+  it('reads the referee and treats anything unclear as not caught', () => {
+    expect(parseLieVerdict('{"lie": 2, "contradicts": true}', 2)).toBe(1);
+    expect(parseLieVerdict('```json\n{"lie": 1, "contradicts": true}\n```', 2)).toBe(0);
+    expect(parseLieVerdict('{"lie": 1, "contradicts": false}', 2)).toBeNull();
+    expect(parseLieVerdict('{"lie": null, "contradicts": true}', 2)).toBeNull();
+    expect(parseLieVerdict('{"lie": 3, "contradicts": true}', 2)).toBeNull();
+    expect(parseLieVerdict('yes, they lied', 2)).toBeNull();
   });
 });

@@ -1,4 +1,5 @@
 import type { Mood } from '@shared/caseSchema.ts';
+import type { EvidenceEffect } from '@shared/clues.ts';
 
 export type CaseSource = 'story' | 'generated';
 
@@ -11,6 +12,20 @@ export interface ChatMessage {
   revealedClueIds?: string[];
   /** Set when the suspect fell silent because the backend failed. */
   silent?: boolean;
+  /** On a question: the earlier statement the detective called a lie. */
+  pinnedStatement?: string;
+  /** On a reply: what the evidence on the table did to the suspect, and which evidence that was. */
+  evidenceEffect?: EvidenceEffect | null;
+  effectEvidenceId?: string | null;
+  /** On a reply: how calling the lie went. */
+  challenge?: 'caught' | 'failed' | null;
+}
+
+/** A lie the detective caught: what was said and the evidence that disproved it. */
+export interface CaughtLie {
+  statement: string;
+  evidenceId: string;
+  at: number;
 }
 
 export interface ConversationState {
@@ -19,6 +34,10 @@ export interface ConversationState {
   patienceMax: number;
   mood: Mood;
   shownEvidence: string[];
+  /** Per piece of evidence shown: what it did to this suspect, last time it was on the table. */
+  evidenceEffects?: Record<string, EvidenceEffect>;
+  /** Lies this suspect was caught in. */
+  caughtLies?: CaughtLie[];
 }
 
 export type PinKind = 'suspect' | 'evidence';
@@ -43,6 +62,17 @@ export interface BoardState {
   pins: BoardPin[];
   links: BoardLink[];
   lastCheckedAt: number | null;
+  /** Free checks used in this run (they only give totals). */
+  checksUsed?: number;
+  /** The totals of the last check. */
+  lastCheck?: TheoryCount | null;
+}
+
+export interface TheoryCount {
+  total: number;
+  supported: number;
+  unsupported: number;
+  neutral: number;
 }
 
 export type AccusationOutcome = 'correct' | 'wrong_culprit' | 'weak_proof';
@@ -92,6 +122,8 @@ export interface CaseProgress {
   conversations: Record<string, ConversationState>;
   board: BoardState;
   hintsUsed: number;
+  /** Times the weak strings on the board were marked; each costs as much as a hint. */
+  boardReveals?: number;
   notes: string;
   accusation: AccusationRecord | null;
   /** Time actually spent on this run, in ms: a case screen open, the window in view, the player not idle. */

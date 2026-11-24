@@ -734,3 +734,111 @@
   .actions { margin-left: 0; width: 100%; }
   .actions > * { flex: 1 1 auto; }
 }
+
+/* Suggested opening questions: shown until the first question is asked. */
+.suggestions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.suggestLabel {
+  margin: 0;
+  font-family: var(--font-type);
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+.suggestList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.suggestChip {
+  min-height: 36px;
+  padding: 0.35rem 0.8rem;
+  border: 1px dashed var(--ink-400);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-strong);
+  font-family: var(--font-type);
+  font-size: var(--fs-sm);
+  text-align: left;
+  cursor: pointer;
+}
+.suggestChip:hover,
+.suggestChip:focus-visible {
+  border-style: solid;
+  border-color: var(--lamp-500);
+  color: var(--lamp-200);
+}
+
+/* A pinned statement, waiting for the evidence that proves it false. */
+.pinnedRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+.pinnedQuote {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-style: italic;
+}
+.pinnedHint {
+  margin: 0;
+  font-family: var(--font-type);
+  font-size: var(--fs-xs);
+  color: var(--lamp-300);
+}
+.pinnedMsg {
+  border-color: var(--red-400);
+  box-shadow: 0 0 0 1px var(--red-400);
+}
+.pinButton {
+  margin: var(--space-2) 0 0;
+  padding: 0.15rem 0.6rem;
+  min-height: 28px;
+  border: 1px solid var(--ink-400);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-type);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
+.pinButton:hover,
+.pinButton:focus-visible,
+.pinButton[aria-pressed='true'] {
+  border-color: var(--red-400);
+  color: var(--text-strong);
+}
+.calledLie {
+  margin: var(--space-2) 0 0;
+  font-family: var(--font-type);
+  font-size: var(--fs-xs);
+  font-style: italic;
+  color: var(--paper-ink-muted);
+}
+
+/* What the evidence did, or how calling the lie went: a line under the reply. */
+.outcome {
+  margin: var(--space-3) 0 0;
+  padding-top: var(--space-2);
+  border-top: 1px dashed var(--ink-400);
+  font-family: var(--font-type);
+  font-size: var(--fs-xs);
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+.outcomeStamp {
+  margin-right: 0.3em;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-strong);
+}
+.outcomeCaught .outcomeStamp { color: var(--red-400); }

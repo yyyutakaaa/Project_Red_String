@@ -1,5 +1,6 @@
 import { useEffect, useId, useLayoutEffect, useRef } from 'react';
 import type { CaseFile, Evidence } from '@shared/caseSchema.ts';
+import type { EvidenceEffect } from '@shared/clues.ts';
 import { Button } from './Button.tsx';
 import { EvidenceCard } from './EvidenceCard.tsx';
 import { Modal } from './Modal.tsx';
@@ -16,6 +17,8 @@ interface EvidencePickerProps {
   selectedId: string | null;
   /** Items this suspect has already been shown. */
   shownIds?: readonly string[];
+  /** What each shown item did to this suspect. */
+  effects?: Readonly<Record<string, EvidenceEffect>>;
   /** Short name of the person across the table, for the notes. */
   suspectName: string;
   /** Called with an evidence id to attach it, or null to put the attached item away. */
@@ -30,6 +33,7 @@ export function EvidencePicker({
   evidenceIds,
   selectedId,
   shownIds = [],
+  effects = {},
   suspectName,
   onPick,
 }: EvidencePickerProps) {
@@ -110,7 +114,15 @@ export function EvidencePicker({
                   </div>
                   {(selected || shown) && (
                     <p className={`${styles.pickerNote} ${selected ? styles.pickerNoteSelected : ''}`}>
-                      {selected ? t('picker.onTable') : t('picker.seen', { name: suspectName })}
+                      {selected
+                        ? t('picker.onTable')
+                        : effects[e.id] === 'none'
+                          ? t('picker.nothing', { name: suspectName })
+                          : effects[e.id] === 'holding'
+                            ? t('picker.holding', { name: suspectName })
+                            : effects[e.id] === 'gave'
+                              ? t('picker.gave', { name: suspectName })
+                              : t('picker.seen', { name: suspectName })}
                     </p>
                   )}
                 </li>

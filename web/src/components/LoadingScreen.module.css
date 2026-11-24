@@ -124,3 +124,21 @@
   animation: none;
   transition: none;
 }
+
+/* From the second time on, the wait can be skipped with a click anywhere. */
+.skippable { cursor: pointer; }
+.skip {
+  padding: 0.3rem 0.9rem;
+  border: 1px dashed var(--ink-400);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-type);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  animation: global(fade-in) 400ms var(--ease-out) 300ms both;
+}
+.skip:hover,
+.skip:focus-visible { border-style: solid; color: var(--text-strong); }

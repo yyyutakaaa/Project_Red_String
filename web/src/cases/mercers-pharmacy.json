@@ -6,10 +6,10 @@
   "setting": "Mercer's Pharmacy on Calloway Street, with Dr. Pell's surgery on the floor above",
   "era": "April 1950",
   "intro_briefing": [
-    "Friday, 14 April 1950. Mercer's Pharmacy has stood on Calloway Street since 1911. Half the city has had a prescription filled there, including, eighteen months ago, a bottle of digitalis drops for a shipowner on the cliffs at Ashgrove. At ten past nine tonight its owner fell down behind the dispensary counter, and he was dead before the ambulance came.",
+    "Friday, 14 April 1950. Mercer's Pharmacy has stood on Calloway Street since 1911. At ten past nine tonight its owner fell down behind the dispensary counter, and he was dead before the ambulance came.",
     "Edgar Mercer was sixty-three. The police surgeon smelled the nerve tonic Mercer took every night before he locked up, looked at the arch of his back, and said strychnine. The police chemist has already confirmed it in the bottle. The question is when it got there.",
     "Four people had their hands near that bottle today: his son and partner, Nathan Mercer; his wife, Lucille; Helen Voss, who runs the soda fountain; and Dr. Raymond Pell, whose surgery is upstairs and whose prescriptions the shop has filled for twelve years. Dr. Pell has come over from St. Columba's Hospital, where he spent the evening delivering a baby.",
-    "Search the shop, the dispensary, the cellar and Dr. Pell's surgery. Question the four of them and show them what you find. Do not ask them where they were at nine o'clock. Ask them where they were when the poison went in."
+    "Question the four of them and show them what you find. Do not ask them where they were at nine o'clock. Ask them where they were when the poison went in."
   ],
   "victim": {
     "id": "edgar",

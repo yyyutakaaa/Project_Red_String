@@ -73,6 +73,7 @@
 }
 .summaryText { font-weight: 700; }
 .summaryVerdict { font-style: italic; color: var(--paper-ink-muted); }
+.summaryNote { font-size: var(--fs-xs); color: var(--paper-ink-muted); }
 
 .tip {
   display: flex;

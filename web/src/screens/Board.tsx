@@ -10,16 +10,17 @@ import {
   BOARD_WIDTH,
   addLink,
   checkTheory,
+  checksLeft,
+  markTheory,
   hasLink,
   linkId,
   movePin,
   removeLink,
-  summarizeTheory,
   syncPins,
-  type TheorySummary,
 } from '../engine/board.ts';
-import type { BoardLink, BoardState, LinkStatus, PinKind } from '../engine/types.ts';
-import { setBoard, useGame } from '../store/game.ts';
+import { HINT_COST } from '../engine/scoring.ts';
+import type { BoardLink, BoardState, LinkStatus, PinKind, TheoryCount } from '../engine/types.ts';
+import { payBoardReveal, setBoard, useGame } from '../store/game.ts';
 import { useReducedMotion, useSettings, type FontSize } from '../store/settings.ts';
 import { sfx } from '../audio/audio.ts';
 import { initials } from '../lib/format.ts';
@@ -275,21 +276,16 @@ const STATUS_LABEL: Record<StatusKey, MessageKey> = {
   unchecked: 'board.statusUnchecked',
 };
 
-function summaryText(s: TheorySummary, total: number): string {
-  if (total === 0) return t('board.noStrings');
-  const parts = [
-    tn('board.sumSupported', s.supported),
-    t('board.sumUnsupported', { count: s.unsupported }),
-    t('board.sumNeutral', { count: s.neutral }),
-  ];
-  if (s.unchecked > 0) parts.push(t('board.sumUnchecked', { count: s.unchecked }));
-  return `${parts.join(', ')}.`;
+/** The totals of a check. It never says which string is which. */
+function summaryText(s: TheoryCount): string {
+  if (s.total === 0) return t('board.noStrings');
+  return t('board.countLine', { supported: s.supported, total: s.total, unsupported: s.unsupported, neutral: s.neutral });
 }
 
-function verdictLine(s: TheorySummary, total: number): string {
-  if (total === 0) return '';
+function verdictLine(s: TheoryCount): string {
+  if (s.total === 0) return '';
   if (s.supported === 0) return t('board.verdictNothing');
-  if (s.unsupported === 0 && s.unchecked === 0) return t('board.verdictHolds');
+  if (s.unsupported === 0) return t('board.verdictHolds');
   return t('board.verdictSome');
 }
 
@@ -448,6 +444,7 @@ export function Board() {
   const [focusedId, setFocusedId] = useState<string | null>(null);
   const [fresh, setFresh] = useState<string | null>(null);
   const [confirmClear, setConfirmClear] = useState(false);
+  const [confirmMark, setConfirmMark] = useState(false);
   const [announcement, setAnnouncement] = useState({ text: '', n: 0 });
 
   // Every suspect and every found item gets a pin. Saved back when that changed anything.
@@ -752,20 +749,39 @@ export function Board() {
   };
 
   const onCheck = () => {
-    const checkedBoard = checkTheory(latestBoard(), caseFile);
+    const before = latestBoard();
+    if (checksLeft(before) === 0) return;
+    const checkedBoard = checkTheory(before, caseFile);
     setBoard(caseKey, checkedBoard);
-    const result = summarizeTheory(checkedBoard);
     track('theory_checked', caseKey, {
       strings: checkedBoard.links.length,
-      supported: result.supported,
-      unsupported: result.unsupported,
+      supported: checkedBoard.lastCheck?.supported ?? 0,
+      unsupported: checkedBoard.lastCheck?.unsupported ?? 0,
+      left: checksLeft(checkedBoard),
     });
     setFresh(null);
     sfx('page');
   };
 
+  // The answer key: every string marked. It costs as much as a hint.
+  const onMark = () => {
+    const marked = markTheory(latestBoard(), caseFile);
+    setBoard(caseKey, marked);
+    payBoardReveal(caseKey);
+    track('theory_checked', caseKey, {
+      strings: marked.links.length,
+      supported: marked.lastCheck?.supported ?? 0,
+      unsupported: marked.lastCheck?.unsupported ?? 0,
+      marked: true,
+    });
+    setConfirmMark(false);
+    setFresh(null);
+    sfx('stamp');
+    announce(t('board.marked'));
+  };
+
   const onClear = () => {
-    setBoard(caseKey, { ...latestBoard(), links: [], lastCheckedAt: null });
+    setBoard(caseKey, { ...latestBoard(), links: [], lastCheckedAt: null, lastCheck: null });
     setConfirmClear(false);
     clearConnect();
     setFresh(null);
@@ -777,8 +793,9 @@ export function Board() {
 
   // --- derived view
 
-  const summary = summarizeTheory(board);
-  const checked = board.lastCheckedAt !== null;
+  const lastCheck = board.lastCheck ?? null;
+  const checked = lastCheck !== null;
+  const left = checksLeft(board);
   const linkCount = board.links.length;
 
   let liveString: string | null = null;
@@ -797,8 +814,11 @@ export function Board() {
       kicker={caseFile.title}
       actions={
         <>
-          <Button id={checkId} variant="primary" data-testid="check-theory" onClick={onCheck}>
-            {t('board.check')}
+          <Button id={checkId} variant="primary" data-testid="check-theory" onClick={onCheck} disabled={left === 0 || linkCount === 0}>
+            {left === 0 ? t('board.noChecks') : t('board.checkLeft', { left })}
+          </Button>
+          <Button data-testid="mark-theory" onClick={() => setConfirmMark(true)} disabled={linkCount === 0} aria-haspopup="dialog">
+            {t('board.mark')}
           </Button>
           <Button onClick={() => setConfirmClear(true)} disabled={linkCount === 0} aria-haspopup="dialog">
             {t('board.clear')}
@@ -820,11 +840,12 @@ export function Board() {
           {checked ? (
             <>
               <span className={styles.summaryLabel}>{t('board.checked')}</span>{' '}
-              <span className={styles.summaryText}>{summaryText(summary, linkCount)}</span>{' '}
-              {verdictLine(summary, linkCount) && <span className={styles.summaryVerdict}>{verdictLine(summary, linkCount)}</span>}
+              <span className={styles.summaryText}>{summaryText(lastCheck)}</span>{' '}
+              {verdictLine(lastCheck) && <span className={styles.summaryVerdict}>{verdictLine(lastCheck)}</span>}{' '}
+              <span className={styles.summaryNote}>{left === 0 ? t('board.checksGone') : tn('board.checksLeft', left)}</span>
             </>
           ) : (
-            <span className={styles.summaryText}>{t('board.noVerdict')}</span>
+            <span className={styles.summaryText}>{t('board.noVerdict', { count: left })}</span>
           )}
         </div>
 
@@ -1039,6 +1060,24 @@ export function Board() {
           {announcement.n % 2 === 1 ? NBSP : ''}
         </p>
       </div>
+
+      <Modal
+        open={confirmMark}
+        title={t('board.markTitle')}
+        onClose={() => setConfirmMark(false)}
+        footer={
+          <>
+            <Button variant="ghost" onClick={() => setConfirmMark(false)}>
+              {t('common.cancel')}
+            </Button>
+            <Button variant="primary" data-testid="confirm-mark-theory" onClick={onMark}>
+              {t('board.markConfirm', { cost: HINT_COST })}
+            </Button>
+          </>
+        }
+      >
+        <p>{t('board.markText', { cost: HINT_COST })}</p>
+      </Modal>
 
       <Modal
         open={confirmClear}
