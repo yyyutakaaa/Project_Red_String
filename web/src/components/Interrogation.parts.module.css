@@ -140,8 +140,7 @@
 .pickerList {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
-  /* Every card the same size, whatever the length of its description. */
-  grid-auto-rows: 1fr;
+  /* Cards in a row share its height (the longest description sets it), not the tallest card of all. */
   gap: var(--space-4);
   margin: 0;
   padding: 0;
