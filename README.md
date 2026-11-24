@@ -116,6 +116,9 @@ Project: `hbwvybkpdqliusxheiyg` (eu-central-1). Edge function secrets: `OMNIAKEY
 | `ALLOWED_ORIGINS` | (none) | extra CORS origins, comma-separated, e.g. a custom domain |
 | `VERCEL_PROJECT_NAME` | `project-red-string` | allows `https://<name>.vercel.app` and its preview URLs |
 | `MODEL_PRICING_JSON` | built-in table | override USD per million tokens, e.g. `{"mimo-v2.6-flash":{"input":0.07,"output":0.13}}` |
+| `DEEPSEEK_API_KEY` | (none) | key for models whose id starts with `deepseek-` (sent straight to DeepSeek, not via OmniaKey) |
+| `DEEPSEEK_BASE_URL` | `https://api.deepseek.com` | DeepSeek OpenAI-compatible endpoint |
+| `DEEPSEEK_MAX_OUTPUT_TOKENS` | `8192` | cap on `max_tokens` for DeepSeek models |
 | `GLOBAL_GENERATIONS_PER_DAY` | `60` | cap on new generated cases per day across all players |
 | `OMNIAKEY_SEND_TEMPERATURE` | (off) | set to `1` to send sampling temperature (some models reject it) |
 
@@ -132,7 +135,8 @@ The spend ceiling is race-free: before each model call the worst-case cost is re
 under a Postgres advisory lock and refused if it would pass `DAILY_SPEND_LIMIT_USD`; the row is settled
 to the real cost afterwards, and calls that fail after the provider accepted them keep their estimated cost.
 
-Switch models without code changes, for example:
+Model ids starting with `deepseek-` (for example `deepseek-chat`) are routed to the DeepSeek API with
+`DEEPSEEK_API_KEY`; every other id goes through OmniaKey. Switch models without code changes, for example:
 
 ```powershell
 npx supabase secrets set SUSPECT_MODEL=mimo-v2.6-flash --project-ref hbwvybkpdqliusxheiyg

@@ -20,6 +20,9 @@ function effort(value: string): string | undefined {
 export const config = {
   omniakeyBaseUrl: () => env('OMNIAKEY_BASE_URL', 'https://api.omniakey.com/v1').replace(/\/$/, ''),
   omniakeyKey: () => env('OMNIAKEY_API_KEY'),
+  deepseekBaseUrl: () => env('DEEPSEEK_BASE_URL', 'https://api.deepseek.com').replace(/\/$/, ''),
+  deepseekKey: () => env('DEEPSEEK_API_KEY'),
+  deepseekMaxOutputTokens: () => envNumber('DEEPSEEK_MAX_OUTPUT_TOKENS', 8192),
   suspectModel: () => env('SUSPECT_MODEL', 'claude-haiku-5-5'),
   generatorModel: () => env('GENERATOR_MODEL', 'claude-opus-5-5'),
   /**

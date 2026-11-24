@@ -173,6 +173,27 @@ Deno.test('reads content-part arrays and skips thinking parts', async () => {
   );
 });
 
+Deno.test('routes deepseek- models to DeepSeek with its own key and output cap', async () => {
+  Deno.env.set('DEEPSEEK_API_KEY', 'ds-test');
+  await withFetch(
+    async (url, init) => {
+      assert(url === 'https://api.deepseek.com/chat/completions', `unexpected url ${url}`);
+      assert((init.headers as Record<string, string>).Authorization === 'Bearer ds-test', 'deepseek key not used');
+      const body = JSON.parse(String(init.body));
+      assert(body.max_tokens === 8192, `max_tokens was ${body.max_tokens}`);
+      return sseResponse([
+        'data: {"choices":[{"delta":{"reasoning_content":"hm"}}]}\n\n',
+        'data: {"choices":[{"delta":{"content":"Hi."}}]}\n\n',
+        'data: [DONE]\n\n',
+      ]);
+    },
+    async () => {
+      const r = await streamChat({ ...opts, model: 'deepseek-chat', maxTokens: 16000 }, () => {});
+      assert(r.text === 'Hi.', `text was ${r.text}`);
+    },
+  );
+});
+
 Deno.test('prices known and unknown models', () => {
   const known = estimateCostUsd('claude-haiku-5-5', { inputTokens: 1_000_000, outputTokens: 1_000_000, estimated: false });
   assert(Math.abs(known - 0.48) < 1e-9, `haiku cost ${known}`);

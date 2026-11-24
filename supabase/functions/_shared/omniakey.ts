@@ -62,12 +62,41 @@ export function providerRejected(err: unknown): boolean {
   return err instanceof ProviderError && (err.kind === 'config' || (err.kind === 'http' && err.usage === null));
 }
 
+export interface Provider {
+  name: 'omniakey' | 'deepseek';
+  baseUrl: string;
+  key: string;
+  keyName: string;
+  /** Hard cap on max_tokens accepted by the provider, if any. */
+  maxOutputTokens?: number;
+}
+
+/**
+ * Which API a model id is served by. Ids starting with "deepseek-" go straight to DeepSeek
+ * (OpenAI-compatible, key in the DEEPSEEK_API_KEY secret); everything else goes through OmniaKey.
+ */
+export function providerFor(model: string): Provider {
+  if (model.startsWith('deepseek-')) {
+    return {
+      name: 'deepseek',
+      baseUrl: config.deepseekBaseUrl(),
+      key: config.deepseekKey(),
+      keyName: 'DEEPSEEK_API_KEY',
+      maxOutputTokens: config.deepseekMaxOutputTokens(),
+    };
+  }
+  return { name: 'omniakey', baseUrl: config.omniakeyBaseUrl(), key: config.omniakeyKey(), keyName: 'OMNIAKEY_API_KEY' };
+}
+
 /** USD per million tokens, from the OmniaKey pricing tables (docs.omniakey.com/en/models, 2026-11-23). */
 const PRICES: Record<string, { input: number; output: number }> = {
   'claude-haiku-5-5': { input: 0.08, output: 0.4 },
   'claude-opus-5-5': { input: 1.12, output: 5.6 },
   'mimo-v2.6-flash': { input: 0.0666, output: 0.133 },
   'gpt-6.2-sol': { input: 0.18, output: 0.9 },
+  // DeepSeek direct, list prices (cache miss). Check api-docs.deepseek.com; override with MODEL_PRICING_JSON.
+  'deepseek-chat': { input: 0.27, output: 1.1 },
+  'deepseek-reasoner': { input: 0.55, output: 2.19 },
 };
 /** Unknown models are costed pessimistically so the spend ceiling stays safe. */
 const FALLBACK_PRICE = { input: 5, output: 25 };
@@ -153,10 +182,11 @@ function contentText(content: unknown): string {
  * sent when OMNIAKEY_SEND_TEMPERATURE=1.
  */
 function buildBody(opts: ChatOptions, stream: boolean, minimal: boolean): string {
+  const provider = providerFor(opts.model);
   const body: Record<string, unknown> = {
     model: opts.model,
     messages: opts.messages,
-    max_tokens: opts.maxTokens,
+    max_tokens: provider.maxOutputTokens ? Math.min(opts.maxTokens, provider.maxOutputTokens) : opts.maxTokens,
     stream,
   };
   if (!minimal) {
@@ -176,13 +206,14 @@ function isParameterError(status: number, detail: string): boolean {
 const needsMinimalBody = new Set<string>();
 
 async function post(opts: ChatOptions, stream: boolean, controller: AbortController): Promise<Response> {
-  const key = config.omniakeyKey();
-  if (!key) throw new ProviderError('OMNIAKEY_API_KEY is not set', 0, 'config');
+  const provider = providerFor(opts.model);
+  const key = provider.key;
+  if (!key) throw new ProviderError(`${provider.keyName} is not set`, 0, 'config');
   const variants = needsMinimalBody.has(opts.model) ? [true] : [false, true];
   for (const minimal of variants) {
     let res: Response;
     try {
-      res = await fetch(`${config.omniakeyBaseUrl()}/chat/completions`, {
+      res = await fetch(`${provider.baseUrl}/chat/completions`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${key}`,
