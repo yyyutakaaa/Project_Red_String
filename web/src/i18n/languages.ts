@@ -8,7 +8,6 @@ export const LANGUAGES = [
   { code: 'nl', name: 'Nederlands', english: 'Dutch' },
   { code: 'fr', name: 'Français', english: 'French' },
   { code: 'de', name: 'Deutsch', english: 'German' },
-  { code: 'es', name: 'Español', english: 'Spanish' },
 ] as const;
 
 export type LanguageCode = (typeof LANGUAGES)[number]['code'];

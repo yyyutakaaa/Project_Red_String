@@ -356,7 +356,7 @@ Your own devices count too; leave them out with `where device_id <> '<your id>'`
 
 ## Languages
 
-The game plays in English, Dutch, French, German and Spanish. Settings → Language switches it; on the first start the game picks the browser's language when it has it. The menus, the case files (briefings, rooms, evidence, clues, hints, endings) and the Discord status are translated. The suspects' sheets stay English: the model reads them in English and answers in the language the player types in, and showing evidence without typing sends the default line in the player's language.
+The game plays in English, Dutch, French and German. Settings → Language switches it; on the first start the game picks the browser's language when it has it. The menus, the case files (briefings, rooms, evidence, clues, hints, endings) and the Discord status are translated. The suspects' sheets stay English: the model reads them in English and answers in the language the player types in, and showing evidence without typing sends the default line in the player's language.
 
 - [`web/src/i18n/en.ts`](web/src/i18n/en.ts) holds every interface string, by key. Components read them with `t('key', { vars })`, counts with `tn('key', n)` (`key.one` / `key.other`), and sentences with an element inside with `rich()`.
 - Translations live in `web/src/i18n/locales/<lang>.json` and, per case, `web/src/cases/i18n/<lang>/<case>.json` ([`caseText.ts`](web/src/i18n/caseText.ts) lists which fields count). A missing string falls back to English. Each language is its own chunk, so a player downloads only theirs.
