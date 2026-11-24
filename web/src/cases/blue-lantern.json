@@ -604,6 +604,7 @@
       ],
       "breaks_on": ["skim-ledger", "safe-revolver", "vance-statement"],
       "patience": 14,
+      "temperament": { "holds_out": 3, "under_pressure": "charming" },
       "deflections": [
         "*straightens his tie and flashes a grin*  Pal, I got a club full of cops and a dead boss. Give me a minute, huh?",
         "*counts something on his fingers, then stops*  Honest to God, Detective, I told you everything I know.",
@@ -681,6 +682,7 @@
       ],
       "breaks_on": ["vance-tab", "green-ledger"],
       "patience": 12,
+      "temperament": { "holds_out": 3, "under_pressure": "cold" },
       "deflections": [
         "*removes his spectacles and polishes them with great care*  Strictly speaking, Detective, that is a question for my client, and my client is no longer available.",
         "*a thin smile*  I would not characterize it that way. Ask me something else.",
@@ -762,6 +764,7 @@
       ],
       "breaks_on": ["wet-shoes", "cash-envelope", "lipstick-glass"],
       "patience": 12,
+      "temperament": { "holds_out": 2, "under_pressure": "hostile" },
       "deflections": [
         "*draws her shawl tighter and looks at the rain on the window*  Ask me again tomorrow, Detective. I sang two sets tonight.",
         "*lets out a long breath of smoke*  Honey, I've got nothing left to give tonight.",
@@ -837,6 +840,7 @@
       ],
       "breaks_on": ["cash-envelope", "danny-iou"],
       "patience": 11,
+      "temperament": { "holds_out": 1, "under_pressure": "fearful" },
       "deflections": [
         "*wipes the same glass for the third time*  Look, look, look, I told the other cops already, sir.",
         "*jams his shaking hands into his apron*  Can I get some air? Just a minute.",

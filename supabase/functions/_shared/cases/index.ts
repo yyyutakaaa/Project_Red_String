@@ -2,14 +2,14 @@
 // SHA-256 of JSON.stringify(case) for each story case. The functions load cases from public.story_cases
 // and only use a case whose stored text matches this hash.
 export const STORY_CASE_HASHES: Record<string, string> = {
-  'ashgrove-house': '059b8da70d4ea136a6ac7923b9f3b9b7180bb301f514d848325328809683c47a',
-  'blue-lantern': '0387606d726a30f645dda4c4da8f57f422eab118890eec05fe9b75ccf541ad7e',
-  'hollis-garden': '7134f6130a3ebdd5a55ebd99e70959c712ed697b9b4a3c0526fe44f7daf479ad',
-  'mercers-pharmacy': '04f946e434d1b70954af4e60221063f531de798b264a70f700bd501520c371e1',
-  'night-express': 'ab72673c07c7dd860f26db1086d538b589a42a474c89cefda1d6da6c4786e6d5',
-  'pier-seventeen': 'dec4d712c01da0f40918a434fb859f011265b85bd9a549545909b67ccd777f0a',
-  'reading-room': 'db4a176ae9006969d588a159425121501e0b5722bd4cc8dd80e9d4d68ca45958',
-  'studio-nine': 'eada2b10205c02711c3ecc99aaf5aa419c2b792b66a363ae9a612e099c68e990',
-  'the-regent': '16c993527ee701305e9d8a38b373a7cbd17e0185977f56ea0b35c4ac50923509',
-  'vance-and-pryor': '1a4d05d299a00898d66873631ed93a813fc77ce6059cd5806738438ff3622aae',
+  'ashgrove-house': '64664db1ce874a45cb087354004e79264b0309cf52d2caec833cccbffeab6e7a',
+  'blue-lantern': 'c1cff116ebd915892c828dbf1b2a7f0362d0038e41b8c6bd0023cff1c6135e75',
+  'hollis-garden': '77575efaadf7267126883fd6e1f544a9c9019093e5c26635ac3e43899e4d317f',
+  'mercers-pharmacy': '616637e39f5fb025c511781668cb38fd76cb30e8aa547b377a4f1fff4dd69f62',
+  'night-express': '16e8c79d894366f77fb20deb48ce381f781e4c1eb5f7ed1b7c2b2beb898b6ae4',
+  'pier-seventeen': '00f9822cd79d8431cd22efd1ba9758652f77a521e5c188ca37769cd9444a761f',
+  'reading-room': '10b8bb43b6e1056a4ca8d9cdc53608e9f2e8fac72aee0e1fd316d5b177e2eac3',
+  'studio-nine': '02593c642e4d5c63b2ffe0f93ce35946ec1561f24f62f02d48550923a6f0d26d',
+  'the-regent': 'e9060b6f0373ab702753ad9079ec5dbfc743d5bad34fc074c5aa6a957524962c',
+  'vance-and-pryor': 'b4956b474419ac8a005aed9bf9cff658e0a7e97f1b25a993c7098379ae81191c',
 };

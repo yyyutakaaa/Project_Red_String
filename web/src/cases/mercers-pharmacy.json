@@ -471,6 +471,7 @@
       ],
       "breaks_on": ["day-book", "surgery-ledger", "prescription-notes"],
       "patience": 13,
+      "temperament": { "holds_out": 3, "under_pressure": "cold" },
       "deflections": [
         "*gently*  My friend, you're tired. We all are. Ask me again slowly.",
         "*rubs his hip*  Poor Edgar. Thirty-nine years behind that counter.",
@@ -535,6 +536,7 @@
       ],
       "breaks_on": ["chain-offer"],
       "patience": 12,
+      "temperament": { "holds_out": 2, "under_pressure": "hostile" },
       "deflections": [
         "*stares at his hands*  Look. I just found him. I can't do this right now.",
         "*rubs his face*  Dad. My father. Sorry.",
@@ -594,6 +596,7 @@
       ],
       "breaks_on": ["rat-poison"],
       "patience": 12,
+      "temperament": { "holds_out": 1, "under_pressure": "cold" },
       "deflections": [
         "*folds her arms*  Well, there it is. I wasn't here.",
         "*sharp*  I've told you once. I'll not tell you twice.",
@@ -658,6 +661,7 @@
       ],
       "breaks_on": ["fountain-tape"],
       "patience": 12,
+      "temperament": { "holds_out": 1, "under_pressure": "fearful" },
       "deflections": [
         "*wipes the counter that is already clean*  Honest, I just make the sodas.",
         "*quickly*  Swear to God, I went home at six. Ask the streetcar man.",

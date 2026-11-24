@@ -451,6 +451,7 @@
       ],
       "breaks_on": ["whitewash-jacket", "porter-log", "swapped-book"],
       "patience": 13,
+      "temperament": { "holds_out": 3, "under_pressure": "charming" },
       "deflections": [
         "*folds his hands on the desk*  I could look that up for you, Detective, if you'd like.",
         "*softly*  Miss Thorne would have known. She always knew.",
@@ -515,6 +516,7 @@
       ],
       "breaks_on": ["swapped-book", "prentice-offer"],
       "patience": 12,
+      "temperament": { "holds_out": 2, "under_pressure": "fearful" },
       "deflections": [
         "*touches his tie*  My dear sir, a matter of some delicacy. Might we come back to it?",
         "*looks toward the windows*  She was the finest keeper of books in this city. I'll say that much.",
@@ -579,6 +581,7 @@
       ],
       "breaks_on": ["cut-maps"],
       "patience": 12,
+      "temperament": { "holds_out": 2, "under_pressure": "hostile" },
       "deflections": [
         "*pushes her hair back*  I'm sorry. I'm sorry, I don't know any more than that.",
         "*sharp*  You will blame me anyway, I think.",
@@ -638,6 +641,7 @@
       ],
       "breaks_on": ["porter-log", "boiler-log"],
       "patience": 12,
+      "temperament": { "holds_out": 1, "under_pressure": "fearful" },
       "deflections": [
         "*looks at his boots*  I ain't saying, mister.",
         "*rubs his knee*  She lent me a book once. About ships. Asked me what I thought.",

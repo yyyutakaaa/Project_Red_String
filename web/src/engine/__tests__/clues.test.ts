@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { CaseFile } from '@shared/caseSchema.ts';
-import { filterRevealedClues, forcedClues, isConditionMet, resolveMood, resolveRevealedClues, type ClueContext } from '@shared/clues.ts';
+import { cracked, evidencePressure, filterRevealedClues, forcedClues, isConditionMet, resolveMood, resolveRevealedClues, type ClueContext } from '@shared/clues.ts';
 import { miniCase } from './fixtures/miniCase.ts';
 
 const c = CaseFile.parse(miniCase());
@@ -50,5 +50,25 @@ describe('clue filtering', () => {
     expect(resolveMood(nora, 'calm', ctx({ shownEvidenceNow: 'pawn-ticket' }))).toBe('broken');
     expect(resolveMood(nora, 'angry', ctx())).toBe('angry');
     expect(resolveMood(nora, 'ecstatic', ctx(), 'nervous')).toBe('nervous');
+  });
+});
+
+describe('suspects hold out against evidence', () => {
+  const turns = (...shown: Array<string | null>) => shown.map((s) => ({ role: 'detective', shown_evidence_id: s }));
+
+  it('counts each showing and each question that keeps pushing after it', () => {
+    expect(evidencePressure([], 'letter')).toEqual({ pressure: { letter: 1 }, pressing: 'letter' });
+    expect(evidencePressure(turns(null, 'letter', null), null)).toEqual({ pressure: { letter: 3 }, pressing: 'letter' });
+    expect(evidencePressure(turns('letter', null, 'glove'), null)).toEqual({ pressure: { letter: 2, glove: 2 }, pressing: 'glove' });
+    expect(evidencePressure(turns(null, null), null)).toEqual({ pressure: {}, pressing: null });
+  });
+
+  it('gives way only after the confrontations the temperament allows', () => {
+    const base = { patienceUsedBefore: 3, shownEvidenceBefore: [] as string[], alreadyRevealed: [] as string[], holdsOut: 2 };
+    expect(cracked('letter', { ...base, shownEvidenceNow: 'letter', pressure: { letter: 1 }, pressing: 'letter' })).toBe(false);
+    expect(cracked('letter', { ...base, shownEvidenceNow: null, pressure: { letter: 2 }, pressing: 'letter' })).toBe(false);
+    expect(cracked('letter', { ...base, shownEvidenceNow: null, pressure: { letter: 3 }, pressing: 'letter' })).toBe(true);
+    // Without pressure data the old rule holds: showing it is enough.
+    expect(cracked('letter', { patienceUsedBefore: 0, shownEvidenceNow: 'letter', shownEvidenceBefore: [], alreadyRevealed: [] })).toBe(true);
   });
 });

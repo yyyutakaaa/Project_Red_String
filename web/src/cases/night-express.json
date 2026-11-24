@@ -518,6 +518,7 @@
       ],
       "breaks_on": ["sleeping-draught"],
       "patience": 12,
+      "temperament": { "holds_out": 1, "under_pressure": "cold" },
       "deflections": [
         "*rubs her eyes*  I'm afraid I'm still half asleep, Detective. Ask me again in a little while.",
         "*looks at the blind*  Walter would have had a headline for this. I haven't got one.",
@@ -583,6 +584,7 @@
       ],
       "breaks_on": ["bar-tab", "wrapped-knife", "deposit-slip"],
       "patience": 12,
+      "temperament": { "holds_out": 2, "under_pressure": "fearful" },
       "deflections": [
         "*spreads his hands*  Off the record, Detective, I'm as lost as you are.",
         "*laughs, too loud*  You want a quote? 'Reporter has nothing to add.' Print it.",
@@ -652,6 +654,7 @@
       ],
       "breaks_on": ["teague-telegram"],
       "patience": 14,
+      "temperament": { "holds_out": 3, "under_pressure": "hostile" },
       "deflections": [
         "*settles back in his chair*  You're building on sand, son. Try another question.",
         "*checks his watch*  I've got a hearing in the morning. I'd like to be awake for it.",
@@ -716,6 +719,7 @@
       ],
       "breaks_on": ["wrapped-knife"],
       "patience": 14,
+      "temperament": { "holds_out": 1, "under_pressure": "cold" },
       "deflections": [
         "*turns his cap in his hands*  I couldn't say, sir. That's the way of it.",
         "*looks down the corridor*  Twenty-two years on this car, sir, and nothing like this.",

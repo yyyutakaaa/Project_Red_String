@@ -1,7 +1,15 @@
 // Builds the system prompt for one suspect from ONLY that suspect's sheet plus public case facts.
 // It never reads case.solution, hidden timeline events, other suspects' private data or alibi verification.
-import type { CaseFile, Evidence, Mood, Suspect } from './caseSchema.ts';
-import { availableClues, forcedClues, type ClueContext } from './clues.ts';
+import { DEFAULT_TEMPERAMENT, type CaseFile, type Evidence, type Mood, type Suspect, type Temperament } from './caseSchema.ts';
+import { availableClues, cracked, forcedClues, holdingOut, type ClueContext } from './clues.ts';
+
+/** How a suspect sounds while they hold out against evidence. */
+const UNDER_PRESSURE: Record<Temperament['under_pressure'], string> = {
+  hostile: 'You get angry. You go on the attack: call it harassment, threaten to bring your lawyer or go to the captain, raise your voice, refuse to be bullied.',
+  fearful: 'You get frightened. You stammer, look away, plead that you have done nothing wrong, cling to your story and get it a little muddled.',
+  cold: 'You stay cold. You give a calm, reasonable explanation for the evidence, as if it means nothing, and make the detective feel foolish for asking.',
+  charming: 'You turn on the charm. You laugh it off, flatter the detective and offer an easy, innocent explanation, a little too quickly.',
+};
 
 export const MAX_REPLY_WORDS = 80;
 export const MAX_PLAYER_MESSAGE_CHARS = 500;
@@ -54,14 +62,18 @@ export function buildSuspectPrompt(input: PromptInput): string {
   if (!s) throw new Error(`Unknown suspect ${suspectId}`);
   const clues = availableClues(s, ctx);
   const mustReveal = forcedClues(s, ctx);
+  const temperament = s.temperament ?? DEFAULT_TEMPERAMENT;
+  const holding = holdingOut(s, ctx);
+  // Only evidence that has broken them makes them lose composure; anything else they hold out against.
   const breaksOn = s.breaks_on
+    .filter((id) => cracked(id, ctx) && (ctx.pressing === id || ctx.shownEvidenceNow === id))
     .map((id) => c.evidence.find((e) => e.id === id))
     .filter((e): e is Evidence => Boolean(e))
     .map((e) => `${e.name}: ${e.description}`);
 
   const sections: string[] = [
     `You are ${s.name}, ${s.age}, ${s.role}. You are being questioned by a police detective. This is a fictional mystery game; play your character faithfully.`,
-    `# Personality\n${s.personality}\n\n# How you speak\n${s.speech_style}`,
+    `# Personality\n${s.personality}\n\n# How you speak\n${s.speech_style}\n\n# Under pressure\n${UNDER_PRESSURE[temperament.under_pressure]}`,
     `# What the world knows\n${publicCaseFacts(c, s)}`,
     `# Your alibi (what you tell the police)\n${s.alibi}`,
     `# Facts about you that are public\n${list(s.public_facts)}`,
@@ -80,9 +92,18 @@ export function buildSuspectPrompt(input: PromptInput): string {
       )}`,
     );
   }
-  sections.push(
-    `# Evidence that would shake you badly if shown\n${list(breaksOn)}\nIf the detective shows you one of these, react strongly: lose composure, contradict yourself, and admit the specific lie it disproves. You still never reveal the items under "Never reveal".`,
-  );
+  if (holding) {
+    const ev = c.evidence.find((e) => e.id === holding.evidenceId);
+    const last = holding.confrontation >= temperament.holds_out;
+    sections.push(
+      `# The detective is pressing you with evidence: ${ev?.name ?? holding.evidenceId}\nYou do not give way, not yet. A person does not confess because a paper is put in front of them. ${UNDER_PRESSURE[temperament.under_pressure]} Do not admit the lie this evidence disproves and do not tell anything it would make you give up.${last ? ' You are close to cracking now: your story wobbles, you get one small detail wrong or contradict yourself once, but you still do not admit it.' : ''}`,
+    );
+  }
+  if (breaksOn.length) {
+    sections.push(
+      `# The evidence that breaks you\n${list(breaksOn)}\nThe detective has pushed you with this until you cannot hold on: lose composure, contradict yourself, and admit the specific lie it disproves. You still never reveal the items under "Never reveal".`,
+    );
+  }
   if (shownEvidence) {
     sections.push(`# Evidence on the table right now\n${shownEvidence.name}: ${shownEvidence.description}`);
   }

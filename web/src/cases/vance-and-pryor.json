@@ -540,6 +540,7 @@
       ],
       "breaks_on": ["elevator-log", "vance-typewriter", "pryor-letter", "trust-ledger"],
       "patience": 14,
+      "temperament": { "holds_out": 3, "under_pressure": "cold" },
       "deflections": [
         "*adjusts a cufflink*  Strictly speaking, Detective, I'm not certain that is a proper question.",
         "*with a small bow of the head*  De mortuis nil nisi bonum. He was my partner for twenty-six years.",
@@ -605,6 +606,7 @@
       ],
       "breaks_on": ["clara-letter"],
       "patience": 12,
+      "temperament": { "holds_out": 2, "under_pressure": "hostile" },
       "deflections": [
         "*evenly*  Not quite, Detective. Ask it properly.",
         "*looks toward Vance's office*  Every time, he has been in the next room. Every single time.",
@@ -669,6 +671,7 @@
       ],
       "breaks_on": ["petty-cash"],
       "patience": 12,
+      "temperament": { "holds_out": 1, "under_pressure": "fearful" },
       "deflections": [
         "*straightens a pile of papers that is already straight*  I'm sorry. Could you repeat that?",
         "*listing, as if taking a letter*  I opened the door at half past eight. The blind was down. He was in his chair.",
@@ -733,6 +736,7 @@
       ],
       "breaks_on": ["elevator-log", "rialto-stubs"],
       "patience": 12,
+      "temperament": { "holds_out": 1, "under_pressure": "fearful" },
       "deflections": [
         "*unwraps a peppermint*  Detective, sir, I told you. Every passenger's in the book.",
         "*looks at the floor*  I seen you before. At the pier. I'd rather not talk about the pier.",

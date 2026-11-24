@@ -636,6 +636,7 @@
       ],
       "breaks_on": ["vance-cufflink", "ferry-log", "trust-dossier"],
       "patience": 14,
+      "temperament": { "holds_out": 2, "under_pressure": "cold" },
       "deflections": [
         "*polishes his spectacles with great care*  Strictly speaking, Detective, that question has no proper answer. Try me with a better one.",
         "*smiles thinly*  Res ipsa loquitur. Or rather, it does not. Ask me something else.",
@@ -713,6 +714,7 @@
       ],
       "breaks_on": ["buried-memo", "gate-phone-pad"],
       "patience": 12,
+      "temperament": { "holds_out": 2, "under_pressure": "cold" },
       "deflections": [
         "*straightens a pen on the desk until it lies exactly parallel*  I have answered that, Detective. I do not repeat myself.",
         "My father's firm has outlasted better questions than that one. Next.",
@@ -800,6 +802,7 @@
       ],
       "breaks_on": ["signout-log", "tommy-sighting"],
       "patience": 16,
+      "temperament": { "holds_out": 3, "under_pressure": "cold" },
       "deflections": [
         "*smooths her gloves, finger by finger*  For the record, Detective, I have answered that. Noted, and declined.",
         "Section 14, bonded premises: I am not required to speculate. I would hope you are not either.",
@@ -881,6 +884,7 @@
       ],
       "breaks_on": ["watch-dial", "pike-wallet"],
       "patience": 12,
+      "temperament": { "holds_out": 1, "under_pressure": "fearful" },
       "deflections": [
         "*unwraps a peppermint with shaking fingers*  I tell you true, chief, it went clean out of my head. Ask me again after some coffee.",
         "*stares out at the fog*  Eight bells, four bells, it all runs together on a night like that, Detective, sir.",
