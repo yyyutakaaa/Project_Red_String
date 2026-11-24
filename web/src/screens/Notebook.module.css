@@ -124,6 +124,7 @@
 .evidenceGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+  grid-auto-rows: 1fr;
   gap: var(--space-4);
   margin: 0;
   padding: 0;
@@ -397,6 +398,7 @@
 .evidenceItem:nth-child(3n + 2) > :first-child { transform: rotate(0.6deg); }
 .evidenceItem:nth-child(3n) > :first-child { transform: rotate(-0.3deg); }
 .evidenceItem > :first-child {
+  flex: 1;
   transition: transform var(--dur-med) var(--ease-out), box-shadow var(--dur-med) var(--ease-out);
 }
 .evidenceItem:hover > :first-child {

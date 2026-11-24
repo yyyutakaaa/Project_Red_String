@@ -2,7 +2,9 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
   gap: var(--space-5);
-  align-items: start;
+  /* Every panel the same height: the tallest one sets it. */
+  grid-auto-rows: 1fr;
+  align-items: stretch;
 }
 
 .panel {
