@@ -19,6 +19,7 @@ import {
 } from '../engine/save.ts';
 import type { AccusationRecord, BoardState, CaseProgress, CaseSource, ChatMessage, ConversationState, SaveSlotData } from '../engine/types.ts';
 import { sfx } from '../audio/audio.ts';
+import { track } from '../lib/telemetry.ts';
 
 export interface Toast {
   id: string;
@@ -145,12 +146,14 @@ export const useGame = create<GameStore>((set, get) => {
       }
       const p = newCaseProgress(caseKey, source);
       write({ ...slot, activeCaseKey: caseKey, progress: { ...slot.progress, [caseKey]: p } });
+      track('case_start', caseKey, { replay: Boolean(slot.completions[caseKey]) });
       return p;
     },
     restartCase: (caseKey, source) => {
       const slot = get().ensureActiveSlot();
       const p = newCaseProgress(caseKey, source);
       write({ ...slot, activeCaseKey: caseKey, progress: { ...slot.progress, [caseKey]: p } });
+      track('case_restart', caseKey, { replay: Boolean(slot.completions[caseKey]) });
       return p;
     },
     update: (caseKey, fn, save = true) => {
@@ -211,11 +214,15 @@ export function clueById(c: CaseFile, clueId: string) {
 const G = () => useGame.getState();
 
 export function markBriefingSeen(caseKey: string): void {
+  const before = G().slot?.progress[caseKey];
   G().update(caseKey, (p) => (p.briefingSeen ? p : { ...p, briefingSeen: true }));
+  if (before && !before.briefingSeen) track('briefing_done', caseKey);
 }
 
 export function visitRoom(caseKey: string, roomId: string): void {
+  const before = G().slot?.progress[caseKey];
   G().update(caseKey, (p) => (p.visitedRooms.includes(roomId) ? p : { ...p, visitedRooms: [...p.visitedRooms, roomId] }));
+  if (before && !before.visitedRooms.includes(roomId)) track('room_open', caseKey, { room: roomId });
 }
 
 /** Examine a hotspot. Returns the evidence id if this examination found new evidence. */
@@ -235,6 +242,7 @@ export function examineHotspot(c: CaseFile, caseKey: string, roomId: string, hot
   if (found) {
     G().pushToast(`Evidence added: ${evidenceName(c, found)}`, 'evidence');
     sfx('pickup');
+    track('evidence_found', caseKey, { evidence: found, via: 'search', room: roomId });
   }
   return found;
 }
@@ -265,6 +273,8 @@ export function applyRevealedClues(c: CaseFile, caseKey: string, clueIds: readon
     sfx('clue');
   }
   for (const ev of newEvidence) G().pushToast(`Evidence added: ${evidenceName(c, ev)}`, 'evidence');
+  for (const id of added) track('clue_revealed', caseKey, { clue: id, suspect: clueById(c, id)?.suspect.id ?? null });
+  for (const ev of newEvidence) track('evidence_found', caseKey, { evidence: ev, via: 'clue' });
   return added;
 }
 
@@ -334,6 +344,7 @@ export function takeHint(c: CaseFile, caseKey: string): string | null {
   if (!p || p.hintsUsed >= c.hints.length) return null;
   const text = c.hints[p.hintsUsed] ?? null;
   G().update(caseKey, (prev) => ({ ...prev, hintsUsed: prev.hintsUsed + 1 }));
+  track('hint_used', caseKey, { n: p.hintsUsed + 1 });
   return text;
 }
 
@@ -383,6 +394,18 @@ export function accuse(c: CaseFile, caseKey: string, culpritId: string, evidence
     useGame.setState({ slot: withCompletion });
   }
   sfx('stamp');
+  track('accusation', caseKey, {
+    outcome: record.outcome,
+    suspect: culpritId,
+    proof: evidenceIds.length,
+    score: record.score,
+    rank: record.rank,
+    ms: record.timeMs ?? 0,
+    questions: record.breakdown?.questionsUsed ?? null,
+    hints: record.breakdown?.hintsUsed ?? null,
+    found: record.breakdown?.discovered ?? null,
+    of: record.breakdown?.discoverable ?? null,
+  });
   return record;
 }
 

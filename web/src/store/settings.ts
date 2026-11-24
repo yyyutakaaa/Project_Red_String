@@ -18,6 +18,8 @@ export interface Settings {
   theme: ThemePref;
   /** Desktop app only: what Discord friends see. */
   discordPresence: DiscordPref;
+  /** Send anonymous play statistics (src/lib/telemetry.ts). */
+  shareStats: boolean;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -29,6 +31,7 @@ export const DEFAULT_SETTINGS: Settings = {
   reducedMotion: 'system',
   theme: 'dark',
   discordPresence: 'full',
+  shareStats: true,
 };
 
 const KEY = 'redstring.settings';
@@ -61,6 +64,7 @@ export function parseSettings(raw: string | null): Settings {
       discordPresence: (['full', 'minimal', 'off'] as const).includes(d.discordPresence as DiscordPref)
         ? (d.discordPresence as DiscordPref)
         : DEFAULT_SETTINGS.discordPresence,
+      shareStats: typeof d.shareStats === 'boolean' ? d.shareStats : DEFAULT_SETTINGS.shareStats,
     };
   } catch {
     return { ...DEFAULT_SETTINGS };
@@ -102,6 +106,7 @@ function persist(s: Settings): void {
     reducedMotion: s.reducedMotion,
     theme: s.theme,
     discordPresence: s.discordPresence,
+    shareStats: s.shareStats,
   };
   try {
     globalThis.localStorage?.setItem(KEY, JSON.stringify(data));

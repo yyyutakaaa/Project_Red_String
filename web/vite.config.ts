@@ -76,6 +76,7 @@ export default defineConfig({
   plugins: [react(), versionFile()],
   define: {
     __SHELL_FINGERPRINT__: JSON.stringify(shellFingerprint()),
+    __APP_COMMIT__: JSON.stringify(buildCommit().slice(0, 12)),
   },
   resolve: {
     alias: [

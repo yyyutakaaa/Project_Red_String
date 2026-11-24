@@ -7,6 +7,7 @@ import { casePath, resolveCase, type CaseContextValue } from '../hooks/useCase.t
 import { startCaseClock, stopCaseClock, useGame, useProgress } from '../store/game.ts';
 import { STORY_ORDER, isStoryUnlocked, type StoryCaseId } from '../engine/caseLoader.ts';
 import { continueSlot } from '../engine/save.ts';
+import { track } from '../lib/telemetry.ts';
 
 /** Wraps every /case/:caseKey/* screen: resolves the case, ensures progress exists, renders the HUD. */
 export function CaseLayout() {
@@ -38,6 +39,15 @@ export function CaseLayout() {
   useEffect(() => {
     document.title = resolved ? `${resolved.caseFile.title} - Project Red String` : 'Project Red String';
   }, [resolved]);
+
+  // Which case screen the player is on (rooms, room, suspects, interrogate, board, notebook, accuse, ending).
+  // Only a change of screen counts, not every save of the progress.
+  const [screen = null, screenTarget = null] = location.pathname.slice(casePath(caseKey).length).split('/').filter(Boolean);
+  const hasProgress = Boolean(progress);
+  useEffect(() => {
+    if (!screen || !hasProgress || locked) return;
+    track('screen', caseKey, { screen, target: screenTarget });
+  }, [caseKey, screen, screenTarget, hasProgress, locked]);
 
   if (!resolved) {
     return (

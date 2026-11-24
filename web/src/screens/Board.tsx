@@ -26,6 +26,7 @@ import { initials } from '../lib/format.ts';
 import { EvidencePhoto } from '../components/EvidencePhoto.tsx';
 import { Figure } from '../components/Portrait.tsx';
 import styles from './Board.module.css';
+import { track } from '../lib/telemetry.ts';
 
 // ---------------------------------------------------------------------------
 // Geometry (all in board units, the SVG viewBox is BOARD_WIDTH x BOARD_HEIGHT)
@@ -746,7 +747,14 @@ export function Board() {
   };
 
   const onCheck = () => {
-    setBoard(caseKey, checkTheory(latestBoard(), caseFile));
+    const checkedBoard = checkTheory(latestBoard(), caseFile);
+    setBoard(caseKey, checkedBoard);
+    const result = summarizeTheory(checkedBoard);
+    track('theory_checked', caseKey, {
+      strings: checkedBoard.links.length,
+      supported: result.supported,
+      unsupported: result.unsupported,
+    });
     setFresh(null);
     sfx('page');
   };

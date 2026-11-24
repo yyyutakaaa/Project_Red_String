@@ -170,6 +170,7 @@ export function SettingsScreen() {
   const [systemLight] = useState(() => systemPrefersLight());
   const themeNoteId = useId();
   const discordNoteId = useId();
+  const statsNoteId = useId();
   // Only desktop shells with presence support (v1.0.5 and later) can talk to Discord.
   const [hasDiscord] = useState(() => Boolean(desktop()?.setPresence));
 
@@ -194,6 +195,11 @@ export function SettingsScreen() {
     { value: 'full', label: 'Show the case', note: 'Friends see the case and who you are questioning.' },
     { value: 'minimal', label: 'Just playing', note: 'Only that you are playing Red String.' },
     { value: 'off', label: 'Hidden', note: 'Nothing on Discord.' },
+  ];
+
+  const statsOptions: Array<{ value: 'on' | 'off'; label: string; note: string }> = [
+    { value: 'on', label: 'Share', note: 'Helps tune the cases where people get stuck.' },
+    { value: 'off', label: 'Keep to myself', note: 'Nothing about your play leaves this device.' },
   ];
 
   const motionOptions: Array<{ value: MotionPref; label: string; note: string }> = [
@@ -323,6 +329,25 @@ export function SettingsScreen() {
               options={motionOptions}
               onChange={(reducedMotion) => patch({ reducedMotion })}
               describedBy={motionNoteId}
+              stack
+            />
+          </section>
+
+          <section className={styles.panel} aria-labelledby="stats-heading">
+            <h2 id="stats-heading" className={styles.panelTitle}>
+              Play statistics
+            </h2>
+            <p id={statsNoteId} className={styles.panelNote}>
+              Which rooms you open, the evidence you find, how many questions you ask and what they turn up, with a
+              random device number. Never what you type, your name or your account.
+            </p>
+            <RadioCards
+              legend="Play statistics"
+              name="stats"
+              value={settings.shareStats ? 'on' : 'off'}
+              options={statsOptions}
+              onChange={(v) => patch({ shareStats: v === 'on' })}
+              describedBy={statsNoteId}
               stack
             />
           </section>
