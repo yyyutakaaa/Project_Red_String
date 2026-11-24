@@ -14,6 +14,7 @@ import { STORY_ORDER } from '../caseLoader.ts';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const casesDir = path.resolve(here, '../../cases');
 const syncedDir = path.resolve(here, '../../../../supabase/functions/_shared/cases');
+const seedFile = path.resolve(here, '../../../../supabase/seed/story_cases.sql');
 
 function load(id: string): unknown {
   return JSON.parse(readFileSync(path.join(casesDir, `${id}.json`), 'utf8'));
@@ -82,11 +83,11 @@ describe.each(STORY_ORDER.map((id) => [id]))('story case %s', (id) => {
     expect(c.hints.length).toBeGreaterThanOrEqual(5);
   });
 
-  it('is synced to the edge functions', () => {
-    const synced = path.join(syncedDir, `${id}.json`);
-    expect(existsSync(synced), 'run npm run sync:cases').toBe(true);
-    const minified = readFileSync(synced, 'utf8');
-    expect(minified, 'server copy is stale: run npm run sync:cases').toBe(JSON.stringify(load(id)));
+  it('is synced to the edge functions (seed SQL and hash)', () => {
+    const minified = JSON.stringify(load(id));
+    const text = readFileSync(path.join(casesDir, `${id}.json`), 'utf8').replace(/\r\n/g, '\n').trimEnd();
+    const seed = readFileSync(seedFile, 'utf8');
+    expect(seed.includes(`values ('${id}', $case$${text}$case$`), 'seed is stale: run npm run sync:cases').toBe(true);
     const index = readFileSync(path.join(syncedDir, 'index.ts'), 'utf8');
     expect(index).toContain(`'${id}': '${createHash('sha256').update(minified).digest('hex')}'`);
   });

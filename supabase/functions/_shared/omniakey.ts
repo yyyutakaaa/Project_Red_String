@@ -5,7 +5,7 @@
 // SSE ("data: {...}" lines with choices[0].delta.content, terminated by "data: [DONE]") is expected,
 // usage is read from prompt_tokens/completion_tokens or input_tokens/output_tokens when present,
 // and estimated from text length otherwise.
-import { config } from './env.ts';
+import { config, env } from './env.ts';
 
 export interface ChatMessage {
   role: 'system' | 'user' | 'assistant';
@@ -95,58 +95,100 @@ function deltaText(chunk: unknown): string {
   const first = choices?.[0];
   if (first) {
     const delta = first.delta as Record<string, unknown> | undefined;
-    if (typeof delta?.content === 'string') return delta.content;
+    const fromDelta = contentText(delta?.content);
+    if (fromDelta) return fromDelta;
     const message = first.message as Record<string, unknown> | undefined;
-    if (typeof message?.content === 'string') return message.content;
+    const fromMessage = contentText(message?.content);
+    if (fromMessage) return fromMessage;
     if (typeof first.text === 'string') return first.text;
+    return '';
   }
-  // Anthropic-style stream events, in case the gateway passes them through.
+  // Responses-API style events: {"type":"response.output_text.delta","delta":"..."}
+  if (typeof c.delta === 'string' && typeof c.type === 'string' && c.type.includes('output_text')) return c.delta;
+  if (typeof c.output_text === 'string') return c.output_text;
+  // Anthropic-style stream events and messages, in case the gateway passes them through.
   const d = c.delta as Record<string, unknown> | undefined;
-  if (typeof d?.text === 'string') return d.text;
+  if (d && typeof d === 'object' && typeof d.text === 'string') return d.text;
+  const fromContent = contentText(c.content);
+  if (fromContent) return fromContent;
   return '';
 }
 
-function buildBody(opts: ChatOptions, stream: boolean): string {
+/** Content may be a string or an array of parts like [{type: 'text', text: '...'}]. Thinking parts are skipped. */
+function contentText(content: unknown): string {
+  if (typeof content === 'string') return content;
+  if (!Array.isArray(content)) return '';
+  return content
+    .map((p) => {
+      if (typeof p === 'string') return p;
+      if (p && typeof p === 'object') {
+        const part = p as Record<string, unknown>;
+        if (part.type === 'thinking' || part.type === 'reasoning') return '';
+        if (typeof part.text === 'string') return part.text;
+      }
+      return '';
+    })
+    .join('');
+}
+
+/**
+ * Request body. Only required fields by default: some models on the gateway reject non-default sampling
+ * parameters (e.g. "claude-haiku-5-5 does not support non-default temperature"), so temperature is only
+ * sent when OMNIAKEY_SEND_TEMPERATURE=1.
+ */
+function buildBody(opts: ChatOptions, stream: boolean, minimal: boolean): string {
   const body: Record<string, unknown> = {
     model: opts.model,
     messages: opts.messages,
     max_tokens: opts.maxTokens,
-    temperature: opts.temperature ?? 0.7,
     stream,
   };
-  if (stream) body.stream_options = { include_usage: true };
+  if (!minimal) {
+    if (opts.temperature !== undefined && env('OMNIAKEY_SEND_TEMPERATURE') === '1') body.temperature = opts.temperature;
+    if (stream) body.stream_options = { include_usage: true };
+  }
   return JSON.stringify(body);
+}
+
+/** A 400 that names a request parameter: worth one retry with the minimal body. */
+function isParameterError(status: number, detail: string): boolean {
+  return status === 400 && /(temperature|stream_options|include_usage|unsupported|not support|unknown parameter|unrecognized)/i.test(detail);
 }
 
 async function post(opts: ChatOptions, stream: boolean, controller: AbortController): Promise<Response> {
   const key = config.omniakeyKey();
   if (!key) throw new ProviderError('OMNIAKEY_API_KEY is not set', 0, 'config');
-  let res: Response;
-  try {
-    res = await fetch(`${config.omniakeyBaseUrl()}/chat/completions`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${key}`,
-        'Content-Type': 'application/json',
-        Accept: stream ? 'text/event-stream' : 'application/json',
-      },
-      body: buildBody(opts, stream),
-      signal: controller.signal,
-    });
-  } catch (err) {
-    if (controller.signal.aborted) throw new ProviderError('Provider timed out', 0, 'timeout');
-    throw new ProviderError(`Network error: ${(err as Error).message}`, 0, 'network');
-  }
-  if (!res.ok) {
+  for (const minimal of [false, true]) {
+    let res: Response;
+    try {
+      res = await fetch(`${config.omniakeyBaseUrl()}/chat/completions`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${key}`,
+          'Content-Type': 'application/json',
+          Accept: stream ? 'text/event-stream' : 'application/json',
+        },
+        body: buildBody(opts, stream, minimal),
+        signal: controller.signal,
+      });
+    } catch (err) {
+      if (controller.signal.aborted) throw new ProviderError('Provider timed out', 0, 'timeout');
+      throw new ProviderError(`Network error: ${(err as Error).message}`, 0, 'network');
+    }
+    if (res.ok) return res;
     let detail = '';
     try {
       detail = (await res.text()).slice(0, 300);
     } catch {
       /* ignore */
     }
+    if (!minimal && isParameterError(res.status, detail)) {
+      console.warn('provider rejected a parameter, retrying with the minimal body:', detail.slice(0, 160));
+      continue;
+    }
     throw new ProviderError(`Provider HTTP ${res.status}: ${detail}`, res.status, 'http');
   }
-  return res;
+  throw new ProviderError('Provider rejected the request', 400, 'http');
 }
 
 function withTimeout(opts: ChatOptions): { controller: AbortController; clear: () => void } {
@@ -163,12 +205,16 @@ export async function streamChat(opts: ChatOptions, onDelta: (text: string) => v
   let firstTokenMs: number | null = null;
   let text = '';
   let usage: { input: number; output: number } | null = null;
+  // A few raw payloads, kept only to explain an empty completion in the logs (no secrets are in them).
+  const samples: string[] = [];
+  let finishReason: string | null = null;
   try {
     const res = await post(opts, true, controller);
     const type = res.headers.get('Content-Type') ?? '';
     if (!type.includes('event-stream') || !res.body) {
       // Gateway answered without streaming: treat as a single chunk.
       const data = (await res.json()) as unknown;
+      samples.push(JSON.stringify(data).slice(0, 300));
       text = deltaText(data);
       usage = readUsage((data as Record<string, unknown>)?.usage);
       if (text) {
@@ -193,7 +239,10 @@ export async function streamChat(opts: ChatOptions, onDelta: (text: string) => v
         while ((nl = buffer.indexOf('\n')) !== -1) {
           const line = buffer.slice(0, nl).trim();
           buffer = buffer.slice(nl + 1);
-          if (!line.startsWith('data:')) continue;
+          if (!line.startsWith('data:')) {
+            if (line && samples.length < 4) samples.push(line.slice(0, 200));
+            continue;
+          }
           const payload = line.slice(5).trim();
           if (payload === '[DONE]') break outer;
           let parsed: unknown;
@@ -204,7 +253,10 @@ export async function streamChat(opts: ChatOptions, onDelta: (text: string) => v
           }
           const u = readUsage((parsed as Record<string, unknown>)?.usage);
           if (u) usage = u;
+          const fr = ((parsed as Record<string, unknown>)?.choices as Array<Record<string, unknown>> | undefined)?.[0]?.finish_reason;
+          if (typeof fr === 'string') finishReason = fr;
           const piece = deltaText(parsed);
+          if (!piece && samples.length < 4) samples.push(payload.slice(0, 240));
           if (piece) {
             if (firstTokenMs === null) firstTokenMs = performance.now() - started;
             text += piece;
@@ -221,7 +273,10 @@ export async function streamChat(opts: ChatOptions, onDelta: (text: string) => v
   } finally {
     clear();
   }
-  if (!text) throw new ProviderError('Empty completion', 0, 'empty');
+  if (!text) {
+    console.error(`empty completion from ${opts.model}; finish_reason=${finishReason}; usage=${JSON.stringify(usage)}; samples=${JSON.stringify(samples)}`);
+    throw new ProviderError('Empty completion', 0, 'empty');
+  }
   const inputChars = opts.messages.reduce((n, m) => n + m.content.length, 0);
   return {
     text,

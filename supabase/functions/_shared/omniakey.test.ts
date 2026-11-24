@@ -113,6 +113,43 @@ Deno.test('reports HTTP errors and timeouts as ProviderError', async () => {
   );
 });
 
+Deno.test('sends no temperature by default and retries once without optional fields on a parameter error', async () => {
+  const bodies: Record<string, unknown>[] = [];
+  await withFetch(
+    async (_url, init) => {
+      const body = JSON.parse(String(init.body));
+      bodies.push(body);
+      if (bodies.length === 1) {
+        return new Response('{"error":{"message":"Invalid request for the selected model. x does not support stream_options"}}', { status: 400 });
+      }
+      return sseResponse(['data: {"choices":[{"delta":{"content":"Ok."}}]}\n\n', 'data: [DONE]\n\n']);
+    },
+    async () => {
+      const r = await streamChat({ ...opts, temperature: 0.8 }, () => {});
+      assert(r.text === 'Ok.', 'retry result');
+      assert(bodies.length === 2, `expected 2 requests, got ${bodies.length}`);
+      assert(!('temperature' in bodies[0]!), 'temperature must not be sent by default');
+      assert('stream_options' in bodies[0]! && !('stream_options' in bodies[1]!), 'minimal retry drops optional fields');
+    },
+  );
+});
+
+Deno.test('reads content-part arrays and skips thinking parts', async () => {
+  await withFetch(
+    async () =>
+      sseResponse([
+        'data: {"choices":[{"delta":{"content":[{"type":"thinking","thinking":"hmm"}]}}]}\n\n',
+        'data: {"choices":[{"delta":{"content":[{"type":"text","text":"Hello"}]}}]}\n\n',
+        'data: {"type":"response.output_text.delta","delta":" there"}\n\n',
+        'data: [DONE]\n\n',
+      ]),
+    async () => {
+      const r = await streamChat(opts, () => {});
+      assert(r.text === 'Hello there', `text was ${r.text}`);
+    },
+  );
+});
+
 Deno.test('prices known and unknown models', () => {
   const known = estimateCostUsd('claude-haiku-5-5', { inputTokens: 1_000_000, outputTokens: 1_000_000, estimated: false });
   assert(Math.abs(known - 0.48) < 1e-9, `haiku cost ${known}`);
