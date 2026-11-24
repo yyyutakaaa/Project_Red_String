@@ -7,6 +7,8 @@ import type { PresenceStatus } from './presence.ts';
 export interface DesktopBridge {
   platform: string;
   titleBar?: boolean;
+  /** Shells from v1.0.6: fingerprint and version of the installed app. */
+  shell?: { fingerprint: string; version: string };
   setTheme?: (theme: Theme) => void;
   /** Discord Rich Presence (desktop shells from v1.0.5). */
   setPresence?: (status: PresenceStatus | null) => void;
@@ -35,4 +37,15 @@ export function initDesktopDocument(): void {
   // Files dropped on the window would otherwise open as a page.
   window.addEventListener('dragover', (e) => e.preventDefault());
   window.addEventListener('drop', (e) => e.preventDefault());
+}
+
+/**
+ * True when this game build expects a newer app than the one it runs in: the shell fingerprints
+ * differ, or the shell is too old to report one. False in a browser, and when the build does not
+ * know its shell (no desktop folder at build time).
+ */
+export function shellOutdated(): boolean {
+  const bridge = desktop();
+  if (!bridge || !__SHELL_FINGERPRINT__) return false;
+  return bridge.shell?.fingerprint !== __SHELL_FINGERPRINT__;
 }

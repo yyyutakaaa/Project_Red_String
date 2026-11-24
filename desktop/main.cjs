@@ -10,6 +10,28 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { pickGameRoot, startUpdates } = require('./updater.cjs');
 const { createPresence } = require('./discord.cjs');
+const crypto = require('node:crypto');
+
+/**
+ * Fingerprint of this shell's own files. The game is built with the fingerprint of the shell next to
+ * it; when an in-app update brings game files for a newer shell, the two differ and the game asks
+ * the player to install the new app. Must match shellFingerprint() in web/vite.config.ts.
+ */
+function shellFingerprint() {
+  try {
+    const { files } = JSON.parse(fs.readFileSync(path.join(__dirname, 'shell-files.json'), 'utf8'));
+    const hash = crypto.createHash('sha256');
+    for (const name of files) {
+      hash.update(`${name}\n`);
+      hash.update(fs.readFileSync(path.join(__dirname, name), 'utf8').replace(/\r/g, ''));
+      hash.update('\n');
+    }
+    return hash.digest('hex').slice(0, 16);
+  } catch {
+    return '';
+  }
+}
+const SHELL_FINGERPRINT = shellFingerprint();
 
 app.setName('Red String');
 // Development only: run a second copy next to an installed one, with its own data folder.
@@ -314,6 +336,9 @@ function buildMenu(checkForUpdates) {
 }
 
 ipcMain.on('red-string:theme', (_event, theme) => applyTheme(theme));
+ipcMain.on('red-string:shell', (event) => {
+  event.returnValue = { fingerprint: SHELL_FINGERPRINT, version: app.getVersion() };
+});
 
 // ---------------------------------------------------------------------------
 // Discord Rich Presence. The application ID comes from the Discord Developer Portal (it is public,

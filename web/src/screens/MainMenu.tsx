@@ -9,6 +9,7 @@ import { resolveTheme, useSettings } from '../store/settings.ts';
 import { useAccount } from '../store/account.ts';
 import { useLaunch } from '../boot/launch.ts';
 import { SyncBadge } from './Account.tsx';
+import { ShellNotice } from '../desktop/ShellNotice.tsx';
 import { sfx } from '../audio/audio.ts';
 import styles from './MainMenu.module.css';
 
@@ -132,6 +133,7 @@ export function MainMenu() {
   return (
     <div className={styles.screen}>
       <RainBackdrop lamp="right" />
+      <ShellNotice />
       <Link to="/account" className={styles.accountChip} data-testid="account-chip" onClick={() => sfx('click')}>
         {user ? (
           <>

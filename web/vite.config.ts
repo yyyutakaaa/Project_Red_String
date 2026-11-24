@@ -51,8 +51,32 @@ function versionFile(): Plugin {
   };
 }
 
+/**
+ * Fingerprint of the desktop shell this game build belongs to. Same recipe as shellFingerprint() in
+ * desktop/main.cjs. Empty when the desktop folder is not there; the game then never asks for a
+ * new installer.
+ */
+function shellFingerprint(): string {
+  const dir = path.resolve(here, '../desktop');
+  try {
+    const { files } = JSON.parse(readFileSync(path.join(dir, 'shell-files.json'), 'utf8')) as { files: string[] };
+    const hash = createHash('sha256');
+    for (const name of files) {
+      hash.update(`${name}\n`);
+      hash.update(readFileSync(path.join(dir, name), 'utf8').replace(/\r/g, ''));
+      hash.update('\n');
+    }
+    return hash.digest('hex').slice(0, 16);
+  } catch {
+    return '';
+  }
+}
+
 export default defineConfig({
   plugins: [react(), versionFile()],
+  define: {
+    __SHELL_FINGERPRINT__: JSON.stringify(shellFingerprint()),
+  },
   resolve: {
     alias: [
       { find: /^zod$/, replacement: path.resolve(here, 'node_modules/zod') },
