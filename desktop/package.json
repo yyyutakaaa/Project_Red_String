@@ -1,0 +1,61 @@
+{
+  "name": "project-red-string-desktop",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Project Red String as a desktop app for macOS and Windows.",
+  "main": "main.cjs",
+  "scripts": {
+    "prepare:web": "node scripts/copy-web.mjs",
+    "start": "npm run prepare:web && electron .",
+    "dist:mac": "npm run prepare:web && electron-builder --mac",
+    "dist:win": "npm run prepare:web && electron-builder --win",
+    "dist": "npm run prepare:web && electron-builder --mac --win"
+  },
+  "build": {
+    "appId": "app.projectredstring.desktop",
+    "productName": "Red String",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.cjs",
+      "preload.cjs",
+      "renderer/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "category": "public.app-category.detective-games",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "universal"
+          ]
+        }
+      ]
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "devDependencies": {
+    "electron": "^45.4.1",
+    "electron-builder": "^26.18.0"
+  },
+  "allowScripts": {
+    "electron-winstaller@5.4.0": true
+  }
+}
