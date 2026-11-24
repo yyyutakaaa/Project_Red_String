@@ -16,10 +16,11 @@
     "sync:cases": "node scripts/sync-cases.mjs",
     "check-secrets": "node scripts/check-secrets.mjs",
     "seed:cases": "node scripts/seed-cases.mjs",
-    "check:functions": "cd ../supabase/functions && npx -y deno@2 check --no-lock --config interrogate/deno.json interrogate/index.ts generate-case/index.ts",
+    "check:functions": "cd ../supabase/functions && npx -y deno@2 check --no-lock --config interrogate/deno.json interrogate/index.ts generate-case/index.ts account/index.ts",
     "test:functions": "cd ../supabase/functions && npx -y deno@2 test --no-lock --config interrogate/deno.json --allow-env _shared/"
   },
   "dependencies": {
+    "@supabase/supabase-js": "2.119.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-router-dom": "^7.18.6",

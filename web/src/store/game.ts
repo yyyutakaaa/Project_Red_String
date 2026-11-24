@@ -58,11 +58,19 @@ interface GameStore {
 
 const storage = browserStorage();
 
+/** Listeners for every slot write and delete. The account store uses them to mirror saves to the cloud. */
+export const saveEvents = {
+  written: new Set<(slot: SaveSlotData) => void>(),
+  deleted: new Set<(n: number) => void>(),
+};
+const emitWritten = (slot: SaveSlotData) => saveEvents.written.forEach((fn) => fn(slot));
+
 export const useGame = create<GameStore>((set, get) => {
   const write = (slot: SaveSlotData) => {
     try {
       const stamped = writeSlot(get().storage, slot);
       set({ slot: stamped, lastSavedAt: stamped.updatedAt });
+      emitWritten(stamped);
     } catch {
       set({ slot });
       get().pushToast('Could not write the save. Storage may be full or disabled.', 'error');
@@ -89,6 +97,7 @@ export const useGame = create<GameStore>((set, get) => {
     removeSlot: (n) => {
       deleteSlot(get().storage, n);
       if (get().slot?.slot === n) set({ slot: null });
+      saveEvents.deleted.forEach((fn) => fn(n));
     },
     ensureActiveSlot: () => {
       const current = get().slot;
@@ -366,6 +375,7 @@ export function accuse(c: CaseFile, caseKey: string, culpritId: string, evidence
   try {
     const stamped = writeSlot(G().storage, withCompletion);
     useGame.setState({ slot: stamped, lastSavedAt: stamped.updatedAt });
+    emitWritten(stamped);
   } catch {
     useGame.setState({ slot: withCompletion });
   }

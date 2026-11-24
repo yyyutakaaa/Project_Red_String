@@ -206,3 +206,41 @@
     font-size: var(--fs-lg);
   }
 }
+
+/* Account chip, top right */
+.accountChip {
+  position: absolute;
+  top: clamp(0.75rem, 3vh, 1.5rem);
+  right: clamp(1rem, 4vw, 2.5rem);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  max-width: min(22rem, calc(100vw - 2rem));
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--ink-500);
+  border-radius: var(--radius-md);
+  background: rgba(8, 11, 18, 0.72);
+  backdrop-filter: blur(6px);
+  color: var(--text);
+  text-decoration: none;
+  text-align: right;
+  animation: global(fade-in) 1.2s var(--ease-out) 0.4s both;
+}
+.accountChip:hover,
+.accountChip:focus-visible {
+  border-color: var(--lamp-400);
+  box-shadow: 0 0 18px var(--lamp-glow);
+}
+.chipName {
+  font-family: var(--font-type);
+  font-size: var(--fs-sm);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--lamp-200);
+}
+.chipNote {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}

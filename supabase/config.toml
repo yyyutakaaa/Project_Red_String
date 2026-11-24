@@ -9,3 +9,6 @@ verify_jwt = false
 
 [functions.generate-case]
 verify_jwt = false
+
+[functions.account]
+verify_jwt = false

@@ -1,0 +1,126 @@
+.screen {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: var(--space-5);
+  background: var(--ink-950);
+  animation: global(fade-in) 300ms var(--ease-out) both;
+  transition: opacity 450ms var(--ease-out);
+}
+.leaving {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.card {
+  position: relative;
+  width: min(30rem, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-4);
+}
+
+.logo {
+  width: min(19rem, 72vw);
+  filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.6));
+}
+
+.masthead {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 0.95;
+  color: var(--lamp-200);
+  text-shadow: 0 0 2px rgba(248, 226, 174, 0.6), 0 0 18px var(--lamp-glow-strong), 0 0 52px var(--lamp-glow);
+  animation: global(lamp-flicker) 7s linear infinite;
+}
+.mastSmall {
+  font-size: clamp(0.95rem, 2.4vw, 1.2rem);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  margin-left: 0.4em;
+}
+.mastBig {
+  font-size: clamp(2.4rem, 8vw, 3.6rem);
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.kicker {
+  margin: 0;
+  font-family: var(--font-type);
+  font-size: var(--fs-sm);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--lamp-300);
+}
+.title {
+  margin: 0;
+  font-size: clamp(1.7rem, 5vw, 2.4rem);
+  color: var(--text-strong);
+  text-shadow: 0 0 24px var(--lamp-glow);
+}
+
+/* Progress: a thread pulled from one pin to the other. */
+.bar {
+  position: relative;
+  width: min(20rem, 80%);
+  height: 14px;
+  margin-top: var(--space-2);
+}
+.thread {
+  position: absolute;
+  left: 7px;
+  right: 7px;
+  top: 50%;
+  height: 3px;
+  margin-top: -1.5px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--red-300), var(--red-600));
+  box-shadow: 0 0 8px var(--red-glow);
+  transform-origin: left center;
+  transition: transform 300ms var(--ease-out);
+}
+.pin {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff0bd, #ecbb52 45%, #8a5d12);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  z-index: 1;
+}
+.pinEnd {
+  left: auto;
+  right: 0;
+  filter: grayscale(0.7) brightness(0.6);
+  transition: filter 300ms;
+}
+.pinLit {
+  filter: none;
+}
+
+.status {
+  margin: 0;
+  min-height: 1.4em;
+  font-family: var(--font-type);
+  font-size: var(--fs-sm);
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+:global([data-motion='reduced']) .screen,
+:global([data-motion='reduced']) .thread,
+:global([data-motion='reduced']) .masthead {
+  animation: none;
+  transition: none;
+}

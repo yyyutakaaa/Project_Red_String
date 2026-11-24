@@ -1,6 +1,8 @@
 import { lazy, Suspense, useEffect, type ComponentType, type ReactNode } from 'react';
 import { createBrowserRouter, Outlet, RouterProvider, ScrollRestoration } from 'react-router-dom';
 import { ToastHost } from './components/ToastHost.tsx';
+import { Boot } from './boot/Boot.tsx';
+import { LaunchOverlay } from './boot/LaunchOverlay.tsx';
 import { audio } from './audio/audio.ts';
 import { applySettingsToDocument, useSettings } from './store/settings.ts';
 import { MainMenu } from './screens/MainMenu.tsx';
@@ -44,6 +46,7 @@ function Root() {
   return (
     <>
       <Outlet />
+      <LaunchOverlay />
       <ToastHost />
       <ScrollRestoration />
     </>
@@ -58,6 +61,7 @@ const router = createBrowserRouter([
       { path: '/', element: <MainMenu /> },
       { path: '/slots', element: page(screen(() => import('./screens/SaveSlots.tsx'), 'SaveSlots')) },
       { path: '/cases', element: page(screen(() => import('./screens/CaseSelect.tsx'), 'CaseSelect')) },
+      { path: '/account', element: page(screen(() => import('./screens/Account.tsx'), 'AccountScreen')) },
       { path: '/settings', element: page(screen(() => import('./screens/Settings.tsx'), 'SettingsScreen')) },
       { path: '/credits', element: page(screen(() => import('./screens/Credits.tsx'), 'Credits')) },
       {
@@ -82,5 +86,9 @@ const router = createBrowserRouter([
 ]);
 
 export function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <Boot>
+      <RouterProvider router={router} />
+    </Boot>
+  );
 }

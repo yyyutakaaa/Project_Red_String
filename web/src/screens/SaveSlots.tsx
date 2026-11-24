@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Button, ButtonLink } from '../components/Button.tsx';
 import { Modal } from '../components/Modal.tsx';
 import { RainBackdrop } from '../components/RainBackdrop.tsx';
@@ -11,6 +10,7 @@ import { SLOT_COUNT, continueSlot, listSlots } from '../engine/save.ts';
 import type { SaveSlotData } from '../engine/types.ts';
 import { formatDate } from '../lib/format.ts';
 import { useGame } from '../store/game.ts';
+import { useLaunch } from '../boot/launch.ts';
 import styles from './SaveSlots.module.css';
 
 type Pending = { kind: 'new' | 'delete'; slot: number } | null;
@@ -44,7 +44,6 @@ function hasAnything(slot: SaveSlotData): boolean {
 
 export function SaveSlots() {
   useAmbience('menu');
-  const navigate = useNavigate();
   const storage = useGame((s) => s.storage);
   const loadedSlot = useGame((s) => s.slot?.slot ?? null);
   const activateSlot = useGame((s) => s.activateSlot);
@@ -54,6 +53,7 @@ export function SaveSlots() {
   const [lastUsed, setLastUsed] = useState(() => continueSlot(storage)?.slot ?? null);
   const [pending, setPending] = useState<Pending>(null);
   const [announcement, setAnnouncement] = useState('');
+  const launch = useLaunch();
 
   useEffect(() => {
     document.title = 'Save slots - Project Red String';
@@ -69,12 +69,16 @@ export function SaveSlots() {
   const load = (n: number) => {
     const slot = activateSlot(n);
     const key = slot.activeCaseKey;
-    navigate(key && resolveCase(key) ? casePath(key) : '/cases');
+    const resolved = key ? resolveCase(key) : null;
+    void launch(key && resolved ? casePath(key) : '/cases', {
+      kicker: `Slot ${n}`,
+      title: resolved?.caseFile.title ?? 'The case files',
+    });
   };
 
   const startFresh = (n: number) => {
     createSlot(n);
-    navigate('/cases');
+    void launch('/cases', { kicker: `Slot ${n}`, title: 'A new game' });
   };
 
   const confirmPending = () => {

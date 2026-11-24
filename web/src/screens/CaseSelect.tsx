@@ -5,7 +5,8 @@ import { Modal } from '../components/Modal.tsx';
 import { RainBackdrop } from '../components/RainBackdrop.tsx';
 import { ScreenFrame } from '../components/ScreenFrame.tsx';
 import { useAmbience } from '../hooks/useAmbience.ts';
-import { casePath } from '../hooks/useCase.ts';
+import { casePath, resolveCase } from '../hooks/useCase.ts';
+import { useLaunch } from '../boot/launch.ts';
 import { STORY_ORDER, getStoryCase, isStoryUnlocked } from '../engine/caseLoader.ts';
 import type { CaseProgress, CaseSource, CompletionRecord } from '../engine/types.ts';
 import { useGame } from '../store/game.ts';
@@ -77,6 +78,7 @@ function CompletionStamp({ completion }: { completion: CompletionRecord | undefi
 export function CaseSelect() {
   useAmbience('menu');
   const navigate = useNavigate();
+  const launch = useLaunch();
   const slot = useGame((s) => s.slot);
   const ensureActiveSlot = useGame((s) => s.ensureActiveSlot);
   const ensureProgress = useGame((s) => s.ensureProgress);
@@ -114,9 +116,13 @@ export function CaseSelect() {
     );
   }
 
+  const titleOf = (key: string) => resolveCase(key)?.caseFile.title ?? 'The case file';
   const open = (key: string, source: CaseSource, status: Status) => {
     ensureProgress(key, source);
-    navigate(status === 'new' ? casePath(key, 'briefing') : casePath(key));
+    void launch(status === 'new' ? casePath(key, 'briefing') : casePath(key), {
+      kicker: status === 'new' ? 'New case' : `Slot ${slot.slot}`,
+      title: titleOf(key),
+    });
   };
   const viewVerdict = (key: string) => {
     setActiveCase(key);
@@ -128,7 +134,7 @@ export function CaseSelect() {
     if (!pending) return;
     setPending(null);
     restartCase(pending.key, pending.source);
-    navigate(casePath(pending.key, 'briefing'));
+    void launch(casePath(pending.key, 'briefing'), { kicker: 'Starting over', title: pending.title });
   };
 
   const completed = (id: string) => Boolean(slot.completions[id]);

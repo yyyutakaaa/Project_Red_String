@@ -5,6 +5,9 @@ import { useAmbience } from '../hooks/useAmbience.ts';
 import { casePath, resolveCase } from '../hooks/useCase.ts';
 import { continueSlot, type KeyValueStorage } from '../engine/save.ts';
 import { useGame } from '../store/game.ts';
+import { useAccount } from '../store/account.ts';
+import { useLaunch } from '../boot/launch.ts';
+import { SyncBadge } from './Account.tsx';
 import { sfx } from '../audio/audio.ts';
 import styles from './MainMenu.module.css';
 
@@ -38,6 +41,9 @@ export function MainMenu() {
   const continueLast = useGame((s) => s.continueLast);
   const ensureActiveSlot = useGame((s) => s.ensureActiveSlot);
   const [lastSave] = useState(() => describeContinue(storage));
+  const user = useAccount((s) => s.user);
+  const sync = useAccount((s) => s.sync);
+  const launch = useLaunch();
   const listRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
@@ -84,11 +90,12 @@ export function MainMenu() {
       return;
     }
     const key = slot.activeCaseKey;
-    if (key && resolveCase(key)) {
+    const resolved = key ? resolveCase(key) : null;
+    if (key && resolved) {
       const closed = Boolean(slot.progress[key]?.accusation);
-      navigate(casePath(key, closed ? 'ending' : ''));
+      void launch(casePath(key, closed ? 'ending' : ''), { kicker: `Slot ${slot.slot}`, title: resolved.caseFile.title });
     } else {
-      navigate('/cases');
+      void launch('/cases', { kicker: `Slot ${slot.slot}`, title: 'The case files' });
     }
   };
 
@@ -110,6 +117,12 @@ export function MainMenu() {
       },
     },
     { id: 'save-slots', label: 'Save Slots', sub: 'Three drawers. Pick one.', to: '/slots' },
+    {
+      id: 'account',
+      label: 'Account',
+      sub: user ? `Signed in as ${user.username}.` : 'Sign in to keep your progress anywhere.',
+      to: '/account',
+    },
     { id: 'settings', label: 'Settings', sub: 'Volume, text speed, type size.', to: '/settings' },
     { id: 'credits', label: 'Credits', sub: 'Who did what.', to: '/credits' },
   ];
@@ -117,6 +130,19 @@ export function MainMenu() {
   return (
     <div className={styles.screen}>
       <RainBackdrop lamp="right" />
+      <Link to="/account" className={styles.accountChip} data-testid="account-chip" onClick={() => sfx('click')}>
+        {user ? (
+          <>
+            <span className={styles.chipName}>{user.username}</span>
+            <SyncBadge state={sync} compact />
+          </>
+        ) : (
+          <>
+            <span className={styles.chipName}>Guest</span>
+            <span className={styles.chipNote}>Progress stays on this device. Sign in</span>
+          </>
+        )}
+      </Link>
       <main id="main" tabIndex={-1} className={styles.main}>
         <header className={styles.masthead}>
           <p className={styles.kicker}>Calder City. Night shift.</p>
