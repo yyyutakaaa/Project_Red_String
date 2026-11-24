@@ -110,7 +110,7 @@ Project: `hbwvybkpdqliusxheiyg` (eu-central-1). Edge function secrets: `OMNIAKEY
 | Secret | Default | Purpose |
 |---|---|---|
 | `SUSPECT_MODEL` | `claude-haiku-5-5` | model that plays suspects |
-| `GENERATOR_MODEL` | `claude-opus-5-5` | model that writes new cases |
+| `GENERATOR_MODEL` | `claude-haiku-5-5` | model that writes new cases |
 | `EVAL_JUDGE_MODEL` | `claude-haiku-5-5` | judge used by the eval tool |
 | `OMNIAKEY_BASE_URL` | `https://api.omniakey.com/v1` | OpenAI-compatible OmniaKey endpoint |
 | `ALLOWED_ORIGINS` | (none) | extra CORS origins, comma-separated, e.g. a custom domain |

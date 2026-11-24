@@ -24,7 +24,9 @@ export const config = {
   deepseekKey: () => env('DEEPSEEK_API_KEY'),
   deepseekMaxOutputTokens: () => envNumber('DEEPSEEK_MAX_OUTPUT_TOKENS', 8192),
   suspectModel: () => env('SUSPECT_MODEL', 'claude-haiku-5-5'),
-  generatorModel: () => env('GENERATOR_MODEL', 'claude-opus-5-5'),
+  // claude-opus-5-5 was tried live on both routes and spent its whole output budget on thinking,
+  // so the default writer is Haiku. Set GENERATOR_MODEL to try another model.
+  generatorModel: () => env('GENERATOR_MODEL', 'claude-haiku-5-5'),
   /**
    * reasoning_effort sent to the models ("low" | "medium" | "high", or "none" to omit it). Thinking models
    * otherwise spend the token budget on reasoning before writing (seen live with claude-opus-5-5).

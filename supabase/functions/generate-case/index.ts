@@ -16,7 +16,7 @@ import { extractJson } from '../_shared/core/replyParsing.ts';
 import { clientIp, errorResponse, isUuid, json, originRejected, preflight, sha256Hex } from '../_shared/http.ts';
 import { db, hitDailyCounter, hitRateLimit, releaseCounter, reserveSpend, settleSpend, worstCaseCostUsd } from '../_shared/db.ts';
 import { providerRejected, streamChat, ProviderError, type ChatMessage } from '../_shared/omniakey.ts';
-import { config, envNumber } from '../_shared/env.ts';
+import { config, env, envNumber } from '../_shared/env.ts';
 
 const MAX_ATTEMPTS = 3;
 const GENERATIONS_PER_DAY = 5;
@@ -85,7 +85,7 @@ async function runAttempt(job: JobRow, remainingToday: number): Promise<AttemptR
   let text: string;
   try {
     const result = await streamChat(
-      { model, messages, maxTokens: MAX_OUTPUT_TOKENS, temperature: 0.9, reasoningEffort: config.generatorReasoningEffort(), anthropicNative: true, timeoutMs: PROVIDER_TIMEOUT_MS },
+      { model, messages, maxTokens: MAX_OUTPUT_TOKENS, temperature: 0.9, reasoningEffort: config.generatorReasoningEffort(), anthropicNative: env('GENERATOR_ANTHROPIC_ROUTE') === '1', timeoutMs: PROVIDER_TIMEOUT_MS },
       () => {},
     );
     text = result.text;
