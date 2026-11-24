@@ -210,22 +210,25 @@ Eval (from the repository root; needs `tools/eval/.env.local` with `RS_EVAL_TOKE
 node tools/eval/run-eval.mjs --models claude-haiku-5-5,mimo-v2.6-flash --judge
 ```
 
-## Deploy to Vercel (not done: the project is kept local for now)
+## Deploy to Vercel
 
-1. Push this repository to GitHub, GitLab or Bitbucket.
-2. vercel.com, Add New, Project, import the repository. Name it `project-red-string` (the edge functions
-   allow `https://project-red-string.vercel.app` and its preview URLs). Keep the root directory as the
-   repository root; install, build and output settings come from `vercel.json`.
-3. No environment variables are required (`web/.env.production` holds the public values). Deploy.
-4. Open the site, start Ashgrove House and ask a suspect a question to confirm CORS and streaming.
-5. For a custom domain, add it in Vercel and set the Supabase secret `ALLOWED_ORIGINS=https://your.domain`.
+Live at https://project-red-string.vercel.app (deployed 2026-11-24 with the Vercel CLI from this machine;
+no Git repository is connected). Checked on the live site: home and deep routes return 200, security
+headers are set, the bundle has the Supabase URL and nothing secret, both functions answer the CORS
+preflight for this origin, and an interrogation of Clara Ashgrove streamed a reply and added a clue to the
+notebook with no console errors. `.vercelignore` keeps `tools/` (eval token), `.env.local` files, `.claude`
+and `.git` out of the upload.
 
-CLI alternative: `npx vercel login`, then `npx vercel` and `npx vercel --prod` from the repository root.
+Redeploy after changes, from the repository root:
+
+```powershell
+npx vercel deploy --prod
+```
+
+For a custom domain, add it in Vercel and set the Supabase secret `ALLOWED_ORIGINS=https://your.domain`.
 
 ## What could not be verified, and how to check it
 
-- **Vercel deployment**: intentionally not deployed; the project stays local for now. Follow the steps above, then play one interrogation on
-  the deployed URL. If the browser reports a CORS error, set `ALLOWED_ORIGINS` or `VERCEL_PROJECT_NAME`.
 - **Real screen readers**: live regions, labels and focus handling were reviewed in code and checked in
   Chromium, but not with NVDA, JAWS or VoiceOver. Check one interrogation and one board session.
 - **Safari and Firefox**: tests ran in Chromium only. `npx playwright install firefox webkit` and add the

@@ -2,6 +2,8 @@
 
 > Question suspects in your own words. They can lie. You have to prove it.
 
+Play it at https://project-red-string.vercel.app
+
 A noir detective game for the browser. You read the briefing, search clickable room scenes, interrogate
 AI-played suspects by typing freely, pin evidence and suspects on a red-string board, and accuse a culprit
 with two to four pieces of evidence. Three hand-written story cases (about 45 minutes each) are included,
