@@ -43,8 +43,8 @@ export function Briefing() {
   const { t } = useT();
 
   return (
-    <ScreenFrame title={caseFile.title} kicker={t('briefing.kicker')}>
-      <article className={`paper selectable ${styles.file}`} aria-labelledby="briefing-heading">
+    <ScreenFrame title={caseFile.title} kicker={t('briefing.kicker')} fill>
+      <article className={`paper selectable scroll-area ${styles.file}`} data-testid="briefing-paper" aria-labelledby="briefing-heading">
         <header className={styles.head}>
           <dl className={styles.headLines}>
             <div>

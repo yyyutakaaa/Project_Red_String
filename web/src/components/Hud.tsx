@@ -104,7 +104,17 @@ export function Hud({ caseFile, caseKey, progress }: HudProps) {
       </nav>
       <div className={styles.tools}>
         <span className={styles.counter} aria-label={t('hud.cluesLabel', { n: discovered, total })} data-testid="clue-counter">
-          {rich(t('hud.clues'), { n: <strong>{discovered}</strong>, total })}
+          <span className={styles.counterFull} aria-hidden="true">
+            {rich(t('hud.clues'), { n: <strong>{discovered}</strong>, total })}
+          </span>
+          {/* Narrower windows: a magnifier and the numbers only (the label above is still read out). */}
+          <span className={styles.counterShort} aria-hidden="true">
+            <svg viewBox="0 0 20 20" focusable="false">
+              <circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" strokeWidth="1.8" />
+              <path d="M12.6 12.6l4.4 4.4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+            <strong>{discovered}</strong>/{total}
+          </span>
         </span>
         <CaseTimer caseKey={caseKey} progress={progress} />
         <Button size="small" onClick={() => setHintOpen(true)} aria-haspopup="dialog">

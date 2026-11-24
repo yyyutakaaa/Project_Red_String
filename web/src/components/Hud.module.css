@@ -1,6 +1,6 @@
 .hud {
-  position: sticky;
-  top: var(--titlebar-h);
+  position: relative;
+  flex: none;
   z-index: 50;
   display: flex;
   align-items: center;
@@ -68,6 +68,8 @@
   white-space: nowrap;
 }
 .counter strong { font-size: var(--fs-md); color: var(--lamp-200); }
+.counterShort { display: none; align-items: center; gap: 0.3rem; }
+.counterShort svg { width: 1em; height: 1em; align-self: center; }
 .timer {
   display: inline-flex;
   align-items: center;
@@ -96,4 +98,18 @@
 
 @media (max-width: 860px) {
   .nav { order: 3; flex-basis: 100%; overflow-x: auto; flex-wrap: nowrap; }
+}
+/* Down to the smallest window the game allows, the bar stays one line: tighter links. */
+@media (min-width: 861px) and (max-width: 1280px) {
+  .hud { flex-wrap: nowrap; gap: var(--space-2); padding-left: var(--space-3); padding-right: var(--space-3); }
+  .nav { flex: 1 1 auto; min-width: 0; flex-wrap: nowrap; gap: 0; overflow-x: auto; scrollbar-width: none; }
+  .link { padding: 0 0.45rem; font-size: var(--fs-xs); letter-spacing: 0.02em; white-space: nowrap; }
+  /* A long case title gives way before the menu does. */
+  .title { font-size: var(--fs-md); margin-right: 0; flex: 0 1 auto; min-width: 4rem; max-width: 12rem; overflow: hidden; text-overflow: ellipsis; }
+  .tools { flex: none; flex-wrap: nowrap; gap: var(--space-1); }
+  .counter, .timer { padding: 0.2rem 0.5rem; font-size: var(--fs-xs); }
+  .timer { min-width: 0; }
+  .counterFull { display: none; }
+  .tools :is(button, a) { padding-left: 0.55rem; padding-right: 0.55rem; }
+  .counterShort { display: inline-flex; }
 }

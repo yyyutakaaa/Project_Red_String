@@ -1,14 +1,18 @@
 /* Interrogation room: dossier on the left, transcript and question box on the right. */
 
+/* The room fills the window: the dossier and the transcript each scroll on their own. */
 .page {
   width: 100%;
   max-width: min(1560px, 100%);
+  height: 100%;
+  min-height: 0;
   margin: 0 auto;
-  padding: var(--space-4) clamp(1rem, 2.5vw, 2.5rem) var(--space-6);
+  padding: clamp(0.5rem, 2vh, 1rem) clamp(1rem, 2.5vw, 2.5rem) clamp(0.5rem, 2vh, 1rem);
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: clamp(0.5rem, 1.5vh, 1rem);
 }
+.page > * { flex: none; }
 .page:focus { outline: none; }
 
 /* ---------------------------------------------------------------- Top bar */
@@ -120,11 +124,14 @@
 }
 
 /* ---------------------------------------------------------------- Layout */
-.layout {
+.page > .layout {
+  flex: 1 1 auto;
+  min-height: 0;
   display: grid;
   grid-template-columns: minmax(15rem, 24rem) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
   gap: var(--space-5);
-  align-items: start;
+  align-items: stretch;
 }
 
 /* ---------------------------------------------------------------- Dossier */
@@ -137,11 +144,8 @@
   border: var(--border);
   border-radius: var(--radius-lg);
   background: var(--ink-800);
-  /* Stays beside the transcript; long case notes scroll inside it. */
-  position: sticky;
-  top: calc(var(--titlebar-h) + var(--hud-height) + var(--space-3));
-  max-height: calc(100vh - var(--hud-height) - var(--space-3) * 2);
-  max-height: calc(var(--app-h) - var(--hud-height) - var(--space-3) * 2);
+  /* Beside the transcript; long case notes scroll inside it. */
+  min-height: 0;
   overflow-x: hidden;
   overflow-y: auto;
 }
@@ -369,19 +373,14 @@
   flex-direction: column;
   gap: var(--space-3);
   min-width: 0;
-  /* Keep the transcript and question box in view while the dossier scrolls past. */
-  position: sticky;
-  top: calc(var(--titlebar-h) + var(--hud-height) + var(--space-3));
   /* Banners shrink the transcript instead of pushing the question box off screen. */
-  max-height: calc(100vh - var(--hud-height) - var(--space-3) * 2);
-  max-height: calc(var(--app-h) - var(--hud-height) - var(--space-3) * 2);
+  min-height: 0;
 }
 .room > * { flex-shrink: 0; }
 
 .room > .log {
-  flex: 1 1 auto;
-  height: 46rem;
-  min-height: 14rem;
+  flex: 1 1 0;
+  min-height: 6rem;
 }
 .log {
   overflow-y: auto;
@@ -842,3 +841,22 @@
   color: var(--text-strong);
 }
 .outcomeCaught .outcomeStamp { color: var(--red-400); }
+
+/* Short windows: the transcript keeps its room. The suggestions become one row that scrolls
+   sideways, and the question box and its spacing tighten. */
+.suggestList {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: thin;
+}
+.suggestChip { white-space: nowrap; }
+@media (max-height: 760px) {
+  .composer { padding: var(--space-2) var(--space-3) var(--space-3); gap: var(--space-1); }
+  .question { min-height: 2.8rem; height: 2.8rem; }
+  .suggestLabel { display: none; }
+  /* Still read out as the box's label, just not shown. */
+  .inputLabel { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .waitingRegion { min-height: 1.1rem; }
+  .room { gap: var(--space-2); }
+}

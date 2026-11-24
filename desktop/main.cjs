@@ -229,8 +229,9 @@ function createWindow(origin) {
     y: windowState.y,
     width: windowState.width,
     height: windowState.height,
-    minWidth: 960,
-    minHeight: 600,
+    // Smaller than the game needs is allowed: the game then covers itself with a "window too small" notice.
+    minWidth: 480,
+    minHeight: 360,
     backgroundColor: CHROME[theme].background,
     title: 'Red String',
     icon: ICON,

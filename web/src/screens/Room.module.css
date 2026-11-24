@@ -152,7 +152,7 @@
   flex-direction: column;
   gap: var(--space-4);
   position: sticky;
-  top: calc(var(--titlebar-h) + var(--hud-height) + var(--space-4));
+  top: 0;
 }
 
 /* ---- Field note (the examined hotspot) ---- */
@@ -161,7 +161,7 @@
   position: relative;
   padding: var(--space-5) var(--space-4) var(--space-4);
   transform: rotate(-0.6deg);
-  scroll-margin: calc(var(--hud-height) + var(--space-4));
+  scroll-margin: var(--space-4);
 }
 
 .clip {

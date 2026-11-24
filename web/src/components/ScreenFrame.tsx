@@ -8,10 +8,15 @@ interface ScreenFrameProps {
   children: ReactNode;
   /** Use nearly the whole window: for screens built around a big picture. */
   wide?: boolean;
+  /**
+   * The content fills the space under the title and scrolls its own parts (fill), instead of the
+   * whole area under the title scrolling as one (the default).
+   */
+  fill?: boolean;
 }
 
 /** Standard page shell: kicker, title, optional actions and content. Renders the page's <main>. */
-export function ScreenFrame({ title, kicker, actions, children, wide = false }: ScreenFrameProps) {
+export function ScreenFrame({ title, kicker, actions, children, wide = false, fill = false }: ScreenFrameProps) {
   return (
     <div className={styles.frame}>
       <main id="main" className={`${styles.inner} ${wide ? styles.wide : ''}`} tabIndex={-1}>
@@ -22,7 +27,9 @@ export function ScreenFrame({ title, kicker, actions, children, wide = false }: 
           </div>
           {actions && <div className={styles.actions}>{actions}</div>}
         </header>
-        {children}
+        <div className={fill ? styles.fill : `${styles.body} scroll-area`} data-testid="screen-body">
+          {children}
+        </div>
       </main>
     </div>
   );
