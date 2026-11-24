@@ -13,3 +13,5 @@ tools/eval/.env.local
 supabase/functions/**/deno.lock
 
 .vercel
+
+.claude/
