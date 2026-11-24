@@ -27,7 +27,7 @@ export const config = {
   /** DeepSeek suspects think before they answer unless SUSPECT_THINKING=0. */
   suspectThinking: () => env('SUSPECT_THINKING', '1') !== '0',
   /** reasoning_effort for a thinking suspect ("low" | "high", or "none" to omit it). Low keeps replies quick. */
-  suspectReasoningEffort: () => effort(env('SUSPECT_REASONING_EFFORT', 'low')),
+  suspectReasoningEffort: () => effort(env('SUSPECT_REASONING_EFFORT', 'high')),
   dailySpendLimitUsd: () => envNumber('DAILY_SPEND_LIMIT_USD', 5),
   /** Comma-separated extra origins, e.g. a custom domain. */
   allowedOrigins: () =>
