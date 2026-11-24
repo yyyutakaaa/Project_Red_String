@@ -1,0 +1,668 @@
+{
+  "schema_version": 1,
+  "id": "reading-room",
+  "title": "The Reading Room",
+  "tagline": "One line of footprints in the snow, and they all belong to the dead woman.",
+  "setting": "The Calder City Public Library on Founders Square, and its rare book annex across the courtyard",
+  "era": "February 1950",
+  "intro_briefing": [
+    "Friday, 17 February 1950. It started snowing at a quarter to eight and has not stopped. The Calder City Public Library stays open late on Fridays, and tonight almost nobody came. At twenty-five past nine the night porter and a visitor crossed the courtyard to the rare book annex and found Miss Agnes Thorne dead at her desk.",
+    "Miss Thorne was sixty-one and had kept the library's rare books for thirty years. Someone struck her on the head with the heavy brass book press from her own desk. The police surgeon puts it between half past eight and nine o'clock.",
+    "There is one line of footprints across the snow in the courtyard before the porter's: hers, going in, at about ten to eight. Nobody else crossed. The people who were in the library tonight are waiting in the reading room: Graham Oakes, the deputy librarian, who was on the reference desk; Oliver Prentice, a rare book dealer who had an appointment with her at nine; Rosa Lindqvist, a student who reads at the window table every night; and Abe Kowalski, the night porter. Miss Peabody from the circulation desk has given the patrolman a statement.",
+    "Search the reading room, the courtyard, the annex and the cellars. Question the four of them and show them what you find. Somebody reached that annex without walking on the snow."
+  ],
+  "victim": {
+    "id": "agnes",
+    "name": "Agnes Thorne",
+    "age": 61,
+    "description": "Keeper of rare books at the Calder City Public Library since 1920. Small, sharp and terrifying to anyone who touched a book without washing their hands. She knew every volume in the annex by its binding.",
+    "cause_of_death": "A single blow to the head with a brass book press.",
+    "found_in": "rare-book-room",
+    "found_at": "at about 21:25, slumped over her desk in the rare book annex"
+  },
+  "solution": {
+    "culprit_id": "graham",
+    "motive": "Graham Oakes had been stealing rare books from the annex and selling them to a dealer, putting cheap copies in their place, and Agnes had found one of the copies that evening.",
+    "method": "Graham left the reference desk by the back stairs, took the tunnel key, went under the courtyard through the cellar tunnel to the annex, struck Agnes with the brass book press, and came back the same way, so he left no prints in the snow.",
+    "required_evidence": ["swapped-book", "whitewash-jacket", "porter-log"],
+    "reveal": "Graham Oakes had been robbing the annex for two years. He took the good copies of books nobody asked for, put cheaper copies of the same editions on the shelves, and sold the real ones to Oliver Prentice as the library of a late uncle. Tonight Agnes Thorne opened the Calder Psalter, a book she had not handled since before the war, and knew at once it was not hers. The library's copy had the bishop's notes in the margins, and the 1947 inventory that called it present and correct was signed by Graham Oakes. At half past eight she telephoned the reference desk and told him to bring her the inventory and the accession register at once. Graham knew what that meant. At twenty to nine he left the desk by the back stairs, took the tunnel key from the porter's board in the cellar and went through the old heating tunnel that runs under the courtyard to the annex. He came up the annex stair, struck her with the book press, took the letter she had begun to the library board, and went back the way he came. Nobody walked on the snow. But the tunnel walls are whitewashed and rub off on dark cloth, the porter missed his key, and Agnes had already slipped a note into the false Psalter, where Graham never thought to look."
+  },
+  "timeline": [
+    {
+      "day": 0,
+      "time": "19:30",
+      "location": "reading-room",
+      "who": ["graham", "rosa"],
+      "what": "The library is open late. Graham is on the reference desk and Rosa at her usual window table. Snow starts falling heavily at about 19:45.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "19:50",
+      "location": "courtyard",
+      "who": ["agnes"],
+      "what": "Agnes crosses the courtyard to the rare book annex. Hers are the only prints until 21:25.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "20:00",
+      "location": "rare-book-room",
+      "who": ["agnes"],
+      "what": "Agnes takes out the Calder Psalter for the first time in years and finds it is a different copy from the library's. She slips a note inside it and starts a letter to the library board.",
+      "visibility": "private",
+      "tags": ["motive"]
+    },
+    {
+      "day": 0,
+      "time": "20:30",
+      "location": "reading-room",
+      "who": ["graham", "agnes"],
+      "what": "Agnes telephones the reference desk from the annex and tells Graham to bring her the 1947 inventory and the accession register at once. Rosa hears his side of the call.",
+      "visibility": "private",
+      "tags": ["motive"]
+    },
+    {
+      "day": 0,
+      "time": "20:30",
+      "location": "tunnel",
+      "who": ["abe"],
+      "what": "Abe leaves his lodge and goes down to the boiler room in the cellar, where he keeps a bottle, and stays there until 21:00, writing up the boiler gauges as usual.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "20:40",
+      "location": "reading-room",
+      "who": ["graham", "rosa"],
+      "what": "Graham leaves the reference desk and goes down the back stairs toward the cellar, not toward the stacks.",
+      "visibility": "private",
+      "tags": ["alibi"]
+    },
+    {
+      "day": 0,
+      "time": "20:42",
+      "location": "tunnel",
+      "who": ["graham"],
+      "what": "Graham takes the tunnel key from the porter's board in the cellar and goes through the whitewashed heating tunnel under the courtyard to the annex. From the boiler room, Abe sees him pass.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "day": 0,
+      "time": "20:47",
+      "location": "rare-book-room",
+      "who": ["graham", "agnes"],
+      "what": "Graham comes up the annex stair, strikes Agnes with the brass book press from her desk, and takes her unfinished letter to the board.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "day": 0,
+      "time": "20:57",
+      "location": "reading-room",
+      "who": ["graham", "rosa"],
+      "what": "Graham comes back up the back stairs to the reference desk carrying his jacket over his arm and hangs it on his chair.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "21:10",
+      "location": "reading-room",
+      "who": ["prentice"],
+      "what": "Prentice arrives by taxi through the front doors, covered in snow, for his nine o'clock appointment, and waits at the circulation desk with Miss Peabody.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "21:25",
+      "location": "courtyard",
+      "who": ["abe", "prentice", "agnes"],
+      "what": "Abe and Prentice cross the courtyard to the annex to fetch Miss Thorne and find her dead.",
+      "visibility": "public",
+      "tags": []
+    }
+  ],
+  "offstage_locations": [],
+  "rooms": [
+    {
+      "id": "reading-room",
+      "name": "Main reading room",
+      "description": "A long hall of oak tables and green lamps under a high ceiling, almost empty tonight. Tall windows look out over the snowy courtyard to the annex. The reference desk is by the back stairs and the circulation desk is by the front doors.",
+      "background": "library",
+      "hotspots": [
+        {
+          "id": "reference-desk",
+          "label": "Reference desk",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "Graham Oakes's desk, tidy, with a telephone and a stack of call slips. A dark tweed jacket hangs over the back of his chair.",
+          "evidence_id": "whitewash-jacket"
+        },
+        {
+          "id": "circulation-desk",
+          "label": "Circulation desk",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "Miss Peabody's desk by the front doors, with the patrolman's notebook open on it at her statement.",
+          "evidence_id": "peabody-statement"
+        },
+        {
+          "id": "window-table",
+          "label": "Window table",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "Rosa Lindqvist's table by the window, piled with atlases. Her satchel hangs on the chair, and a folder of loose map pages is sticking out of it.",
+          "evidence_id": "cut-maps"
+        },
+        {
+          "id": "windows",
+          "label": "Windows",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "From the windows you can see the whole courtyard under the lamp: the snow, the line of prints, and the dark annex door. Anyone crossing would have been seen from here.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "courtyard",
+      "name": "Courtyard",
+      "description": "A square courtyard between the main building and the annex, under a foot of fresh snow. One lamp on a post lights it. The annex is a small stone building with its own door and a single lit window.",
+      "background": "garden",
+      "hotspots": [
+        {
+          "id": "prints",
+          "label": "Footprints",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The tracks across the courtyard, already filling with snow.",
+          "evidence_id": "snow-prints"
+        },
+        {
+          "id": "annex-door",
+          "label": "Annex door",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "A heavy oak door. Snow has drifted against it and was only broken when the porter pushed it open at twenty-five past nine.",
+          "evidence_id": null
+        },
+        {
+          "id": "lamp-post",
+          "label": "Lamp post",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "The courtyard lamp. Under it the snow is smooth and untouched.",
+          "evidence_id": null
+        },
+        {
+          "id": "grating",
+          "label": "Grating",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "An iron grating set in the middle of the courtyard. The snow on it has melted away, and warm air rises from below.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "rare-book-room",
+      "name": "Rare book annex",
+      "description": "A single high room lined with locked glass cases, smelling of leather and dust. Miss Thorne's desk stands under the lamp. In the corner a narrow door opens onto a stair going down.",
+      "background": "archive",
+      "hotspots": [
+        {
+          "id": "agnes-desk",
+          "label": "Desk",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "Where she was found. Her blotter has a fresh sheet on it with the indented marks of a letter that is not there any more. On the floor beside the chair lies a heavy brass book press.",
+          "evidence_id": "book-press"
+        },
+        {
+          "id": "book-cradle",
+          "label": "Book cradle",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "A small book lies open on a felt cradle at the end of the desk. A corner of white paper sticks out from between the pages.",
+          "evidence_id": "swapped-book"
+        },
+        {
+          "id": "letter-tray",
+          "label": "Letter tray",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "Miss Thorne's incoming letters, in order. The top one is on a dealer's letterhead.",
+          "evidence_id": "prentice-offer"
+        },
+        {
+          "id": "stair-door",
+          "label": "Stair door",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "A narrow door in the corner, unbolted, onto a stone stair that goes down into the dark. There is a white smear on the door frame at shoulder height.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "tunnel",
+      "name": "Cellars and heating tunnel",
+      "description": "The main building's cellar: the boiler room behind a half-open door, the porter's key board on the wall, and an iron door into the old heating tunnel. The tunnel runs straight under the courtyard to the annex stair. Its walls are whitewashed and close enough to touch on both sides.",
+      "background": "cellar",
+      "hotspots": [
+        {
+          "id": "key-board",
+          "label": "Key board",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "A board of labelled hooks for every key in the building. The porter's key book hangs beside it on a nail.",
+          "evidence_id": "porter-log"
+        },
+        {
+          "id": "boiler-room",
+          "label": "Boiler room",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "The boiler room door stands half open. From the stool inside you can see the key board and the tunnel door. There is a gauge log on a clipboard, and a half bottle of rye behind the coal shovel.",
+          "evidence_id": "boiler-log"
+        },
+        {
+          "id": "tunnel-door",
+          "label": "Tunnel door",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "An iron door into the heating tunnel, unlocked now. The tunnel beyond is narrow, warm and white, with steam pipes along one wall.",
+          "evidence_id": null
+        },
+        {
+          "id": "tunnel-wall",
+          "label": "Tunnel wall",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "You brush the wall with your sleeve and it comes away white. The whitewash rubs off on anything that touches it. Halfway along, at shoulder height, there is a clean scraped patch where somebody's shoulder rubbed hard against it.",
+          "evidence_id": null
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "swapped-book",
+      "name": "The false Psalter",
+      "description": "A small leather-bound Psalter printed in 1712, labelled as the library's Calder Psalter. Inside, in Miss Thorne's sharp hand: 'NOT OURS. Ours has the Bishop's notes in the margin of every page. This is clean. 1947 inventory says present and correct, signed G.O. Find out who sold ours. Ask O.P.'",
+      "found_in": "rare-book-room",
+      "points_to": ["graham", "prentice"],
+      "is_red_herring": false
+    },
+    {
+      "id": "whitewash-jacket",
+      "name": "Graham's tweed jacket",
+      "description": "Graham Oakes's dark tweed jacket from the back of his chair. The right shoulder and sleeve are streaked with chalky white powder that has been brushed at and not got out. Nothing in the reading room or the stacks is painted white.",
+      "found_in": "reading-room",
+      "points_to": ["graham"],
+      "is_red_herring": false
+    },
+    {
+      "id": "porter-log",
+      "name": "Porter's key book",
+      "description": "Abe Kowalski's key book: '8.42 pm. Tunnel key gone from board. Not signed out. 9.00 pm. Tunnel key back on hook. ???'",
+      "found_in": "tunnel",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "snow-prints",
+      "name": "Tracks in the snow",
+      "description": "A single line of small prints from the main building's side door to the annex, half filled with snow, made at about ten to eight by a woman's galoshes. Then two fresh sets side by side, the porter and Mr. Prentice at twenty-five past nine. Nobody else crossed this courtyard tonight.",
+      "found_in": "courtyard",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "book-press",
+      "name": "Brass book press",
+      "description": "A heavy brass press for flattening bindings, from the corner of Miss Thorne's desk. One edge is bloody. The handle has been wiped.",
+      "found_in": "rare-book-room",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "peabody-statement",
+      "name": "Miss Peabody's statement",
+      "description": "Miss Peabody's statement to the patrolman: 'Miss Lindqvist sat at the window table all evening and never left it. Mr. Oakes left the reference desk at twenty to nine by the back stairs and came back about nine. Mr. Prentice came in the front doors at ten past nine, white with snow, and waited at my desk until the porter took him across.'",
+      "found_in": "reading-room",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "prentice-offer",
+      "name": "Dealer's letter",
+      "description": "A letter on the letterhead of Oliver Prentice, Fine and Rare Books: 'Dear Miss Thorne, my client will pay four thousand dollars for the Calder Psalter. No questions need be asked on either side. I will call on Friday at nine.'",
+      "found_in": "rare-book-room",
+      "points_to": ["prentice"],
+      "is_red_herring": true
+    },
+    {
+      "id": "cut-maps",
+      "name": "Loose map pages",
+      "description": "A folder in Rosa Lindqvist's satchel holding six hand-coloured map pages cut neatly from an atlas, and a safety razor blade wrapped in paper.",
+      "found_in": "reading-room",
+      "points_to": ["rosa"],
+      "is_red_herring": true
+    },
+    {
+      "id": "boiler-log",
+      "name": "Boiler gauge log",
+      "description": "The boiler log on its clipboard, in the porter's hand: pressure and temperature at 8.30, 8.40, 8.50 and 9.00 pm. The boiler room stool faces the key board and the tunnel door.",
+      "found_in": "tunnel",
+      "points_to": [],
+      "is_red_herring": false
+    }
+  ],
+  "suspects": [
+    {
+      "id": "graham",
+      "name": "Graham Oakes",
+      "role": "Deputy librarian",
+      "age": 45,
+      "portrait": "man-bare",
+      "color": "#5a6a5a",
+      "personality": "Mild, pleasant and very helpful, the man who knows where everything is. He has been passed over for the top job twice and smiles about it. He respected Agnes Thorne and was afraid of her, and for two years he has been waiting for the day she opened the wrong book.",
+      "speech_style": "Soft and helpful, a librarian's voice, never above a murmur. Uses catalogue words: 'shelved', 'accession', 'provenance'. Calls her 'Miss Thorne', always. Offers to look things up when he does not want to answer.",
+      "alibi": "I was at the reference desk all evening, apart from a few minutes in the stacks. And you've seen the snow. Nobody could have got to the annex without leaving prints.",
+      "public_facts": [
+        "Graham Oakes has been deputy librarian for nine years.",
+        "He was on the reference desk in the main reading room tonight.",
+        "He signs the yearly inventories of the library's collections, including the annex."
+      ],
+      "private_knowledge": [
+        "Miss Thorne telephoned the reference desk at half past eight and asked for the 1947 inventory and the accession register.",
+        "There is an old heating tunnel under the courtyard from the main cellar to the annex stair. Few people outside the staff know about it.",
+        "The snow started at about a quarter to eight."
+      ],
+      "lies": [
+        {
+          "topic": "Where he went at twenty to nine",
+          "claim": "I went into the stacks for a few minutes to fetch a book for a reader. That's all.",
+          "truth": "You went down the back stairs to the cellar, took the tunnel key and went under the courtyard to the annex. You were gone from 20:40 to 20:57."
+        },
+        {
+          "topic": "The rare books",
+          "claim": "Every book in the annex was checked in the 1947 inventory. I signed it myself.",
+          "truth": "You have taken the good copies of eleven books since 1948, replaced them with cheaper copies, and sold the originals to Oliver Prentice."
+        }
+      ],
+      "secrets": [
+        "You told Prentice the books came from your late uncle's library in Harmon."
+      ],
+      "never_reveal": [
+        "That you struck Miss Thorne with the book press and took her letter to the board.",
+        "That you went to the annex through the heating tunnel."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "graham-call",
+          "text": "Says Miss Thorne telephoned the reference desk at half past eight wanting the 1947 inventory and the accession register, and that he told her he would bring them when the desk was quiet.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "graham-tunnel",
+          "text": "Admits, when pressed, that there is an old heating tunnel from the main cellar to the annex stair. He says it has been locked for years and nobody uses it.",
+          "condition": "pressed"
+        }
+      ],
+      "breaks_on": ["whitewash-jacket", "porter-log", "swapped-book"],
+      "patience": 13,
+      "deflections": [
+        "*folds his hands on the desk*  I could look that up for you, Detective, if you'd like.",
+        "*softly*  Miss Thorne would have known. She always knew.",
+        "*glances at the windows*  You've seen the snow. I don't know what else to tell you."
+      ],
+      "alibi_verification": {
+        "status": "broken",
+        "evidence_ids": ["porter-log", "peabody-statement"],
+        "clue_ids": ["abe-saw", "rosa-stairs"],
+        "note": "The key book shows the tunnel key gone from 20:42 to 21:00. Miss Peabody saw him leave by the back stairs at 20:40, Rosa saw him go toward the cellar, and the porter saw him pass into the tunnel."
+      }
+    },
+    {
+      "id": "prentice",
+      "name": "Oliver Prentice",
+      "role": "Dealer in fine and rare books",
+      "age": 60,
+      "portrait": "elder-man",
+      "color": "#7a6a5a",
+      "personality": "Courtly, well dressed and well read, with a dealer's habit of never asking where a fine thing came from if the price is right. He did not kill anybody and is very frightened of what an honest answer about his stock would do to him.",
+      "speech_style": "Old-fashioned and elaborate: 'one would hardly say', 'a matter of some delicacy'. Calls books 'she'. Calls the detective 'my dear sir' or 'my dear madam'. When frightened he gets more polite.",
+      "alibi": "I arrived at ten past nine in a taxi through the front door, late because of the snow, and I waited at the desk until the porter took me across.",
+      "public_facts": [
+        "Oliver Prentice has a shop on Lantern Street that sells rare books.",
+        "He had an appointment with Miss Thorne at nine o'clock tonight.",
+        "He and the porter found her body."
+      ],
+      "private_knowledge": [
+        "Miss Thorne wrote to you this week asking you to come on Friday at nine about 'a matter of provenance'.",
+        "In 1948 you bought a Calder Psalter with a bishop's notes in the margins from Graham Oakes, who said it came from his late uncle's library.",
+        "You have bought ten other fine books from Oakes in two years."
+      ],
+      "lies": [
+        {
+          "topic": "Buying from the library's staff",
+          "claim": "I have never bought a book from anyone connected with this library. I would not dream of it.",
+          "truth": "Since 1948 you have bought eleven fine books from Graham Oakes, including a Calder Psalter with a bishop's notes in it."
+        }
+      ],
+      "secrets": [
+        "You sold the annotated Psalter on to a collector in Boston for six thousand dollars."
+      ],
+      "never_reveal": [
+        "The name of the Boston collector."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "prentice-bought",
+          "text": "Admits he bought a Calder Psalter with the Bishop's notes in it from Graham Oakes in 1948. Oakes said it came from his late uncle's library in Harmon. He has bought ten other fine books from Oakes since.",
+          "condition": "shown_evidence:swapped-book"
+        },
+        {
+          "clue_id": "prentice-letter",
+          "text": "Says Miss Thorne wrote this week asking him to call on Friday at nine about 'a matter of provenance'. The offer in his letter was for a private client and, he insists, perfectly proper.",
+          "condition": "shown_evidence:prentice-offer"
+        },
+        {
+          "clue_id": "prentice-snow",
+          "text": "Says when he and the porter crossed the courtyard at twenty-five past nine there was only one line of prints in front of them, small ones, half filled with snow.",
+          "condition": "free"
+        }
+      ],
+      "breaks_on": ["swapped-book", "prentice-offer"],
+      "patience": 12,
+      "deflections": [
+        "*touches his tie*  My dear sir, a matter of some delicacy. Might we come back to it?",
+        "*looks toward the windows*  She was the finest keeper of books in this city. I'll say that much.",
+        "*very politely*  I really could not say."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": ["peabody-statement"],
+        "clue_ids": [],
+        "note": "Miss Peabody saw him come in the front doors at 21:10 covered in snow, and he waited at her desk until the porter took him across. Agnes was dead by then."
+      }
+    },
+    {
+      "id": "rosa",
+      "name": "Rosa Lindqvist",
+      "role": "Graduate student in history",
+      "age": 26,
+      "portrait": "young-woman",
+      "color": "#6a8aa0",
+      "personality": "Clever, poor and proud. She is writing a thesis on the early maps of Calder City and spends every evening at the window table because her room has no heat. She has done something she is ashamed of and expects to be blamed for everything else.",
+      "speech_style": "Quick and precise, with a slight Swedish lilt. Gives exact details and then apologizes for them. Calls the victim 'Miss Thorne'. Gets defensive and sharp when she feels accused.",
+      "alibi": "I sat at the window table all evening. I didn't leave it until the porter started shouting.",
+      "public_facts": [
+        "Rosa Lindqvist reads at the window table in the reading room almost every evening.",
+        "She is a student at the university writing about early maps of the city.",
+        "Miss Thorne caught her with a razor in the annex last month and banned her from it."
+      ],
+      "private_knowledge": [
+        "At half past eight the reference desk telephone rang. You heard Mr. Oakes say, 'Yes, Miss Thorne. Now? Yes, of course.'",
+        "At twenty to nine Mr. Oakes left the desk and went down the back stairs toward the cellar. The stacks are the other way.",
+        "He came back at about nine with his jacket over his arm, and hung it on his chair very carefully, inside out."
+      ],
+      "lies": [
+        {
+          "topic": "The map pages",
+          "claim": "Those are my own copies. I trace them.",
+          "truth": "You cut six map pages out of an atlas in the main collection with a razor blade to sell, because you could not pay your rent."
+        }
+      ],
+      "secrets": [
+        "You sold two maps to a shop on Lantern Street last month."
+      ],
+      "never_reveal": [
+        "That you cried when Miss Thorne banned you from the annex."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "rosa-stairs",
+          "text": "Says Mr. Oakes took a telephone call at half past eight and said 'Yes, Miss Thorne. Now? Yes, of course.' At twenty to nine he went down the back stairs toward the cellar, which is the other way from the stacks.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "rosa-jacket",
+          "text": "Says when Mr. Oakes came back at about nine he was carrying his jacket over his arm, and he hung it on his chair carefully, inside out, as if he did not want the outside to touch anything.",
+          "condition": "pressed"
+        },
+        {
+          "clue_id": "rosa-maps",
+          "text": "Admits she cut the map pages from an atlas with the razor blade to sell. She could not pay her rent. She never went near the annex tonight.",
+          "condition": "shown_evidence:cut-maps"
+        }
+      ],
+      "breaks_on": ["cut-maps"],
+      "patience": 12,
+      "deflections": [
+        "*pushes her hair back*  I'm sorry. I'm sorry, I don't know any more than that.",
+        "*sharp*  You will blame me anyway, I think.",
+        "*looks at the windows*  I can still see the light in the annex. I keep thinking she's in there working."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": ["peabody-statement"],
+        "clue_ids": [],
+        "note": "Miss Peabody says Rosa sat at the window table all evening and never left it."
+      }
+    },
+    {
+      "id": "abe",
+      "name": "Abe Kowalski",
+      "role": "Night porter",
+      "age": 58,
+      "portrait": "man-cap",
+      "color": "#6a5a4a",
+      "personality": "Big, slow and kind, with bad knees and a bottle he thinks nobody knows about. He liked Miss Thorne, who once lent him a book about ships and asked him what he thought of it. He is ashamed of where he was tonight and frightened it will cost him his job.",
+      "speech_style": "Plain and slow, with a heavy city accent. Calls everybody 'mister' or 'miss'. Says 'I ain't saying' when he means he will not say. Gets quiet and looks at his boots when he is caught out.",
+      "alibi": "I was in my lodge by the front door all evening, like always.",
+      "public_facts": [
+        "Abe Kowalski has been night porter at the library for fifteen years.",
+        "He keeps the building's keys on a board and writes them in a book.",
+        "He and Mr. Prentice found Miss Thorne's body."
+      ],
+      "private_knowledge": [
+        "There is an old heating tunnel under the courtyard from the cellar to the annex stair. The key hangs on your board.",
+        "From half past eight to nine you were in the boiler room with your bottle, where you can see the key board and the tunnel door.",
+        "At twenty to nine Mr. Oakes came past the boiler room, took the tunnel key and went into the tunnel. He came back at about five to nine with white all down his shoulder."
+      ],
+      "lies": [
+        {
+          "topic": "Where he was",
+          "claim": "I was in my lodge all evening, mister. Never left it.",
+          "truth": "From 20:30 to 21:00 you were in the boiler room in the cellar with your bottle."
+        }
+      ],
+      "secrets": [
+        "You keep a half bottle of rye behind the coal shovel in the boiler room."
+      ],
+      "never_reveal": [
+        "That you were drunk on duty twice last winter and Miss Thorne covered for you."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "abe-saw",
+          "text": "Admits he was in the boiler room with his bottle from half past eight to nine. At twenty to nine Mr. Oakes came past, took the tunnel key off the board and went into the tunnel. He came back at about five to nine with white all down his right shoulder and hung the key back.",
+          "condition": "shown_evidence:porter-log"
+        },
+        {
+          "clue_id": "abe-tunnel",
+          "text": "Says there is an old heating tunnel from the main cellar under the courtyard to the annex stair. Only the staff know it, and the key hangs on his board.",
+          "condition": "free"
+        }
+      ],
+      "breaks_on": ["porter-log", "boiler-log"],
+      "patience": 12,
+      "deflections": [
+        "*looks at his boots*  I ain't saying, mister.",
+        "*rubs his knee*  She lent me a book once. About ships. Asked me what I thought.",
+        "*slowly*  I do the keys and the doors. That's all I do."
+      ],
+      "alibi_verification": {
+        "status": "broken",
+        "evidence_ids": ["boiler-log"],
+        "clue_ids": [],
+        "note": "He was not in his lodge. His own boiler log has entries every ten minutes from 20:30 to 21:00 in the cellar, and he never went through the tunnel."
+      }
+    }
+  ],
+  "hints": [
+    "Look at the courtyard first. If nobody walked on the snow, ask how else somebody could get from the main building to the annex.",
+    "Something warm runs under the courtyard. Find the way down from the main building.",
+    "The porter keeps a book of every key. Show it to him and ask him where he really was tonight.",
+    "Miss Thorne found something wrong just before she died. Look inside the book on her desk, then show it to the dealer.",
+    "Two people in the reading room have things they are ashamed of. Clear them with Miss Peabody's statement before you go after them.",
+    "On the board, connect the false Psalter, the key book and whatever has white on it, then press \"Check theory\".",
+    "Look hard at Graham Oakes. He signed the inventory that hid the theft, the tunnel key was out while he was away from his desk, and the tunnel whitewash is on his jacket."
+  ],
+  "endings": {
+    "correct": "Graham Oakes asks if he may put his jacket on before they take him out. He may not. The library board meets on Monday and finds ten more false books in the annex by Wednesday. Rosa Lindqvist is given a key to the annex, to help put them right.",
+    "wrong_culprit": "You arrest the wrong person on a night with only one set of footprints, and the papers call it the perfect crime. Graham Oakes is made keeper of rare books in March. Nobody opens the Calder Psalter again for years.",
+    "weak_proof": "You named the right man, and his lawyer asked how he crossed the snow. A dusty jacket, a missing key, a dead woman's note. You needed to tie the book, the tunnel and the man together."
+  }
+}

@@ -1,0 +1,11 @@
+project_id = "project-red-string"
+
+[db.seed]
+enabled = true
+sql_paths = ["./seed/story_cases.sql"]
+
+[functions.interrogate]
+verify_jwt = false
+
+[functions.generate-case]
+verify_jwt = false

@@ -1,0 +1,690 @@
+{
+  "schema_version": 1,
+  "id": "the-regent",
+  "title": "The Regent",
+  "tagline": "Everybody in the ballroom kissed somebody at midnight. The clock on the wall was ten minutes fast.",
+  "setting": "The Regent Hotel on Harbor Avenue, during the Ashgrove Shipping New Year's Eve party",
+  "era": "December 1949",
+  "intro_briefing": [
+    "Saturday, 31 December 1949. Ashgrove Shipping took the whole Starlight Ballroom at the Regent Hotel to see out the year, with a band, a countdown and fireworks over the river at midnight. At ten past twelve the hotel's house detective let himself into Suite 1204 and found a guest dead beside the telephone.",
+    "The dead man is Gilbert Ames, fifty, an accountant of Ames and Fowler. Clara Ashgrove hired him in December to go through the books of the Ashgrove Family Trust. Someone hit him on the head with a champagne magnum. A minute before, he had rung the switchboard and asked for the house detective.",
+    "Four people from the Ashgrove table are waiting in the manager's office: his wife, Lorraine Ames; his partner, Howard Fowler; Clara Ashgrove, who invited him; and Leonard Vance of Vance and Pryor, the trustee whose books Ames was going through. All four say they were in the ballroom at midnight, and all four are telling the truth about the countdown.",
+    "Search the lobby, the suite, the ballroom and the hotel laundry. Question the four of them and show them what you find. Find out exactly when midnight was in each room of this hotel."
+  ],
+  "victim": {
+    "id": "gilbert",
+    "name": "Gilbert Ames",
+    "age": 50,
+    "description": "Senior partner of Ames and Fowler, accountants, on Commerce Street. Slow, thorough and honest to the point of being dull. He went through other people's books for a living and never let a figure go until it added up.",
+    "cause_of_death": "Two blows to the head with a champagne magnum.",
+    "found_in": "suite-1204",
+    "found_at": "at about 00:10, on the floor of Suite 1204 beside the telephone table, with the receiver hanging off the hook"
+  },
+  "solution": {
+    "culprit_id": "fowler",
+    "motive": "Gilbert had found that his partner Howard Fowler had taken more than sixty thousand dollars from the firm's client accounts, and he meant to go to the police on the second of January.",
+    "method": "Right after the countdown, which the ballroom clock ran ten minutes early, Fowler slipped up to Suite 1204, struck Gilbert down with the champagne magnum as he was telephoning for help, and dropped his bloodied gloves down the laundry chute before going back to the ballroom.",
+    "required_evidence": ["audit-notes", "laundry-gloves", "switchboard-log"],
+    "reveal": "Howard Fowler had been dipping into the client accounts of Ames and Fowler since 1947, sixty-one thousand dollars of other people's money. Over Christmas Gilbert Ames found it. At eleven o'clock in the ballroom he told Fowler, under the noise of the band, that he would give him one chance: come up to the suite after midnight and sign a confession, or Gilbert would go to the police on the second. Fowler never meant to sign. The ballroom clock had been running ten minutes fast since Wednesday, and the bandleader counted down off it, so the whole room sang at ten to twelve by the real time. In the noise and kissing that followed, Fowler went out to the elevators. Gilbert saw his face at the door and reached for the telephone. At 23:56 by the switchboard clock he asked for the house detective, and the operator heard the receiver fall. Fowler hit him twice with the magnum from the ice bucket, pulled off his white gloves, which were spattered, and dropped them down the laundry chute on the twelfth floor. He was back at the Ashgrove table by five past twelve, without his gloves, telling everyone he had been there at midnight. He had been, at the ballroom's midnight. The partner's own notes give the motive, the switchboard log proves Gilbert was alive after the countdown, and the laundry marks on the gloves have Fowler's name on them."
+  },
+  "timeline": [
+    {
+      "day": 0,
+      "time": "20:00",
+      "location": "ballroom",
+      "who": ["gilbert", "lorraine", "fowler", "clara", "vance"],
+      "what": "The Ashgrove Shipping New Year's Eve party begins in the Starlight Ballroom. Everyone at the Ashgrove table wears evening dress, and the men wear white gloves for dancing.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "22:30",
+      "location": "ballroom",
+      "who": ["vance", "gilbert"],
+      "what": "At the ballroom bar, Vance tells Gilbert sharply that the trust ledgers will not be available until the third of January. Lorraine sees them argue.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "23:00",
+      "location": "ballroom",
+      "who": ["gilbert", "fowler"],
+      "what": "Gilbert tells Fowler he knows about the client accounts and that Fowler can come up to the suite after midnight to sign a confession, or he goes to the police on 2 January.",
+      "visibility": "private",
+      "tags": ["motive"]
+    },
+    {
+      "day": 0,
+      "time": "23:30",
+      "location": "suite-1204",
+      "who": ["gilbert"],
+      "what": "Gilbert tells Lorraine he has a headache and goes up to Suite 1204.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "23:50",
+      "location": "ballroom",
+      "who": ["lorraine", "fowler", "clara", "vance"],
+      "what": "The band counts down to the New Year off the ballroom clock, which is ten minutes fast. The room sings and kisses. By the real time it is ten to twelve.",
+      "visibility": "public",
+      "tags": ["alibi"]
+    },
+    {
+      "day": 0,
+      "time": "23:52",
+      "location": "lobby",
+      "who": ["fowler"],
+      "what": "Fowler slips out of the ballroom in the crush and takes an elevator to the twelfth floor.",
+      "visibility": "private",
+      "tags": ["alibi"]
+    },
+    {
+      "day": 0,
+      "time": "23:55",
+      "location": "suite-1204",
+      "who": ["fowler", "gilbert"],
+      "what": "Fowler knocks at Suite 1204 and Gilbert lets him in.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "day": 0,
+      "time": "23:56",
+      "location": "suite-1204",
+      "who": ["gilbert"],
+      "what": "Gilbert rings the switchboard and asks for the house detective. The operator hears the receiver fall.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "23:57",
+      "location": "suite-1204",
+      "who": ["fowler", "gilbert"],
+      "what": "Fowler strikes Gilbert twice with the champagne magnum from the ice bucket.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "day": 1,
+      "time": "00:00",
+      "location": "ballroom",
+      "who": ["lorraine", "clara", "vance"],
+      "what": "Real midnight. Fireworks go up over the river and the ships in the harbor sound their horns. The guests in the ballroom crowd to the windows.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 1,
+      "time": "00:01",
+      "location": "laundry",
+      "who": ["fowler"],
+      "what": "Fowler pulls off his spattered white gloves and drops them down the laundry chute on the twelfth floor. They land in the linen bin in the basement laundry.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "day": 1,
+      "time": "00:05",
+      "location": "ballroom",
+      "who": ["fowler", "clara", "lorraine", "vance"],
+      "what": "Fowler is back at the Ashgrove table without his gloves.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 1,
+      "time": "00:10",
+      "location": "suite-1204",
+      "who": ["gilbert"],
+      "what": "The house detective, Mr. Brophy, held up by the crowds in the lobby, reaches Suite 1204 and finds Gilbert dead.",
+      "visibility": "public",
+      "tags": []
+    }
+  ],
+  "offstage_locations": [],
+  "rooms": [
+    {
+      "id": "lobby",
+      "name": "Hotel lobby",
+      "description": "Marble floor, potted palms and a great deal of brass. Paper streamers and squashed party hats are everywhere. Behind the front desk is a glass-fronted switchboard room, and over the desk is the hotel clock.",
+      "background": "lobby",
+      "hotspots": [
+        {
+          "id": "switchboard",
+          "label": "Switchboard",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The night operator's switchboard. Every call is written in a log book with the time from the switchboard clock.",
+          "evidence_id": "switchboard-log"
+        },
+        {
+          "id": "lobby-clock",
+          "label": "Lobby clock",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "A big electric clock over the front desk. A small card under it reads: 'Set by the radio time signal daily. The switchboard clock is on the same circuit.'",
+          "evidence_id": null
+        },
+        {
+          "id": "front-desk",
+          "label": "Front desk",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "The register is open at tonight's page. Suite 1204: Mr. and Mrs. G. Ames. Room 806: Mr. H. Fowler. The Ashgrove party is billed to the company.",
+          "evidence_id": null
+        },
+        {
+          "id": "elevators",
+          "label": "Elevators",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "Three brass elevator doors off the lobby, a few steps from the ballroom entrance. Tonight the operators were too busy with the crowds to notice who rode where.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "suite-1204",
+      "name": "Suite 1204",
+      "description": "A sitting room and bedroom on the twelfth floor with a view of the river. A silver ice bucket stands on the sideboard, and papers are spread over the writing desk. The telephone receiver still hangs over the edge of its table.",
+      "background": "hotel-room",
+      "hotspots": [
+        {
+          "id": "telephone-table",
+          "label": "Telephone table",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "Where Mr. Brophy found him, beside the telephone table. Next to the body, among the broken glass, lies a heavy champagne bottle with a dark smear along the base.",
+          "evidence_id": "champagne-magnum"
+        },
+        {
+          "id": "writing-desk",
+          "label": "Writing desk",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "Ledger sheets and an adding machine tape spread across the desk, and on top a page of notes in Gilbert's small, square hand. Beside it is a sheet of hotel notepaper with a single typed line and a blank space for a signature.",
+          "evidence_id": "audit-notes"
+        },
+        {
+          "id": "briefcase",
+          "label": "Briefcase",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "Gilbert's briefcase under the desk, with a folder labelled 'Ashgrove Family Trust' on top.",
+          "evidence_id": "trust-memo"
+        },
+        {
+          "id": "dressing-table",
+          "label": "Dressing table",
+          "x": 10,
+          "y": 56,
+          "width": 26,
+          "height": 26,
+          "description": "Lorraine's scent bottles and brushes, and in the drawer a long blue envelope from an insurance company.",
+          "evidence_id": "insurance-policy"
+        },
+        {
+          "id": "window",
+          "label": "Window",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "A wide window over the river. The last of the fireworks smoke is drifting over the water, and a freighter is still sounding its horn.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "ballroom",
+      "name": "Starlight Ballroom",
+      "description": "A long ballroom under a ceiling painted with stars, with a bandstand at one end and a bar at the other. Balloons have come down all over the floor. The Ashgrove table is still covered in glasses and place cards.",
+      "background": "bar",
+      "hotspots": [
+        {
+          "id": "ballroom-clock",
+          "label": "Ballroom clock",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "A gilt clock high on the wall above the bandstand. A brass tag hangs from its winding key on a string.",
+          "evidence_id": "ballroom-clock"
+        },
+        {
+          "id": "bandstand",
+          "label": "Bandstand",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "The bandleader's set list is taped to the front of the stand. Under 'Auld Lang Syne' he has written: 'Countdown off the big clock. Fireworks are the hotel's business.'",
+          "evidence_id": null
+        },
+        {
+          "id": "ashgrove-table",
+          "label": "Ashgrove table",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "Six place cards and five chairs pushed back. A pair of white dance gloves lies folded by Vance's card and another by Gilbert's, which he never came back for. There are none at Fowler's place.",
+          "evidence_id": null
+        },
+        {
+          "id": "bar",
+          "label": "Ballroom bar",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "The bar where the barman says he saw 'the lawyer and the accountant' having words at about half past ten. He did not hear what about.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "laundry",
+      "name": "Hotel laundry",
+      "description": "A hot basement room full of steam and the smell of starch, with linen carts and the open mouth of the laundry chute, which runs down from every floor of the hotel.",
+      "background": "cellar",
+      "hotspots": [
+        {
+          "id": "chute-bin",
+          "label": "Chute bin",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The canvas bin under the laundry chute, half full of napkins and towels from the party. On top of the pile is a pair of white gloves.",
+          "evidence_id": "laundry-gloves"
+        },
+        {
+          "id": "chute-door",
+          "label": "Chute door",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "The steel door at the bottom of the chute. A painted plate lists the floors it serves: every floor from two to fourteen, through a hatch beside each service stair.",
+          "evidence_id": null
+        },
+        {
+          "id": "linen-carts",
+          "label": "Linen carts",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "Carts of clean sheets and towels ready for the morning. Each guest's own laundry comes back with a sewn name tape, and the tapes hang in a box on the wall, waiting to be sewn.",
+          "evidence_id": null
+        },
+        {
+          "id": "boiler",
+          "label": "Boiler",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "The laundry boiler roaring behind its door. The night laundryman says nothing has been burned in it tonight. He keeps it for water.",
+          "evidence_id": null
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "audit-notes",
+      "name": "Gilbert's notes",
+      "description": "A page in Gilbert's square hand: 'Fowler and Ames client accounts. Withdrawals by H.F., 1947 to date: $61,400. Covered with false transfers. H.F. told 11 pm. Sign tonight or police Jan 2.' Underneath, a typed sheet on hotel paper: 'I, Howard Fowler, admit taking the sums listed below.' The signature line is empty.",
+      "found_in": "suite-1204",
+      "points_to": ["fowler"],
+      "is_red_herring": false
+    },
+    {
+      "id": "switchboard-log",
+      "name": "Switchboard log",
+      "description": "The operator's log for the night, timed by the switchboard clock, which is set daily by the radio time signal: '11.56 pm. 1204, Mr. Ames. Asked for house detective. Line dropped 11.57, receiver off. 11.58 Brophy sent, held up in lobby crowd.'",
+      "found_in": "lobby",
+      "points_to": ["fowler"],
+      "is_red_herring": false
+    },
+    {
+      "id": "laundry-gloves",
+      "name": "Gloves from the chute",
+      "description": "A pair of men's white kid evening gloves, the right one spattered with dark spots across the back and fingers. Inside each cuff is the hotel laundry's sewn name tape: 'H. FOWLER 806'.",
+      "found_in": "laundry",
+      "points_to": ["fowler"],
+      "is_red_herring": false
+    },
+    {
+      "id": "champagne-magnum",
+      "name": "Champagne magnum",
+      "description": "A magnum of champagne from the suite's ice bucket, unopened, with blood and hair on the heavy base. The neck is wet from the ice. Whoever held it wore gloves or wiped it.",
+      "found_in": "suite-1204",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "ballroom-clock",
+      "name": "Tag on the ballroom clock",
+      "description": "A brass tag from the hotel engineers on the ballroom clock: 'Runs 10 min fast. Do not adjust. Repair after holiday. 28 Dec.'",
+      "found_in": "ballroom",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "trust-memo",
+      "name": "Note on the Ashgrove trust",
+      "description": "A note in Gilbert's folder on the Ashgrove Family Trust: 'L.V. refuses ledgers until Jan 3. Bank statements do not match his summaries for 1946 and 1947. Something badly wrong here. Ask C.A.'",
+      "found_in": "suite-1204",
+      "points_to": ["vance"],
+      "is_red_herring": true
+    },
+    {
+      "id": "insurance-policy",
+      "name": "Insurance policy",
+      "description": "A life insurance policy on Gilbert Ames for fifty thousand dollars, taken out in October, with Lorraine Ames as the sole beneficiary.",
+      "found_in": "suite-1204",
+      "points_to": ["lorraine"],
+      "is_red_herring": true
+    }
+  ],
+  "suspects": [
+    {
+      "id": "fowler",
+      "name": "Howard Fowler",
+      "role": "Partner, Ames and Fowler, accountants",
+      "age": 52,
+      "portrait": "man-glasses",
+      "color": "#5a5a7a",
+      "personality": "Jovial, soft-spoken and full of sympathy for everyone, especially the widow. He has been the friendly half of the firm for twenty years while Gilbert was the careful one. He is very clever about figures and not as clever about people as he thinks.",
+      "speech_style": "Warm and comfortable, a good after-dinner speaker. Calls the dead man 'poor old Gil'. Uses bookkeeping words for everything: 'balance', 'on the books', 'carried forward'. When he is worried he talks about the weather and the fireworks.",
+      "alibi": "I was in the ballroom at midnight. We all were. I sang Auld Lang Syne with Lorraine on one side of me and Miss Ashgrove on the other.",
+      "public_facts": [
+        "Howard Fowler has been Gilbert Ames's partner for twenty years.",
+        "He was a guest at the Ashgrove table tonight and had Room 806.",
+        "Everyone at the table saw him there at the countdown."
+      ],
+      "private_knowledge": [
+        "Gil went up to the suite at half past eleven saying he had a headache.",
+        "At the countdown you stood between Lorraine and Miss Ashgrove.",
+        "You know the ballroom clock is fast. The barman complained about it earlier."
+      ],
+      "lies": [
+        {
+          "topic": "Where he was after the countdown",
+          "claim": "I never left the ballroom. I was there from the countdown until the house detective came for us.",
+          "truth": "You left at 23:52, went up to Suite 1204, and came back at 00:05 without your gloves."
+        },
+        {
+          "topic": "The firm's accounts",
+          "claim": "The firm is in fine shape. Gil and I never had a cross word about money in twenty years.",
+          "truth": "You have taken sixty-one thousand four hundred dollars from client accounts since 1947, and at eleven o'clock Gil told you he knew."
+        }
+      ],
+      "secrets": [
+        "You lost most of the money at the racetrack in Harmon."
+      ],
+      "never_reveal": [
+        "That you went up to Suite 1204 after the countdown and struck Gil with the champagne magnum.",
+        "That you dropped your gloves down the laundry chute."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "fowler-headache",
+          "text": "Says poor old Gil went up to the suite at half past eleven with a headache, and that he meant to look in on him in the morning.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "fowler-gloves",
+          "text": "Says he took his gloves off after the countdown because it was hot and must have left them somewhere in the ballroom.",
+          "condition": "pressed"
+        }
+      ],
+      "breaks_on": ["switchboard-log", "laundry-gloves", "audit-notes"],
+      "patience": 13,
+      "deflections": [
+        "*shakes his head slowly*  Poor old Gil. I can't take it in.",
+        "*looks at the window*  Did you see the fireworks over the river? Best I can remember.",
+        "*spreads his hands*  I'm a numbers man, Detective. Ask me something with a number in it."
+      ],
+      "alibi_verification": {
+        "status": "broken",
+        "evidence_ids": ["switchboard-log", "ballroom-clock"],
+        "clue_ids": ["clara-gloves", "lorraine-howard"],
+        "note": "The ballroom counted down at ten to twelve by the real time, and the switchboard log has Gilbert alive at 23:56. Lorraine saw Howard leave toward the elevators after the countdown, and Clara saw him come back at five past twelve without his gloves."
+      }
+    },
+    {
+      "id": "lorraine",
+      "name": "Lorraine Ames",
+      "role": "Gilbert Ames's wife",
+      "age": 44,
+      "portrait": "woman-bun",
+      "color": "#7a6a4a",
+      "personality": "Bright and sociable, the opposite of her husband, and bored by him for years. She is shocked and guilty about the boredom, and she knows how the insurance policy will look. She wants to be helpful and keeps saying the wrong thing.",
+      "speech_style": "Chatty, too many words, nervous laughter in the wrong places. Calls her husband 'Gilbert', never 'Gil'. Says 'I mean to say' before every awkward fact. Apologizes for crying and then cries.",
+      "alibi": "I was at the Ashgrove table from before the countdown until the house detective came. I never went upstairs.",
+      "public_facts": [
+        "Lorraine Ames has been married to Gilbert for eighteen years.",
+        "She and Gilbert had Suite 1204 for the night.",
+        "She was at the Ashgrove table in the ballroom for the countdown."
+      ],
+      "private_knowledge": [
+        "Gilbert went up to the suite at half past eleven with a headache.",
+        "At about half past ten you saw Mr. Vance and Gilbert arguing at the ballroom bar.",
+        "Right after the countdown, Howard kissed your cheek and went off toward the lobby doors, the way the elevators are."
+      ],
+      "lies": [
+        {
+          "topic": "The insurance",
+          "claim": "Insurance? I wouldn't know anything about that. Gilbert handled all that sort of thing.",
+          "truth": "You asked Gilbert to take out the policy in October, after his heart scare, and you know it is for fifty thousand dollars."
+        }
+      ],
+      "secrets": [
+        "You had been thinking about leaving Gilbert in the spring."
+      ],
+      "never_reveal": [
+        "That you were relieved, for one moment, when they told you."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "lorraine-howard",
+          "text": "Says right after the countdown Howard kissed her cheek and went off through the crowd toward the lobby doors, the way the elevators are. She did not see him again until after midnight.",
+          "condition": "shown_evidence:ballroom-clock"
+        },
+        {
+          "clue_id": "lorraine-argument",
+          "text": "Says she saw Mr. Vance and Gilbert having words at the ballroom bar at about half past ten. Gilbert came back to the table very red and said 'That man is hiding something.'",
+          "condition": "free"
+        },
+        {
+          "clue_id": "lorraine-table",
+          "text": "Says Miss Ashgrove and Mr. Vance were both at the table with her from the countdown until the house detective came for them. Mr. Vance gave a little speech about the old year.",
+          "condition": "pressed"
+        },
+        {
+          "clue_id": "lorraine-policy",
+          "text": "Admits she asked Gilbert to take out the policy in October, after a heart scare, because she would have had nothing. She says she would never have touched him.",
+          "condition": "shown_evidence:insurance-policy"
+        }
+      ],
+      "breaks_on": ["insurance-policy"],
+      "patience": 12,
+      "deflections": [
+        "*laughs, then covers her mouth*  I'm sorry. I mean to say, I don't know what I'm saying.",
+        "*twists her handkerchief*  Gilbert would know. Gilbert always knew where everybody was.",
+        "*crying*  I'm sorry. Could we stop for a minute?"
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": [],
+        "clue_ids": ["clara-table", "vance-table"],
+        "note": "Clara and Vance both put her at the Ashgrove table from the countdown until the house detective arrived."
+      }
+    },
+    {
+      "id": "clara",
+      "name": "Clara Ashgrove",
+      "role": "Head of Ashgrove Shipping; host of the party",
+      "age": 33,
+      "portrait": "woman-bun",
+      "color": "#8c4a5a",
+      "personality": "Sharp, proud and controlled. She has run Ashgrove Shipping for a year through two scandals and a murder trial, and tonight was meant to show the city the firm was still standing. She hired Gilbert Ames because she no longer trusts the figures Leonard Vance gives her about her father's trust, and she will not say so to a policeman until she is sure.",
+      "speech_style": "Clipped, exact sentences, times and figures, no softening. Says 'my father's trust' and 'Ashgrove' as if they were one word. Corrects imprecision: 'Not quite, Detective.' Goes quieter when she is angry.",
+      "alibi": "I was at my table in the ballroom from the countdown until the house detective came. Mr. Vance and Mrs. Ames were with me.",
+      "public_facts": [
+        "Clara Ashgrove has run Ashgrove Shipping since her father's death in October 1948.",
+        "She hosted the party in the Starlight Ballroom.",
+        "In December she hired Gilbert Ames to examine the books of the Ashgrove Family Trust."
+      ],
+      "private_knowledge": [
+        "Leonard Vance has been trustee of your father's trust since before the war. Your father meant to replace him with you and never signed the paper.",
+        "Howard Fowler was standing next to you at the countdown. He wore white gloves.",
+        "When Howard came back to the table at about five past twelve his hands were bare, and he kept them in his pockets."
+      ],
+      "lies": [
+        {
+          "topic": "Why she hired Ames",
+          "claim": "Mr. Ames was doing a routine review of the trust. Every trust has one.",
+          "truth": "You hired him because the trust's income has fallen every year since 1946 and Leonard Vance will not show you the ledgers."
+        }
+      ],
+      "secrets": [
+        "You have already written to the State Bar asking how to remove a trustee."
+      ],
+      "never_reveal": [
+        "That you are afraid your father's money is gone."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "clara-gloves",
+          "text": "Says Howard Fowler stood next to her at the countdown wearing white gloves. When he came back to the table at about five past twelve his hands were bare and he kept them in his pockets.",
+          "condition": "shown_evidence:laundry-gloves"
+        },
+        {
+          "clue_id": "clara-table",
+          "text": "Says Mrs. Ames and Mr. Vance were at her table from the countdown until the house detective came. She would have noticed either of them leaving. She was watching Vance.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "clara-trust",
+          "text": "Admits she hired Ames because the trust's income has fallen every year since 1946 and Vance will not show her the ledgers. She says she does not know yet what Ames found.",
+          "condition": "shown_evidence:trust-memo"
+        }
+      ],
+      "breaks_on": ["trust-memo"],
+      "patience": 12,
+      "deflections": [
+        "*evenly*  Not quite, Detective. Try the question again.",
+        "*looks at the ballroom doors*  I have two hundred guests to apologize to in the morning.",
+        "*a thin smile*  You will forgive me if I keep my opinions off the manifest for now."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": [],
+        "clue_ids": ["lorraine-table", "vance-table"],
+        "note": "Lorraine and Vance both put her at the Ashgrove table from the countdown until the house detective came."
+      }
+    },
+    {
+      "id": "vance",
+      "name": "Leonard Vance",
+      "role": "Attorney-at-law, Vance and Pryor; trustee of the Ashgrove Family Trust",
+      "age": 55,
+      "portrait": "man-glasses",
+      "color": "#6b7f99",
+      "personality": "Smooth, precise and unfailingly polite, a man who has spent thirty years making other people's trouble sound like paperwork. This is the third death in fourteen months with his name somewhere near it, and he is very careful indeed. The accountant was going through his trust, and he knows exactly how that looks.",
+      "speech_style": "Measured, lawyerly sentences: 'strictly speaking', 'as a matter of form', 'I would put it rather differently'. A Latin tag when he wants distance: res ipsa loquitur, de mortuis nil nisi bonum. Calls the detective 'Detective' with a faint smile and answers a question with a question when he can.",
+      "alibi": "From the countdown until Mr. Brophy came for us I was at Miss Ashgrove's table. I made a short speech. Several hundred people heard it, though I doubt many listened.",
+      "public_facts": [
+        "Leonard Vance of Vance and Pryor is counsel to Ashgrove Shipping and trustee of the Ashgrove Family Trust.",
+        "He was a guest at the Ashgrove table tonight.",
+        "Gilbert Ames was examining the books of the trust he manages."
+      ],
+      "private_knowledge": [
+        "You argued with Ames at the ballroom bar at about half past ten. He wanted the trust ledgers before the third of January.",
+        "Mrs. Ames and Miss Ashgrove were at the table with you from the countdown until the house detective arrived.",
+        "Fowler went off through the crowd toward the lobby a minute or two after the countdown."
+      ],
+      "lies": [
+        {
+          "topic": "His talk with Ames",
+          "claim": "I exchanged New Year's greetings with Mr. Ames. Nothing more.",
+          "truth": "At about half past ten you told Ames sharply at the bar that he would not see the trust ledgers before the third of January."
+        }
+      ],
+      "secrets": [
+        "The trust ledgers do not match the bank statements, and you need until the third to make them."
+      ],
+      "never_reveal": [
+        "That you have taken money from the Ashgrove Family Trust since 1946."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "vance-table",
+          "text": "Says Miss Ashgrove and Mrs. Ames were at the table with him from the countdown until the house detective came for them. He made a little speech about the old year and both of them had to sit through it.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "vance-fowler",
+          "text": "Says that a minute or two after the countdown Fowler went off through the crowd toward the lobby doors. Vance assumed he was looking for the men's room.",
+          "condition": "pressed"
+        },
+        {
+          "clue_id": "vance-ledgers",
+          "text": "Admits he argued with Ames at the bar about the trust ledgers and told him he would have them on the third. He calls it 'a question of good order' and will not say more about the trust.",
+          "condition": "shown_evidence:trust-memo"
+        }
+      ],
+      "breaks_on": ["trust-memo"],
+      "patience": 14,
+      "deflections": [
+        "*adjusts a cufflink*  Strictly speaking, Detective, I'm not sure that is a proper question.",
+        "*with a small bow of the head*  De mortuis nil nisi bonum. I'll say nothing against him.",
+        "*smiles faintly*  I have answered rather a lot of policemen this year. Would you like to try another?"
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": [],
+        "clue_ids": ["clara-table", "lorraine-table"],
+        "note": "Clara and Lorraine both put him at the Ashgrove table from the countdown until the house detective came. Clara says she was watching him the whole time."
+      }
+    }
+  ],
+  "hints": [
+    "Every one of them says they were in the ballroom at midnight. Find out which midnight they mean. Look at the ballroom clock, then the lobby clock.",
+    "The switchboard writes down every call with the time. Find out when Gilbert Ames was last alive.",
+    "Show Lorraine Ames the tag from the ballroom clock. She saw somebody leave right after the countdown.",
+    "Laundry in a hotel comes back with a name tape. Go down to the basement and see what came down the chute tonight.",
+    "Two people at the table have papers in the suite that look bad for them. Ask about them, then check whether they ever left the table.",
+    "On the board, pin Gilbert's notes, the switchboard log and whatever you found in the laundry, then press \"Check theory\".",
+    "Look hard at Howard Fowler. Gilbert caught him with his hand in the client accounts, Gilbert was alive after the countdown, and the gloves in the chute have his name in them."
+  ],
+  "endings": {
+    "correct": "Howard Fowler is taken out through the kitchens to keep him away from the photographers. The New Year is four hours old. Clara Ashgrove takes Gilbert Ames's folder on her father's trust home in her own briefcase, and does not mention it to Leonard Vance.",
+    "wrong_culprit": "You arrest the wrong person on New Year's morning and the papers love it. Howard Fowler gives the eulogy at the funeral, settles his late partner's affairs himself, and closes the client accounts before anybody else can open them.",
+    "weak_proof": "You named the right man, and his lawyer made the clock your problem. Everybody saw him at midnight. You needed his partner's notes, the call that proved Gilbert outlived the countdown, and the gloves with his name in them."
+  }
+}

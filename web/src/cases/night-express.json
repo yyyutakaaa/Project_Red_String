@@ -1,0 +1,746 @@
+{
+  "schema_version": 1,
+  "id": "night-express",
+  "title": "The Night Express",
+  "tagline": "A newspaper owner with a file for the commission, a sleeping car, and twelve minutes at a water stop.",
+  "setting": "The Calder Limited, the overnight sleeper from Calder City to Harmon Junction",
+  "era": "June 1949",
+  "intro_briefing": [
+    "Thursday, 9 June 1949. The Calder Limited left Calder City at nine last night with one sleeping car, one dining car and a lounge car on the back. It was due into Harmon Junction at seven. At five past midnight the porter brought a cup of coffee to Compartment C and found Walter Brandt dead in his berth.",
+    "Brandt owned the Calder Courier, the paper that ran the Pier Seventeen story in April and kept running it. He was on his way to Harmon to give evidence to the state Waterfront Commission at ten this morning. Somebody stabbed him once, under the ribs, with a knife that is not in the compartment.",
+    "The railroad stopped the train at Ferris Crossing and telephoned the city. You came out on the engine of the milk train. Nobody has left the sleeping car. In it you have his wife, Irene Brandt; his star reporter, Paul Sutter, who was carrying the Courier's half of the file; Conrad Teague, the waterfront contractor whose name is all over that file, travelling to the same hearing; and the porter, Gus Malloy, who has worked this car for twenty-two years.",
+    "Search the compartment, the corridor, the dining car and the lounge car. Question the four of them and put what you find on the table in front of them. When you can show who went into Compartment C, and why, make your accusation."
+  ],
+  "victim": {
+    "id": "walter",
+    "name": "Walter Brandt",
+    "age": 54,
+    "description": "Owner and publisher of the Calder Courier. Loud, stubborn and hard to frighten. He had spent eight months building a file on waterfront contracts and meant to hand it to the commission himself.",
+    "cause_of_death": "A single stab wound under the left ribs from a narrow serrated blade.",
+    "found_in": "compartment-c",
+    "found_at": "at about 00:05, lying in his lower berth in Compartment C, half under the blanket"
+  },
+  "solution": {
+    "culprit_id": "paul",
+    "motive": "Paul Sutter had been taking money from Teague Construction to tell Teague what the Courier knew, and Walter had found the deposit slip and put it on the list of exhibits for the commission.",
+    "method": "Paul pocketed a steak knife at dinner. When the porter got off the train at the Ferris Crossing water stop, Paul went from his own compartment into Compartment C, stabbed Walter, and pushed the knife into the corridor fire bucket wrapped in a page of his own typed copy.",
+    "required_evidence": ["deposit-slip", "wrapped-knife", "bar-tab"],
+    "reveal": "Paul Sutter sold his own paper. Since the spring, Teague Construction had been paying him to tell Conrad Teague what the Courier was about to print, and in May a cheque for two thousand five hundred dollars went into his account. Walter Brandt found the deposit slip. He said nothing to Paul until last night, when the two of them sat in Compartment C going through the commission file, and he showed Paul item seven on the list. Paul had already taken a steak knife off the table at dinner. He sat in the lounge car until the bar shut at half past eleven, went to his own compartment and waited. At twenty to twelve the train stopped at Ferris Crossing to take on water and ice, and Gus Malloy left his seat at the end of the corridor to help the ice crew, as he does every trip. For twelve minutes nobody was watching the corridor. Paul knocked on Compartment C, went in and stabbed Walter once. He wrapped the knife in the first paper he had, a page of his own story, and pushed it into the sand of the fire bucket. Then he told everyone he had been writing in the lounge car until midnight. The lounge car was dark by then, the barman wrote down the time of his last drink, and Walter had left a carbon of the deposit slip in his wife's handbag."
+  },
+  "timeline": [
+    {
+      "day": 0,
+      "time": "21:00",
+      "location": "corridor",
+      "who": ["walter", "irene", "paul", "teague", "gus"],
+      "what": "The Calder Limited leaves Calder City. Walter Brandt has Compartment C, Irene Brandt has D next door with a connecting door, Paul Sutter has B and Conrad Teague has F. Gus Malloy is the sleeping car porter.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "21:20",
+      "location": "dining-car",
+      "who": ["walter", "irene", "paul"],
+      "what": "Walter, Irene and Paul dine together at table 4. Teague eats alone at table 1.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "21:50",
+      "location": "dining-car",
+      "who": ["paul"],
+      "what": "Paul slips a steak knife from table 4 into his jacket inside his folded napkin and leaves the table first.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "day": 0,
+      "time": "22:05",
+      "location": "dining-car",
+      "who": ["teague", "walter"],
+      "what": "Teague stops at Walter's table and offers him ten thousand dollars to stay home from the hearing. Walter laughs at him loudly enough for the steward to hear.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "22:15",
+      "location": "compartment-c",
+      "who": ["walter", "paul"],
+      "what": "Walter and Paul go through the commission file in Compartment C. Walter shows Paul item seven on the exhibit list, the Teague deposit slip, and tells him he will be named on Thursday.",
+      "visibility": "private",
+      "tags": ["motive"]
+    },
+    {
+      "day": 0,
+      "time": "22:40",
+      "location": "compartment-c",
+      "who": ["irene", "walter"],
+      "what": "Irene goes through the connecting door into C. They argue about the divorce she wants. Walter says he cannot sleep, and she gives him one of her sleeping powders. He bolts the connecting door after her.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "22:50",
+      "location": "lounge-car",
+      "who": ["teague", "paul"],
+      "what": "Teague sits down to gin rummy with Conductor Hale at the card table. Paul is at the bar with his portable typewriter.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "23:25",
+      "location": "lounge-car",
+      "who": ["paul"],
+      "what": "Paul signs for a last rye and soda. At 23:30 the barman shuts the bar and at 23:35 turns out the lounge lights. Paul says he will finish his story in his berth and goes forward.",
+      "visibility": "public",
+      "tags": ["alibi"]
+    },
+    {
+      "day": 0,
+      "time": "23:30",
+      "location": "compartment-c",
+      "who": ["walter", "gus"],
+      "what": "Walter rings for the porter and asks through the door for coffee at midnight.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "23:35",
+      "location": "conductors-office",
+      "who": ["teague"],
+      "what": "Teague and Conductor Hale carry their game back to the conductor's office at the rear of the lounge car and keep playing.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "23:38",
+      "location": "corridor",
+      "who": ["gus", "irene"],
+      "what": "Irene rings from D. Gus brings her a glass of water. She is in her nightgown and barely awake, and she bolts her door after him.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "23:40",
+      "location": "ferris-crossing",
+      "who": ["gus"],
+      "what": "The train stops at the Ferris Crossing water tower. Gus leaves his seat and gets down to help the ice crew load the dining car, against the railroad's rules. Teague and Hale can see him from the office window.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "23:43",
+      "location": "compartment-c",
+      "who": ["paul", "walter"],
+      "what": "Paul knocks on Compartment C, is let in, and stabs Walter once with the steak knife.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "day": 0,
+      "time": "23:47",
+      "location": "corridor",
+      "who": ["paul"],
+      "what": "Paul wraps the knife in a page of his typed story and pushes it into the sand of the fire bucket at the end of the corridor.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "day": 0,
+      "time": "23:52",
+      "location": "corridor",
+      "who": ["gus", "paul"],
+      "what": "The train moves off. Gus climbs back aboard and sees Paul at the end of the corridor by the fire bucket. Paul says he wanted some air.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 1,
+      "time": "00:05",
+      "location": "compartment-c",
+      "who": ["gus", "walter"],
+      "what": "Gus brings the coffee to Compartment C, gets no answer, opens the door with his key and finds Walter dead. The train stops at the next siding and the conductor telephones the city.",
+      "visibility": "public",
+      "tags": []
+    }
+  ],
+  "offstage_locations": [
+    { "id": "conductors-office", "name": "Conductor's office" },
+    { "id": "ferris-crossing", "name": "Ferris Crossing water stop" }
+  ],
+  "rooms": [
+    {
+      "id": "compartment-c",
+      "name": "Compartment C",
+      "description": "A first-class compartment, green plush and polished walnut, with the lower berth made up and the upper folded away. The blind is down. A briefcase lies open on the seat, and the connecting door to Compartment D is in the far wall.",
+      "background": "train-car",
+      "hotspots": [
+        {
+          "id": "berth",
+          "label": "Berth",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The lower berth where Gus found him. The blanket is pulled half off and there is blood on the sheet. His reading glasses are folded on the shelf above, and his shoes are side by side on the floor.",
+          "evidence_id": null
+        },
+        {
+          "id": "briefcase",
+          "label": "Briefcase",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "A heavy leather briefcase stamped W.B., open on the seat. Inside is a cardboard folder marked 'Commission' with a typed list clipped to the front. One of the pockets in the folder is empty.",
+          "evidence_id": "exhibit-list"
+        },
+        {
+          "id": "connecting-door",
+          "label": "Connecting door",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "The door through to Compartment D. A brass bolt on this side is shot home, and there is dust in the slot on the D side of the frame.",
+          "evidence_id": "door-bolt"
+        },
+        {
+          "id": "side-table",
+          "label": "Side table",
+          "x": 10,
+          "y": 56,
+          "width": 26,
+          "height": 26,
+          "description": "A water glass on the fold-down table with a chalky white ring in the bottom, and beside it a folded paper twist from a pharmacy.",
+          "evidence_id": "sleeping-draught"
+        },
+        {
+          "id": "window",
+          "label": "Window",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "The blind is down and latched. The window behind it is shut tight. Nothing went in or out this way.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "corridor",
+      "name": "Sleeping car corridor",
+      "description": "A narrow corridor down one side of the sleeping car, carpeted in maroon, with the compartment doors A to F along the left and windows along the right. The porter's seat and call board are at one end, the fire bucket and the door to the vestibule at the other.",
+      "background": "hallway",
+      "hotspots": [
+        {
+          "id": "call-board",
+          "label": "Call board",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The porter's call board, a little glass panel with a flag for each compartment. Gus writes every call in a pocket book that hangs beside it on a string.",
+          "evidence_id": "call-board"
+        },
+        {
+          "id": "porters-seat",
+          "label": "Porter's seat",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "A fold-down seat at the end of the car with a shoeshine box under it and four pairs of shoes in a row. From here you can see every door in the corridor.",
+          "evidence_id": null
+        },
+        {
+          "id": "fire-bucket",
+          "label": "Fire bucket",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "A red fire bucket of sand on a hook by the vestibule door. The sand has been dug into and smoothed over, and a corner of paper sticks out of it.",
+          "evidence_id": "wrapped-knife"
+        },
+        {
+          "id": "window",
+          "label": "Window",
+          "x": 10,
+          "y": 56,
+          "width": 26,
+          "height": 26,
+          "description": "Fields and telegraph poles go past in the dark. Through the glass you can see the next car's lights swing as the train takes the curve.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "dining-car",
+      "name": "Dining car",
+      "description": "White tablecloths, little brass lamps, and the smell of coffee and cigars. The tables have been cleared for the night except for the steward's tray of silver, which is still waiting to be counted back into its drawers.",
+      "background": "dining-room",
+      "hotspots": [
+        {
+          "id": "steward-tray",
+          "label": "Silver tray",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The steward's tray of knives, forks and spoons, with his tally card tucked under the rim.",
+          "evidence_id": "knife-tally"
+        },
+        {
+          "id": "seating-card",
+          "label": "Seating card",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "The steward's seating card for the second sitting. Table 1: Mr. Teague, alone. Table 4: Mr. and Mrs. Brandt and Mr. Sutter. In pencil beside table 4: 'Shouting, 10.05. Mr. T.'",
+          "evidence_id": null
+        },
+        {
+          "id": "kitchen-hatch",
+          "label": "Kitchen hatch",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "The hatch into the galley. Through it you can see the ice chest, freshly filled at Ferris Crossing. Water is still dripping out of it onto the floor.",
+          "evidence_id": null
+        },
+        {
+          "id": "table-four",
+          "label": "Table four",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "Table 4, by the window. The cloth is clean now. Under it, stuck to the table edge, is a folded menu with doodles of the Courier masthead in the margin.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "lounge-car",
+      "name": "Lounge car",
+      "description": "The last car on the train: leather armchairs, a little bar with a brass rail, and a card table under a green-shaded lamp. The lights are on again now, but the bar is shuttered.",
+      "background": "bar",
+      "hotspots": [
+        {
+          "id": "bar",
+          "label": "Bar",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The barman's tab book lies on the counter beside the till, and a chalkboard hangs above the shutter.",
+          "evidence_id": "bar-tab"
+        },
+        {
+          "id": "card-table",
+          "label": "Card table",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "A deck of cards squared off neatly and a score pad in a conductor's careful figures.",
+          "evidence_id": "gin-score-pad"
+        },
+        {
+          "id": "ashtray",
+          "label": "Ashtray",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "A standing ashtray by the armchair Teague used. Among the cigar ends is a yellow telegram form, crumpled into a ball.",
+          "evidence_id": "teague-telegram"
+        },
+        {
+          "id": "typewriter-case",
+          "label": "Typewriter case",
+          "x": 10,
+          "y": 56,
+          "width": 26,
+          "height": 26,
+          "description": "An empty case for a portable typewriter, left under the bar stool. The machine has gone forward with its owner. A few balls of discarded copy paper lie beside it, all typed in purple ribbon.",
+          "evidence_id": null
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "exhibit-list",
+      "name": "Commission exhibit list",
+      "description": "A typed list headed 'For the Commission, Thursday', clipped to Walter's folder. Seven items. The seventh reads: 'Deposit slip, Teague Construction to P.S., 3 May 1949, $2,500. Carbon with I.' The pocket in the folder marked 7 is empty.",
+      "found_in": "compartment-c",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "deposit-slip",
+      "name": "Carbon of a deposit slip",
+      "description": "A carbon copy of a deposit slip from the Calder Savings Bank, dated 3 May 1949: one cheque, Teague Construction Company, $2,500, paid into the account of Paul R. Sutter. Across the back, in Walter's heavy pencil: 'Our own man. God help us. Thursday.'",
+      "found_in": "irene",
+      "points_to": ["paul", "teague"],
+      "is_red_herring": false
+    },
+    {
+      "id": "wrapped-knife",
+      "name": "Knife in the fire bucket",
+      "description": "A dining car steak knife with a serrated blade, dark and sticky to the handle, wrapped in a sheet of typed copy and pushed into the sand. The page is typed in purple ribbon and starts 'HARMON JUNCTION, June 10. By Paul Sutter, Courier Staff.'",
+      "found_in": "corridor",
+      "points_to": ["paul"],
+      "is_red_herring": false
+    },
+    {
+      "id": "knife-tally",
+      "name": "Steward's tally card",
+      "description": "The steward's card for the second sitting: 'Steak knives out 24, back 23. Short one, table 4.' Table 4 was the Brandt party: Walter, Irene and Paul.",
+      "found_in": "dining-car",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "bar-tab",
+      "name": "Lounge car tab book",
+      "description": "The barman's tab book. The last entry is '11.25. Rye and soda. Comp. B', signed 'P. Sutter'. On the chalkboard above the shutter: 'BAR CLOSED 11.30. LIGHTS OUT 11.35. By order.'",
+      "found_in": "lounge-car",
+      "points_to": ["paul"],
+      "is_red_herring": false
+    },
+    {
+      "id": "gin-score-pad",
+      "name": "Gin rummy score pad",
+      "description": "A conductor's score pad: 'Hale v. Teague'. Hands are numbered and timed in the margin, the way a railroad man writes everything. The first hand is at 10.50, there is a note 'moved to office 11.35', and the hands go on without a gap to 12.20, when someone has written 'stopped, trouble in sleeper'.",
+      "found_in": "lounge-car",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "teague-telegram",
+      "name": "Crumpled telegram",
+      "description": "A telegram form handed in at Calder City at 6.10 last evening, addressed to Conrad Teague, Calder Limited: 'BRANDT MUST NOT REACH HEARING WITH FILE. DEAL WITH IT TONIGHT. FISK.'",
+      "found_in": "lounge-car",
+      "points_to": ["teague"],
+      "is_red_herring": true
+    },
+    {
+      "id": "sleeping-draught",
+      "name": "Glass and powder paper",
+      "description": "Walter's water glass with a chalky ring in the bottom, and a folded paper twist printed 'Mercer's Pharmacy. Mrs. I. Brandt. One powder at bedtime.'",
+      "found_in": "compartment-c",
+      "points_to": ["irene"],
+      "is_red_herring": true
+    },
+    {
+      "id": "door-bolt",
+      "name": "Bolted connecting door",
+      "description": "The connecting door between C and D is bolted on Walter's side. There is a film of dust in the bolt slot on the D side that nobody has touched.",
+      "found_in": "compartment-c",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "call-board",
+      "name": "Porter's call book",
+      "description": "Gus Malloy's pocket book of calls for the night, in pencil: '11.30 C, coffee at 12. 11.38 D, water. 12.05 C coffee, no answer.'",
+      "found_in": "corridor",
+      "points_to": [],
+      "is_red_herring": false
+    }
+  ],
+  "suspects": [
+    {
+      "id": "irene",
+      "name": "Irene Brandt",
+      "role": "Walter Brandt's wife",
+      "age": 41,
+      "portrait": "woman-hat",
+      "color": "#7a5c8a",
+      "personality": "Tired, elegant and very honest about how little she liked her husband in the last few years, which makes people think she is harder than she is. She wanted a divorce and was going to ask for it properly after the hearing. Under the sleeping powder she is slow and foggy, and she knows it, and it frightens her more than the detective does.",
+      "speech_style": "Low voice, long pauses, dry jokes she does not smile at. Calls her husband 'Walter' and never 'my husband'. Says 'I'm afraid' when she means no. When she is caught out she goes very still and answers with one word.",
+      "alibi": "I took my powder at eleven and I was asleep until the porter started shouting.",
+      "public_facts": [
+        "Irene Brandt has been married to Walter for nineteen years.",
+        "She had Compartment D, next to her husband's, with a connecting door between them.",
+        "She dined with Walter and Paul Sutter at table 4 in the dining car."
+      ],
+      "private_knowledge": [
+        "Walter told you at dinner, under his breath, that he had found 'one of our own' on Teague's payroll, and that he was going to name him at the hearing.",
+        "Walter gave you a carbon of a bank slip to keep in your handbag, in case anything happened to his briefcase. You have not looked at it closely.",
+        "Paul left the dinner table first, at about ten to ten, holding his napkin bunched up in his hand.",
+        "At about twenty to midnight you rang for water and the porter brought it. You bolted your door after him."
+      ],
+      "lies": [
+        {
+          "topic": "Whether she saw Walter after dinner",
+          "claim": "I didn't see Walter again after dinner. I went to my compartment and took my powder.",
+          "truth": "At about 22:40 you went through the connecting door into C. You argued about the divorce, he said he could not sleep, and you gave him one of your powders. He bolted the connecting door after you."
+        }
+      ],
+      "secrets": [
+        "You have been seeing a lawyer about a divorce since March, and you meant to ask Walter for one after the hearing."
+      ],
+      "never_reveal": [
+        "That the last thing you said to Walter was that you wished you had never married him."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "irene-carbon",
+          "text": "Says Walter told her at dinner he had found one of his own people on Teague's payroll. He gave her a carbon of a bank slip to keep in her handbag in case his briefcase went missing. She takes it out and hands it over.",
+          "condition": "shown_evidence:exhibit-list",
+          "evidence_id": "deposit-slip"
+        },
+        {
+          "clue_id": "irene-quarrel",
+          "text": "Admits she went into C through the connecting door at about 22:40. They argued about the divorce she wants. He said he could not sleep, so she gave him one of her powders, and he bolted the connecting door behind her.",
+          "condition": "shown_evidence:sleeping-draught"
+        },
+        {
+          "clue_id": "irene-napkin",
+          "text": "Remembers Paul getting up from table 4 first, at about ten to ten, with his napkin bunched up in his fist, as if he had something in it.",
+          "condition": "pressed"
+        }
+      ],
+      "breaks_on": ["sleeping-draught"],
+      "patience": 12,
+      "deflections": [
+        "*rubs her eyes*  I'm afraid I'm still half asleep, Detective. Ask me again in a little while.",
+        "*looks at the blind*  Walter would have had a headline for this. I haven't got one.",
+        "*very still*  No."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": ["door-bolt"],
+        "clue_ids": ["gus-water"],
+        "note": "The connecting door was bolted on Walter's side with undisturbed dust on her side, so nobody came from D. The porter took her water at 23:38, found her barely awake, and heard her bolt her corridor door."
+      }
+    },
+    {
+      "id": "paul",
+      "name": "Paul Sutter",
+      "role": "Chief reporter, the Calder Courier",
+      "age": 29,
+      "portrait": "young-man",
+      "color": "#5a6e8c",
+      "personality": "Quick, likeable and eager to be liked. He talks to the detective as one professional to another and offers help before he is asked. Underneath he is badly frightened, and the more frightened he gets the more he talks.",
+      "speech_style": "Newspaper talk: short punchy sentences, 'off the record', 'for what it's worth', 'the old man' for Walter. Calls the detective 'Detective' and sometimes 'pal'. When he is cornered he starts quoting what he would write about it.",
+      "alibi": "I sat in the lounge car writing up the hearing piece until about midnight. Then I turned in and slept until all the noise.",
+      "public_facts": [
+        "Paul Sutter has worked for the Courier for six years and wrote most of the Pier Seventeen stories.",
+        "He was carrying the Courier's notes for the Waterfront Commission hearing.",
+        "He had Compartment B and spent part of the evening in the lounge car with his typewriter."
+      ],
+      "private_knowledge": [
+        "You and Walter went through the commission file in Compartment C from about 22:15 until 22:40.",
+        "You saw Conrad Teague stop at Walter's table after dinner. Walter laughed in his face.",
+        "You know the porter gets off at Ferris Crossing every trip to help with the ice."
+      ],
+      "lies": [
+        {
+          "topic": "Where he was from half past eleven",
+          "claim": "I was in the lounge car writing until about midnight.",
+          "truth": "The bar shut at 23:30 and the lights went out at 23:35. You went back to Compartment B, and at about 23:43 you went to Compartment C."
+        },
+        {
+          "topic": "Money from Teague",
+          "claim": "Teague? I've been trying to nail that man for a year. I wouldn't take a cigarette from him.",
+          "truth": "Teague Construction paid you two thousand five hundred dollars in May to tell them what the Courier was going to print."
+        }
+      ],
+      "secrets": [
+        "Walter showed you item seven on the exhibit list at about 22:30 and told you he would name you at the hearing."
+      ],
+      "never_reveal": [
+        "That you went into Compartment C during the water stop and stabbed Walter with the steak knife from dinner.",
+        "That you hid the knife in the corridor fire bucket wrapped in a page of your own copy."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "paul-file",
+          "text": "Says he and Walter went through the commission file together in Compartment C from about 22:15 to 22:40, and that Walter was in a foul mood all evening.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "paul-lounge",
+          "text": "Admits the bar shut at half past eleven and the lights went out. He says he went back to Compartment B and finished his story in his berth, alone.",
+          "condition": "shown_evidence:bar-tab"
+        }
+      ],
+      "breaks_on": ["bar-tab", "wrapped-knife", "deposit-slip"],
+      "patience": 12,
+      "deflections": [
+        "*spreads his hands*  Off the record, Detective, I'm as lost as you are.",
+        "*laughs, too loud*  You want a quote? 'Reporter has nothing to add.' Print it.",
+        "*lights a cigarette with a shaking match*  Give me a minute. The old man was a friend of mine."
+      ],
+      "alibi_verification": {
+        "status": "broken",
+        "evidence_ids": ["bar-tab"],
+        "clue_ids": ["teague-left", "gus-saw-paul"],
+        "note": "The tab book and chalkboard show the bar shut at 23:30 and the lounge went dark at 23:35. Teague saw him leave then, and the porter found him by the fire bucket at 23:52."
+      }
+    },
+    {
+      "id": "teague",
+      "name": "Conrad Teague",
+      "role": "President, Teague Construction Company",
+      "age": 52,
+      "portrait": "man-hat",
+      "color": "#6e5a3c",
+      "personality": "A big, comfortable man who has bought his way out of every trouble he has been in and expects to do it again. He is rude to the porter and polite to the detective, and he is honestly shocked that someone got to Brandt before the commission did, because now he will be the first name in every paper.",
+      "speech_style": "Slow and heavy, with a builder's words: 'foundations', 'square', 'load-bearing'. Calls the detective 'son' or 'officer' whatever their rank. Never answers a question with a yes or a no when he can answer it with a story.",
+      "alibi": "From ten to eleven until gone midnight I was playing gin rummy with Conductor Hale, first in the lounge car and then in his office at the back.",
+      "public_facts": [
+        "Conrad Teague's company holds most of the city's waterfront building contracts.",
+        "He was travelling to the Waterfront Commission hearing, where Walter Brandt was going to give evidence about his contracts.",
+        "He had Compartment F and dined alone at table 1."
+      ],
+      "private_knowledge": [
+        "You played gin rummy with Conductor Hale from 22:50. When the lounge lights went out at 23:35 you moved to his office at the back of the lounge car.",
+        "From the office window you watched the porter out on the platform at Ferris Crossing, helping the ice crew, the whole time the train stood there.",
+        "The reporter left the lounge car when the bar shut at half past eleven and said he would finish his piece in his berth."
+      ],
+      "lies": [
+        {
+          "topic": "Whether he spoke to Brandt on the train",
+          "claim": "I never said a word to Brandt all night. We nodded in the corridor, that's all.",
+          "truth": "At 22:05 you stopped at his table in the dining car and offered him ten thousand dollars to stay away from the hearing. He laughed at you."
+        },
+        {
+          "topic": "The telegram",
+          "claim": "I don't get telegrams on trains. Nobody knew I was on this one.",
+          "truth": "Your lawyer, Morton Fisk, wired you at the station. 'Deal with it' meant make Brandt an offer, which you did."
+        }
+      ],
+      "secrets": [
+        "You have paid people at the Courier for information before. You do not know which one Walter found."
+      ],
+      "never_reveal": [
+        "The names of the city officials Teague Construction pays every Christmas."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "teague-left",
+          "text": "Says the reporter, Sutter, packed up his typewriter and left the lounge car when the barman shut the bar at half past eleven. He said he would finish his piece in his berth.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "teague-porter",
+          "text": "Says that from the conductor's office window he watched the old porter out on the platform at Ferris Crossing with the ice crew the whole time the train stood there, from about 23:40 until it moved off at about 23:52.",
+          "condition": "pressed"
+        },
+        {
+          "clue_id": "teague-offer",
+          "text": "Admits the telegram is from his lawyer, Morton Fisk. 'Deal with it' meant make Brandt an offer. He offered Brandt ten thousand dollars at his table in the dining car at about 22:05 and Brandt laughed at him.",
+          "condition": "shown_evidence:teague-telegram"
+        }
+      ],
+      "breaks_on": ["teague-telegram"],
+      "patience": 14,
+      "deflections": [
+        "*settles back in his chair*  You're building on sand, son. Try another question.",
+        "*checks his watch*  I've got a hearing in the morning. I'd like to be awake for it.",
+        "*smiles without warmth*  My lawyer would tell me to stop talking about here."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": ["gin-score-pad"],
+        "clue_ids": [],
+        "note": "Conductor Hale's score pad times every hand from 22:50 to 00:20, with the move to the conductor's office at 23:35 and no gap during the water stop."
+      }
+    },
+    {
+      "id": "gus",
+      "name": "Gus Malloy",
+      "role": "Sleeping car porter, the Calder Limited",
+      "age": 61,
+      "portrait": "elder-man",
+      "color": "#4c6a5a",
+      "personality": "Patient, careful and proud of a clean record. He has seen everything that happens on a sleeping car and talks about very little of it. He is shaken by the death and more shaken that it happened on his car, and he is afraid that what he did at the water stop will cost him his job.",
+      "speech_style": "Polite and slow, 'sir' or 'ma'am' every sentence, times given exactly. Says 'that's the way of it' when he means he will not say more. Never says anything bad about a passenger.",
+      "alibi": "I sat on my seat at the end of the car all night, doing the shoes, the same as always.",
+      "public_facts": [
+        "Gus Malloy has been porter on this sleeping car for twenty-two years.",
+        "He found Walter Brandt dead when he brought the coffee at 00:05.",
+        "His seat at the end of the corridor looks down the whole car."
+      ],
+      "private_knowledge": [
+        "Mr. Brandt rang at 23:30 and asked through the door for coffee at midnight. He sounded wide awake.",
+        "Mrs. Brandt rang at 23:38. You took her a glass of water. She was in her nightgown and could barely hold the glass, and you heard her bolt her door after you.",
+        "When you came back aboard at 23:52 you saw the young newspaper fellow standing by the fire bucket at the end of the corridor. He said he wanted some air."
+      ],
+      "lies": [
+        {
+          "topic": "The water stop",
+          "claim": "I never left my seat, sir. Not once.",
+          "truth": "At Ferris Crossing you got down to help the ice crew load the dining car, as you do every trip. You were off the train from about 23:40 to 23:52. It is against the rules."
+        }
+      ],
+      "secrets": [
+        "The ice crew foreman pays you a dollar a trip to help, and you need it."
+      ],
+      "never_reveal": [
+        "That you have done this every trip for eleven years."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "gus-coffee",
+          "text": "Says Mr. Brandt rang at half past eleven and asked through the door for coffee at midnight. He sounded wide awake. At five past twelve there was no answer, so Gus opened the door with his key.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "gus-water",
+          "text": "Says Mrs. Brandt rang at 23:38. He took her a glass of water in D. She was in her nightgown and could hardly hold the glass, and he heard her bolt her door behind him.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "gus-saw-paul",
+          "text": "Admits he got off at Ferris Crossing to help with the ice. When he climbed back aboard at 23:52 the young newspaper fellow, Mr. Sutter, was standing by the fire bucket at the end of the corridor and said he wanted some air.",
+          "condition": "shown_evidence:wrapped-knife"
+        }
+      ],
+      "breaks_on": ["wrapped-knife"],
+      "patience": 14,
+      "deflections": [
+        "*turns his cap in his hands*  I couldn't say, sir. That's the way of it.",
+        "*looks down the corridor*  Twenty-two years on this car, sir, and nothing like this.",
+        "*looks at his shoes*  I'd rather not speak about the passengers, sir, if it's all the same."
+      ],
+      "alibi_verification": {
+        "status": "broken",
+        "evidence_ids": [],
+        "clue_ids": ["teague-porter"],
+        "note": "He did leave his seat, but Teague watched him on the platform at Ferris Crossing from about 23:40 to 23:52, the whole stop. He was off the train when Walter was killed."
+      }
+    }
+  ],
+  "hints": [
+    "Start in Compartment C. Read the list in the briefcase carefully. One exhibit is missing, and the list says who has the copy.",
+    "Walter was alive at half past eleven. The porter's call book shows it. Work out who could reach Compartment C after that without being seen.",
+    "The train stopped at Ferris Crossing for about twelve minutes. Ask the porter where he was. If he will not say, someone else saw him from a window.",
+    "Use \"Show evidence\" in an interrogation. Show Irene Brandt the exhibit list and she will hand you something Walter gave her to keep.",
+    "Check where everyone says they were against the lounge car tab book and the score pad. One of them was not where he says.",
+    "On the red-string board, pin the deposit slip, the knife from the fire bucket and the tab book together and press \"Check theory\" before you accuse.",
+    "Look hard at Paul Sutter. He took Teague's money, his own copy is wrapped round the knife, and the lounge car was dark when he says he was writing there."
+  ],
+  "endings": {
+    "correct": "Paul Sutter is taken off the train at Harmon Junction in handcuffs, past the photographers who came for the hearing. The commission sits at ten anyway. Irene Brandt hands it her husband's folder herself, with item seven back in its pocket.",
+    "wrong_culprit": "You take the wrong passenger off at Harmon Junction, and the man who wrapped the knife in his own story writes the Courier's front page about the arrest. It is a very good story. He knows everything you got wrong.",
+    "weak_proof": "You have the right man and a lawyer will make short work of the rest. A knife anyone could have taken, a page anyone could have picked up, a slip with no witness to it. You needed the money, the knife and the hour, Detective, together."
+  }
+}

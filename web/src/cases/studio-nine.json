@@ -1,0 +1,666 @@
+{
+  "schema_version": 1,
+  "id": "studio-nine",
+  "title": "Studio Nine",
+  "tagline": "Half a million people heard her on the air. Half of what they heard was a record.",
+  "setting": "Radio Calder, on the ninth floor of the Courier Building",
+  "era": "October 1949",
+  "intro_briefing": [
+    "Friday, 14 October 1949. Every Friday at half past nine Radio Calder puts out 'Nightbeat', a crime serial played live from Studio Nine on the ninth floor of the Courier Building. Tonight's episode went out on time and finished on time. At five past ten an actress waiting for an appointment walked into the producer's office and found him dead.",
+    "Vernon Clay, forty-seven, produced and directed 'Nightbeat' and half the station's other shows. Someone strangled him at his desk with a length of microphone cable. The police surgeon puts it between half past nine and ten, the half hour the show was on the air.",
+    "Four people are still on the floor: Dorothy Vale, the star of the serial; Eddie Fenn, the sound-effects man; Sam Okada, the engineer who ran the board tonight; and Nora Quill, the young actress who found him. The night receptionist, Mrs. Gage, has gone home after giving a statement, and the lobby sign-in book is still on her desk.",
+    "Search the studio, Clay's office, the record library and the lobby. Question the four of them and show them what you find. Everybody in the building says they were somewhere they can prove. One of them is counting on a record."
+  ],
+  "victim": {
+    "id": "vernon",
+    "name": "Vernon Clay",
+    "age": 47,
+    "description": "Producer and director of 'Nightbeat' and most of Radio Calder's evening shows. Clever, smooth and mean with money and with people. He kept a locked drawer and a lot of secrets in it.",
+    "cause_of_death": "Strangled with a length of rubber-covered microphone cable.",
+    "found_in": "vernon-office",
+    "found_at": "at about 22:05, slumped forward over his desk"
+  },
+  "solution": {
+    "culprit_id": "dorothy",
+    "motive": "Vernon had been blackmailing Dorothy for two years over her 1938 conviction under her real name, and that evening he doubled what she paid him.",
+    "method": "Dorothy had recorded her long monologue on a transcription disc that afternoon. While the engineer played the record on the air, she slipped out of the studio's back door, strangled Vernon in his office with a microphone cable, and was back at the microphone before the record ended.",
+    "required_evidence": ["blackmail-ledger", "transcription-sleeve", "pearl-earring"],
+    "reveal": "Before she was Dorothy Vale she was Dora Valinski, and in 1938 she did six months for passing bad cheques. Vernon Clay found out two years ago and had taken two hundred dollars a month from her ever since. At seven tonight he told her the price was going up to four hundred. She had already planned for it. At a quarter past three she asked Sam Okada to record her long monologue on a transcription disc, in case her throat went in the evening. The sponsor forbids records on 'Nightbeat', so Sam told nobody. At twenty to ten Sam put the record on the air, and Dorothy went out through the studio's back door into the corridor. Vernon's office is two doors down. She took a length of cable from the reel by the door, came up behind him at his desk and strangled him. One of her pearl earrings came off and rolled under the desk. She was back at the microphone at six minutes to ten to read her last lines live, and half a million listeners would swear she never left. The ledger in Vernon's drawer gives the reason, the record sleeve gives the time, and the earring puts her in the room."
+  },
+  "timeline": [
+    {
+      "day": 0,
+      "time": "15:15",
+      "location": "studio-nine",
+      "who": ["dorothy", "sam"],
+      "what": "Dorothy asks Sam to record her fourteen-minute monologue for tonight's episode on a transcription disc, saying her throat may give out. Sam records it and files it in the record library for 21:40.",
+      "visibility": "private",
+      "tags": ["alibi"]
+    },
+    {
+      "day": 0,
+      "time": "19:00",
+      "location": "vernon-office",
+      "who": ["vernon", "dorothy"],
+      "what": "Vernon tells Dorothy that from November she will pay him four hundred dollars a month instead of two hundred.",
+      "visibility": "private",
+      "tags": ["motive"]
+    },
+    {
+      "day": 0,
+      "time": "20:30",
+      "location": "vernon-office",
+      "who": ["eddie", "vernon"],
+      "what": "Eddie shouts at Vernon in his office about eleven weeks of unpaid overtime and leaves a note on his desk.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "21:30",
+      "location": "studio-nine",
+      "who": ["dorothy", "eddie", "sam"],
+      "what": "'Nightbeat' goes on the air. Dorothy is at the microphone, Eddie at the effects table, and Sam in the control booth behind the glass.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "21:35",
+      "location": "lobby",
+      "who": ["nora"],
+      "what": "Nora signs in at the lobby desk to see Vernon at ten and waits with the receptionist, Mrs. Gage.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "21:40",
+      "location": "studio-nine",
+      "who": ["sam", "dorothy", "eddie"],
+      "what": "Sam puts the transcription disc of Dorothy's monologue on the air. Dorothy leaves the studio by the back door into the corridor. Eddie keeps working the effects for the scene, and Sam stays at the board.",
+      "visibility": "private",
+      "tags": ["alibi"]
+    },
+    {
+      "day": 0,
+      "time": "21:42",
+      "location": "vernon-office",
+      "who": ["dorothy", "vernon"],
+      "what": "Dorothy takes a length of microphone cable from the reel by the studio door, goes into Vernon's office and strangles him at his desk. One of her pearl earrings falls under the desk.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "day": 0,
+      "time": "21:54",
+      "location": "studio-nine",
+      "who": ["dorothy", "sam", "eddie"],
+      "what": "Dorothy comes back in by the back door. The record ends and she reads her last lines live.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "22:00",
+      "location": "studio-nine",
+      "who": ["dorothy", "eddie", "sam"],
+      "what": "'Nightbeat' goes off the air on time.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "22:05",
+      "location": "vernon-office",
+      "who": ["nora", "vernon"],
+      "what": "Nora goes up for her ten o'clock appointment and finds Vernon dead at his desk.",
+      "visibility": "public",
+      "tags": []
+    }
+  ],
+  "offstage_locations": [],
+  "rooms": [
+    {
+      "id": "studio-nine",
+      "name": "Studio Nine",
+      "description": "A padded room with a hanging microphone, music stands for scripts, and a long table covered in the sound-effects man's gear. The control booth looks in through a wide glass window. A red ON AIR light over the main door is dark now. A plain door at the back opens onto the service corridor.",
+      "background": "stage",
+      "hotspots": [
+        {
+          "id": "script-stand",
+          "label": "Script stand",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "Dorothy's script for episode 112 on the stand under the microphone. Four pages in the middle are clipped together with a paper clip and marked 'INSERT' in pencil. She did not read those pages tonight.",
+          "evidence_id": null
+        },
+        {
+          "id": "booth-window",
+          "label": "Control booth",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "Through the glass, the engineer's board with its dials and two turntables. His log sheet is clipped beside the faders.",
+          "evidence_id": "engineer-log"
+        },
+        {
+          "id": "effects-table",
+          "label": "Effects table",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "Coconut shells, a rain drum, a door on a little frame, a box of gravel for footsteps. Eddie's cue sheet for the episode has every effect ticked off in pencil, one after another without a gap.",
+          "evidence_id": null
+        },
+        {
+          "id": "cable-reel",
+          "label": "Cable reel",
+          "x": 10,
+          "y": 56,
+          "width": 26,
+          "height": 26,
+          "description": "A reel of rubber-covered microphone cable by the back door, with a pair of cutters hanging next to it. A length has been cut off recently. The rubber at the cut end is clean and bright.",
+          "evidence_id": null
+        },
+        {
+          "id": "back-door",
+          "label": "Back door",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "A plain, felt-lined door onto the service corridor. It closes without a sound. From the microphone you would not notice anyone using it. From the booth you would.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "vernon-office",
+      "name": "Vernon Clay's office",
+      "description": "A corner office two doors down the corridor from Studio Nine, with framed posters of the station's shows and a big desk facing the door. The radio on the filing cabinet is still tuned to Radio Calder.",
+      "background": "office",
+      "hotspots": [
+        {
+          "id": "desk-chair",
+          "label": "Desk chair",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The chair where Nora found him. Lying on the carpet behind it is a length of black rubber-covered cable, cut clean at both ends.",
+          "evidence_id": "mic-cable"
+        },
+        {
+          "id": "drawer",
+          "label": "Locked drawer",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "The bottom drawer of the desk, the one he always kept locked. The key was on his watch chain. Inside is a small black account book with a newspaper cutting folded into it.",
+          "evidence_id": "blackmail-ledger"
+        },
+        {
+          "id": "under-desk",
+          "label": "Under the desk",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "Something small and white has rolled into the corner under the desk, against the skirting board.",
+          "evidence_id": "pearl-earring"
+        },
+        {
+          "id": "wastebasket",
+          "label": "Wastebasket",
+          "x": 10,
+          "y": 56,
+          "width": 26,
+          "height": 26,
+          "description": "A wire wastebasket with a crumpled sheet of station notepaper on top.",
+          "evidence_id": "overtime-note"
+        },
+        {
+          "id": "photo-frame",
+          "label": "Signed photograph",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "A publicity photograph of a young woman, propped face down on the blotter, as if he had turned it over when someone came in.",
+          "evidence_id": "signed-photo"
+        }
+      ]
+    },
+    {
+      "id": "record-library",
+      "name": "Record library",
+      "description": "A narrow room lined with steel shelves of sixteen-inch transcription discs in brown paper sleeves, each labelled and numbered. There is a turntable for checking discs and a desk with the library ledger.",
+      "background": "archive",
+      "hotspots": [
+        {
+          "id": "turntable",
+          "label": "Turntable",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The checking turntable. An empty brown sleeve lies on top of it, put down in a hurry after the disc was taken out.",
+          "evidence_id": "transcription-sleeve"
+        },
+        {
+          "id": "shelves",
+          "label": "Shelves",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "Rows and rows of discs: 'Nightbeat' episodes back to 1946, dance bands, sponsors' announcements. The 'Nightbeat' shelf has a gap at number 112.",
+          "evidence_id": null
+        },
+        {
+          "id": "library-ledger",
+          "label": "Library ledger",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "The ledger where every disc taken out is signed for. The last entry today is in Sam Okada's neat hand: 'NB 112 insert, out 9.35 pm, booth.'",
+          "evidence_id": null
+        },
+        {
+          "id": "sponsor-notice",
+          "label": "Notice",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "A typed notice pinned to the door: 'By order of the sponsor, NIGHTBEAT is a LIVE program. No transcriptions to be used on the air without written approval. V. Clay.'",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "lobby",
+      "name": "Ninth-floor lobby",
+      "description": "The lobby by the elevators, with a reception desk, a leather bench for guests and the station's call letters in chrome on the wall. The elevator dial is the only light that moves.",
+      "background": "lobby",
+      "hotspots": [
+        {
+          "id": "sign-in-book",
+          "label": "Sign-in book",
+          "x": 6,
+          "y": 10,
+          "width": 20,
+          "height": 26,
+          "description": "The visitors' book on Mrs. Gage's desk, with a note pinned to tonight's page.",
+          "evidence_id": "sign-in-book"
+        },
+        {
+          "id": "bench",
+          "label": "Guest bench",
+          "x": 34,
+          "y": 8,
+          "width": 26,
+          "height": 22,
+          "description": "A leather bench facing the desk. A movie magazine lies open on it at a page of screen tests, and an ashtray beside it holds three cigarette ends with pink lipstick on them.",
+          "evidence_id": null
+        },
+        {
+          "id": "elevator",
+          "label": "Elevator",
+          "x": 70,
+          "y": 10,
+          "width": 22,
+          "height": 30,
+          "description": "The elevator dial shows the car parked at the ninth floor. The night man says nobody used it between half past nine and the police arriving.",
+          "evidence_id": null
+        },
+        {
+          "id": "corridor-door",
+          "label": "Corridor door",
+          "x": 46,
+          "y": 52,
+          "width": 18,
+          "height": 28,
+          "description": "Glass doors from the lobby into the main corridor. From the reception desk you can see straight down to the front door of Studio Nine, but not the service corridor that runs behind it past Vernon's office.",
+          "evidence_id": null
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "blackmail-ledger",
+      "name": "Black account book",
+      "description": "A small account book from Vernon's locked drawer. One page is headed 'D.V.' with monthly entries of $200 going back to November 1947. The last line, dated today: 'Nov. on, $400. Told her 7 pm.' Folded inside is a cutting from the Calder Courier, March 1938: 'Dora Valinski, 28, actress, six months for passing bad cheques.' The photograph is of a younger Dorothy Vale.",
+      "found_in": "vernon-office",
+      "points_to": ["dorothy"],
+      "is_red_herring": false
+    },
+    {
+      "id": "transcription-sleeve",
+      "name": "Record sleeve",
+      "description": "An empty sleeve for a sixteen-inch transcription disc, labelled in grease pencil: 'NIGHTBEAT 112. INSERT. D. VALE MONOLOGUE. 14 min 30. Rec. 3.15 pm 14/10. ON AIR 9.40.'",
+      "found_in": "record-library",
+      "points_to": ["dorothy"],
+      "is_red_herring": false
+    },
+    {
+      "id": "pearl-earring",
+      "name": "Pearl drop earring",
+      "description": "A single pearl drop on a gold screw-back, found in the corner under Vernon's desk. The screw is loose, as if it was pulled off. It is not cheap.",
+      "found_in": "vernon-office",
+      "points_to": ["dorothy"],
+      "is_red_herring": false
+    },
+    {
+      "id": "mic-cable",
+      "name": "Length of microphone cable",
+      "description": "About four feet of rubber-covered microphone cable, cut clean at both ends with good cutters. The cut ends are bright and new. It matches the reel by the back door of Studio Nine.",
+      "found_in": "vernon-office",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "engineer-log",
+      "name": "Engineer's log",
+      "description": "Sam Okada's log sheet for 'Nightbeat' 112: '9.30 on air, live. 9.40 TR insert on, table 2. 9.54 TR off, live. 10.00 off air.' Every line is initialled S.O., and there are entries every few minutes from 9.25 until 10.10.",
+      "found_in": "studio-nine",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "overtime-note",
+      "name": "Crumpled note",
+      "description": "A sheet of station notepaper, crumpled: 'Eleven weeks overtime. You pay me by Monday or I take it out of your hide. E.F.'",
+      "found_in": "vernon-office",
+      "points_to": ["eddie"],
+      "is_red_herring": true
+    },
+    {
+      "id": "signed-photo",
+      "name": "Signed photograph",
+      "description": "A publicity photograph of Nora Quill, signed across the corner: 'To V., who made me promises. Keep them. N.'",
+      "found_in": "vernon-office",
+      "points_to": ["nora"],
+      "is_red_herring": true
+    },
+    {
+      "id": "sign-in-book",
+      "name": "Lobby sign-in book",
+      "description": "Tonight's page of the visitors' book: 'Miss N. Quill. In 9.35. To see Mr. Clay at 10.' Pinned to it is Mrs. Gage's note for the police: 'Miss Quill sat on the bench in front of me from 9.35 until she went down the corridor at 10.04. She did not leave the lobby. I. Gage.'",
+      "found_in": "lobby",
+      "points_to": [],
+      "is_red_herring": false
+    }
+  ],
+  "suspects": [
+    {
+      "id": "dorothy",
+      "name": "Dorothy Vale",
+      "role": "Star of 'Nightbeat'",
+      "age": 39,
+      "portrait": "woman-bob",
+      "color": "#7a4a5a",
+      "personality": "A real professional: calm, gracious, and in control of every pause. She has played widows and murderesses on the air for ten years and knows exactly how a frightened woman sounds, so she never sounds like one. She is proud of having made herself from nothing, and terrified of anyone finding out what the nothing was.",
+      "speech_style": "Beautiful diction, a little theatrical. Calls the detective 'my dear'. Uses actors' words: 'cue', 'beat', 'in the wings'. Takes a breath before every answer as if before a line. When she is rattled she corrects her own grammar.",
+      "alibi": "I was at the microphone in Studio Nine from half past nine until ten. Half the city heard me.",
+      "public_facts": [
+        "Dorothy Vale has played the lead in 'Nightbeat' since 1946.",
+        "Tonight's episode went out live from Studio Nine from 21:30 to 22:00.",
+        "She was still in the studio when Nora Quill screamed."
+      ],
+      "private_knowledge": [
+        "Tonight's script had a long monologue for you in the middle of the episode.",
+        "Vernon's office is two doors down the service corridor from the back door of Studio Nine.",
+        "You were wearing your pearl drop earrings tonight."
+      ],
+      "lies": [
+        {
+          "topic": "Whether she left the studio",
+          "claim": "I never left the microphone. Not for a moment. You can ask anyone who listens to the radio.",
+          "truth": "You recorded your monologue on a disc at 15:15. While Sam played it on the air from 21:40 to 21:54, you were out of the studio."
+        },
+        {
+          "topic": "Vernon Clay",
+          "claim": "Vernon and I had a perfectly good working arrangement. He gave me the best part on the air.",
+          "truth": "Vernon had been blackmailing you for two years over your conviction in 1938 under your real name, Dora Valinski. At seven tonight he doubled the price."
+        }
+      ],
+      "secrets": [
+        "Your real name is Dora Valinski, and you served six months in 1938 for passing bad cheques."
+      ],
+      "never_reveal": [
+        "That you left by the back door of the studio during the record, went to Vernon's office and strangled him with a length of microphone cable.",
+        "That you lost a pearl earring in his office."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "dorothy-record",
+          "text": "Admits she asked Sam to record her monologue that afternoon because she was afraid her throat would go. She says that while the record played she stepped out into the service corridor to rest her voice, alone, and came back for her last lines.",
+          "condition": "shown_evidence:transcription-sleeve"
+        },
+        {
+          "clue_id": "dorothy-vernon-seven",
+          "text": "Admits she saw Vernon in his office at seven o'clock 'about the script', and that he was in a vile temper.",
+          "condition": "pressed"
+        }
+      ],
+      "breaks_on": ["transcription-sleeve", "blackmail-ledger", "pearl-earring"],
+      "patience": 13,
+      "deflections": [
+        "*takes a breath, as if before a line*  My dear, I have answered that already. Beautifully, I thought.",
+        "*touches her ear, then lowers her hand*  It has been a very long evening.",
+        "*smiles*  You should hear me on a good night. This isn't one."
+      ],
+      "alibi_verification": {
+        "status": "broken",
+        "evidence_ids": ["transcription-sleeve", "engineer-log"],
+        "clue_ids": ["sam-disc", "eddie-earring"],
+        "note": "The record sleeve and the engineer's log show her monologue went out from a disc from 21:40 to 21:54. Sam saw her leave by the back door, and Eddie noticed she came back with one earring."
+      }
+    },
+    {
+      "id": "eddie",
+      "name": "Eddie Fenn",
+      "role": "Sound-effects man, Radio Calder",
+      "age": 44,
+      "portrait": "man-cap",
+      "color": "#6a5a3a",
+      "personality": "Gruff, honest and fed up. He has done every footstep and gunshot on 'Nightbeat' for three years for less money than he was promised, and he hated Vernon Clay openly. He notices small things for a living and he noticed a lot tonight.",
+      "speech_style": "Short and blunt, working man's talk. Calls the detective 'chief'. Describes things by how they sound: 'a door like a coffin lid', 'heels on lino'. Gets louder when he is accused.",
+      "alibi": "I was at my effects table the whole show. Rain, a train, two doors and a gunshot. You can't do that from anywhere else.",
+      "public_facts": [
+        "Eddie Fenn has done the sound effects for 'Nightbeat' since 1946.",
+        "Everyone on the floor heard him shouting at Vernon about money at half past eight.",
+        "He was in Studio Nine for the whole broadcast."
+      ],
+      "private_knowledge": [
+        "Sam was at his board in the booth the whole show. You could see him through the glass every time you looked up for a cue.",
+        "At twenty to ten Dorothy stepped away from the microphone and went out the back door. Her voice kept coming out of the monitor speaker.",
+        "Dorothy had both pearl drops in her ears when the show started. When she came back in at six minutes to ten she only had one, and she kept touching that ear."
+      ],
+      "lies": [
+        {
+          "topic": "His quarrel with Vernon",
+          "claim": "I shouted a bit. Everybody shouted at Vernon. Didn't mean anything.",
+          "truth": "You told Vernon you would take your overtime out of his hide and left a note on his desk saying so."
+        }
+      ],
+      "secrets": [
+        "You have an offer from a station in Chicago and were going to take it next month."
+      ],
+      "never_reveal": [
+        "That you once stole the 'Nightbeat' theme recording to sell to a dance band."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "eddie-sam",
+          "text": "Says Sam was at his board in the control booth the whole show. Eddie looked up at the glass for every cue and Sam was always there.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "eddie-earring",
+          "text": "Says Dorothy had both pearl drops in at the start of the show. When she came back in by the back door at about six minutes to ten she was wearing one, and she kept touching that ear.",
+          "condition": "shown_evidence:pearl-earring"
+        },
+        {
+          "clue_id": "eddie-note",
+          "text": "Admits he wrote the note and meant it, about the money. He says he never went near Vernon's office after half past eight, and his cue sheet shows an effect every minute of the show.",
+          "condition": "shown_evidence:overtime-note"
+        }
+      ],
+      "breaks_on": ["overtime-note"],
+      "patience": 12,
+      "deflections": [
+        "*cracks his knuckles*  Ask me something I can answer, chief.",
+        "*snorts*  You want the sound of a man not caring? That's it.",
+        "*leans back*  I do noises. I don't do speeches."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": ["engineer-log"],
+        "clue_ids": ["sam-eddie"],
+        "note": "Sam watched him at the effects table through the booth glass for the whole show, and the engineer's log shows effects cues running without a break."
+      }
+    },
+    {
+      "id": "sam",
+      "name": "Sam Okada",
+      "role": "Engineer, Radio Calder",
+      "age": 35,
+      "portrait": "man-glasses",
+      "color": "#3a6a7a",
+      "personality": "Exact, reserved and very good at his job. He bent a rule tonight as a favor to Dorothy, and now that rule is tangled up in a murder and he is afraid of losing the only job in radio that would have him. He will not lie about anything he can be shown.",
+      "speech_style": "Quiet and technical: 'the board', 'levels', 'cue light'. Gives times to the minute. Says 'I'd have to check the log' when he wants a moment. Never raises his voice.",
+      "alibi": "I was at the board in the control booth from before the show until after ten. You don't leave the board.",
+      "public_facts": [
+        "Sam Okada has been an engineer at Radio Calder for four years.",
+        "He ran the board in the control booth for tonight's broadcast.",
+        "He keeps a log sheet for every program."
+      ],
+      "private_knowledge": [
+        "At a quarter past three Dorothy asked you to record her monologue on a disc in case her throat gave out. You recorded it.",
+        "At twenty to ten you put the disc on the air. Dorothy went out the back door of the studio as soon as it started and came back at six minutes to ten.",
+        "Eddie was at his effects table the whole show. You could see him through the glass."
+      ],
+      "lies": [
+        {
+          "topic": "Whether the show was live",
+          "claim": "'Nightbeat' is a live program. It went out live tonight, start to finish.",
+          "truth": "You played Dorothy's monologue from a transcription disc from 21:40 to 21:54. The sponsor forbids it, and you told nobody."
+        }
+      ],
+      "secrets": [
+        "You have recorded inserts for Dorothy twice before this year."
+      ],
+      "never_reveal": [
+        "That Vernon once told you he would see you never worked in radio again if you crossed him."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "sam-disc",
+          "text": "Admits he recorded Dorothy's monologue at a quarter past three and played it on the air at twenty to ten. Dorothy went out the back door of the studio as soon as the record started and came back at six minutes to ten.",
+          "condition": "shown_evidence:transcription-sleeve"
+        },
+        {
+          "clue_id": "sam-eddie",
+          "text": "Says Eddie was at the effects table the whole show. Sam could see him through the glass and Eddie never missed a cue.",
+          "condition": "free"
+        }
+      ],
+      "breaks_on": ["transcription-sleeve", "engineer-log"],
+      "patience": 14,
+      "deflections": [
+        "*adjusts his glasses*  I'd have to check the log.",
+        "*looks at his hands*  I run the board. That's all I do.",
+        "*evenly*  I'd rather not guess, Detective. Guessing is how you get dead air."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": ["engineer-log"],
+        "clue_ids": ["eddie-sam"],
+        "note": "His log has initialled entries every few minutes from 21:25 to 22:10, and Eddie saw him at the board through the glass for every cue."
+      }
+    },
+    {
+      "id": "nora",
+      "name": "Nora Quill",
+      "role": "Actress",
+      "age": 23,
+      "portrait": "young-woman",
+      "color": "#b07a8a",
+      "personality": "Young, ambitious and out of her depth. She came up from a small-town stock company in the spring and believed Vernon when he said he would make her a star. She found his body, and she is shaking, and part of her is already wondering what this does to her chances.",
+      "speech_style": "Breathless, a lot of 'I mean' and 'you know'. Calls the victim 'Mr. Clay' and then, by accident, 'Vernon'. Tells more than she is asked. When she is embarrassed she laughs.",
+      "alibi": "I sat in the lobby from twenty-five to ten waiting for my appointment. At ten I went down the corridor and found him.",
+      "public_facts": [
+        "Nora Quill is a young actress who has had small parts on Radio Calder this year.",
+        "She had an appointment with Vernon Clay at ten o'clock.",
+        "She found his body at about 22:05."
+      ],
+      "private_knowledge": [
+        "You waited on the bench in front of Mrs. Gage's desk the whole time and never left the lobby.",
+        "From the lobby you can see the front door of Studio Nine but not the service corridor behind it.",
+        "Vernon told you last week that Dorothy Vale would be 'leaving the show' by Christmas and that her part would be yours."
+      ],
+      "lies": [
+        {
+          "topic": "Vernon Clay",
+          "claim": "I'd hardly met Mr. Clay. It was just an audition.",
+          "truth": "You had dinner with Vernon at the Ambassador Hotel last week, and he promised you Dorothy Vale's part by Christmas."
+        }
+      ],
+      "secrets": [
+        "You told your mother in a letter that you were going to be the new star of 'Nightbeat'."
+      ],
+      "never_reveal": [
+        "That you were afraid of Vernon after the dinner at the Ambassador and did not want to go up alone."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "nora-promise",
+          "text": "Admits she signed the photograph for Vernon. He took her to dinner at the Ambassador last week and promised her Dorothy Vale's part by Christmas. He said Dorothy would be 'leaving the show' and would not argue about it.",
+          "condition": "shown_evidence:signed-photo"
+        },
+        {
+          "clue_id": "nora-found",
+          "text": "Says when she opened Vernon's door at five past ten the radio on the cabinet was still playing and the room smelled of a woman's perfume, something like gardenia, that was not hers.",
+          "condition": "pressed"
+        }
+      ],
+      "breaks_on": ["signed-photo"],
+      "patience": 12,
+      "deflections": [
+        "*laughs, then stops*  I'm sorry. I don't know why I'm laughing.",
+        "*twists her gloves*  I mean, you know, I only came for an audition.",
+        "*looks at the corridor door*  Do I have to stay much longer? I really don't want to go back down there."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": ["sign-in-book"],
+        "clue_ids": [],
+        "note": "Mrs. Gage's note in the sign-in book says Nora sat in front of her desk from 21:35 until 22:04 and never left the lobby."
+      }
+    }
+  ],
+  "hints": [
+    "Everybody on this floor has an alibi. Find out which ones rest on something you can hold in your hand.",
+    "The record library keeps track of every disc that goes on the air. Look at what is lying on the turntable.",
+    "Show the engineer what you find in the record library. He bent a rule tonight and will tell you what really went out on the air.",
+    "Something small rolled under Vernon's desk. Show it to the people who were in the studio and ask who was wearing it.",
+    "Vernon kept one drawer locked. What is in it explains why one person on this floor could not afford to let him live.",
+    "Pin the account book, the record sleeve and the earring on the board together and press \"Check theory\" before you accuse.",
+    "Look hard at Dorothy Vale. Vernon was bleeding her for money, her monologue was a record, and her earring was under his desk."
+  ],
+  "endings": {
+    "correct": "Dorothy Vale walks out past the ON AIR light with her head up and one earring in. Next Friday 'Nightbeat' goes out with a new leading lady and a notice from the sponsor about records. Nobody at Radio Calder mentions Dora Valinski by name.",
+    "wrong_culprit": "You arrest the wrong person and the evening papers love it. Dorothy Vale reads a tribute to Vernon Clay on the air the next Friday, live, and her voice does not shake once.",
+    "weak_proof": "You named the right woman and couldn't hold her. A record proves the show broke the sponsor's rules, an earring can be lost anywhere, and a dead man's account book is only numbers. You needed all three together."
+  }
+}

@@ -1,0 +1,31 @@
+.lede {
+  font-style: italic;
+  color: var(--text-muted);
+  max-width: 60ch;
+  line-height: 1.7;
+  margin-bottom: var(--space-5);
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+.details {
+  max-width: 60ch;
+  font-family: var(--font-type);
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+.details summary {
+  cursor: pointer;
+  min-height: 28px;
+}
+.detailText {
+  margin: var(--space-2) 0 0;
+  padding: var(--space-3);
+  border: var(--border);
+  border-radius: var(--radius-md);
+  background: var(--ink-800);
+  overflow-wrap: anywhere;
+}

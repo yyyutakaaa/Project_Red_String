@@ -1,0 +1,16 @@
+# Only what the web build needs goes to Vercel. Local secrets and tooling stay on this machine.
+.git
+.claude
+.vercel
+node_modules
+**/node_modules
+.env
+*.local
+**/.env.local
+tools
+web/dist
+web/test-results
+web/playwright-report
+supabase/.temp
+supabase/.branches
+supabase/seed

@@ -1,0 +1,441 @@
+.layout {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.instructions {
+  margin: 0;
+  max-width: 72ch;
+  font-family: var(--font-type);
+  font-size: var(--fs-sm);
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+/* What the detective is holding: always the same height */
+.hand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: 2.75rem;
+  margin-bottom: calc(var(--space-2) * -1);
+  padding: 0 var(--space-1) 0 var(--space-3);
+  border-left: 3px solid var(--ink-500);
+  font-family: var(--font-type);
+  font-size: var(--fs-sm);
+  color: var(--text-faint);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.hand span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.handActive {
+  border-left-color: var(--lamp-400);
+  background: linear-gradient(90deg, rgba(232, 181, 74, 0.1), transparent 70%);
+  color: var(--lamp-200);
+}
+.handActive strong { color: var(--text-strong); }
+
+/* Verdict slip */
+.summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+  min-height: 2.75rem;
+  padding: var(--space-2) var(--space-4);
+  border: 1px dashed var(--ink-400);
+  border-radius: var(--radius-sm);
+  background: var(--ink-850);
+  color: var(--text-muted);
+  font-family: var(--font-type);
+  font-size: var(--fs-sm);
+}
+.summaryChecked {
+  border: 1px solid var(--paper-300);
+  border-left: 5px solid var(--lamp-500);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.25), transparent 50%),
+    var(--paper-100);
+  color: var(--paper-ink);
+  box-shadow: var(--shadow-1);
+  animation: global(fade-up) var(--dur-med) var(--ease-out) both;
+}
+.summaryLabel {
+  font-weight: 700;
+  font-size: var(--fs-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--paper-ink-muted);
+}
+.summaryText { font-weight: 700; }
+.summaryVerdict { font-style: italic; color: var(--paper-ink-muted); }
+
+.tip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--ink-500);
+  border-left: 4px solid var(--lamp-400);
+  border-radius: var(--radius-md);
+  background: var(--ink-800);
+}
+.tip p {
+  margin: 0;
+  max-width: 64ch;
+  font-size: var(--fs-sm);
+  color: var(--text);
+}
+
+/* Wooden frame, cork, lamp */
+.frame {
+  position: relative;
+  width: 100%;
+  /* Keep the whole board on screen on short displays so pins can be dragged anywhere without scrolling. */
+  max-width: max(720px, calc((100svh - var(--hud-height) - 2.5rem) * 1.58 + 36px));
+  margin: 0 auto;
+  padding: clamp(10px, 1.5vw, 18px);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 220, 160, 0.09), rgba(0, 0, 0, 0.28)),
+    repeating-linear-gradient(91deg, rgba(0, 0, 0, 0.2) 0 2px, transparent 2px 9px),
+    repeating-linear-gradient(88deg, rgba(255, 200, 140, 0.05) 0 1px, transparent 1px 14px),
+    linear-gradient(90deg, #2a1a0f, #3b2515 28%, #2d1b10 61%, #3c2717);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 210, 150, 0.14),
+    inset 0 2px 0 rgba(255, 220, 170, 0.12),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.5),
+    0 24px 50px rgba(0, 0, 0, 0.65),
+    0 0 110px rgba(232, 181, 74, 0.08);
+}
+
+.cork {
+  position: relative;
+  overflow: hidden;
+  border-radius: 3px;
+  background-color: #5d432a;
+  background-image:
+    radial-gradient(circle at 25% 35%, rgba(0, 0, 0, 0.24) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 75% 65%, rgba(255, 214, 160, 0.13) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.16) 0 1.4px, transparent 2.2px),
+    radial-gradient(circle at 10% 80%, rgba(40, 20, 5, 0.32) 0 2px, transparent 3px),
+    radial-gradient(circle at 60% 20%, rgba(255, 220, 170, 0.08) 0 2.5px, transparent 3.5px),
+    linear-gradient(135deg, #664a31, #4f3822 55%, #5e432a);
+  background-size: 6px 6px, 9px 9px, 13px 13px, 23px 23px, 31px 31px, 100% 100%;
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.55), inset 0 10px 28px rgba(0, 0, 0, 0.55);
+}
+/* The desk lamp, hanging above the board */
+.cork::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 62% 75% at 50% -6%, rgba(242, 205, 122, 0.34), rgba(232, 181, 74, 0.12) 45%, transparent 76%);
+  animation: global(lamp-flicker) 11s linear infinite;
+}
+/* Vignette: the corners stay in the dark */
+.cork::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 38%, transparent 58%, rgba(5, 7, 12, 0.45) 100%);
+}
+
+.svg {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+.svg text { text-rendering: geometricPrecision; }
+
+.backdrop { fill: transparent; }
+.svg[data-connecting] .backdrop { cursor: crosshair; }
+
+/* Strings */
+.link {
+  cursor: pointer;
+  outline: none;
+}
+.link path,
+.badge,
+.live { pointer-events: none; }
+.link .hit { pointer-events: stroke; }
+
+.balance { fill: none; stroke: transparent; stroke-width: 22; }
+.shadowWide {
+  fill: none;
+  stroke: rgba(0, 0, 0, 0.16);
+  stroke-width: 9;
+  stroke-linecap: round;
+}
+.shadow {
+  fill: none;
+  stroke: rgba(0, 0, 0, 0.42);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+.focusHalo {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 11;
+  stroke-linecap: round;
+}
+.link:focus-visible .focusHalo { stroke: var(--lamp-300); opacity: 0.9; }
+.glow {
+  fill: none;
+  stroke: rgba(224, 74, 83, 0.32);
+  stroke-width: 10;
+  stroke-linecap: round;
+}
+.line {
+  fill: none;
+  stroke: var(--red-500);
+  stroke-width: 3;
+  stroke-linecap: round;
+  transition: stroke var(--dur-fast), stroke-width var(--dur-fast), opacity var(--dur-fast);
+}
+.hit {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 22;
+  stroke-linecap: round;
+}
+.link:hover .line { stroke-width: 4.5; stroke: var(--red-400); opacity: 1; }
+
+.unchecked .line { stroke: var(--red-500); }
+.supported .line { stroke: var(--red-400); stroke-width: 4; }
+.unsupported .line {
+  stroke: var(--red-600);
+  stroke-width: 2.5;
+  stroke-dasharray: 10 8;
+  opacity: 0.8;
+}
+.neutral .line {
+  stroke: var(--text-faint);
+  stroke-width: 1.75;
+  opacity: 0.95;
+}
+.unsupported .shadow,
+.neutral .shadow { stroke-width: 2.5; }
+.neutral .shadowWide,
+.unsupported .shadowWide { stroke-width: 5; }
+
+.badge circle { fill: var(--lamp-400); stroke: var(--ink-900); stroke-width: 2; }
+.badge path {
+  fill: none;
+  stroke: var(--ink-900);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.fresh .line,
+.fresh .shadow {
+  stroke-dasharray: 1;
+  animation: string-draw 420ms var(--ease-out) both;
+}
+@keyframes string-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+.live {
+  fill: none;
+  stroke: var(--red-400);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 9 7;
+  opacity: 0.9;
+}
+
+/* Pins */
+.pin {
+  cursor: grab;
+  outline: none;
+  touch-action: none;
+}
+.dragging { cursor: grabbing; }
+.pinFocus {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 3;
+  stroke-dasharray: 7 5;
+  pointer-events: none;
+}
+.pin:focus-visible .pinFocus { stroke: var(--lamp-300); }
+.source .pinFocus { stroke: var(--lamp-400); stroke-dasharray: none; }
+.target .pinFocus { stroke: var(--lamp-200); stroke-dasharray: 3 4; }
+.source .handleRing,
+.target .handleRing { stroke: var(--lamp-300); }
+
+.pushPin { pointer-events: none; }
+.pushShadow { fill: rgba(0, 0, 0, 0.45); }
+.pushHead { fill: var(--red-600); stroke: var(--red-700); stroke-width: 1.2; }
+.pushShine { fill: rgba(255, 255, 255, 0.6); }
+
+.paper { fill: var(--paper-100); stroke: var(--paper-300); stroke-width: 1; }
+.paperShadow { fill: rgba(0, 0, 0, 0.42); }
+.cardRule { stroke: #6f87a8; stroke-width: 1.2; opacity: 0.7; }
+.cardLabel {
+  font-family: var(--font-type);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  fill: var(--paper-ink-muted);
+}
+.cardName {
+  font-family: var(--font-type);
+  font-weight: 700;
+  fill: var(--paper-ink);
+  text-anchor: middle;
+}
+
+.photoShadow { fill: rgba(0, 0, 0, 0.45); }
+.photoMount { fill: var(--paper-200); stroke: rgba(0, 0, 0, 0.35); stroke-width: 1; }
+.silhouette { fill: #07090e; opacity: 0.9; }
+.photoGloss {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 6;
+}
+.initials {
+  font-family: var(--font-type);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.1em;
+  text-anchor: middle;
+  fill: var(--lamp-200);
+  stroke: rgba(5, 7, 12, 0.9);
+  stroke-width: 3px;
+  paint-order: stroke;
+}
+.stripText {
+  font-family: var(--font-type);
+  font-weight: 700;
+  fill: var(--paper-ink);
+  text-anchor: middle;
+}
+
+/* Connector knob */
+.handle {
+  cursor: crosshair;
+  touch-action: none;
+}
+.handleHit { fill: transparent; }
+.handleRing {
+  fill: rgba(5, 7, 12, 0.6);
+  stroke: var(--paper-100);
+  stroke-width: 2;
+  transition: stroke var(--dur-fast);
+}
+.handleKnob { fill: var(--red-500); }
+.handle:hover .handleRing { stroke: var(--lamp-300); }
+.handle:hover .handleKnob { fill: var(--red-400); }
+
+@media (pointer: coarse) {
+  /* Bigger knobs for fingers (CSS geometry properties; the attributes remain as fallback). */
+  .handleHit { r: 34px; }
+  .handleRing { r: 13px; }
+  .handleKnob { r: 8.5px; }
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-type);
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+.legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.swatch {
+  width: 3.5rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+}
+
+/* Accessible list of strings */
+.connections {
+  padding: var(--space-4) var(--space-5);
+  border: var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--ink-850);
+}
+.connections h2 {
+  font-size: var(--fs-lg);
+  margin-bottom: var(--space-3);
+}
+.count {
+  font-family: var(--font-type);
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+.empty {
+  margin: 0;
+  font-family: var(--font-type);
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+.connectionList {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.connection {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-1) 0 var(--space-1) var(--space-3);
+  border-left: 3px solid var(--red-600);
+  border-bottom: 1px solid var(--ink-700);
+}
+.connectionNames { font-family: var(--font-body); font-size: var(--fs-sm); }
+.connectionTo {
+  font-family: var(--font-type);
+  color: var(--text-faint);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.connectionStatus {
+  font-family: var(--font-type);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+.status_supported { color: var(--lamp-300); }
+.status_unsupported { color: var(--text-faint); font-style: italic; }
+.status_neutral { color: var(--text-faint); }
+.status_unchecked { color: var(--text-muted); }
+
+@media (max-width: 640px) {
+  .connection { grid-template-columns: minmax(0, 1fr) auto; }
+  .connectionStatus { grid-column: 1; grid-row: 2; }
+  .connections { padding: var(--space-3); }
+}

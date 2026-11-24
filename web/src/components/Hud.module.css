@@ -1,0 +1,81 @@
+.hud {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  /* A fixed floor, not var(--hud-height): the HUD writes its measured height into that variable,
+     and reading it back here would stop the bar from ever shrinking again. */
+  min-height: 56px;
+  padding: var(--space-2) var(--space-4);
+  background: linear-gradient(180deg, rgba(8, 11, 18, 0.98), rgba(11, 15, 23, 0.94));
+  border-bottom: 1px solid var(--ink-600);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  flex-wrap: wrap;
+}
+.title {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  color: var(--lamp-300);
+  text-decoration: none;
+  white-space: nowrap;
+  text-shadow: 0 0 14px var(--lamp-glow);
+  margin-right: var(--space-2);
+}
+.nav {
+  display: flex;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+  flex: 1;
+}
+.link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  text-decoration: none;
+  font-family: var(--font-type);
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+}
+.link:hover { color: var(--text-strong); border-color: var(--ink-500); }
+.active { color: var(--lamp-300); border-color: var(--ink-500); background: var(--ink-700); }
+.accuse { color: var(--red-300); }
+.accuse.active { color: #fff; background: var(--red-700); border-color: var(--red-500); }
+.tools {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.counter {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--lamp-500);
+  color: var(--lamp-300);
+  font-family: var(--font-type);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.counter strong { font-size: var(--fs-md); color: var(--lamp-200); }
+.hintText {
+  font-family: var(--font-type);
+  font-size: var(--fs-lg);
+  line-height: 1.5;
+}
+.hintList { padding-left: 1.2rem; color: var(--text-muted); }
+.slotRow { display: flex; gap: var(--space-2); flex-wrap: wrap; margin-top: var(--space-3); }
+
+@media (max-width: 860px) {
+  .nav { order: 3; flex-basis: 100%; overflow-x: auto; flex-wrap: nowrap; }
+}

@@ -1,0 +1,179 @@
+/* Shared styles for the interrogation parts: Typewriter, MoodIndicator, PatienceMeter, EvidencePicker. */
+
+/* ---------------------------------------------------------------- Typewriter */
+.typewriter {
+  white-space: pre-wrap;
+}
+
+.caret {
+  display: inline-block;
+  width: 0.55ch;
+  height: 1em;
+  margin-left: 1px;
+  vertical-align: -0.12em;
+  background: currentColor;
+  opacity: 0.7;
+  animation: caret-blink 1s steps(1, end) infinite;
+}
+
+@keyframes caret-blink {
+  0%, 49% { opacity: 0.7; }
+  50%, 100% { opacity: 0; }
+}
+
+/* ---------------------------------------------------------------- MoodIndicator */
+.mood {
+  --mood-color: var(--mood-calm);
+  --mood-text: var(--mood-calm);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: var(--space-2);
+  row-gap: 0;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--ink-500);
+  border-left: 3px solid var(--mood-color);
+  border-radius: var(--radius-md);
+  background: var(--ink-850);
+  font-family: var(--font-type);
+}
+.mood[data-mood='calm'] { --mood-color: var(--mood-calm); --mood-text: var(--mood-calm); }
+.mood[data-mood='nervous'] { --mood-color: var(--mood-nervous); --mood-text: var(--lamp-300); }
+.mood[data-mood='angry'] { --mood-color: var(--mood-angry); --mood-text: var(--red-300); }
+.mood[data-mood='broken'] { --mood-color: var(--mood-broken); --mood-text: var(--mood-broken); }
+
+.moodDot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background: var(--mood-color);
+  box-shadow: 0 0 10px var(--mood-color);
+  transition: background var(--dur-med), box-shadow var(--dur-med);
+}
+
+.moodLine {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.moodLabel {
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+}
+
+.moodValue {
+  font-size: var(--fs-md);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mood-text);
+  transition: color var(--dur-med);
+}
+
+.moodNote {
+  grid-column: 2;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* ---------------------------------------------------------------- PatienceMeter */
+.patience {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--ink-500);
+  border-radius: var(--radius-md);
+  background: var(--ink-850);
+  font-family: var(--font-type);
+}
+
+.patienceText {
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text);
+}
+.patience[data-level='low'] .patienceText { color: var(--lamp-300); }
+.patience[data-level='none'] .patienceText { color: var(--text-muted); }
+
+.pips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Each pip is a matchstick: lit while the question is still yours to ask. */
+.pip {
+  width: 0.5rem;
+  height: 1rem;
+  border-radius: 2px;
+  border: 1px solid var(--ink-400);
+  background: transparent;
+  transition: background var(--dur-med), border-color var(--dur-med), box-shadow var(--dur-med);
+}
+.pipLit {
+  background: var(--lamp-400);
+  border-color: var(--lamp-300);
+  box-shadow: 0 0 6px var(--lamp-glow);
+}
+.patience[data-level='low'] .pipLit {
+  background: var(--lamp-500);
+}
+
+/* ---------------------------------------------------------------- EvidencePicker */
+.pickerIntro {
+  margin: 0 0 var(--space-4);
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+}
+
+.pickerList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pickerItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.pickerCard {
+  display: block;
+}
+
+.pickerNote {
+  margin: 0;
+  font-family: var(--font-type);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+}
+.pickerNoteSelected {
+  color: var(--lamp-300);
+}
+
+.pickerEmpty {
+  margin: 0;
+  padding: var(--space-4);
+  border: 1px dashed var(--ink-400);
+  border-radius: var(--radius-md);
+  font-family: var(--font-type);
+  color: var(--text-muted);
+  text-align: center;
+}
