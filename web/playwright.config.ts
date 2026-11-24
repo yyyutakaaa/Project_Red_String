@@ -18,7 +18,8 @@ export default defineConfig({
     { name: 'tablet-chromium', use: { ...devices['Desktop Chrome'], viewport: { width: 820, height: 1180 }, hasTouch: true } },
   ],
   webServer: {
-    command: 'npx vite --host 127.0.0.1 --port 4173 --strictPort',
+    // Production mode loads .env.production, so the backend counts as configured; tests mock every call.
+    command: 'npx vite --mode production --host 127.0.0.1 --port 4173 --strictPort',
     url: 'http://127.0.0.1:4173',
     reuseExistingServer: true,
     timeout: 120_000,

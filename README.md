@@ -58,6 +58,8 @@ The server decides what a suspect is allowed to reveal, so you can't talk the an
 - [Backend](#backend)
 - [Eval tool](#eval-tool)
 - [Deploying](#deploying)
+- [Accounts and cloud saves](#accounts-and-cloud-saves)
+- [Loading screens](#loading-screens)
 - [Desktop app](#desktop-app-macos-and-windows)
 - [Your own art and sound](#your-own-art-and-sound)
 - [Accessibility](#accessibility)
@@ -247,6 +249,21 @@ npx vercel deploy --prod
 `vercel.json` builds `web/` and sends every route to `index.html`. The build also runs the secret scan and fails if it finds something. `.vercelignore` keeps local files like `tools/` and `.env.local` out of the upload.
 
 Using your own domain? Add it to the `ALLOWED_ORIGINS` secret on Supabase, or the server will refuse the interrogations.
+
+## Accounts and cloud saves
+
+Players can play as a guest or sign in with a **detective name and a password**. There is no email.
+
+- **Guest:** saves stay in this browser (or this desktop app) only.
+- **Signed in:** the same three slots live in the `cloud_saves` table, one row per account and slot, behind row level security. Every save is uploaded a moment after it happens. On sign-in, guest saves on the device are merged in, and per slot the newest copy wins. Signing out uploads anything pending, then clears the saves from the device. If the upload can't finish (offline), sign-out is refused so nothing is lost.
+- **Creating accounts:** the `account` edge function creates them with the Supabase admin API, already confirmed. Each name maps to an internal address `<name>@players.redstring.local` that never receives mail. Signing in goes straight to Supabase Auth.
+- **Code:** sync logic in [`web/src/engine/cloudSync.ts`](web/src/engine/cloudSync.ts) (with unit tests), the account store in [`web/src/store/account.ts`](web/src/store/account.ts), the screen at `/account`. The e2e test [`account.spec.ts`](web/tests/e2e/account.spec.ts) runs the whole flow against a mocked Supabase.
+
+There is no password reset, because there is no email to send it to.
+
+## Loading screens
+
+The game starts behind a loading screen that stays up for at least 1.5 seconds. In that time the fonts load, the session is restored, cloud saves are merged, and the main screens are fetched. Opening a case or a save shows a second loading screen for at least 2 seconds while every case screen is fetched. Both screens draw the logo thread by thread as they load ([`LogoEye.tsx`](web/src/components/LogoEye.tsx)).
 
 ## Desktop app (macOS and Windows)
 

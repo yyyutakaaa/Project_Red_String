@@ -131,6 +131,17 @@ export function writeSlot(storage: KeyValueStorage, data: SaveSlotData, now = Da
   return stamped;
 }
 
+/** Store a slot exactly as given: no new timestamp, no change to the active slot. Used for cloud copies. */
+export function putSlot(storage: KeyValueStorage, data: SaveSlotData): void {
+  storage.setItem(SLOT_KEY(data.slot), JSON.stringify(data));
+}
+
+/** Remove every slot and the active-slot marker, e.g. when a player signs out on this device. */
+export function clearSlots(storage: KeyValueStorage): void {
+  for (let n = 1; n <= SLOT_COUNT; n++) storage.removeItem(SLOT_KEY(n));
+  storage.removeItem(ACTIVE_SLOT_KEY);
+}
+
 export function deleteSlot(storage: KeyValueStorage, slot: number): void {
   storage.removeItem(SLOT_KEY(slot));
   if (storage.getItem(ACTIVE_SLOT_KEY) === String(slot)) storage.removeItem(ACTIVE_SLOT_KEY);

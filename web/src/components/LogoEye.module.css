@@ -1,0 +1,49 @@
+.logo {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.well { fill: #04060b; transition: opacity 400ms var(--ease-out); }
+
+.lid,
+.loose,
+.irisRim {
+  fill: none;
+  stroke: url(#le-thread);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  transition: stroke-dashoffset 450ms var(--ease-out);
+}
+.lid { stroke-width: 15; filter: drop-shadow(0 6px 6px rgba(0, 0, 0, 0.55)); }
+.loose { stroke-width: 9; }
+.irisRim { stroke-width: 7; }
+
+.fan { fill: none; stroke: #e0444f; stroke-width: 3.2; stroke-linecap: round; transition: opacity 400ms; }
+.irisBed { fill: #3a0a10; transition: opacity 400ms; }
+.chordDeep,
+.chordMid,
+.chordLight { fill: none; transition: opacity 400ms; }
+.chordDeep { stroke: #8f1722; stroke-width: 3.4; }
+.chordMid { stroke: #d2333f; stroke-width: 3; }
+.chordLight { stroke: #ff7078; stroke-width: 2.2; }
+
+.pupil { fill: #05070c; stroke: #000; stroke-opacity: 0.6; stroke-width: 4; }
+
+.nail {
+  fill: url(#le-brass);
+  stroke: #5e400c;
+  stroke-width: 1.5;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0);
+  transition: transform 260ms cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+.nailIn { transform: scale(1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .well, .lid, .loose, .irisRim, .fan, .irisBed, .chordDeep, .chordMid, .chordLight, .nail { transition: none; }
+}
+:global([data-motion='reduced']) .logo * { transition: none !important; }
