@@ -1,8 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
-  "installCommand": "npm ci --prefix web",
-  "buildCommand": "npm run build --prefix web && node web/scripts/check-secrets.mjs web/dist",
+  "installCommand": "cd web && npm ci",
+  "buildCommand": "cd web && npm run build && node scripts/check-secrets.mjs dist",
   "outputDirectory": "web/dist",
   "rewrites": [{ "source": "/((?!assets/).*)", "destination": "/index.html" }],
   "headers": [
