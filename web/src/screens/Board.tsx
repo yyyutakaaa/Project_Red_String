@@ -23,6 +23,8 @@ import { setBoard, useGame } from '../store/game.ts';
 import { useReducedMotion, useSettings, type FontSize } from '../store/settings.ts';
 import { sfx } from '../audio/audio.ts';
 import { initials } from '../lib/format.ts';
+import { EvidencePhoto } from '../components/EvidencePhoto.tsx';
+import { Figure } from '../components/Portrait.tsx';
 import styles from './Board.module.css';
 
 // ---------------------------------------------------------------------------
@@ -87,9 +89,10 @@ interface Connecting {
 const PHOTO_R = 40;
 const PHOTO_CY = -12;
 const STRIP_Y = 34;
-const CARD_W = 172;
-const CARD_PAD = 12;
-const CARD_HEADER = 26;
+/** Evidence is pinned up as a photograph: a white-bordered print with the name written under it. */
+const CARD_W = 152;
+const CARD_EDGE = 7;
+const PHOTO_H = 88;
 const MONO = 0.6;
 const KNOB_HIT = 26;
 const DRAG_THRESHOLD = 6;
@@ -180,11 +183,11 @@ function suspectShape(s: Suspect, scale: number): PinShape {
 }
 
 function evidenceShape(e: Evidence, scale: number): PinShape {
-  const font = 15 * scale;
-  const lineHeight = font * 1.22;
-  const maxChars = Math.max(6, Math.floor((CARD_W - CARD_PAD * 2) / (font * MONO)));
+  const font = 13 * scale;
+  const lineHeight = font * 1.2;
+  const maxChars = Math.max(6, Math.floor((CARD_W - CARD_EDGE * 2 - 4) / (font * MONO)));
   const lines = wrapText(e.name, maxChars, 3);
-  const height = Math.max(76, Math.round(CARD_HEADER + lines.length * lineHeight + 16));
+  const height = Math.round(CARD_EDGE + PHOTO_H + 7 + lines.length * lineHeight + 9);
   const top = -height / 2;
   const pushY = top + 5;
   return {
@@ -298,7 +301,6 @@ function PushPin({ y }: { y: number }) {
 function SuspectBody({ shape, uid }: { shape: PinShape; uid: string }) {
   const s = shape.suspect;
   if (!s) return null;
-  const hat = s.portrait.includes('hat');
   const w = shape.width;
   const h = shape.height;
   return (
@@ -307,16 +309,9 @@ function SuspectBody({ shape, uid }: { shape: PinShape; uid: string }) {
       <circle className={styles.photoMount} cx={0} cy={PHOTO_CY} r={PHOTO_R + 5} />
       <g clipPath={`url(#${uid}-photo)`}>
         <circle cx={0} cy={PHOTO_CY} r={PHOTO_R} fill={`url(#${uid}-tint-${s.id})`} />
-        <g className={styles.silhouette} transform={`translate(0 ${PHOTO_CY})`}>
-          <path d="M-36 46 C-34 20 -18 12 0 12 C18 12 34 20 36 46 Z" />
-          <rect x={-6} y={4} width={12} height={12} rx={4} />
-          <ellipse cx={0} cy={-6} rx={13} ry={16} />
-          {hat && (
-            <>
-              <ellipse cx={0} cy={-18} rx={25} ry={4.5} />
-              <path d="M-14 -18 C-14 -32 -8 -35 0 -35 C8 -35 14 -32 14 -18 Z" />
-            </>
-          )}
+        {/* The same figure as the suspect's portrait, so a face on the board is a face you know. */}
+        <g className={styles.silhouette} transform={`translate(-42 ${PHOTO_CY - 44}) scale(0.42)`}>
+          <Figure kind={s.portrait} fill="#07090e" rim="#f2cd7a" />
         </g>
         <circle className={styles.photoGloss} cx={0} cy={PHOTO_CY} r={PHOTO_R} />
       </g>
@@ -339,18 +334,14 @@ function EvidenceBody({ shape, exhibit }: { shape: PinShape; exhibit: number }) 
   const h = shape.height;
   const top = -h / 2;
   const left = -w / 2;
-  const block = shape.lines.length * shape.lineHeight;
-  const avail = h - CARD_HEADER - 10;
-  const first = top + CARD_HEADER + Math.max(0, (avail - block) / 2) + shape.font * 0.82;
-  const ruleY = top + CARD_HEADER - 6;
+  const photoW = w - CARD_EDGE * 2;
+  const first = top + CARD_EDGE + PHOTO_H + 7 + shape.font * 0.82;
   return (
     <g transform={`rotate(${r1(shape.tilt)})`}>
-      <rect className={styles.paperShadow} x={left + 3} y={top + 6} width={w} height={h} rx={2} />
-      <rect className={styles.paper} x={left} y={top} width={w} height={h} rx={2} />
-      <line className={styles.cardRule} x1={left + 8} x2={left + w - 8} y1={ruleY} y2={ruleY} />
-      <text className={styles.cardLabel} x={left + 10} y={top + 16}>
-        {exhibit > 0 ? `EXHIBIT ${exhibit}` : 'EXHIBIT'}
-      </text>
+      <rect className={styles.paperShadow} x={left + 3} y={top + 7} width={w} height={h} rx={2} />
+      <rect className={styles.print} x={left} y={top} width={w} height={h} rx={2} />
+      <EvidencePhoto name={shape.name} marker={exhibit} x={left + CARD_EDGE} y={top + CARD_EDGE} width={photoW} height={PHOTO_H} />
+      <rect className={styles.printEdge} x={left + CARD_EDGE} y={top + CARD_EDGE} width={photoW} height={PHOTO_H} />
       <text className={styles.cardName} style={{ fontSize: shape.font }}>
         {shape.lines.map((line, i) => (
           <tspan key={i} x={0} y={r1(first + i * shape.lineHeight)}>
@@ -358,6 +349,47 @@ function EvidenceBody({ shape, exhibit }: { shape: PinShape; exhibit: number }) 
           </tspan>
         ))}
       </text>
+    </g>
+  );
+}
+
+/** Set dressing behind the pins: a street map of Calder City, a file label, a coffee ring. */
+function BoardDecor({ title, era }: { title: string; era: string }) {
+  const label = `FILE: ${title.toUpperCase()} · ${era.toUpperCase()}`.slice(0, 44);
+  // 14px Courier with 0.14em tracking: about 10.4 units a character.
+  const labelW = Math.round(label.length * 10.4 + 30);
+  return (
+    <g className={styles.decor} aria-hidden="true">
+      <g transform="translate(756 442) rotate(2.4)">
+        <rect className={styles.mapShadow} x={5} y={8} width={410} height={292} />
+        <rect className={styles.mapPaper} width={410} height={292} />
+        <path
+          className={styles.mapRiver}
+          d="M-2 214 C70 196 120 236 196 222 S330 176 412 204 V250 C330 226 270 262 196 266 S70 240 -2 262 Z"
+        />
+        <path
+          className={styles.mapStreets}
+          d="M0 44H410M0 92H410M0 140H410M0 184H330M52 0V200M112 0V214M172 0V222M232 0V214M292 0V196M352 0V190M0 20L140 140M410 30L250 184M60 268H410M150 262V292M270 252V292"
+        />
+        <path className={styles.mapBlocks} d="M58 50h48v36h-48zM178 98h48v36h-48zM298 50h48v36h-48zM118 146h48v32h-48zM238 146h48v30h-48z" />
+        <circle className={styles.mapMark} cx={202} cy={116} r={13} />
+        <path className={styles.mapMark} d="M194 108l16 16M210 108l-16 16" />
+        <text className={styles.mapTitle} x={14} y={284}>
+          CALDER CITY · HARBOR WARD
+        </text>
+        <circle className={styles.decorPin} cx={205} cy={10} r={6} />
+      </g>
+      <g transform="translate(30 706) rotate(-1.6)">
+        <rect className={styles.labelShadow} x={3} y={4} width={labelW} height={38} />
+        <rect className={styles.labelPaper} width={labelW} height={38} />
+        <text className={styles.labelText} x={16} y={25}>
+          {label}
+        </text>
+        <circle className={styles.decorPin} cx={9} cy={7} r={5} />
+        <circle className={styles.decorPin} cx={labelW - 9} cy={7} r={5} />
+      </g>
+      <circle className={styles.coffee} cx={1092} cy={92} r={44} />
+      <circle className={styles.coffee} cx={1100} cy={97} r={39} strokeDasharray="60 22 90 14" />
     </g>
   );
 }
@@ -744,6 +776,7 @@ export function Board() {
 
   return (
     <ScreenFrame
+      wide
       title="The board"
       kicker={caseFile.title}
       actions={
@@ -833,6 +866,8 @@ export function Board() {
                   if (connecting?.via === 'select') cancelConnect();
                 }}
               />
+
+              <BoardDecor title={caseFile.title} era={caseFile.era} />
 
               <g className={styles.strings}>
                 {board.links.map((link) => {

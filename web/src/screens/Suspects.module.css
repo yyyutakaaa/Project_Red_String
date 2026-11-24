@@ -10,7 +10,7 @@
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 19.5rem), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19.5rem), 1fr));
   gap: var(--space-5);
   align-items: stretch;
 }
@@ -325,4 +325,195 @@
     opacity: 1;
     transform: none;
   }
+}
+
+/* ---------------------------------------------------------------------------
+   The lineup room: all the suspects against the height chart, each under a lamp, seen through
+   one-way glass. It stays a dark room in both themes, like the crime scene pictures.
+   Wide screens only; narrow screens keep the small wall on each card. */
+.room {
+  display: none;
+}
+@media (min-width: 900px) {
+  .room {
+    display: block;
+  }
+  .wall {
+    display: none;
+  }
+}
+.room {
+  position: relative;
+  height: clamp(17rem, 42vh, 27rem);
+  margin-bottom: var(--space-6);
+  border: 1px solid #2a3549;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background:
+    repeating-linear-gradient(180deg, rgba(235, 229, 216, 0.2) 0 1px, transparent 1px 14.2857%),
+    repeating-linear-gradient(180deg, rgba(235, 229, 216, 0.06) 0 1px, transparent 1px 3.5714%),
+    linear-gradient(180deg, #222b3b 0%, #151b27 62%, #0b0f17 100%);
+  box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.75), 0 22px 50px rgba(0, 0, 0, 0.55);
+  animation: rise var(--dur-slow) var(--ease-out) both;
+}
+.roomMarks {
+  position: absolute;
+  inset: 0 auto 14.2857% 0.75rem;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-type);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  line-height: 1;
+  color: rgba(235, 229, 216, 0.5);
+}
+.roomMarksRight {
+  inset: 0 0.75rem 14.2857% auto;
+  text-align: right;
+}
+.roomMarks span {
+  flex: 1;
+  padding-top: 0.35rem;
+}
+
+.row {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0 7%;
+  list-style: none;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-end;
+}
+.stand {
+  --beam: 242, 205, 122;
+  position: relative;
+  flex: 0 1 17rem;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  transition: filter var(--dur-med) var(--ease-out);
+}
+.stand[data-mood='nervous'] { --beam: 255, 196, 92; }
+.stand[data-mood='angry'] { --beam: 255, 96, 84; }
+.stand[data-mood='broken'] { --beam: 176, 158, 226; }
+/* Look at one, and the others step back into the dark. */
+.row:hover .stand:not(:hover) {
+  filter: brightness(0.5) saturate(0.7);
+}
+
+.roomShade {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 4.4rem;
+  height: 1.3rem;
+  margin-left: -2.2rem;
+  clip-path: polygon(30% 0, 70% 0, 100% 100%, 0 100%);
+  background: linear-gradient(180deg, #1c222e 0%, #0a0d14 65%, rgb(var(--beam)) 66%);
+  filter: drop-shadow(0 6px 16px rgba(var(--beam), 0.6));
+  z-index: 2;
+}
+.roomBeam {
+  position: absolute;
+  top: 1.2rem;
+  left: 50%;
+  width: 150%;
+  height: 100%;
+  transform: translateX(-50%);
+  clip-path: polygon(46% 0, 54% 0, 100% 100%, 0 100%);
+  background: linear-gradient(180deg, rgba(var(--beam), 0.42) 0%, rgba(var(--beam), 0.13) 50%, rgba(var(--beam), 0.04) 100%);
+  mix-blend-mode: screen;
+  animation: global(lamp-flicker) 11s linear infinite;
+  transition: opacity var(--dur-med);
+}
+.stand:nth-child(2n) .roomBeam { animation-delay: -4s; }
+.stand:nth-child(3n) .roomBeam { animation-delay: -7s; }
+
+.figureLink {
+  position: relative;
+  z-index: 1;
+  height: calc(86% * var(--tall, 1));
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  text-decoration: none;
+  outline: none;
+}
+.figure {
+  height: 100%;
+  width: auto;
+  display: block;
+  /* a rim of the suspect's own colour behind them, like light off the wall */
+  filter: drop-shadow(0 0 26px color-mix(in srgb, var(--tint) 55%, transparent)) drop-shadow(0 12px 14px rgba(0, 0, 0, 0.7));
+  transform-origin: 50% 100%;
+  transition: transform var(--dur-med) var(--ease-out);
+}
+.stand:hover .figure {
+  transform: scale(1.04);
+}
+/* The slate each one holds: number and name. */
+.slate {
+  position: absolute;
+  left: 50%;
+  bottom: 9%;
+  transform: translateX(-50%) rotate(-1.5deg);
+  min-width: 9.5rem;
+  padding: 0.35rem 0.8rem 0.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  border: 2px solid #e9e2d2;
+  border-radius: 2px;
+  background: #07090e;
+  color: #f1e8d4;
+  font-family: var(--font-type);
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.75);
+}
+.stand:nth-child(2n) .slate { transform: translateX(-50%) rotate(1.2deg); }
+.slateNo {
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  line-height: 1.1;
+}
+.slateName {
+  font-size: var(--fs-xs);
+  letter-spacing: 0.12em;
+  color: #cdbb95;
+}
+
+.floor {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 7%;
+  background: linear-gradient(180deg, #05070c, #0d121b);
+  border-top: 2px solid #2a3549;
+  pointer-events: none;
+}
+/* Reflections on the glass between you and them. */
+.glass {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(112deg, transparent 0 22%, rgba(255, 255, 255, 0.055) 22% 27%, transparent 27% 46%, rgba(255, 255, 255, 0.03) 46% 58%, transparent 58%),
+    radial-gradient(ellipse at 50% 40%, transparent 55%, rgba(0, 0, 0, 0.6) 100%);
+}
+.roomLabel {
+  position: absolute;
+  right: 3.4rem;
+  bottom: 0.45rem;
+  margin: 0;
+  font-family: var(--font-type);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(235, 229, 216, 0.38);
+  pointer-events: none;
 }
