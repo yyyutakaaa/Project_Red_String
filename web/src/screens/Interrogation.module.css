@@ -139,9 +139,9 @@
   background: var(--ink-800);
   /* Stays beside the transcript; long case notes scroll inside it. */
   position: sticky;
-  top: calc(var(--hud-height) + var(--space-3));
+  top: calc(var(--titlebar-h) + var(--hud-height) + var(--space-3));
   max-height: calc(100vh - var(--hud-height) - var(--space-3) * 2);
-  max-height: calc(100dvh - var(--hud-height) - var(--space-3) * 2);
+  max-height: calc(var(--app-h) - var(--hud-height) - var(--space-3) * 2);
   overflow-x: hidden;
   overflow-y: auto;
 }
@@ -276,10 +276,10 @@
   min-width: 0;
   /* Keep the transcript and question box in view while the dossier scrolls past. */
   position: sticky;
-  top: calc(var(--hud-height) + var(--space-3));
+  top: calc(var(--titlebar-h) + var(--hud-height) + var(--space-3));
   /* Banners shrink the transcript instead of pushing the question box off screen. */
   max-height: calc(100vh - var(--hud-height) - var(--space-3) * 2);
-  max-height: calc(100dvh - var(--hud-height) - var(--space-3) * 2);
+  max-height: calc(var(--app-h) - var(--hud-height) - var(--space-3) * 2);
 }
 .room > * { flex-shrink: 0; }
 

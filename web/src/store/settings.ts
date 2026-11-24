@@ -1,8 +1,11 @@
 import { create } from 'zustand';
+import { desktop } from '../desktop/bridge.ts';
 
 export type TextSpeed = 'slow' | 'normal' | 'fast' | 'instant';
 export type FontSize = 'small' | 'medium' | 'large' | 'xlarge';
 export type MotionPref = 'system' | 'reduced' | 'full';
+export type ThemePref = 'dark' | 'light' | 'system';
+export type Theme = 'dark' | 'light';
 
 export interface Settings {
   masterVolume: number;
@@ -11,6 +14,7 @@ export interface Settings {
   textSpeed: TextSpeed;
   fontSize: FontSize;
   reducedMotion: MotionPref;
+  theme: ThemePref;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -20,6 +24,7 @@ export const DEFAULT_SETTINGS: Settings = {
   textSpeed: 'normal',
   fontSize: 'medium',
   reducedMotion: 'system',
+  theme: 'dark',
 };
 
 const KEY = 'redstring.settings';
@@ -48,6 +53,7 @@ export function parseSettings(raw: string | null): Settings {
       reducedMotion: (['system', 'reduced', 'full'] as const).includes(d.reducedMotion as MotionPref)
         ? (d.reducedMotion as MotionPref)
         : DEFAULT_SETTINGS.reducedMotion,
+      theme: (['dark', 'light', 'system'] as const).includes(d.theme as ThemePref) ? (d.theme as ThemePref) : DEFAULT_SETTINGS.theme,
     };
   } catch {
     return { ...DEFAULT_SETTINGS };
@@ -87,6 +93,7 @@ function persist(s: Settings): void {
     textSpeed: s.textSpeed,
     fontSize: s.fontSize,
     reducedMotion: s.reducedMotion,
+    theme: s.theme,
   };
   try {
     globalThis.localStorage?.setItem(KEY, JSON.stringify(data));
@@ -111,9 +118,28 @@ export function useReducedMotion(): boolean {
   return isReducedMotion(pref);
 }
 
+export function systemPrefersLight(): boolean {
+  return typeof window !== 'undefined' && window.matchMedia?.('(prefers-color-scheme: light)').matches === true;
+}
+
+export function resolveTheme(pref: ThemePref): Theme {
+  if (pref === 'system') return systemPrefersLight() ? 'light' : 'dark';
+  return pref;
+}
+
+/** Window-bar colours per theme. The desktop app paints its title bar with these. */
+export const THEME_CHROME: Record<Theme, { background: string; symbol: string }> = {
+  dark: { background: '#0b0f17', symbol: '#ebe5d8' },
+  light: { background: '#e9e2d4', symbol: '#2a2620' },
+};
+
 /** Reflect settings onto <html> so CSS can react. Call once at startup and on change. */
-export function applySettingsToDocument(s: Pick<Settings, 'fontSize' | 'reducedMotion'>): void {
+export function applySettingsToDocument(s: Pick<Settings, 'fontSize' | 'reducedMotion' | 'theme'>): void {
   const root = document.documentElement;
+  const theme = resolveTheme(s.theme);
+  root.dataset.theme = theme;
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', THEME_CHROME[theme].background);
+  desktop()?.setTheme?.(theme);
   root.dataset.fontSize = s.fontSize;
   root.dataset.motion = s.reducedMotion === 'system' ? (systemPrefersReducedMotion() ? 'reduced' : 'system') : s.reducedMotion;
 }

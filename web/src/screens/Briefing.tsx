@@ -42,7 +42,7 @@ export function Briefing() {
 
   return (
     <ScreenFrame title={caseFile.title} kicker="Case briefing">
-      <article className={`paper ${styles.file}`} aria-labelledby="briefing-heading">
+      <article className={`paper selectable ${styles.file}`} aria-labelledby="briefing-heading">
         <header className={styles.head}>
           <dl className={styles.headLines}>
             <div>

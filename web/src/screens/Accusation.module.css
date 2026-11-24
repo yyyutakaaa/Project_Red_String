@@ -76,7 +76,7 @@
 }
 .suspectOn {
   border-color: var(--red-500);
-  background: linear-gradient(180deg, rgba(168, 38, 47, 0.22), rgba(16, 21, 31, 0.9));
+  background: linear-gradient(180deg, rgba(168, 38, 47, 0.22), transparent 70%), var(--glass-strong-bg);
   box-shadow: 0 0 0 1px var(--red-500), 0 0 24px var(--red-glow);
 }
 .suspectOn:has(input:focus-visible) {
@@ -153,7 +153,7 @@
   gap: var(--space-3) var(--space-5);
   margin: 0 calc(var(--space-4) * -1);
   padding: var(--space-4);
-  background: linear-gradient(180deg, rgba(8, 11, 18, 0.88), rgba(8, 11, 18, 0.98));
+  background: var(--glass-strong-bg);
   border-top: 1px solid var(--ink-600);
   backdrop-filter: blur(4px);
 }

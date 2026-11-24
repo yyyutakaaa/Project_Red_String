@@ -27,7 +27,7 @@
 }
 .evidence { border-left-color: var(--lamp-400); }
 .clue { border-left-color: var(--red-400); }
-.error { border-left-color: var(--red-500); background: #2a1216; }
+.error { border-left-color: var(--red-500); background: var(--error-bg); }
 .save { border-left-color: var(--ok-400); }
 .label {
   font-weight: 700;

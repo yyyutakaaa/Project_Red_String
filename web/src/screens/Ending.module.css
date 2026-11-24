@@ -95,7 +95,7 @@
 .scoreCard,
 .solution {
   padding: var(--space-5);
-  background: linear-gradient(180deg, rgba(22, 29, 42, 0.96), rgba(16, 21, 31, 0.96));
+  background: var(--panel-bg);
   border: var(--border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-2);

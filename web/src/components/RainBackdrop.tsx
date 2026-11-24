@@ -102,9 +102,9 @@ export function RainBackdrop({ lamp = 'right', intensity = 'full' }: RainBackdro
         <div className={styles.cone} />
         <div className={styles.glow} />
         <svg className={styles.post} viewBox="0 0 100 300" preserveAspectRatio="xMidYMax meet" focusable="false">
-          <path d="M72 300V44c0-16-10-26-26-26H34" fill="none" stroke="#04060a" strokeWidth="5" />
-          <path d="M66 300h12v-10h-12z" fill="#04060a" />
-          <path d="M22 18h24l-3 10H25z" fill="#04060a" />
+          <path d="M72 300V44c0-16-10-26-26-26H34" fill="none" stroke="currentColor" strokeWidth="5" />
+          <path d="M66 300h12v-10h-12z" fill="currentColor" />
+          <path d="M22 18h24l-3 10H25z" fill="currentColor" />
           <ellipse cx="34" cy="29" rx="9" ry="2.6" className={styles.bulb} />
         </svg>
       </div>

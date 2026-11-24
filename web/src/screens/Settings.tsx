@@ -11,6 +11,8 @@ import {
   useSettings,
   type FontSize,
   type MotionPref,
+  type ThemePref,
+  systemPrefersLight,
   type Settings,
   type TextSpeed,
 } from '../store/settings.ts';
@@ -163,6 +165,8 @@ export function SettingsScreen() {
   const reduced = useReducedMotion();
   const typed = usePreviewTyping(PREVIEW_LINE, TEXT_SPEED_CPS[settings.textSpeed], reduced);
   const [systemReduced] = useState(() => systemPrefersReducedMotion());
+  const [systemLight] = useState(() => systemPrefersLight());
+  const themeNoteId = useId();
 
   useEffect(() => {
     document.title = 'Settings - Project Red String';
@@ -174,6 +178,12 @@ export function SettingsScreen() {
   };
 
   const patch = (p: Partial<Settings>) => set(p);
+
+  const themeOptions: Array<{ value: ThemePref; label: string; note: string }> = [
+    { value: 'dark', label: 'Night shift', note: 'Dark streets, lamp light. The way it was made.' },
+    { value: 'light', label: 'Day shift', note: 'Bright and warm, easier in a sunny room.' },
+    { value: 'system', label: 'Follow system', note: `Your device is in ${systemLight ? 'light' : 'dark'} mode now.` },
+  ];
 
   const motionOptions: Array<{ value: MotionPref; label: string; note: string }> = [
     { value: 'system', label: 'Follow system', note: `Your device says: ${systemReduced ? 'reduce' : 'full'}.` },
@@ -247,6 +257,24 @@ export function SettingsScreen() {
               value={settings.fontSize}
               options={FONT_SIZES.map((f) => ({ value: f.value, label: f.label, sample: f.scale }))}
               onChange={(fontSize) => patch({ fontSize })}
+            />
+          </section>
+
+          <section className={styles.panel} aria-labelledby="theme-heading">
+            <h2 id="theme-heading" className={styles.panelTitle}>
+              Lighting
+            </h2>
+            <p id={themeNoteId} className={styles.panelNote}>
+              Work the night shift or the day shift. Case files and photographs stay the same.
+            </p>
+            <RadioCards
+              legend="Colour theme"
+              name="theme"
+              value={settings.theme}
+              options={themeOptions}
+              onChange={(theme) => patch({ theme })}
+              describedBy={themeNoteId}
+              stack
             />
           </section>
 
