@@ -15,7 +15,7 @@ export default defineConfig({
   },
   projects: [
     { name: 'desktop-chromium', use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 800 } } },
-    // A tablet held sideways: the game needs at least 960 x 560 (see components/TooSmall.tsx).
+    // A tablet held sideways: the game needs at least 960 x 560 (the desktop window cannot get smaller than 960 x 600).
     { name: 'tablet-chromium', use: { ...devices['Desktop Chrome'], viewport: { width: 1180, height: 820 }, hasTouch: true } },
     { name: 'smallest-window', use: { ...devices['Desktop Chrome'], viewport: { width: 960, height: 560 } } },
   ],

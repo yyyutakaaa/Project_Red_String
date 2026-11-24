@@ -1,5 +1,4 @@
-// The game is one screen: the page never scrolls, each screen scrolls its own panels, and a window
-// smaller than the game needs gets a notice over everything.
+// The game is one screen: the page never scrolls, and each screen scrolls its own panels.
 import { test, expect, type Page } from '@playwright/test';
 
 const SCREENS = ['/', '/cases', '/slots', '/settings', '/credits', '/case/ashgrove-house/briefing', '/case/ashgrove-house/rooms', '/case/ashgrove-house/suspects', '/case/ashgrove-house/notebook', '/case/ashgrove-house/board', '/case/ashgrove-house/accuse'];
@@ -35,13 +34,4 @@ test('no screen makes the page scroll; the briefing paper scrolls instead', asyn
     await expect.poll(() => paper.evaluate((el) => el.scrollTop)).toBeGreaterThan(0);
     expect((await pageOverflow(page)).page).toBeLessThanOrEqual(0);
   }
-});
-
-test('a window that is too small gets a notice, and it goes when the window grows', async ({ page }) => {
-  await page.goto('/');
-  await expect(page.getByTestId('too-small')).toHaveCount(0);
-  await page.setViewportSize({ width: 800, height: 500 });
-  await expect(page.getByTestId('too-small')).toBeVisible();
-  await page.setViewportSize({ width: 1280, height: 800 });
-  await expect(page.getByTestId('too-small')).toHaveCount(0);
 });
