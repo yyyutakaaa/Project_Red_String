@@ -58,6 +58,7 @@ The server decides what a suspect is allowed to reveal, so you can't talk the an
 - [Backend](#backend)
 - [Eval tool](#eval-tool)
 - [Deploying](#deploying)
+- [Desktop app](#desktop-app-macos-and-windows)
 - [Your own art and sound](#your-own-art-and-sound)
 - [Accessibility](#accessibility)
 
@@ -246,6 +247,21 @@ npx vercel deploy --prod
 `vercel.json` builds `web/` and sends every route to `index.html`. The build also runs the secret scan and fails if it finds something. `.vercelignore` keeps local files like `tools/` and `.env.local` out of the upload.
 
 Using your own domain? Add it to the `ALLOWED_ORIGINS` secret on Supabase, or the server will refuse the interrogations.
+
+## Desktop app (macOS and Windows)
+
+The same React game also ships as a desktop app, built with Electron in [`desktop/`](desktop).
+It serves the web build from `http://127.0.0.1:47615` inside the app, so the edge functions accept it without any backend change and saves stay put between launches.
+
+```bash
+cd desktop
+npm install
+npm start          # build the web game and open it in a window
+npm run dist:mac   # release/Red String-<version>-universal.dmg
+npm run dist:win   # release/Red String Setup <version>.exe
+```
+
+The builds are not code-signed, so macOS Gatekeeper and Windows SmartScreen will warn the first time you open them.
 
 ## Your own art and sound
 
