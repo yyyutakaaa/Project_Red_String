@@ -47,4 +47,24 @@ describe('suspect prompt', () => {
     expect(turn).toContain('<detective_says>');
     expect(turn.length).toBeLessThan(MAX_PLAYER_MESSAGE_CHARS + 60);
   });
+
+  it('tells a suspect to shrug at evidence that has nothing to do with them', () => {
+    const slips = c.evidence.find((e) => e.id === 'racing-slips')!;
+    const ticket = c.evidence.find((e) => e.id === 'pawn-ticket')!;
+    const shown = (e: typeof slips) => buildSuspectPrompt({ caseFile: c, suspectId: 'nora', ctx: { ...ctx, shownEvidenceNow: e.id }, mood: 'calm', shownEvidence: e });
+    expect(shown(slips)).toContain('This evidence means nothing to you');
+    expect(shown(ticket)).not.toContain('This evidence means nothing to you');
+  });
+
+  it('makes a caught suspect admit the lie, and lets a wrong call bounce off', () => {
+    const ticket = c.evidence.find((e) => e.id === 'pawn-ticket')!;
+    const nora = c.suspects.find((s) => s.id === 'nora')!;
+    const base = { caseFile: c, suspectId: 'nora', ctx: { ...ctx, shownEvidenceNow: ticket.id }, mood: 'calm' as const, shownEvidence: ticket };
+    const caught = buildSuspectPrompt({ ...base, challenge: { statement: 'I never pawned a thing.', caught: true, truth: nora.lies[0]?.truth ?? 'the truth' } });
+    expect(caught).toContain('You have been caught in a lie');
+    expect(caught).toContain('I never pawned a thing.');
+    const failed = buildSuspectPrompt({ ...base, challenge: { statement: 'I like tea.', caught: false } });
+    expect(failed).toContain('The detective says you lied');
+    expect(failed).not.toContain('You have been caught in a lie');
+  });
 });

@@ -1,9 +1,9 @@
 // interrogate: one question to one suspect, answered in character and streamed over SSE.
 //
 // Request (POST JSON): { case_id, suspect_id, save_id, conversation, message,
-//                        shown_evidence_id?, device_id }
+//                        shown_evidence_id?, device_id, challenge_statement? }
 // Response: text/event-stream with "delta" events ({ text }) and one "final" event:
-//   { reply, revealed_clue_ids, mood, patience_used, patience_max, silent }
+//   { reply, revealed_clue_ids, mood, patience_used, patience_max, silent, evidence_effect, challenge }
 // Errors before streaming starts are JSON: { error: { code, message } }.
 //
 // The system prompt is built from ONLY the suspect's own sheet plus public case facts (see
@@ -11,15 +11,16 @@
 // so the client's "conversation" is accepted for compatibility but never trusted for the prompt.
 import { z } from 'zod';
 import { buildSuspectPrompt, buildUserTurn, MAX_PLAYER_MESSAGE_CHARS } from '../_shared/core/suspectPrompt.ts';
-import { evidencePressure, resolveMood, resolveRevealedClues, normalizeMood, type ClueContext } from '../_shared/core/clues.ts';
+import { evidenceEffect, evidencePressure, resolveMood, resolveRevealedClues, normalizeMood, type ClueContext } from '../_shared/core/clues.ts';
 import { limitWords, parseReplyMeta, sanitizeReply, spokenPart, streamableText, visibleLength } from '../_shared/core/replyParsing.ts';
 import { DEFAULT_TEMPERAMENT, type Mood } from '../_shared/core/caseSchema.ts';
 import { SseStream, clientIp, errorResponse, isUuid, json, originRejected, preflight, sha256Hex } from '../_shared/http.ts';
-import { claimQuestion, hitRateLimit, logUsage, recordTurn, releaseQuestion, reserveSpend, settleSpend, worstCaseCostUsd, type StoredTurn } from '../_shared/db.ts';
+import { NETWORK_SHARE_USED, claimQuestion, hitRateLimit, logUsage, recordTurn, releaseQuestion, reserveSpend, settleSpend, worstCaseCostUsd, type StoredTurn } from '../_shared/db.ts';
 import { chat, providerRejected, ProviderError, streamChat, type ChatMessage, type Usage } from '../_shared/omniakey.ts';
 import { config } from '../_shared/env.ts';
 import { resolveCase, seedStoryCase, storyCaseDiagnostics } from '../_shared/cases.ts';
 import { judgeModel, judgeReply, resolveEval, type JudgeVerdict } from '../_shared/evalMode.ts';
+import { MAX_STATEMENT_CHARS, judgeLie, lieCheckChars, sameStatement } from '../_shared/lieCheck.ts';
 
 const MAX_OUTPUT_TOKENS = 320;
 const PROVIDER_TIMEOUT_MS = 25_000;
@@ -42,6 +43,8 @@ const Body = z.object({
   shown_evidence_id: z.string().max(64).nullable().optional(),
   device_id: z.string().refine(isUuid, 'device_id must be a uuid'),
   parent_save_id: z.string().refine(isUuid, 'parent_save_id must be a uuid').nullable().optional(),
+  /** "Catch a lie": something this suspect said earlier, word for word, that the shown evidence is said to disprove. */
+  challenge_statement: z.string().max(4000).nullable().optional(),
 });
 
 function pick<T>(items: readonly T[]): T {
@@ -86,8 +89,11 @@ Deno.serve(async (req: Request): Promise<Response> => {
   if (!suspect) return errorResponse(req, 404, 'not_found', 'Unknown suspect.');
   const shown = shownId ? caseFile.evidence.find((e) => e.id === shownId) ?? null : null;
   if (shownId && !shown) return errorResponse(req, 400, 'bad_request', 'Unknown evidence.');
+  const statement = (body.challenge_statement ?? '').trim().slice(0, MAX_STATEMENT_CHARS);
+  if (statement && !shown) return errorResponse(req, 400, 'bad_request', 'Show the evidence that proves the lie.');
 
   const evalCtx = await resolveEval(req);
+  let networkKey: string | null = null;
 
   try {
     const rl = evalCtx
@@ -100,6 +106,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
     }
     if (!evalCtx) {
       const ipKey = `ip:${(await sha256Hex(clientIp(req))).slice(0, 32)}`;
+      networkKey = ipKey;
       const ipRl = await hitRateLimit(ipKey, LIMITS.ipPerMinute, LIMITS.ipPerDay, 'int');
       if (!ipRl.allowed) {
         return errorResponse(req, 429, 'rate_limited', 'Too many questions from this network.', { 'Retry-After': String(ipRl.retryAfterSeconds) });
@@ -134,9 +141,54 @@ Deno.serve(async (req: Request): Promise<Response> => {
     });
   }
 
+  const model = evalCtx?.model ?? config.suspectModel();
+  const thinking = model.startsWith('deepseek-') && config.suspectThinking();
+  const maxTokens = thinking ? THINKING_OUTPUT_TOKENS : MAX_OUTPUT_TOKENS;
+  const spokenQuestion = message || (statement ? 'You told me this. This says otherwise.' : 'Take a look at this.');
+
+  // A pinned statement must be something this suspect really said in this run.
+  const challenging = Boolean(statement && shown);
+  if (challenging && !claim.messages.some((t: StoredTurn) => t.role === 'suspect' && sameStatement(t.text, statement))) {
+    await releaseQuestion(body.save_id, caseKey, suspect.id);
+    return errorResponse(req, 400, 'bad_request', 'That statement is not in the record.');
+  }
+
+  // Reserve the worst case (the reply plus one metadata retry, and the lie check when one is asked for)
+  // against the daily ceiling before calling a model, atomically, so concurrent requests cannot overshoot it.
+  const historyTurns = claim.messages.slice(-HISTORY_TURNS * 2);
+  const sheetChars = buildSuspectPrompt({
+    caseFile,
+    suspectId: suspect.id,
+    ctx: { patienceUsedBefore: claim.patienceUsedBefore, shownEvidenceNow: shown?.id ?? null, shownEvidenceBefore: claim.shownEvidence, alreadyRevealed: claim.revealedClues },
+    mood: 'calm',
+    shownEvidence: shown,
+  }).length;
+  const roughInputChars = sheetChars + 1500 + historyTurns.reduce((n: number, t: StoredTurn) => n + t.text.length + 120, 0) + spokenQuestion.length + statement.length;
+  const estimate =
+    worstCaseCostUsd(model, roughInputChars, maxTokens, 2) +
+    (challenging && shown ? worstCaseCostUsd(model, lieCheckChars(suspect, statement, shown), 60, 1) : 0);
+  const reservation = await reserveSpend(body.device_id, 'interrogate', model, estimate, networkKey);
+  if (reservation === null || reservation === NETWORK_SHARE_USED) {
+    await releaseQuestion(body.save_id, caseKey, suspect.id);
+    return reservation === null
+      ? errorResponse(req, 503, 'spend_limit', 'The daily interrogation budget is used up. Try again tomorrow.')
+      : errorResponse(req, 429, 'network_limit', 'This network has used its share of today\'s interrogation budget. Try again tomorrow.');
+  }
+
+  // "Catch a lie": the statement has to be one of this suspect's lies, and the evidence has to disprove it.
+  const usages: Array<{ model: string; usage: Usage }> = [];
+  let caughtLie: number | null = null;
+  if (challenging && shown) {
+    const verdict = await judgeLie(model, suspect, statement, shown);
+    if (verdict.usage) usages.push({ model, usage: verdict.usage });
+    caughtLie = verdict.lieIndex;
+  }
+  const caught = caughtLie !== null;
+
   // Evidence does not break a suspect on sight: each showing, and each question that keeps pushing
-  // after it, is one confrontation, and their temperament says how many they get through.
-  const { pressure, pressing } = evidencePressure(claim.messages, shown?.id ?? null);
+  // after it, is one confrontation, and their temperament says how many they get through. A caught
+  // lie breaks them at once.
+  const { pressure, pressing } = evidencePressure(claim.messages, shown?.id ?? null, caught);
   const ctx: ClueContext = {
     patienceUsedBefore: claim.patienceUsedBefore,
     shownEvidenceNow: shown?.id ?? null,
@@ -147,31 +199,26 @@ Deno.serve(async (req: Request): Promise<Response> => {
     holdsOut: (suspect.temperament ?? DEFAULT_TEMPERAMENT).holds_out,
   };
   const prevMood: Mood = normalizeMood(claim.mood);
-  const system = buildSuspectPrompt({ caseFile, suspectId: suspect.id, ctx, mood: prevMood, shownEvidence: shown });
-  const history: ChatMessage[] = claim.messages.slice(-HISTORY_TURNS * 2).map((t: StoredTurn) =>
+  const system = buildSuspectPrompt({
+    caseFile,
+    suspectId: suspect.id,
+    ctx,
+    mood: prevMood,
+    shownEvidence: shown,
+    challenge: challenging ? { statement, caught, truth: caughtLie !== null ? suspect.lies[caughtLie]?.truth : undefined } : null,
+  });
+  const history: ChatMessage[] = historyTurns.map((t: StoredTurn) =>
     t.role === 'detective'
       ? { role: 'user', content: buildUserTurn(t.text, t.shown_evidence_id ? caseFile.evidence.find((e) => e.id === t.shown_evidence_id) ?? null : null) }
       : { role: 'assistant', content: t.text },
   );
-  const spokenQuestion = message || 'Take a look at this.';
   const messages: ChatMessage[] = [{ role: 'system', content: system }, ...history, { role: 'user', content: buildUserTurn(spokenQuestion, shown) }];
-  const model = evalCtx?.model ?? config.suspectModel();
-  const thinking = model.startsWith('deepseek-') && config.suspectThinking();
-  const maxTokens = thinking ? THINKING_OUTPUT_TOKENS : MAX_OUTPUT_TOKENS;
   const clueIds = suspect.revealable_clues.map((c) => c.clue_id);
-
-  // Reserve the worst case (the reply plus one metadata retry) against the daily ceiling before calling
-  // the model, atomically, so concurrent requests cannot overshoot it.
-  const inputChars = messages.reduce((n, m) => n + m.content.length, 0);
-  const reservation = await reserveSpend(body.device_id, 'interrogate', model, worstCaseCostUsd(model, inputChars, maxTokens, 2));
-  if (reservation === null) {
-    await releaseQuestion(body.save_id, caseKey, suspect.id);
-    return errorResponse(req, 503, 'spend_limit', 'The daily interrogation budget is used up. Try again tomorrow.');
-  }
+  const effect = evidenceEffect(suspect, ctx);
+  const challengeResult = challenging ? (caught ? 'caught' : 'failed') : null;
 
   const sse = new SseStream();
   const run = async () => {
-    const usages: Array<{ model: string; usage: Usage }> = [];
     const settle = async (fn: string) => {
       const own = usages.filter((u) => u.model === model).map((u) => u.usage);
       if (own.length) await settleSpend(reservation, fn, model, own);
@@ -242,7 +289,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
         caseKey,
         suspect.id,
         [
-          { role: 'detective', text: spokenQuestion, shown_evidence_id: shown?.id ?? null },
+          { role: 'detective', text: spokenQuestion, shown_evidence_id: shown?.id ?? null, ...(caught ? { caught: true } : {}) },
           { role: 'suspect', text: reply },
         ],
         shown?.id ?? null,
@@ -272,6 +319,9 @@ Deno.serve(async (req: Request): Promise<Response> => {
         patience_used: claim.patienceUsedBefore + 1,
         patience_max: patienceMax,
         silent: false,
+        // What the evidence on the table did: nothing, they are holding out, or they gave way.
+        evidence_effect: flagged ? null : effect,
+        challenge: challengeResult,
         ...(evalReport ? { eval: evalReport } : {}),
       });
     } catch (err) {
@@ -289,6 +339,8 @@ Deno.serve(async (req: Request): Promise<Response> => {
         patience_used: claim.patienceUsedBefore,
         patience_max: patienceMax,
         silent: true,
+        evidence_effect: null,
+        challenge: null,
         ...(evalCtx ? { eval: { verdict: null, first_token_ms: firstTokenMs, total_ms: performance.now() - started, model, flagged: false, raw: '', error: (err as Error).message } } : {}),
       });
     } finally {

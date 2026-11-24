@@ -22,28 +22,41 @@ export interface ClueContext {
   holdsOut?: number;
 }
 
+/** Pressure a caught lie adds: more than any temperament holds out against. */
+export const CAUGHT_PRESSURE = 100;
+
 /**
  * How hard each piece of evidence has been put to a suspect. Showing it is one confrontation, and so is
  * every question after it, until other evidence goes on the table: the detective keeps pushing.
+ * A turn in which the detective caught the suspect lying with that evidence breaks them at once.
  */
 export function evidencePressure(
-  turns: ReadonlyArray<{ role: string; shown_evidence_id?: string | null }>,
+  turns: ReadonlyArray<{ role: string; shown_evidence_id?: string | null; caught?: boolean }>,
   shownNow: string | null,
+  caughtNow = false,
 ): { pressure: Record<string, number>; pressing: string | null } {
   const pressure: Record<string, number> = {};
   let pressing: string | null = null;
-  const push = (shown: string | null | undefined) => {
+  const push = (shown: string | null | undefined, caught: boolean | undefined) => {
     if (shown) pressing = shown;
-    if (pressing) pressure[pressing] = (pressure[pressing] ?? 0) + 1;
+    if (pressing) pressure[pressing] = (pressure[pressing] ?? 0) + (caught && shown ? CAUGHT_PRESSURE : 1);
   };
-  for (const t of turns) if (t.role === 'detective') push(t.shown_evidence_id);
-  push(shownNow);
+  for (const t of turns) if (t.role === 'detective') push(t.shown_evidence_id, t.caught);
+  push(shownNow, caughtNow);
   return { pressure, pressing };
 }
 
 /** Has this evidence been pushed hard enough to break the suspect? Without pressure data, showing it is enough. */
 export function cracked(evidenceId: string, ctx: ClueContext): boolean {
   return (ctx.pressure?.[evidenceId] ?? 1) > (ctx.holdsOut ?? 0);
+}
+
+/** Does this evidence touch the suspect at all: it breaks them, or one of their clues waits on it. */
+export function evidenceMatters(suspect: Suspect, evidenceId: string): boolean {
+  return suspect.breaks_on.includes(evidenceId) || suspect.revealable_clues.some((c) => {
+    const cond = parseCondition(c.condition);
+    return cond.kind === 'shown_evidence' && cond.evidenceId === evidenceId;
+  });
 }
 
 /** Evidence the detective is pressing that the suspect is still holding out against, or null. */
@@ -55,6 +68,19 @@ export function holdingOut(suspect: Suspect, ctx: ClueContext): { evidenceId: st
     return cond.kind === 'shown_evidence' && cond.evidenceId === e && !ctx.alreadyRevealed.includes(c.clue_id);
   });
   return guards ? { evidenceId: e, confrontation: ctx.pressure?.[e] ?? 1 } : null;
+}
+
+export type EvidenceEffect = 'none' | 'holding' | 'gave';
+
+/**
+ * What the evidence on the table does to this suspect, for the player's notes: nothing (it does not
+ * touch them), they are holding out against it, or it has made them give way.
+ */
+export function evidenceEffect(suspect: Suspect, ctx: ClueContext): EvidenceEffect | null {
+  const e = ctx.pressing ?? ctx.shownEvidenceNow;
+  if (!e) return null;
+  if (!evidenceMatters(suspect, e)) return 'none';
+  return cracked(e, ctx) ? 'gave' : 'holding';
 }
 
 export function isConditionMet(condition: string, ctx: ClueContext): boolean {

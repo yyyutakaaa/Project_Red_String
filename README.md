@@ -103,6 +103,10 @@ Only interrogations go to the server. The `interrogate` function loads the case 
 
 The server also checks which clues a suspect may reveal at that moment. Patience per suspect, rate limits and a daily spend limit are kept in Postgres.
 
+Evidence does not make a suspect confess on sight. Each suspect has a temperament: how many confrontations with a piece of evidence they get through (showing it, and each question that keeps pressing after it) and how they sound meanwhile (angry, frightened, cold or charming). The player can also catch a lie: pin something the suspect said, put evidence beside it and call it. The evidence has to matter to that suspect, and a small model call checks that the statement is one of the lies on their sheet that this evidence disproves. A caught lie breaks them at once; a wrong call costs the question. Every reply also tells the player what the evidence did: nothing, holding out, or gave way.
+
+On the board, "Check theory" gives totals only (how many strings hold) and can be used three times per case. Having each string marked is the answer key and costs as much as a hint.
+
 API keys only exist as Supabase secrets. The frontend knows the Supabase URL and the publishable key and nothing else. `npm run check-secrets` scans the build to make sure.
 
 > The game used to have a "New Case" mode where an AI wrote a fresh case. That is gone. Every case is written by hand now, and `generate-case` only answers 410.
@@ -222,6 +226,7 @@ npx supabase secrets set SUSPECT_MODEL=claude-haiku-5-5 --project-ref hbwvybkpdq
 | Per IP address | 90 per minute, 2000 per day |
 | Per suspect | their own patience, so a max number of questions per save |
 | Per day | `DAILY_SPEND_LIMIT_USD` for the whole game |
+| Per network per day | a share of the daily budget (`network_share_of_daily_spend` in `rs_settings`, 0.2 by default) |
 
 Before every question the server reserves the highest possible cost in `usage_log`. If that would go over the daily limit, the question is refused. After the reply it fills in the real cost. Two questions at the same time can't push it over the limit together.
 

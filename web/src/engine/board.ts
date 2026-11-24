@@ -1,5 +1,5 @@
 import type { CaseFile } from '@shared/caseSchema.ts';
-import type { BoardLink, BoardPin, BoardState, LinkStatus, PinKind } from './types.ts';
+import type { BoardLink, BoardPin, BoardState, LinkStatus, PinKind, TheoryCount } from './types.ts';
 
 export const BOARD_WIDTH = 1200;
 export const BOARD_HEIGHT = 760;
@@ -96,10 +96,41 @@ export function checkLink(c: CaseFile, a: string, b: string): LinkStatus {
   return 'unsupported';
 }
 
+/** Free checks per run. A check gives the totals and nothing else, so it cannot be used as an answer key. */
+export const FREE_CHECKS = 3;
+
+export function checksLeft(board: BoardState): number {
+  return Math.max(0, FREE_CHECKS - (board.checksUsed ?? 0));
+}
+
+/** How many strings hold, do not hold, or only join two people. */
+export function countTheory(board: BoardState, c: CaseFile): TheoryCount {
+  const out: TheoryCount = { total: board.links.length, supported: 0, unsupported: 0, neutral: 0 };
+  for (const l of board.links) {
+    const status = checkLink(c, l.from, l.to);
+    if (status) out[status]++;
+  }
+  return out;
+}
+
+/** A free check: the totals only. No string is marked, and old marks come off. */
 export function checkTheory(board: BoardState, c: CaseFile, now = Date.now()): BoardState {
+  if (checksLeft(board) === 0) return board;
+  return {
+    ...board,
+    links: board.links.map((l) => (l.status === null ? l : { ...l, status: null })),
+    lastCheck: countTheory(board, c),
+    checksUsed: (board.checksUsed ?? 0) + 1,
+    lastCheckedAt: now,
+  };
+}
+
+/** Mark every string as holding or not. This is the answer key, so it costs as much as a hint. */
+export function markTheory(board: BoardState, c: CaseFile, now = Date.now()): BoardState {
   return {
     ...board,
     links: board.links.map((l) => ({ ...l, status: checkLink(c, l.from, l.to) })),
+    lastCheck: countTheory(board, c),
     lastCheckedAt: now,
   };
 }

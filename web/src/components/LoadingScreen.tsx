@@ -1,5 +1,6 @@
 // Full-screen loading card used at start-up and when a case or save opens: the logo winds itself
 // in as `progress` climbs, with a red thread underneath as the progress bar.
+import { useEffect } from 'react';
 import { LogoEye } from './LogoEye.tsx';
 import { RainBackdrop } from './RainBackdrop.tsx';
 import styles from './LoadingScreen.module.css';
@@ -15,12 +16,30 @@ interface LoadingScreenProps {
   leaving?: boolean;
   /** Show the big game title (start-up only). */
   masthead?: boolean;
+  /** Given when the player may skip the wait: a click anywhere, or Enter, Space or Escape. */
+  onSkip?: () => void;
 }
 
-export function LoadingScreen({ progress, kicker, title, status, leaving = false, masthead = false }: LoadingScreenProps) {
+export function LoadingScreen({ progress, kicker, title, status, leaving = false, masthead = false, onSkip }: LoadingScreenProps) {
   const pct = Math.round(Math.min(1, Math.max(0, progress)) * 100);
+
+  useEffect(() => {
+    if (!onSkip) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Escape') return;
+      e.preventDefault();
+      onSkip();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onSkip]);
+
   return (
-    <div className={`${styles.screen} ${leaving ? styles.leaving : ''}`} data-testid="loading-screen">
+    <div
+      className={`${styles.screen} ${leaving ? styles.leaving : ''} ${onSkip ? styles.skippable : ''}`}
+      data-testid="loading-screen"
+      onClick={onSkip}
+    >
       <RainBackdrop lamp="right" intensity="soft" />
       <div className={styles.card}>
         <div className={styles.logo}>
@@ -52,6 +71,11 @@ export function LoadingScreen({ progress, kicker, title, status, leaving = false
         <p className={styles.status} aria-live="polite">
           {status}
         </p>
+        {onSkip && (
+          <button type="button" className={styles.skip} data-testid="skip-loading" onClick={onSkip}>
+            {t('loading.skip')}
+          </button>
+        )}
       </div>
     </div>
   );

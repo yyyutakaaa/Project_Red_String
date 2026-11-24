@@ -20,7 +20,7 @@ import { Portrait } from '../components/Portrait.tsx';
 import { ScreenFrame } from '../components/ScreenFrame.tsx';
 import { Typewriter } from '../components/Typewriter.tsx';
 import { uuid } from '../engine/save.ts';
-import type { ChatMessage } from '../engine/types.ts';
+import type { CaughtLie, ChatMessage } from '../engine/types.ts';
 import { useAmbience } from '../hooks/useAmbience.ts';
 import { casePath, useCaseContext } from '../hooks/useCase.ts';
 import { ApiError, checkBackend, describeApiError, interrogate, type ConversationTurn } from '../lib/api.ts';
@@ -141,6 +141,24 @@ function lastSuspectId(messages: readonly ChatMessage[]): string | null {
   return null;
 }
 
+/** When something was said. Only ever called from event handlers, never while rendering. */
+const timestamp = (): number => Date.now();
+
+/** The evidence the detective is pressing: the last piece put on the table. */
+function lastShownEvidence(messages: readonly ChatMessage[]): string | null {
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const m = messages[i];
+    if (m?.role === 'detective' && m.shownEvidenceId) return m.shownEvidenceId;
+  }
+  return null;
+}
+
+/** A statement short enough to show on a chip. */
+function excerpt(text: string, max = 90): string {
+  const flat = text.replace(/\s+/g, ' ').trim();
+  return flat.length <= max ? flat : `${flat.slice(0, max - 1).trimEnd()}…`;
+}
+
 function scrollToBottom(el: HTMLElement, smooth: boolean): void {
   const top = el.scrollHeight;
   if (typeof el.scrollTo === 'function') el.scrollTo({ top, behavior: smooth ? 'smooth' : 'auto' });
@@ -180,6 +198,8 @@ interface RetryPayload {
   text: string;
   evidenceId: string | null;
   detectiveId: string;
+  /** The statement being called a lie, when the question did that. */
+  statement: string | null;
 }
 
 interface Failure {
@@ -207,6 +227,8 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
 
   const [draft, setDraft] = useState('');
   const [attached, setAttached] = useState<string | null>(null);
+  // The reply the detective has pinned to call a lie: it needs evidence beside it to be sent.
+  const [pinnedId, setPinnedId] = useState<string | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [failure, setFailure] = useState<Failure | null>(null);
   const [silentNotice, setSilentNotice] = useState(false);
@@ -230,7 +252,15 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
   const attachedEvidence = attached ? caseFile.evidence.find((e) => e.id === attached) ?? null : null;
   const others = caseFile.suspects.filter((s) => s.id !== suspect.id);
   const noted: RevealableClue[] = suspect.revealable_clues.filter((c) => progress.revealedClues.includes(c.clue_id));
-  const canSend = !inFlight && !exhausted && (draft.trim().length > 0 || attached !== null);
+  const pinned = pinnedId ? conv.messages.find((m) => m.id === pinnedId && m.role === 'suspect') ?? null : null;
+  const canSend = !inFlight && !exhausted && (pinned ? attached !== null : draft.trim().length > 0 || attached !== null);
+  const hasAsked = conv.messages.some((m) => m.role === 'detective');
+  const suggestions = [
+    t('interro.suggest1', { victim: caseFile.victim.name }),
+    t('interro.suggest2', { victim: caseFile.victim.name }),
+    t('interro.suggest3', { victim: caseFile.victim.name }),
+    t('interro.suggest4'),
+  ];
 
   // Reachability: warn before the player types, keep listening to the browser's own signal.
   useEffect(() => {
@@ -319,7 +349,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
     s.lastTop = el.scrollTop;
   };
 
-  async function ask(text: string, evidenceId: string | null, retryOfId: string | null): Promise<void> {
+  async function ask(text: string, evidenceId: string | null, retryOfId: string | null, statement: string | null = null): Promise<void> {
     if (usePendingReplies.getState().byKey[convKey]) return;
     const activeSlot = useGame.getState().slot;
     const run = activeSlot?.progress[caseKey];
@@ -331,7 +361,9 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
     const stillActive = () => isActiveRun(caseKey, slotNo, runId);
     const current = getConversation(run, caseFile, suspect.id);
     if (current.patienceUsed >= current.patienceMax) return;
-    const message = (text.trim() || (evidenceId ? t('interro.showLine') : '')).slice(0, MAX_LEN);
+    // Calling a lie needs the evidence that proves it.
+    const lie = statement && evidenceId ? statement : null;
+    const message = (text.trim() || (lie ? t('interro.lieLine') : evidenceId ? t('interro.showLine') : '')).slice(0, MAX_LEN);
     if (!message) return;
 
     // Everything said before this question. A retry leaves out the question being retried.
@@ -351,15 +383,17 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
         id: detectiveId,
         role: 'detective',
         text: message,
-        at: Date.now(),
+        at: timestamp(),
         shownEvidenceId: evidenceId,
+        ...(lie ? { pinnedStatement: lie } : {}),
       });
       setDraft('');
       setAttached(null);
+      setPinnedId(null);
     }
 
     const placeholderId = uuid();
-    addChatMessage(caseFile, caseKey, suspect.id, { id: placeholderId, role: 'suspect', text: '', at: Date.now() }, false);
+    addChatMessage(caseFile, caseKey, suspect.id, { id: placeholderId, role: 'suspect', text: '', at: timestamp() }, false);
     setPending(convKey, { placeholderId, started: false });
     setTypedIds((prev) => new Set(prev).add(placeholderId));
 
@@ -374,6 +408,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
           conversation,
           message,
           shown_evidence_id: evidenceId,
+          challenge_statement: lie,
           device_id: useGame.getState().deviceId,
         },
         {
@@ -391,13 +426,22 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
       // The chips on this reply show what it revealed; the notebook also catches up on anything this
       // suspect revealed earlier in the run whose reply never made it here.
       const revealed = Array.isArray(final.revealed_clue_ids) ? final.revealed_clue_ids : [];
+      const effect = final.silent ? null : final.evidence_effect ?? null;
+      const pressingId = evidenceId ?? lastShownEvidence(prior);
       const allRevealed = Array.isArray(final.all_revealed_clue_ids) ? final.all_revealed_clue_ids : revealed;
       patchChatMessage(
         caseFile,
         caseKey,
         suspect.id,
         placeholderId,
-        { text: reply, revealedClueIds: revealed, ...(final.silent ? { silent: true } : {}) },
+        {
+          text: reply,
+          revealedClueIds: revealed,
+          ...(final.silent ? { silent: true } : {}),
+          // "Nothing new" is said once, when the evidence goes on the table; "holding out" for as long as it lasts.
+          ...(pressingId && ((effect === 'none' && evidenceId) || effect === 'holding') ? { evidenceEffect: effect, effectEvidenceId: pressingId } : {}),
+          ...(final.challenge ? { challenge: final.challenge } : {}),
+        },
         true,
       );
       applyRevealedClues(caseFile, caseKey, allRevealed);
@@ -411,6 +455,8 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
         silent: final.silent,
         len: message.length,
         retry: Boolean(retryOfId),
+        effect,
+        lie: final.challenge ?? null,
       });
 
       const latest = liveConversation(caseFile, caseKey, suspect.id);
@@ -422,7 +468,12 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
         patienceUsed: final.patience_used,
         patienceMax: final.patience_max,
         ...(addShown ? { shownEvidence: [...shownBefore, evidenceId] } : {}),
+        ...(effect && pressingId ? { evidenceEffects: { ...(latest?.evidenceEffects ?? {}), [pressingId]: effect } } : {}),
+        ...(final.challenge === 'caught' && lie && evidenceId
+          ? { caughtLies: [...(latest?.caughtLies ?? []), { statement: lie, evidenceId, at: timestamp() } satisfies CaughtLie] }
+          : {}),
       });
+      if (final.challenge === 'caught') sfx('stamp');
 
       if (final.silent) setSilentNotice(true);
       confirmedOnline.current = true;
@@ -438,7 +489,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
         if (latest) setConversationState(caseFile, caseKey, suspect.id, { patienceUsed: latest.patienceMax });
         setFailure(null);
       } else {
-        setFailure({ message: describeApiError(err), retry: { text: message, evidenceId, detectiveId } });
+        setFailure({ message: describeApiError(err), retry: { text: message, evidenceId, detectiveId, statement: lie } });
       }
       if (code === 'offline' || code === 'not_configured') {
         confirmedOnline.current = false;
@@ -453,7 +504,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
 
   const submit = () => {
     if (!canSend) return;
-    void ask(draft, attached, null);
+    void ask(draft, attached, null, pinned?.text ?? null);
     inputRef.current?.focus({ preventScroll: true });
   };
 
@@ -471,8 +522,8 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
 
   const retry = () => {
     if (!failure?.retry || inFlight) return;
-    const { text, evidenceId, detectiveId } = failure.retry;
-    void ask(text, evidenceId, detectiveId);
+    const { text, evidenceId, detectiveId, statement } = failure.retry;
+    void ask(text, evidenceId, detectiveId, statement);
   };
 
   const onPick = (id: string | null) => {
@@ -626,6 +677,16 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
                   typed={typedIds.has(m.id)}
                   animate={m.id === newestSuspectId}
                   streaming={pending?.placeholderId === m.id}
+                  pinned={pinnedId === m.id}
+                  onPin={
+                    exhausted || m.role !== 'suspect' || m.silent || pending?.placeholderId === m.id
+                      ? null
+                      : () => {
+                          setPinnedId((id) => (id === m.id ? null : m.id));
+                          sfx('click');
+                          inputRef.current?.focus({ preventScroll: true });
+                        }
+                  }
                 />
               ))}
             </div>
@@ -699,6 +760,51 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
                 </span>
               </div>
             )}
+            {pinned && (
+              <div className={styles.pinnedRow} data-testid="pinned-statement">
+                <span className={styles.attachedChip}>
+                  <span className={styles.attachedLabel}>{t('interro.pinned')}</span>
+                  <span className={styles.pinnedQuote}>{excerpt(pinned.text)}</span>
+                  <button
+                    type="button"
+                    className={styles.chipRemove}
+                    onClick={() => {
+                      setPinnedId(null);
+                      inputRef.current?.focus({ preventScroll: true });
+                    }}
+                    aria-label={t('interro.unpin')}
+                    data-testid="remove-pinned-statement"
+                  >
+                    x
+                  </button>
+                </span>
+                <p className={styles.pinnedHint} role="status">
+                  {attachedEvidence ? t('interro.pinnedReady', { evidence: attachedEvidence.name }) : t('interro.pinnedNeedsEvidence')}
+                </p>
+              </div>
+            )}
+            {!hasAsked && !exhausted && !inFlight && (
+              <div className={styles.suggestions} data-testid="suggested-questions">
+                <p className={styles.suggestLabel}>{t('interro.suggestLabel', { name: short, max: conv.patienceMax })}</p>
+                <ul className={styles.suggestList}>
+                  {suggestions.map((q) => (
+                    <li key={q}>
+                      <button
+                        type="button"
+                        className={styles.suggestChip}
+                        onClick={() => {
+                          setDraft(q);
+                          sfx('click');
+                          inputRef.current?.focus({ preventScroll: true });
+                        }}
+                      >
+                        {q}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
             <label htmlFor={questionId} className={styles.inputLabel}>
               {t('interro.yourQuestion')}
             </label>
@@ -734,7 +840,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
                   {t('interro.showEvidence')}
                 </Button>
                 <Button type="submit" variant="primary" data-testid="send-question" disabled={!canSend}>
-                  {t('interro.send')}
+                  {pinned ? t('interro.callLie') : t('interro.send')}
                 </Button>
               </div>
             </div>
@@ -749,6 +855,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
         evidenceIds={progress.foundEvidence}
         selectedId={attached}
         shownIds={conv.shownEvidence}
+        effects={conv.evidenceEffects}
         suspectName={short}
         onPick={onPick}
       />
@@ -769,9 +876,13 @@ interface MessageViewProps {
   animate: boolean;
   /** The reply is still streaming in. */
   streaming: boolean;
+  /** This reply is pinned to be called a lie. */
+  pinned: boolean;
+  /** Pin or unpin this reply; null when it cannot be pinned. */
+  onPin: (() => void) | null;
 }
 
-function MessageView({ message: m, caseFile, speaker, typed, animate, streaming }: MessageViewProps) {
+function MessageView({ message: m, caseFile, speaker, typed, animate, streaming, pinned, onPin }: MessageViewProps) {
   if (m.role === 'system') {
     return (
       <div className={`${styles.row} ${styles.rowSystem}`}>
@@ -795,6 +906,11 @@ function MessageView({ message: m, caseFile, speaker, typed, animate, streaming 
               <span>{evidenceName(caseFile, m.shownEvidenceId)}</span>
             </p>
           )}
+          {m.pinnedStatement && (
+            <p className={styles.calledLie} data-testid="called-lie">
+              <span className={styles.tagLabel}>{t('interro.calledLie')}</span> “{excerpt(m.pinnedStatement, 140)}”
+            </p>
+          )}
         </div>
       </div>
     );
@@ -807,7 +923,7 @@ function MessageView({ message: m, caseFile, speaker, typed, animate, streaming 
   return (
     <div className={`${styles.row} ${styles.rowSuspect}`}>
       <div
-        className={`${styles.msg} ${styles.suspect} ${m.silent ? styles.silent : ''}`}
+        className={`${styles.msg} ${styles.suspect} ${m.silent ? styles.silent : ''} ${pinned ? styles.pinnedMsg : ''}`}
         data-testid="chat-message"
         data-role="suspect"
         data-silent={m.silent ? 'true' : undefined}
@@ -820,6 +936,26 @@ function MessageView({ message: m, caseFile, speaker, typed, animate, streaming 
         <p className={styles.text}>
           {typed ? <Typewriter text={m.text} animate={animate} streaming={streaming} /> : m.text}
         </p>
+        {m.challenge && (
+          <p className={`${styles.outcome} ${m.challenge === 'caught' ? styles.outcomeCaught : ''}`} data-testid="lie-outcome" data-outcome={m.challenge}>
+            <span className={styles.outcomeStamp}>{t(m.challenge === 'caught' ? 'interro.caughtStamp' : 'interro.failedStamp')}</span>{' '}
+            {t(m.challenge === 'caught' ? 'interro.caughtText' : 'interro.failedText', { name: speaker })}
+          </p>
+        )}
+        {!m.challenge && m.evidenceEffect && m.effectEvidenceId && (
+          <p className={styles.outcome} data-testid="evidence-effect" data-effect={m.evidenceEffect}>
+            <span className={styles.outcomeStamp}>{t(m.evidenceEffect === 'none' ? 'interro.nothingStamp' : 'interro.holdingStamp')}</span>{' '}
+            {t(m.evidenceEffect === 'none' ? 'interro.nothingText' : 'interro.holdingText', {
+              name: speaker,
+              evidence: evidenceName(caseFile, m.effectEvidenceId),
+            })}
+          </p>
+        )}
+        {onPin && !streaming && m.text.trim().length > 0 && (
+          <button type="button" className={styles.pinButton} onClick={onPin} aria-pressed={pinned} data-testid="pin-statement">
+            {pinned ? t('interro.unpin') : t('interro.pin')}
+          </button>
+        )}
         {clues.length > 0 && (
           <ul className={styles.clues} aria-label={t('interro.notedLabel')}>
             {clues.map((c) => (

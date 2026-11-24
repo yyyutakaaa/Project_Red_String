@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { create } from 'zustand';
 import { audio } from '../audio/audio.ts';
+import { markSeen, seenBefore, skippableDelay } from './skip.ts';
 
 export const LAUNCH_MIN_MS = 2000;
 
@@ -13,9 +14,21 @@ interface LaunchState {
   kicker: string;
   title: string;
   startedAt: number;
+  /** The player has seen this screen before and may skip the wait. */
+  skippable: boolean;
+  skipped: boolean;
 }
 
-export const useLaunchState = create<LaunchState>(() => ({ active: false, leaving: false, kicker: '', title: '', startedAt: 0 }));
+export const useLaunchState = create<LaunchState>(() => ({ active: false, leaving: false, kicker: '', title: '', startedAt: 0, skippable: false, skipped: false }));
+
+let skipWait: (() => void) | null = null;
+
+/** End the minimum wait of the loading screen that is showing. What is still loading finishes first. */
+export function skipLaunch(): void {
+  if (!useLaunchState.getState().skippable || !skipWait) return;
+  useLaunchState.setState({ skipped: true });
+  skipWait();
+}
 
 const delay = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
@@ -48,11 +61,23 @@ export function useLaunch() {
   return useCallback(
     async (to: string, info: LaunchInfo) => {
       if (useLaunchState.getState().active) return;
-      useLaunchState.setState({ active: true, leaving: false, kicker: info.kicker ?? '', title: info.title, startedAt: performance.now() });
+      const wait = skippableDelay(LAUNCH_MIN_MS);
+      skipWait = wait.skip;
+      useLaunchState.setState({
+        active: true,
+        leaving: false,
+        kicker: info.kicker ?? '',
+        title: info.title,
+        startedAt: performance.now(),
+        skippable: seenBefore('launch'),
+        skipped: false,
+      });
       // Going into a case: the music hands over during the loading screen, so the case opens with
       // its own music already playing. The case screen then sets the exact mood of the room.
       if (to.startsWith('/case/')) audio.setAmbience('rain');
-      await Promise.all([delay(LAUNCH_MIN_MS), preloadCaseScreens(), info.prepare?.().catch(() => undefined)]);
+      await Promise.all([wait.done, preloadCaseScreens(), info.prepare?.().catch(() => undefined)]);
+      skipWait = null;
+      markSeen('launch');
       navigate(to);
       // Cover the first paint of the new screen, then fade out.
       await delay(120);

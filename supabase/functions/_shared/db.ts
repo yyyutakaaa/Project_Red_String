@@ -74,17 +74,22 @@ export async function spendCeilingReached(): Promise<boolean> {
   }
 }
 
+/** The reservation was refused because this network has used its own share of the daily budget. */
+export const NETWORK_SHARE_USED = -1;
+
 /**
  * Reserve the worst-case cost of a model call against the daily ceiling, atomically (advisory lock in
- * Postgres). Returns the usage_log row id, or null when the ceiling would be passed. Fails closed.
+ * Postgres). Returns the usage_log row id, null when the ceiling would be passed, or
+ * NETWORK_SHARE_USED when this network (hashed address) has spent its share of the day. Fails closed.
  */
-export async function reserveSpend(deviceId: string, fn: string, model: string, estimateUsd: number): Promise<number | null> {
+export async function reserveSpend(deviceId: string, fn: string, model: string, estimateUsd: number, networkKey: string | null = null): Promise<number | null> {
   const { data, error } = await db().rpc('rs_reserve_spend', {
     p_device_id: deviceId,
     p_function: fn,
     p_model: model,
     p_estimate: Number(estimateUsd.toFixed(6)),
     p_limit: config.dailySpendLimitUsd(),
+    p_network: networkKey,
   });
   if (error) {
     console.error('reserve spend failed', error.message);
@@ -134,6 +139,8 @@ export interface StoredTurn {
   role: 'detective' | 'suspect';
   text: string;
   shown_evidence_id?: string | null;
+  /** The detective caught the suspect lying with the evidence shown in this turn. */
+  caught?: boolean;
 }
 
 export interface ClaimedQuestion {

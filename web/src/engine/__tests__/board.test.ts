@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { CaseFile } from '@shared/caseSchema.ts';
-import { addLink, checkLink, checkTheory, emptyBoard, movePin, removeLink, summarizeTheory, syncPins } from '../board.ts';
+import { FREE_CHECKS, addLink, checkLink, checkTheory, checksLeft, emptyBoard, markTheory, movePin, removeLink, summarizeTheory, syncPins } from '../board.ts';
 import { miniCase } from './fixtures/miniCase.ts';
 
 const c = CaseFile.parse(miniCase());
@@ -70,9 +70,23 @@ describe('red-string board', () => {
     b = addLink(b, 'nora', 'ben');
     b = checkTheory(b, c, 123);
     expect(b.lastCheckedAt).toBe(123);
+    // A free check counts and marks nothing.
+    expect(b.lastCheck).toEqual({ total: 3, supported: 1, unsupported: 1, neutral: 1 });
+    expect(summarizeTheory(b)).toEqual({ supported: 0, unsupported: 0, neutral: 0, unchecked: 3 });
+    expect(checksLeft(b)).toBe(FREE_CHECKS - 1);
+    // Marking the strings is the paid answer key.
+    b = markTheory(b, c, 456);
     expect(summarizeTheory(b)).toEqual({ supported: 1, unsupported: 1, neutral: 1, unchecked: 0 });
     b = addLink(b, 'ben', 'racing-slips');
     expect(summarizeTheory(b).unchecked).toBe(1);
+  });
+
+  it('runs out of free checks', () => {
+    let b = syncPins(emptyBoard(), c, ['pawn-ticket']);
+    b = addLink(b, 'nora', 'pawn-ticket');
+    for (let i = 0; i < FREE_CHECKS; i++) b = checkTheory(b, c, i + 1);
+    expect(checksLeft(b)).toBe(0);
+    expect(checkTheory(b, c, 99)).toBe(b);
   });
 
   it('clamps pins to the board', () => {
