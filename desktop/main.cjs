@@ -9,6 +9,7 @@ const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
 const { pickGameRoot, startUpdates } = require('./updater.cjs');
+const { createPresence } = require('./discord.cjs');
 
 app.setName('Red String');
 // Development only: run a second copy next to an installed one, with its own data folder.
@@ -313,6 +314,40 @@ function buildMenu(checkForUpdates) {
 }
 
 ipcMain.on('red-string:theme', (_event, theme) => applyTheme(theme));
+
+// ---------------------------------------------------------------------------
+// Discord Rich Presence. The application ID comes from the Discord Developer Portal (it is public,
+// not a secret); its name is what friends see after "Playing". Empty switches presence off.
+// RED_STRING_DISCORD_ID overrides it for testing.
+const DISCORD_CLIENT_ID = process.env.RED_STRING_DISCORD_ID || '1574718724559085648';
+const SITE_URL = 'https://project-red-string.vercel.app';
+const presence = DISCORD_CLIENT_ID ? createPresence(DISCORD_CLIENT_ID) : null;
+const appStartedAt = Date.now();
+
+const line = (v) => (typeof v === 'string' && v.trim() ? v.trim().slice(0, 120) : undefined);
+
+/** Build the Discord activity from what the game reports. Only text and a time come from the page. */
+function toActivity(status) {
+  if (!status || typeof status !== 'object') return null;
+  const details = line(status.details);
+  if (!details) return null;
+  const startedAt = Number.isFinite(status.startedAt) && status.startedAt > 0 && status.startedAt <= Date.now() ? status.startedAt : appStartedAt;
+  return {
+    type: 0,
+    details,
+    state: line(status.state),
+    timestamps: { start: Math.floor(startedAt) },
+    assets: {
+      large_image: `${SITE_URL}/discord-logo.png`,
+      large_text: 'Project Red String',
+      ...(line(status.smallText) ? { small_image: `${SITE_URL}/discord-pin.png`, small_text: line(status.smallText) } : {}),
+    },
+    buttons: [{ label: 'Play Red String', url: SITE_URL }],
+  };
+}
+
+ipcMain.on('red-string:presence', (_event, status) => presence?.set(toActivity(status)));
+app.on('will-quit', () => presence?.stop());
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();

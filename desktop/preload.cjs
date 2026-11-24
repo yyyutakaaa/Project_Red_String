@@ -7,6 +7,8 @@ contextBridge.exposeInMainWorld('redStringDesktop', {
   /** The game may draw its own title bar: this shell hides the system one. */
   titleBar: process.platform === 'darwin' || process.platform === 'win32',
   setTheme: (theme) => ipcRenderer.send('red-string:theme', theme === 'light' ? 'light' : 'dark'),
+  /** Discord status: { details, state?, startedAt?, smallText? }, or null to clear it. */
+  setPresence: (status) => ipcRenderer.send('red-string:presence', status ?? null),
   onFullscreen: (callback) => {
     const listener = (_event, on) => callback(Boolean(on));
     ipcRenderer.on('red-string:fullscreen', listener);

@@ -2,11 +2,14 @@
 // it is missing and everything here does nothing. Older desktop shells (before the custom title
 // bar) only expose `platform`, so every extra is optional.
 import type { Theme } from '../store/settings.ts';
+import type { PresenceStatus } from './presence.ts';
 
 export interface DesktopBridge {
   platform: string;
   titleBar?: boolean;
   setTheme?: (theme: Theme) => void;
+  /** Discord Rich Presence (desktop shells from v1.0.5). */
+  setPresence?: (status: PresenceStatus | null) => void;
   onFullscreen?: (callback: (on: boolean) => void) => () => void;
   onNavigate?: (callback: (route: string) => void) => () => void;
 }
