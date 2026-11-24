@@ -9,11 +9,10 @@ export type PresenceMode = 'full' | 'minimal' | 'off';
 export interface PresenceStatus {
   details: string;
   state?: string;
-  /** When this stretch began (ms). The shell falls back to app start. */
-  startedAt?: number;
-  /** Tooltip on the small pin icon. */
-  smallText?: string;
 }
+// No start time and no small icon are sent on purpose. The shell then counts from when the game was
+// opened, so the timer on Discord runs on steadily instead of jumping back to 0:00 whenever the
+// player walks into a case or back to the menu.
 
 const MENU_LINES: Record<string, string> = {
   '/': 'In the main menu',
@@ -24,19 +23,15 @@ const MENU_LINES: Record<string, string> = {
   '/credits': 'Reading the credits',
 };
 
-const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
-
 export interface PresenceInput {
   pathname: string;
   mode: PresenceMode;
   slot: SaveSlotData | null;
   /** Looks up a case by key; null when it does not exist. */
   caseFile: (caseKey: string) => CaseFile | null;
-  /** When the player entered the current case (ms), if they are in one. */
-  caseEnteredAt?: number;
 }
 
-export function describePresence({ pathname, mode, slot, caseFile, caseEnteredAt }: PresenceInput): PresenceStatus | null {
+export function describePresence({ pathname, mode, slot, caseFile }: PresenceInput): PresenceStatus | null {
   if (mode === 'off') return null;
   const match = /^\/case\/([^/]+)(?:\/([^/]+)(?:\/([^/]+))?)?/.exec(pathname);
 
@@ -45,13 +40,13 @@ export function describePresence({ pathname, mode, slot, caseFile, caseEnteredAt
     return { details: MENU_LINES[pathname] ?? 'In the menus' };
   }
 
-  if (mode === 'minimal') return { details: 'Working a case', startedAt: caseEnteredAt };
+  if (mode === 'minimal') return { details: 'Working a case' };
 
   const caseKey = decodeURIComponent(match[1]!);
   const screen = match[2] ?? '';
   const param = match[3] ? decodeURIComponent(match[3]) : '';
   const c = caseFile(caseKey);
-  if (!c) return { details: 'Working a case', startedAt: caseEnteredAt };
+  if (!c) return { details: 'Working a case' };
 
   const progress = slot?.progress[caseKey];
   let state: string;
@@ -95,9 +90,5 @@ export function describePresence({ pathname, mode, slot, caseFile, caseEnteredAt
       state = 'On the case';
   }
 
-  const smallText = progress
-    ? `${plural(progress.foundEvidence.length, 'piece of evidence', 'pieces of evidence')}, ${plural(progress.revealedClues.length, 'clue', 'clues')}`
-    : undefined;
-
-  return { details: `Case: ${c.title}`, state, startedAt: caseEnteredAt, smallText };
+  return { details: `Case: ${c.title}`, state };
 }

@@ -6,6 +6,11 @@
 // This file only exports plain functions (no components) so fast refresh stays happy.
 import type { ReactElement, ReactNode } from 'react';
 import styles from './RoomScene.module.css';
+import { NS, halo, rim, stroke, type Draw, type PropPaint } from './propKit.tsx';
+import { OBJECT_DRAW, type ObjectKind } from './PropsObjects.tsx';
+import { FIXTURE_DRAW, VARIANT_DRAW, type FixtureKind } from './PropsFixtures.tsx';
+
+export type { PropPaint } from './propKit.tsx';
 
 export type PropKind =
   | 'desk'
@@ -55,25 +60,10 @@ export type PropKind =
   | 'radio'
   | 'curtain'
   | 'candle'
-  | 'item';
-
-/** Colours a prop is painted with. The scene supplies them so props match the room. */
-export interface PropPaint {
-  /** Silhouette fill, usually a gradient url. */
-  body: string;
-  /** Secondary surfaces (seat cushions, door panels). */
-  mid: string;
-  /** Darkest detail lines. */
-  edge: string;
-  /** Lamp-coloured rim light. */
-  rim: string;
-  /** Emitted light (lamp shades, embers, brandy). */
-  glow: string;
-  paper: string;
-  glass: string;
-  metal: string;
-  fabric: string;
-}
+  | 'item'
+  // the second library: PropsObjects.tsx and PropsFixtures.tsx
+  | ObjectKind
+  | FixtureKind;
 
 /** A rectangle in scene units (the scene viewBox is 1000 x 600). */
 export interface PropBox {
@@ -159,11 +149,11 @@ const WORDS: Record<string, PropKind> = {
   glass: 'glass', tumbler: 'glass', snifter: 'glass', goblet: 'glass', cup: 'glass', teacup: 'glass',
   mug: 'glass', wineglass: 'glass', flute: 'glass', chalice: 'glass', cocktail: 'glass', coupe: 'glass',
   decanter: 'decanter', carafe: 'decanter', jug: 'decanter', pitcher: 'decanter', flask: 'decanter',
-  tray: 'decanter', teapot: 'decanter', siphon: 'decanter', kettle: 'decanter', shaker: 'decanter',
-  bottle: 'bottle', vial: 'bottle', phial: 'bottle', medicine: 'bottle', pill: 'bottle', poison: 'bottle',
+  teapot: 'decanter', siphon: 'decanter', kettle: 'decanter', shaker: 'decanter',
+  bottle: 'bottle', vial: 'bottle', phial: 'bottle', medicine: 'bottle', poison: 'bottle', magnum: 'bottle',
   tonic: 'bottle', drop: 'bottle', perfume: 'bottle', inkwell: 'bottle', digitalis: 'bottle', laudanum: 'bottle',
   whisky: 'bottle', whiskey: 'bottle', gin: 'bottle', wine: 'bottle', champagne: 'bottle', bourbon: 'bottle',
-  rum: 'bottle', syringe: 'bottle',
+  rum: 'bottle',
   letter: 'letter', envelope: 'letter', note: 'letter', telegram: 'letter', newspaper: 'letter', paper: 'letter',
   document: 'letter', will: 'letter', codicil: 'letter', receipt: 'letter', ticket: 'letter', card: 'letter',
   memo: 'letter', page: 'letter', pad: 'letter', notepad: 'letter', invoice: 'letter', bill: 'letter',
@@ -180,12 +170,12 @@ const WORDS: Record<string, PropKind> = {
   notice: 'painting', noticeboard: 'painting', canvas: 'painting', print: 'painting', sketch: 'painting',
   mural: 'painting', certificate: 'painting', diploma: 'painting', board: 'painting', blackboard: 'painting',
   piano: 'piano', pianola: 'piano', organ: 'piano', harpsichord: 'piano',
-  telephone: 'phone', phone: 'phone', switchboard: 'phone', receiver: 'phone',
+  telephone: 'phone', phone: 'phone', receiver: 'phone',
   bed: 'bed', cot: 'bed', bunk: 'bed', berth: 'bed', mattress: 'bed', bedstead: 'bed', hammock: 'bed',
   bookshelf: 'bookshelf', bookcase: 'bookshelf', shelf: 'bookshelf', shelving: 'bookshelf', rack: 'bookshelf',
   fireplace: 'fireplace', hearth: 'fireplace', mantel: 'fireplace', mantelpiece: 'fireplace', grate: 'fireplace',
-  fire: 'fireplace', stove: 'fireplace', range: 'fireplace', oven: 'fireplace', furnace: 'fireplace',
-  boiler: 'fireplace', brazier: 'fireplace', incinerator: 'fireplace',
+  fire: 'fireplace', stove: 'fireplace', range: 'fireplace', oven: 'fireplace',
+  brazier: 'fireplace', incinerator: 'fireplace',
   planter: 'plant', plant: 'plant', fern: 'plant', palm: 'plant', pot: 'plant', orchid: 'plant', tree: 'plant',
   shrub: 'plant', bush: 'plant', hedge: 'plant', aspidistra: 'plant', flowerbed: 'plant', rosebush: 'plant',
   ivy: 'plant', topiary: 'plant', foxglove: 'plant', seedling: 'plant',
@@ -195,7 +185,7 @@ const WORDS: Record<string, PropKind> = {
   loveseat: 'sofa', ottoman: 'sofa', banquette: 'sofa', booth: 'sofa',
   trunk: 'case', suitcase: 'case', briefcase: 'case', valise: 'case', satchel: 'case', bag: 'case',
   handbag: 'case', purse: 'case', luggage: 'case', chest: 'case', case: 'case', holdall: 'case',
-  attache: 'case', portmanteau: 'case', carpetbag: 'case', wallet: 'case', footlocker: 'case',
+  attache: 'case', portmanteau: 'case', carpetbag: 'case', footlocker: 'case',
   safe: 'safe', strongbox: 'safe', vault: 'safe', lockbox: 'safe', cashbox: 'safe',
   lamp: 'lamp', lampshade: 'lamp', lantern: 'lamp', sconce: 'lamp', chandelier: 'lamp', lamppost: 'lamp',
   streetlamp: 'lamp', streetlight: 'lamp', light: 'lamp', torch: 'lamp', flashlight: 'lamp', spotlight: 'lamp',
@@ -205,18 +195,20 @@ const WORDS: Record<string, PropKind> = {
   crate: 'crate', box: 'crate', carton: 'crate', parcel: 'crate', package: 'crate', pallet: 'crate',
   ledger: 'book', book: 'book', diary: 'book', journal: 'book', notebook: 'book', register: 'book',
   logbook: 'book', log: 'book', album: 'book', scrapbook: 'book', bible: 'book', account: 'book',
-  guestbook: 'book', manifest: 'book', record: 'book', directory: 'book', almanac: 'book', novel: 'book',
+  guestbook: 'book', manifest: 'book', record: 'book', almanac: 'book', novel: 'book',
+  psalter: 'book', hymnal: 'book', missal: 'book', volume: 'book', tome: 'book',
   stair: 'stairs', staircase: 'stairs', stairway: 'stairs', step: 'stairs', stairwell: 'stairs',
   banister: 'stairs', landing: 'stairs', gangway: 'stairs', gangplank: 'stairs',
   sink: 'sink', basin: 'sink', washbasin: 'sink', washstand: 'sink', tap: 'sink', faucet: 'sink',
   bath: 'bathtub', bathtub: 'bathtub', tub: 'bathtub', shower: 'bathtub',
-  table: 'table', nightstand: 'table', workbench: 'table', trolley: 'table', cart: 'table', altar: 'table',
+  table: 'table', nightstand: 'table', workbench: 'table', altar: 'table',
   buffet: 'table', worktop: 'table',
   counter: 'counter', bar: 'counter', till: 'counter', reception: 'counter', kiosk: 'counter',
-  clock: 'clock', timepiece: 'clock', watch: 'clock', stopwatch: 'clock',
+  clock: 'clock', timepiece: 'clock', watch: 'clock', stopwatch: 'clock', dial: 'clock', wristwatch: 'clock',
   gramophone: 'gramophone', phonograph: 'gramophone', jukebox: 'gramophone', turntable: 'gramophone',
   microphone: 'microphone', mic: 'microphone',
   rope: 'rope', cord: 'rope', noose: 'rope', cable: 'rope', chain: 'rope', hawser: 'rope', mooring: 'rope',
+  hook: 'rope', flex: 'rope',
   hat: 'hat', fedora: 'hat', cap: 'hat', bowler: 'hat', trilby: 'hat', homburg: 'hat', bonnet: 'hat', beret: 'hat',
   bin: 'bin', basket: 'bin', wastebasket: 'bin', wastepaper: 'bin', bucket: 'bin', can: 'bin', hamper: 'bin',
   pail: 'bin', dustbin: 'bin', trashcan: 'bin', ashcan: 'bin',
@@ -226,13 +218,86 @@ const WORDS: Record<string, PropKind> = {
   gun: 'gun', revolver: 'gun', pistol: 'gun', rifle: 'gun', shotgun: 'gun', derringer: 'gun', firearm: 'gun',
   holster: 'gun', bullet: 'gun', cartridge: 'gun', casing: 'gun',
   knife: 'knife', knives: 'knife', dagger: 'knife', blade: 'knife', razor: 'knife', opener: 'knife',
-  scissors: 'knife', poker: 'knife', cleaver: 'knife', scalpel: 'knife', sword: 'knife', hook: 'knife',
+  scissors: 'knife', poker: 'knife', cleaver: 'knife', scalpel: 'knife', sword: 'knife',
   key: 'key', keyring: 'key', padlock: 'key', lock: 'key',
   vase: 'vase', urn: 'vase', flower: 'vase', bouquet: 'vase', rose: 'vase', lily: 'vase', lilies: 'vase', wreath: 'vase',
   umbrella: 'umbrella', parasol: 'umbrella', cane: 'umbrella', stick: 'umbrella',
   radio: 'radio', wireless: 'radio', transmitter: 'radio',
   curtain: 'curtain', drape: 'curtain', drapery: 'curtain', tapestry: 'curtain', screen: 'curtain',
   candle: 'candle', candlestick: 'candle', candelabra: 'candle', candelabrum: 'candle',
+
+  // ---- the second library ----
+  // paper that used to be a nameless item
+  statement: 'letter', affidavit: 'letter', testimony: 'letter', confession: 'letter', sighting: 'letter',
+  summary: 'letter', report: 'letter', form: 'letter', list: 'letter', inventory: 'letter', schedule: 'letter',
+  slip: 'letter', chit: 'letter', iou: 'letter', carbon: 'letter', demand: 'letter', policy: 'letter',
+  warrant: 'letter', licence: 'letter', license: 'letter', passport: 'letter', prescription: 'letter',
+  tape: 'letter', spike: 'letter', invitation: 'letter', bond: 'letter',
+  directory: 'painting',
+  // things you wear and carry
+  shoe: 'shoes', slipper: 'shoes', boot: 'shoes', heel: 'shoes', pump: 'shoes', sandal: 'shoes', galosh: 'shoes',
+  glove: 'glove', gloves: 'glove', mitten: 'glove', gauntlet: 'glove',
+  earring: 'jewel', cufflink: 'jewel', ring: 'jewel', necklace: 'jewel', bracelet: 'jewel', brooch: 'jewel',
+  pearl: 'jewel', jewel: 'jewel', jewelry: 'jewel', jewellery: 'jewel', diamond: 'jewel', locket: 'jewel',
+  pendant: 'jewel', tiepin: 'jewel', gem: 'jewel', ruby: 'jewel', emerald: 'jewel', tiara: 'jewel',
+  wallet: 'wallet', billfold: 'wallet', pocketbook: 'wallet',
+  spectacles: 'spectacles', eyeglasses: 'spectacles', monocle: 'spectacles', lorgnette: 'spectacles',
+  handkerchief: 'cloth', hanky: 'cloth', napkin: 'cloth', rag: 'cloth', towel: 'cloth', bandage: 'cloth',
+  cloth: 'cloth', tablecloth: 'cloth', apron: 'cloth',
+  lipstick: 'cosmetic', compact: 'cosmetic', powder: 'cosmetic', rouge: 'cosmetic', comb: 'cosmetic',
+  hairbrush: 'cosmetic', mascara: 'cosmetic',
+  pipe: 'pipe', meerschaum: 'pipe',
+  // money and marks
+  money: 'money', cash: 'money', banknote: 'money', dollar: 'money', wad: 'money', bankroll: 'money',
+  coin: 'money', chip: 'money', ransom: 'money', winnings: 'money',
+  tag: 'tag', label: 'tag', badge: 'tag', medal: 'tag', token: 'tag', shield: 'tag',
+  // weapons, tools, traces
+  mallet: 'mallet', gavel: 'mallet', club: 'mallet', bat: 'mallet', truncheon: 'mallet', cosh: 'mallet',
+  wrench: 'tool', spanner: 'tool', crowbar: 'tool', jemmy: 'tool', shovel: 'tool', spade: 'tool', axe: 'tool',
+  hatchet: 'tool', hammer: 'tool', pliers: 'tool', screwdriver: 'tool', chisel: 'tool', pickaxe: 'tool', tool: 'tool',
+  handcuffs: 'handcuffs', handcuff: 'handcuffs', cuffs: 'handcuffs', manacle: 'handcuffs', shackle: 'handcuffs',
+  footprint: 'footprints', footstep: 'footprints', track: 'footprints', bootprint: 'footprints', trail: 'footprints',
+  stain: 'stain', blood: 'stain', bloodstain: 'stain', spill: 'stain', smear: 'stain', outline: 'stain', scorch: 'stain',
+  fingerprint: 'fingerprint', thumbprint: 'fingerprint', dabs: 'fingerprint',
+  statuette: 'statuette', statue: 'statuette', bust: 'statuette', figurine: 'statuette', trophy: 'statuette',
+  paperweight: 'statuette', bookend: 'statuette', idol: 'statuette', sculpture: 'statuette', ornament: 'statuette',
+  // the detective's and the doctor's kit
+  magnifier: 'magnifier', loupe: 'magnifier', lens: 'magnifier',
+  binoculars: 'binoculars', binocular: 'binoculars', telescope: 'binoculars', spyglass: 'binoculars',
+  camera: 'camera',
+  syringe: 'medical', needle: 'medical', hypodermic: 'medical', pill: 'medical', tablet: 'medical',
+  capsule: 'medical', stethoscope: 'medical', thermometer: 'medical',
+  scale: 'scale', scales: 'scale', balance: 'scale', mortar: 'scale', pestle: 'scale',
+  // music, games, pictures
+  trumpet: 'instrument', horn: 'instrument', saxophone: 'instrument', sax: 'instrument', cornet: 'instrument',
+  trombone: 'instrument', clarinet: 'instrument', violin: 'instrument', cello: 'instrument', fiddle: 'instrument',
+  bass: 'instrument', guitar: 'instrument', banjo: 'instrument', snare: 'instrument', drums: 'instrument',
+  cymbal: 'instrument',
+  dice: 'cards', die: 'cards', domino: 'cards', ace: 'cards',
+  snapshot: 'photo', negative: 'photo', polaroid: 'photo', photostat: 'photo',
+  reel: 'reel', film: 'reel', spool: 'reel',
+  sleeve: 'sleeve', disc: 'sleeve', disk: 'sleeve',
+  press: 'press', vise: 'press', vice: 'press', clamp: 'press',
+  // the harbour
+  anchor: 'nautical', buoy: 'nautical', lifebuoy: 'nautical', lifebelt: 'nautical', helm: 'nautical', wheel: 'nautical',
+  // bigger things in a room
+  sack: 'sack', bait: 'sack', grain: 'sack', flour: 'sack',
+  bell: 'bell', buzzer: 'bell', gong: 'bell', chime: 'bell', doorbell: 'bell',
+  ladder: 'ladder', stepladder: 'ladder',
+  tray: 'tray', salver: 'tray',
+  bicycle: 'bicycle', bike: 'bicycle', cycle: 'bicycle', tricycle: 'bicycle',
+  elevator: 'elevator', lift: 'elevator',
+  bandstand: 'bandstand', dais: 'bandstand', rostrum: 'bandstand',
+  grating: 'grating', grille: 'grating', grill: 'grating', drain: 'grating', vent: 'grating', manhole: 'grating',
+  reed: 'reeds', rushes: 'reeds', cattail: 'reeds', bulrush: 'reeds',
+  pond: 'pond', pool: 'pond', fountain: 'pond', birdbath: 'pond',
+  soda: 'fountain',
+  wall: 'wall', brick: 'wall', brickwork: 'wall', masonry: 'wall',
+  boiler: 'boiler', furnace: 'boiler',
+  switchboard: 'switchboard', exchange: 'switchboard',
+  keyboard: 'keyrack', keyrack: 'keyrack',
+  cart: 'cart', trolley: 'cart', barrow: 'cart', wheelbarrow: 'cart',
+  icebox: 'icebox', refrigerator: 'icebox', fridge: 'icebox', freezer: 'icebox',
 };
 
 const PAIRS: Record<string, PropKind> = {
@@ -266,6 +331,42 @@ const PAIRS: Record<string, PropKind> = {
   'glass case': 'cabinet',
   'display case': 'cabinet',
   'book case': 'bookshelf',
+
+  // ---- the second library ----
+  'key board': 'keyrack',
+  'key rack': 'keyrack',
+  'key cabinet': 'keyrack',
+  'ice box': 'icebox',
+  'soda fountain': 'fountain',
+  'lily pond': 'pond',
+  'music stand': 'musicstand',
+  'script stand': 'musicstand',
+  'sheet music': 'musicstand',
+  'control booth': 'booth',
+  'projection booth': 'booth',
+  'sound booth': 'booth',
+  'croquet rack': 'mallet',
+  'mallet rack': 'mallet',
+  'camera case': 'camera',
+  'cable reel': 'rope',
+  'cash box': 'crate',
+  'cufflink box': 'jewel',
+  'jewel box': 'jewel',
+  'jewelry box': 'jewel',
+  'jewellery box': 'jewel',
+  'ring box': 'jewel',
+  'trinket box': 'jewel',
+  'playing cards': 'cards',
+  'playing card': 'cards',
+  'magnifying glass': 'magnifier',
+  'opera glasses': 'binoculars',
+  'field glasses': 'binoculars',
+  'reading glasses': 'spectacles',
+  'fire bucket': 'bin',
+  'chalk outline': 'stain',
+  'pocket watch': 'clock',
+  'pill box': 'medical',
+  'pill bottle': 'medical',
 };
 
 function singular(w: string): string {
@@ -304,6 +405,7 @@ function variantFor(kind: PropKind, l: string, box: PropBox): string {
   const tall = box.h > box.w * 1.5;
   switch (kind) {
     case 'chair':
+      if (/bench|pew|settle/.test(l)) return 'bench';
       if (/wicker|cane|rattan/.test(l)) return 'wicker';
       if (/stool/.test(l)) return 'stool';
       if (/arm|easy|club|wing|lounge|recliner|leather|reading/.test(l)) return 'arm';
@@ -316,6 +418,8 @@ function variantFor(kind: PropKind, l: string, box: PropBox): string {
       if (/lantern|oil|hurricane|torch|flashlight/.test(l)) return 'lantern';
       return tall && box.h > 200 ? 'floor' : 'table';
     case 'clock':
+      if (/dial/.test(l)) return 'dial';
+      if (/pocket|watch|stopwatch|wrist/.test(l)) return 'pocket';
       return tall || /grandfather|hall|long|tall|longcase/.test(l) ? 'tall' : 'wall';
     case 'table':
       if (/dining|banquet|dinner|supper/.test(l)) return 'dining';
@@ -323,10 +427,12 @@ function variantFor(kind: PropKind, l: string, box: PropBox): string {
       if (/card|cribbage|poker|games|round|side|bedside|night|tea|coffee|occasional|phone|telephone/.test(l)) return 'round';
       return 'plain';
     case 'case':
+      if (/\bbag\b|satchel|purse|handbag|holdall|carpetbag/.test(l)) return 'bag';
       if (/trunk|chest|steamer|footlocker/.test(l)) return 'trunk';
       if (/suitcase|valise|luggage|portmanteau|holdall/.test(l)) return 'suitcase';
       return 'brief';
     case 'painting':
+      if (/directory/.test(l)) return 'directory';
       if (/map|chart|plan/.test(l)) return 'map';
       if (/poster|notice|calendar|bill|board|certificate|diploma/.test(l)) return 'notice';
       if (/landscape|sea|ship|seascape|harbor|harbour|river|view/.test(l)) return 'landscape';
@@ -334,21 +440,44 @@ function variantFor(kind: PropKind, l: string, box: PropBox): string {
     case 'fireplace':
       return /stove|range|oven|boiler|furnace|incinerator/.test(l) ? 'stove' : 'hearth';
     case 'cabinet':
+      if (/drawer/.test(l)) return 'drawer';
       if (/medicine|bathroom|glass|display|curio|china|vitrine/.test(l)) return 'glazed';
       if (/filing|file|card/.test(l)) return 'filing';
       return 'plain';
     case 'letter':
       if (/torn|ripped|burnt|burned|charred|scrap|half/.test(l)) return 'torn';
+      if (/crumpled|balled|screwed/.test(l)) return 'crumpled';
       if (/newspaper|gazette|times|herald|clipping/.test(l)) return 'news';
-      if (/telegram|card|ticket|receipt|postcard|note|pad|stub|memo/.test(l)) return 'note';
+      if (/telegram|telex|\bwire\b/.test(l)) return 'telegram';
+      if (/ticket|stub/.test(l)) return 'ticket';
+      if (/\btape\b/.test(l)) return 'tape';
+      if (/envelope/.test(l)) return 'envelope';
+      if (/blotter/.test(l)) return 'blotter';
+      if (/spike/.test(l)) return 'spike';
+      if (/passport/.test(l)) return 'passport';
+      if (/folder|dossier|\bfile\b/.test(l)) return 'folder';
+      if (/policy|deed|certificate|warrant|licen[cs]e|\bbond\b/.test(l)) return 'policy';
+      if (/statement|affidavit|testimony|confession|sighting|report|summary|\bform\b/.test(l)) return 'form';
+      if (/\blist\b|inventory|schedule|roster/.test(l)) return 'list';
+      if (/slip|chit|iou|receipt|carbon|cheque|invoice|prescription/.test(l)) return 'slip';
+      if (/pages?\b|sheets\b|leaves/.test(l)) return 'pages';
+      if (/program|programme|menu|\bcard\b|invitation/.test(l)) return 'card';
+      if (/note|pad|memo|postcard/.test(l)) return 'note';
       return 'letter';
     case 'book':
-      return /ledger|account|register|diary|journal|notebook|log|manifest|album|guest|record/.test(l) ? 'open' : 'stack';
+      if (/psalter|bible|hymnal|missal|volume\b|tome|novel|pocket|prayer/.test(l)) return 'closed';
+      if (/books|stack|pile|volumes|cradle/.test(l)) return 'stack';
+      return 'open';
     case 'crate':
-      return /box|carton|parcel|package/.test(l) ? 'box' : 'crate';
+      if (/cash|money|petty|strong/.test(l)) return 'cashbox';
+      if (/parcel|package/.test(l)) return 'parcel';
+      return /box|carton/.test(l) ? 'box' : 'crate';
     case 'bottle':
+      if (/champagne|magnum/.test(l)) return 'champagne';
       return /vial|phial|medicine|pill|poison|tonic|drop|perfume|ink|digitalis|laudanum|syringe/.test(l) ? 'vial' : 'wine';
     case 'window':
+      if (/barred|\bbars\b|grille/.test(l)) return 'barred';
+      if (/ticket|booking|dispensary|teller|cashier|\bpay\b/.test(l)) return 'ticket';
       if (/porthole/.test(l)) return 'porthole';
       if (/roof|sky/.test(l)) return 'roof';
       return 'sash';
@@ -358,7 +487,67 @@ function variantFor(kind: PropKind, l: string, box: PropBox): string {
     case 'plant':
       return /fern|ivy|foxglove/.test(l) ? 'fern' : 'palm';
     case 'phone':
+      if (/wall/.test(l)) return 'wall';
       return box.h > box.w * 1.15 ? 'table' : 'desk';
+    case 'bin':
+      return /bucket|pail/.test(l) && !/ice/.test(l) ? 'bucket' : '';
+    case 'rope':
+      if (/hook/.test(l)) return 'hooks';
+      if (/chain/.test(l)) return 'chain';
+      if (/cable|cord|flex|\blead\b/.test(l)) return 'cable';
+      return '';
+    case 'door':
+      if (/hatch|serving/.test(l)) return 'hatch';
+      if (/revolving/.test(l)) return 'revolving';
+      return '';
+    case 'gun':
+      return /bullet|cartridge|casing|shell/.test(l) ? 'bullet' : '';
+    // ---- the second library ----
+    case 'jewel':
+      if (/\bbox\b|case/.test(l)) return 'box';
+      if (/earring|pendant|\bdrop\b|brooch|locket/.test(l)) return 'earring';
+      if (/cufflink|tiepin/.test(l)) return 'cufflink';
+      if (/necklace|pearls|bracelet|tiara/.test(l)) return 'necklace';
+      if (/\bring\b|diamond|gem|ruby|emerald/.test(l)) return 'ring';
+      return 'earring';
+    case 'mallet':
+      return /rack|stand|\bset\b/.test(l) ? 'rack' : '';
+    case 'tag':
+      if (/badge|shield|medal/.test(l)) return 'badge';
+      return /coin|token/.test(l) ? 'coin' : '';
+    case 'money':
+      if (/coin|change|silver/.test(l)) return 'coins';
+      return /chip/.test(l) ? 'chips' : '';
+    case 'tool':
+      if (/crowbar|jemmy|\bbar\b/.test(l)) return 'crowbar';
+      if (/shovel|spade/.test(l)) return 'shovel';
+      if (/axe|hatchet/.test(l)) return 'axe';
+      if (/hammer/.test(l)) return 'hammer';
+      return 'wrench';
+    case 'instrument':
+      if (/violin|cello|fiddle|bass|guitar|banjo/.test(l)) return 'violin';
+      return /drum|snare|cymbal/.test(l) ? 'drum' : 'horn';
+    case 'cards':
+      return /dice|\bdie\b|domino/.test(l) ? 'dice' : '';
+    case 'medical':
+      if (/pill|tablet|capsule/.test(l)) return 'pills';
+      return /stethoscope/.test(l) ? 'stethoscope' : 'syringe';
+    case 'statuette':
+      return /trophy|\bcup\b|prize/.test(l) ? 'trophy' : 'bust';
+    case 'scale':
+      return /mortar|pestle/.test(l) ? 'mortar' : 'balance';
+    case 'nautical':
+      if (/buoy|lifebelt/.test(l)) return 'buoy';
+      return /wheel|helm/.test(l) ? 'wheel' : 'anchor';
+    case 'cosmetic':
+      return /compact|powder|rouge/.test(l) ? 'compact' : 'lipstick';
+    case 'stain':
+      return /outline|chalk/.test(l) ? 'outline' : 'blood';
+    case 'cart':
+      return /trolley|drinks|\btea\b|serving|dessert/.test(l) ? 'trolley' : 'linen';
+    case 'tray':
+      if (/champagne|glass|drinks|cocktail/.test(l)) return 'glasses';
+      return /silver|salver|\bcard\b|calling/.test(l) ? 'silver' : 'letter';
     default:
       return '';
   }
@@ -378,6 +567,43 @@ const STRETCH = new Set<PropKind>([
   'counter',
   'curtain',
   'sofa',
+  'elevator',
+  'bandstand',
+  'grating',
+  'pond',
+  'fountain',
+  'wall',
+  'keyrack',
+  'icebox',
+  'booth',
+]);
+
+/** Things that lie on a table rather than stand on the floor: drawn around the middle of the box. */
+const LYING = new Set<PropKind>([
+  'letter',
+  'key',
+  'gun',
+  'knife',
+  'glove',
+  'jewel',
+  'wallet',
+  'photo',
+  'footprints',
+  'sleeve',
+  'tag',
+  'money',
+  'spectacles',
+  'tool',
+  'cards',
+  'handcuffs',
+  'magnifier',
+  'medical',
+  'pipe',
+  'reel',
+  'nautical',
+  'cloth',
+  'stain',
+  'fingerprint',
 ]);
 
 function fitFor(kind: PropKind, variant: string): string {
@@ -386,7 +612,11 @@ function fitFor(kind: PropKind, variant: string): string {
   if (kind === 'clock') return variant === 'tall' ? 'none' : 'xMidYMid meet';
   if (kind === 'mirror') return variant === 'oval' ? 'xMidYMid meet' : 'none';
   if (kind === 'lamp' && variant === 'chandelier') return 'xMidYMin meet';
-  if (kind === 'letter' || kind === 'key' || kind === 'gun' || kind === 'knife') return 'xMidYMid meet';
+  if (kind === 'tool' && variant === 'shovel') return 'xMidYMax meet';
+  if (kind === 'instrument') return variant === 'drum' ? 'xMidYMax meet' : 'xMidYMid meet';
+  if (kind === 'medical' && variant === 'pills') return 'xMidYMax meet';
+  if (kind === 'rope' && variant === 'hooks') return 'xMidYMin meet';
+  if (LYING.has(kind)) return 'xMidYMid meet';
   return 'xMidYMax meet';
 }
 
@@ -443,45 +673,6 @@ export function describeProp(label: string, box: PropBox): PropInfo {
 
 // ---------------------------------------------------------------------------
 // Drawing
-
-interface Ctx {
-  p: PropPaint;
-  v: string;
-  r: () => number;
-  animated: boolean;
-}
-type Draw = (c: Ctx) => ReactNode;
-
-const NS = 'non-scaling-stroke' as const;
-
-function rim(p: PropPaint, d: string, opacity = 0.9, width = 2): ReactElement {
-  return (
-    <path
-      d={d}
-      fill="none"
-      stroke={p.rim}
-      strokeOpacity={opacity}
-      strokeWidth={width}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      vectorEffect={NS}
-    />
-  );
-}
-
-function stroke(color: string, d: string, opacity = 0.6, width = 1): ReactElement {
-  return <path d={d} fill="none" stroke={color} strokeOpacity={opacity} strokeWidth={width} strokeLinecap="round" vectorEffect={NS} />;
-}
-
-function halo(p: PropPaint, cx: number, cy: number, r: number, strength = 1): ReactElement {
-  return (
-    <g fill={p.glow}>
-      <circle cx={cx} cy={cy} r={r} opacity={0.05 * strength} />
-      <circle cx={cx} cy={cy} r={r * 0.66} opacity={0.08 * strength} />
-      <circle cx={cx} cy={cy} r={r * 0.38} opacity={0.14 * strength} />
-    </g>
-  );
-}
 
 function flame(p: PropPaint, cx: number, cy: number, s: number, animated: boolean): ReactElement {
   return (
@@ -1866,13 +2057,17 @@ const DRAW: Record<PropKind, Draw> = {
   curtain,
   candle,
   item,
+  ...OBJECT_DRAW,
+  ...FIXTURE_DRAW,
 };
 
 /** Draw one prop fitted into its hotspot box. Returns an <svg> element to place inside the scene's SVG. */
 export function renderProp({ label, box, paint, flip = false, animated = false, seed }: PropRenderOptions): ReactElement {
   const info = describeProp(label, box);
   const r = seededRandom(seed ?? hashString(label));
-  const drawn = DRAW[info.kind]({ p: paint, v: info.variant, r, animated });
+  // A kind can have extra looks in the second library; they win over the kind's own drawing.
+  const draw = VARIANT_DRAW[info.kind]?.[info.variant] ?? DRAW[info.kind];
+  const drawn = draw({ p: paint, v: info.variant, r, animated });
   return (
     <svg
       x={box.x}

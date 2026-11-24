@@ -140,6 +140,7 @@ function RoomSearch({ room, caseFile, caseKey, progress }: RoomViewProps) {
           controlsId={DESCRIPTION_ID}
           label={`${room.name}: places to search`}
           flashKey={flashKey}
+          place={{ name: room.name, description: room.description, setting: caseFile.setting }}
         />
         <p className={styles.help}>
           <span>Tab</span> through the room. <span>Enter</span> or <span>Space</span> to look closer.

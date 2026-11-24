@@ -8,6 +8,8 @@ import { backgroundArt } from '../assets/registry.ts';
 import { sfx } from '../audio/audio.ts';
 import { useReducedMotion } from '../store/settings.ts';
 import { describeProp, hashString, rainPath, renderProp, seededRandom, type PropBox, type PropLight, type PropPaint } from './Props.tsx';
+import { sceneKeyFor, type ScenePlace } from './sceneKey.ts';
+import { placeProps, type Placed } from './scenePlacement.ts';
 import styles from './RoomScene.module.css';
 
 const W = 1000;
@@ -116,7 +118,19 @@ type Extra =
   | 'wineRacks'
   | 'cobwebs'
   | 'luggageRack'
-  | 'passingLights';
+  | 'passingLights'
+  // the second set: rooms the first one could only approximate
+  | 'coachRoof'
+  | 'diningTables'
+  | 'apothecary'
+  | 'eyeChart'
+  | 'acoustic'
+  | 'onAir'
+  | 'stars'
+  | 'balloons'
+  | 'washLine'
+  | 'snow'
+  | 'glassFronts';
 
 interface SceneSpec {
   wall: WallKind;
@@ -257,6 +271,82 @@ const SPECS: Record<string, SceneSpec> = {
     wall: 'stone', floor: 'flagstone', window: 'small', lamp: 'bulb', rain: 'window',
     extras: ['arches', 'wineRacks', 'cobwebs'],
     palette: pal({ wallTop: '#1f1c18', wallBottom: '#0c0b09', accent: '#2a2620', trim: '#110f0b', floorFar: '#1c1a16', floorNear: '#090807', floorLine: '#040403', floorAlt: '#23211c', propTop: '#15130f', propBottom: '#060504', propMid: '#12100c' }),
+  },
+  // ---- the second set. Picked by the room's name (see sceneKey.ts), not by the case file's key. ----
+  'train-corridor': {
+    wall: 'panels', floor: 'carpet', window: 'carriage', lamp: 'sconces', rain: 'window',
+    extras: ['coachRoof', 'passingLights', 'runner'],
+    palette: pal({ wallTop: '#2b1913', wallBottom: '#120a07', accent: '#3b2319', trim: '#1b100a', floorFar: '#2a1418', floorNear: '#0d0608', floorLine: '#060304', floorAlt: '#3a1c22', fabric: '#3a1c22', propTop: '#18110c', propBottom: '#060403', propMid: '#150f0b' }),
+  },
+  'dining-car': {
+    wall: 'panels', floor: 'carpet', window: 'carriage', lamp: 'sconces', rain: 'window',
+    extras: ['coachRoof', 'passingLights', 'diningTables'],
+    palette: pal({ wallTop: '#2e1d12', wallBottom: '#140c07', accent: '#402a19', trim: '#1c110a', floorFar: '#1d2420', floorNear: '#090c0a', floorLine: '#050706', floorAlt: '#27302b', fabric: '#2a3a30', propTop: '#1a130c', propBottom: '#060403', propMid: '#17100b' }),
+  },
+  'lounge-car': {
+    wall: 'panels', floor: 'carpet', window: 'carriage', lamp: 'sconces', rain: 'window',
+    extras: ['coachRoof', 'passingLights', 'clubTables', 'runner'],
+    palette: pal({ wallTop: '#281a10', wallBottom: '#110a06', accent: '#3a2616', trim: '#190f08', floorFar: '#1c2a22', floorNear: '#080d0a', floorLine: '#040706', floorAlt: '#25382d', fabric: '#3a2414', propTop: '#19120b', propBottom: '#060403', propMid: '#160f0a' }),
+  },
+  pharmacy: {
+    wall: 'panels', floor: 'checker', window: 'none', lamp: 'pendant', rain: 'none',
+    extras: ['apothecary'],
+    palette: pal({ wallTop: '#2a1c12', wallBottom: '#130c07', accent: '#3a281a', trim: '#1a100a', floorFar: '#33322c', floorNear: '#0e0e0c', floorLine: '#060605', floorAlt: '#0c0c0b', fabric: '#3a1c1c', propTop: '#1b140d', propBottom: '#070504', propMid: '#18110c' }),
+  },
+  dispensary: {
+    wall: 'plaster', floor: 'linoleum', window: 'none', lamp: 'bulb', rain: 'none',
+    extras: ['apothecary', 'pipes'],
+    palette: pal({ wallTop: '#232b29', wallBottom: '#101514', accent: '#2d3835', trim: '#141a18', floorFar: '#20241f', floorNear: '#0a0c0a', floorLine: '#050605', floorAlt: '#292e28', propTop: '#161c1a', propBottom: '#060808', propMid: '#131917' }),
+  },
+  surgery: {
+    wall: 'plaster', floor: 'linoleum', window: 'frosted', lamp: 'pendant', wainscot: true, rain: 'window',
+    extras: ['eyeChart', 'certificate', 'radiator'],
+    palette: pal({ wallTop: '#26302e', wallBottom: '#121817', accent: '#33403d', trim: '#161d1b', floorFar: '#252a2c', floorNear: '#0b0d0e', floorLine: '#060708', floorAlt: '#161a1c', fabric: '#2a3a3e', propTop: '#171d1f', propBottom: '#06080a', propMid: '#14191b' }),
+  },
+  gatehouse: {
+    wall: 'panels', floor: 'planks', window: 'sash', lamp: 'lantern', rain: 'window',
+    extras: ['pipes', 'certificate'],
+    palette: pal({ wallTop: '#261d13', wallBottom: '#120d08', accent: '#33281a', trim: '#170f09', floorFar: '#1f1a13', floorNear: '#0b0907', floorLine: '#040302', floorAlt: '#28211a', fabric: '#2e2a22', propTop: '#17120c', propBottom: '#060403', propMid: '#14100b' }),
+  },
+  courtyard: {
+    wall: 'open', floor: 'flagstone', window: 'none', lamp: 'street', rain: 'open', fog: true,
+    extras: ['alleyWalls', 'puddles'],
+    palette: pal({ skyTop: '#080d15', skyBottom: '#1e2735', accent: '#20242c', trim: '#0b0d11', floorFar: '#1f242d', floorNear: '#0a0c11', floorLine: '#05060a', floorAlt: '#262c37', propTop: '#141824', propBottom: '#05070b', propMid: '#11151f' }),
+  },
+  'courtyard-snow': {
+    wall: 'open', floor: 'flagstone', window: 'none', lamp: 'street', rain: 'none', fog: true,
+    extras: ['alleyWalls', 'snow'],
+    palette: pal({ skyTop: '#0b111c', skyBottom: '#2a3446', accent: '#262b35', trim: '#10131a', floorFar: '#565f6e', floorNear: '#232a36', floorLine: '#141922', floorAlt: '#636d7d', propTop: '#161b28', propBottom: '#06080d', propMid: '#131822' }),
+  },
+  'rare-books': {
+    wall: 'shelving', shelfItems: 'books', floor: 'boards', window: 'arched', lamp: 'shade', rain: 'window',
+    extras: ['glassFronts', 'rugBig', 'dust'],
+    palette: pal({ wallTop: '#1f1710', wallBottom: '#100b07', accent: '#2a1f15', trim: '#1c140c', floorFar: '#1e160e', floorNear: '#0a0704', floorLine: '#050302', floorAlt: '#27190f', fabric: '#2a2238', propTop: '#19120c', propBottom: '#070504', propMid: '#16100a' }),
+  },
+  'radio-studio': {
+    wall: 'plaster', floor: 'carpet', window: 'none', lamp: 'spot', rain: 'none',
+    extras: ['acoustic', 'onAir'],
+    palette: pal({ wallTop: '#20242b', wallBottom: '#0e1014', accent: '#2a3039', trim: '#12151a', floorFar: '#1c1a22', floorNear: '#09080c', floorLine: '#050407', floorAlt: '#25222d', fabric: '#2a2238', propTop: '#161920', propBottom: '#06070a', propMid: '#13161c' }),
+  },
+  ballroom: {
+    wall: 'damask', floor: 'parquet', window: 'arched', lamp: 'chandelier', crown: true, rain: 'window',
+    extras: ['stars', 'drapes', 'balloons'],
+    palette: pal({ wallTop: '#1b2140', wallBottom: '#0c0f1f', accent: '#262e56', trim: '#1c1810', floorFar: '#2a1e12', floorNear: '#100b06', floorLine: '#070503', floorAlt: '#352617', fabric: '#3a2a14', propTop: '#181420', propBottom: '#060509', propMid: '#15111c' }),
+  },
+  laundry: {
+    wall: 'subway', floor: 'concrete', window: 'small', lamp: 'bulb', rain: 'window',
+    extras: ['pipes', 'washLine', 'steam'],
+    palette: pal({ wallTop: '#232a2b', wallBottom: '#111617', accent: '#2f393a', trim: '#0d1213', floorFar: '#1f2223', floorNear: '#090a0b', floorLine: '#050606', floorAlt: '#272a2b', fabric: '#3a3a36', propTop: '#161c1d', propBottom: '#060809', propMid: '#131819' }),
+  },
+  'boiler-room': {
+    wall: 'brick', floor: 'concrete', window: 'none', lamp: 'bulb', rain: 'none',
+    extras: ['arches', 'pipes', 'cobwebs', 'steam'],
+    palette: pal({ wallTop: '#231813', wallBottom: '#0f0a08', accent: '#33221a', trim: '#130b08', floorFar: '#1c1a18', floorNear: '#090808', floorLine: '#040404', floorAlt: '#23211e', propTop: '#16110d', propBottom: '#060404', propMid: '#130e0b' }),
+  },
+  'records-room': {
+    wall: 'shelving', shelfItems: 'boxes', floor: 'linoleum', window: 'none', lamp: 'bulb', rain: 'none',
+    extras: ['dust'],
+    palette: pal({ wallTop: '#1b2023', wallBottom: '#0b0e10', accent: '#262c30', trim: '#161b1e', floorFar: '#1c1f20', floorNear: '#090a0b', floorLine: '#050606', floorAlt: '#232727', propTop: '#141819', propBottom: '#060708', propMid: '#111516' }),
   },
   'train-car': {
     wall: 'panels', floor: 'carpet', window: 'carriage', lamp: 'sconces', rain: 'window',
@@ -399,6 +489,15 @@ interface PlacedProp {
   flip: boolean;
   grounded: boolean;
   seed: number;
+  /** A shelf under a small thing on the wall, or a slab of building behind a wall thing outdoors. */
+  shelf: Rect | null;
+  /** A side table (indoors) or a crate (outdoors) under a small thing on the floor. */
+  stand: Rect | null;
+  /** Not drawn: the scene already shows it (a train's own windows). */
+  hidden: boolean;
+  facade: Rect | null;
+  /** Where the hotspot is clicked, in scene units. */
+  hit: Rect;
 }
 
 interface Layout {
@@ -413,10 +512,17 @@ interface Layout {
   seed: number;
 }
 
+const CARRIAGE_WINDOWS = [70, 310, 550, 790];
+
 function placeWindows(spec: SceneSpec, obstacles: Rect[], hasWindowProp: boolean): Rect[] {
   const k = spec.window;
   if (k === 'none') return [];
-  if (k === 'carriage') return [70, 310, 550, 790].map((x) => ({ x, y: 72, w: 150, h: 160 }));
+  // A carriage window gives way to whatever hangs on that stretch of wall (a call board, a hatch).
+  if (k === 'carriage') {
+    return CARRIAGE_WINDOWS.map((x) => ({ x, y: 72, w: 150, h: 160 })).filter(
+      (w) => !obstacles.some((o) => o.y < w.y + w.h && overlapArea(w, o) > w.w * w.h * 0.12),
+    );
+  }
   if (k === 'grid') return [{ x: 110, y: 26, w: 780, h: 112 }];
   if (hasWindowProp) return [];
   const opts: Record<Exclude<WindowKind, 'none' | 'carriage' | 'grid'>, { w: number; h: number; y: number; xs: number[] }> = {
@@ -482,15 +588,39 @@ function placeLamp(spec: SceneSpec, obstacles: Rect[]): LampLayout {
 }
 
 function computeLayout(spec: SceneSpec, hotspots: readonly Hotspot[], key: string): Layout {
-  const obstacles = hotspots.map(hotspotRect);
-  const infos = hotspots.map((h, i) => ({ h, rect: obstacles[i]!, info: describeProp(h.label, obstacles[i]!) }));
-  const windowProps = infos.filter((p) => p.info.kind === 'window' && p.info.variant === 'sash');
+  // The case file's rectangles say what is where; scenePlacement decides how each thing really sits.
+  const authored = hotspots.map(hotspotRect);
+  const first = hotspots.map((h, i) => describeProp(h.label, authored[i]!));
+  const seated = placeProps(
+    first.map((info, i) => ({ kind: info.kind, variant: info.variant, rect: authored[i]! })),
+    spec.wall === 'open',
+  );
+  const infos = hotspots.map((h, i) => {
+    const placed: Placed = seated[i]!;
+    return { h, rect: placed.box, info: describeProp(h.label, placed.box), placed, hidden: false };
+  });
+  if (spec.window === 'carriage') {
+    // A railway carriage has its own windows in the scene. A "Window" hotspot is one of those, not a
+    // house window hung on top of them: point it at the nearest carriage window and draw nothing.
+    for (const p of infos) {
+      if (p.info.kind !== 'window') continue;
+      const cx = p.placed.box.x + p.placed.box.w / 2;
+      const x = CARRIAGE_WINDOWS.reduce((best, wx) => (Math.abs(wx + 75 - cx) < Math.abs(best + 75 - cx) ? wx : best), CARRIAGE_WINDOWS[0]!);
+      const pane = { x, y: 72, w: 150, h: 160 };
+      p.placed = { ...p.placed, box: pane, hit: pane, facade: null };
+      p.rect = pane;
+      p.hidden = true;
+    }
+  }
+  // Scene windows keep clear of everything that is really there, hidden panes excepted.
+  const obstacles = infos.filter((p) => !p.hidden).map((p) => p.placed.hit);
+  const windowProps = infos.filter((p) => !p.hidden && p.info.kind === 'window' && p.info.variant === 'sash');
   const windows = placeWindows(spec, obstacles, windowProps.length > 0 || infos.some((p) => p.info.kind === 'window'));
   const lamp = placeLamp(spec, [...obstacles, ...windows]);
   const propLights = infos.map((p) => p.info.light).filter((l): l is PropLight => l !== null);
   const mainX = lamp.kind === 'sconces' ? 500 : lamp.x;
   const props: PlacedProp[] = infos
-    .map(({ h, rect, info }) => {
+    .map(({ h, rect, info, placed, hidden }) => {
       const cx = info.drawn.x + info.drawn.w / 2;
       return {
         id: h.id,
@@ -498,8 +628,13 @@ function computeLayout(spec: SceneSpec, hotspots: readonly Hotspot[], key: strin
         box: rect,
         drawn: info.drawn,
         flip: !info.light && mainX < cx - 40,
-        grounded: info.drawn.y + info.drawn.h > HZ + 4 && info.kind !== 'rug',
+        grounded: placed.seat !== 'flat' && !placed.shelf && !placed.stand && !hidden && info.drawn.y + info.drawn.h > HZ + 4 && info.kind !== 'rug',
         seed: hashString(`${key}/${h.id}`),
+        shelf: placed.shelf,
+        stand: placed.stand,
+        hidden,
+        facade: placed.facade,
+        hit: placed.hit,
       };
     })
     .sort((a, b) => a.drawn.y + a.drawn.h - (b.drawn.y + b.drawn.h));
@@ -1823,6 +1958,174 @@ function wallExtras(c: Ctx): ReactNode {
       </g>,
     );
   }
+  if (c.has('coachRoof')) {
+    // the curved ceiling of a railway carriage, with its ribs
+    const curveY = (x: number) => 58 - 88 * (x / W) * (1 - x / W);
+    out.push(
+      <g key="coach">
+        <path d={`M0 0 H${W} V58 Q500 14 0 58 Z`} fill={pa.trim} />
+        {[125, 250, 375, 500, 625, 750, 875].map((x) => (
+          <path key={x} d={`M${x} 0 V${curveY(x).toFixed(1)}`} stroke={pa.wallBottom} strokeWidth="5" />
+        ))}
+        <path d={`M0 58 Q500 14 ${W} 58`} stroke="#8a6a32" strokeOpacity="0.55" strokeWidth="3" fill="none" />
+      </g>,
+    );
+  }
+  if (c.has('apothecary')) {
+    // a chemist's back wall: show globes, three shelves of bottles, a bank of small drawers
+    const glass = ['#16242a', '#2a1f12', '#1b2a1e', '#2a1a1c', '#1a2030'];
+    out.push(
+      <g key="apoth">
+        {[
+          [190, '#8e1f28'],
+          [500, '#1f6a4a'],
+          [810, '#24509a'],
+        ].map(([x, colour]) => (
+          <g key={x as number}>
+            <ellipse cx={x as number} cy="44" rx="46" ry="34" fill={url('glow')} opacity="0.5" />
+            <rect x={(x as number) - 6} y="10" width="12" height="14" fill={pa.trim} />
+            <circle cx={x as number} cy="46" r="24" fill={colour as string} opacity="0.85" />
+            <ellipse cx={(x as number) - 8} cy="38" rx="6" ry="9" fill="#ffffff" opacity="0.2" />
+          </g>
+        ))}
+        {[122, 176, 230].map((y, row) => (
+          <g key={y}>
+            <rect x="30" y={y} width="940" height="6" fill={pa.trim} />
+            {Array.from({ length: 31 }, (_, i) => {
+              const h = 24 + ((i * 17 + row * 7) % 20);
+              const x = 42 + i * 30;
+              return (
+                <g key={i}>
+                  <rect x={x} y={y - h} width="18" height={h} rx="4" fill={glass[(i + row) % glass.length]} />
+                  <rect x={x + 5} y={y - h - 5} width="8" height="6" fill={pa.trim} />
+                  {(i + row) % 3 !== 0 && <rect x={x + 2} y={y - h * 0.62} width="14" height={h * 0.34} fill="#cdbb95" opacity="0.3" />}
+                </g>
+              );
+            })}
+          </g>
+        ))}
+        <g fill={pa.accent} stroke={pa.trim} strokeWidth="2">
+          {Array.from({ length: 3 }, (_, row) =>
+            Array.from({ length: 19 }, (_, col) => <rect key={`${row}-${col}`} x={32 + col * 49.3} y={246 + row * 40} width="47" height="38" />),
+          )}
+        </g>
+        <g fill="#8a6a32" opacity="0.7">
+          {Array.from({ length: 3 }, (_, row) =>
+            Array.from({ length: 19 }, (_, col) => <circle key={`${row}-${col}`} cx={55.5 + col * 49.3} cy={266 + row * 40} r="3" />),
+          )}
+        </g>
+      </g>,
+    );
+  }
+  if (c.has('eyeChart')) {
+    const spot = free(c, [
+      { x: 700, y: 60, w: 110, h: 160 },
+      { x: 170, y: 60, w: 110, h: 160 },
+      { x: 450, y: 60, w: 110, h: 160 },
+    ]);
+    if (spot) {
+      out.push(
+        <g key="chart">
+          <rect x={spot.x} y={spot.y} width="100" height="150" fill="#cfc8b8" opacity="0.55" />
+          <rect x={spot.x} y={spot.y} width="100" height="150" fill="none" stroke={pa.trim} strokeWidth="4" />
+          <g fill="#0a0d12" opacity="0.75">
+            <rect x={spot.x + 40} y={spot.y + 14} width="20" height="22" />
+            {[0, 1, 2, 3, 4].map((row) =>
+              Array.from({ length: row + 2 }, (_, i) => {
+                const size = 15 - row * 2.4;
+                const gap = (100 - 20) / (row + 2);
+                return <rect key={`${row}-${i}`} x={spot.x + 10 + i * gap + (gap - size) / 2} y={spot.y + 48 + row * 20} width={size} height={size} />;
+              }),
+            )}
+          </g>
+        </g>,
+      );
+    }
+  }
+  if (c.has('acoustic')) {
+    // sound-deadening tiles: seams every so often, and row upon row of small holes
+    out.push(
+      <g key="acoustic">
+        <g stroke={pa.wallBottom} strokeWidth="2.5" strokeDasharray="2 9" opacity="0.9">
+          {Array.from({ length: 24 }, (_, i) => (
+            <path key={i} d={`M0 ${22 + i * 14} H${W}`} />
+          ))}
+        </g>
+        <g stroke={pa.trim} strokeWidth="3" opacity="0.9">
+          {[125, 250, 375, 500, 625, 750, 875].map((x) => (
+            <path key={x} d={`M${x} 0 V${HZ}`} />
+          ))}
+          <path d={`M0 124 H${W} M0 248 H${W}`} />
+        </g>
+      </g>,
+    );
+  }
+  if (c.has('onAir')) {
+    const spot = free(c, [
+      { x: 420, y: 22, w: 160, h: 50 },
+      { x: 150, y: 22, w: 160, h: 50 },
+      { x: 700, y: 22, w: 160, h: 50 },
+    ], 0.3) ?? { x: 420, y: 22, w: 160, h: 50 };
+    out.push(
+      <g key="onair">
+        <ellipse cx={spot.x + 80} cy={spot.y + 25} rx="150" ry="70" fill="#c8323c" opacity="0.12" />
+        <rect x={spot.x} y={spot.y} width="160" height="50" rx="5" fill="#0a0506" stroke={pa.trim} strokeWidth="4" />
+        <text
+          x={spot.x + 80}
+          y={spot.y + 35}
+          textAnchor="middle"
+          fontFamily="'Courier Prime', monospace"
+          fontWeight="700"
+          fontSize="30"
+          letterSpacing="5"
+          fill="#ff5a5a"
+          className={anim(c, styles.neon)}
+        >
+          ON AIR
+        </text>
+      </g>,
+    );
+  }
+  if (c.has('stars')) {
+    // the painted ceiling: a night sky over the dance floor
+    out.push(
+      <g key="stars">
+        <rect width={W} height="76" fill="#0a1230" />
+        {Array.from({ length: 70 }, (_, i) => (
+          <circle key={i} cx={r() * W} cy={6 + r() * 62} r={0.8 + r() * 1.9} fill="#f2cd7a" opacity={0.35 + r() * 0.55} />
+        ))}
+        <rect y="74" width={W} height="6" fill="#8a6a32" opacity="0.6" />
+      </g>,
+    );
+  }
+  if (c.has('washLine')) {
+    out.push(
+      <g key="wash">
+        <path d="M30 70 Q500 108 970 64" stroke={pa.trim} strokeWidth="3" fill="none" />
+        {[110, 290, 470, 650, 820].map((x, i) => {
+          const top = 70 + 38 * 4 * (x / W) * (1 - x / W) * 0.9 + (i % 2) * 2;
+          const w = 110 + (i % 3) * 16;
+          return <path key={x} d={`M${x} ${top} h${w} l${-4 + (i % 2) * 10} ${120 + (i % 3) * 26} q${-w / 2} 12 ${-w} 0 Z`} fill="#cfc8b8" opacity={0.22 + (i % 2) * 0.08} />;
+        })}
+      </g>,
+    );
+  }
+  if (c.has('glassFronts')) {
+    // the shelves are behind locked glass doors
+    out.push(
+      <g key="glass">
+        {[0, 125, 250, 375, 500, 625, 750, 875].map((x) => (
+          <g key={x}>
+            <path d={`M${x + 8} 20 L${x + 52} 20 L${x + 20} ${HZ - 20} L${x + 8} ${HZ - 20} Z`} fill="#ffffff" opacity="0.045" />
+            <rect x={x} y="12" width="5" height={HZ - 24} fill="#8a6a32" opacity="0.55" />
+            <rect x={x + 112} y={HZ / 2} width="7" height="12" rx="2" fill="#8a6a32" opacity="0.75" />
+          </g>
+        ))}
+        <rect y="12" width={W} height="5" fill="#8a6a32" opacity="0.55" />
+        <rect y={HZ - 24} width={W} height="5" fill="#8a6a32" opacity="0.55" />
+      </g>,
+    );
+  }
   if (c.has('proscenium')) {
     out.push(
       <g key="pros">
@@ -2094,6 +2397,53 @@ function floorExtras(c: Ctx): ReactNode {
             <path d={`M${30 + i * 83} ${H - 40} q15 -10 30 0 Z`} fill="#f2cd7a" opacity="0.7" />
           </g>
         ))}
+      </g>,
+    );
+  }
+  if (c.has('diningTables')) {
+    // white cloths and little brass lamps, down both sides of the car
+    for (const x of [100, 900]) {
+      out.push(
+        <g key={`dine${x}`}>
+          <path d={`M${x - 130} ${H} L${x - 104} ${H - 58} H${x + 104} L${x + 130} ${H} Z`} fill="#cfc8b8" opacity="0.5" />
+          <path d={`M${x - 104} ${H - 58} H${x + 104}`} stroke="#f2cd7a" strokeOpacity="0.5" strokeWidth="2" />
+          <ellipse cx={x} cy={H - 96} rx="60" ry="38" fill={url('glow')} />
+          <rect x={x - 2} y={H - 86} width="4" height="28" fill="#8a6a32" />
+          <path d={`M${x - 16} ${H - 86} L${x - 9} ${H - 104} H${x + 9} L${x + 16} ${H - 86} Z`} fill="#f2cd7a" opacity="0.75" />
+        </g>,
+      );
+    }
+  }
+  if (c.has('balloons')) {
+    const colours = ['#8e1f28', '#d9a23a', '#24509a', '#cfc8b8'];
+    out.push(
+      <g key="balloons">
+        {[60, 190, 330, 520, 700, 840, 950].map((x, i) => {
+          const y = H - 26 - ((i * 37) % 44);
+          return (
+            <g key={x}>
+              <ellipse cx={x} cy={y + 24} rx="22" ry="5" fill="#000000" opacity="0.4" />
+              <ellipse cx={x} cy={y} rx="21" ry="25" fill={colours[i % colours.length]} opacity="0.7" />
+              <ellipse cx={x - 7} cy={y - 9} rx="5" ry="8" fill="#ffffff" opacity="0.2" />
+            </g>
+          );
+        })}
+        <path d={`M120 ${H - 70} q30 -18 60 0 t60 0 M560 ${H - 30} q26 -16 52 0 t52 0 t52 0`} stroke="#cfc8b8" strokeOpacity="0.35" strokeWidth="5" fill="none" />
+      </g>,
+    );
+  }
+  if (c.has('snow')) {
+    // a foot of fresh snow, and more coming down
+    out.push(
+      <g key="snow">
+        <rect y={HZ} width={W} height={H - HZ} fill="#dfe6ee" opacity="0.34" />
+        <path d={`M0 ${HZ + 10} Q150 ${HZ - 22} 320 ${HZ + 4} T640 ${HZ - 2} T1000 ${HZ + 8} V${HZ + 40} H0 Z`} fill="#e8eef5" opacity="0.4" />
+        <path d={`M0 ${H} V${H - 46} Q220 ${H - 84} 470 ${H - 40} T1000 ${H - 60} V${H} Z`} fill="#eef3f8" opacity="0.34" />
+        <g fill="#ffffff" className={anim(c, styles.drift)}>
+          {Array.from({ length: 90 }, (_, i) => (
+            <circle key={i} cx={c.r() * W} cy={c.r() * H} r={0.9 + c.r() * 1.7} opacity={0.3 + c.r() * 0.5} />
+          ))}
+        </g>
       </g>,
     );
   }
@@ -2406,6 +2756,8 @@ export interface RoomSceneProps {
   /** Accessible name for the group of hotspots. */
   label?: string;
   className?: string;
+  /** The room itself (name, description, the case's setting): lets the drawing pick a more fitting scene than the key alone. */
+  place?: ScenePlace | null;
   /** Change this number to fire the photographer's flashbulb (evidence found). */
   flashKey?: number;
 }
@@ -2421,6 +2773,7 @@ export function RoomScene({
   label,
   className,
   flashKey = 0,
+  place = null,
 }: RoomSceneProps) {
   const sceneRef = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
@@ -2428,10 +2781,31 @@ export function RoomScene({
   const u = `rs${useId().replace(/[^a-zA-Z0-9]/g, '')}`;
   const [hoverId, setHoverId] = useState<string | null>(null);
   const art = backgroundArt(background);
-  const spec = useMemo(() => specFor(background), [background]);
-  const layout = useMemo(() => computeLayout(spec, hotspots, background), [spec, hotspots, background]);
+  const placeName = place?.name;
+  const placeDescription = place?.description;
+  const placeSetting = place?.setting;
+  const sceneKey = useMemo(
+    () => sceneKeyFor(background, placeName ? { name: placeName, description: placeDescription, setting: placeSetting } : null),
+    [background, placeName, placeDescription, placeSetting],
+  );
+  const spec = useMemo(() => specFor(sceneKey), [sceneKey]);
+  const layout = useMemo(() => computeLayout(spec, hotspots, sceneKey), [spec, hotspots, sceneKey]);
   const layers = useMemo(() => (art ? null : buildLayers(spec, layout, u, animated)), [art, spec, layout, u, animated]);
-  const ordered = useMemo(() => [...hotspots].sort((a, b) => a.y - b.y || a.x - b.x), [hotspots]);
+  // Hit areas in percent of the scene, from where each prop was seated. Real art keeps the authored boxes.
+  const hitById = useMemo(() => {
+    const map = new Map<string, { x: number; y: number; w: number; h: number }>();
+    if (!art) for (const p of layout.props) map.set(p.id, { x: p.hit.x / 10, y: p.hit.y / 6, w: p.hit.w / 10, h: p.hit.h / 6 });
+    return map;
+  }, [art, layout]);
+  const ordered = useMemo(
+    () =>
+      [...hotspots].sort((a, b) => {
+        const ha = hitById.get(a.id) ?? a;
+        const hb = hitById.get(b.id) ?? b;
+        return ha.y - hb.y || ha.x - hb.x;
+      }),
+    [hotspots, hitById],
+  );
   const interactive = !thumbnail && onExamine !== undefined;
 
   const paint: PropPaint = useMemo(
@@ -2450,6 +2824,7 @@ export function RoomScene({
   );
 
   const glowing = thumbnail ? null : (hoverId ?? activeId);
+  const openAir = spec.wall === 'open';
   const propLayer = useMemo(() => {
     if (art) return null;
     return layout.props.map((p) => {
@@ -2457,6 +2832,56 @@ export function RoomScene({
       const bottom = p.drawn.y + p.drawn.h;
       return (
         <g key={p.id} filter={glowing === p.id ? `url(#${u}-hot)` : undefined}>
+          {p.facade && (
+            // outdoors there is no back wall: give the window or door a piece of the house to be in
+            <g>
+              <rect x={p.facade.x} y={p.facade.y} width={p.facade.w} height={p.facade.h} fill={spec.palette.trim} />
+              <rect x={p.facade.x} y={p.facade.y} width={p.facade.w} height={p.facade.h} fill={spec.palette.accent} opacity="0.5" />
+              <rect x={p.facade.x - 6} y={p.facade.y - 6} width={p.facade.w + 12} height="8" fill={spec.palette.propBottom} />
+              <path d={`M${p.facade.x + p.facade.w} ${p.facade.y} V${p.facade.y + p.facade.h}`} stroke="#f2cd7a" strokeOpacity="0.18" strokeWidth="2" />
+            </g>
+          )}
+          {p.shelf && (
+            // a small thing on the wall rests on a shelf, with its brackets and its shadow
+            <g>
+              <rect x={p.shelf.x + 4} y={p.shelf.y + p.shelf.h} width={p.shelf.w - 8} height="10" fill="#000000" opacity="0.35" />
+              <path
+                d={`M${p.shelf.x + 12} ${p.shelf.y + p.shelf.h} v16 l14 -16 Z M${p.shelf.x + p.shelf.w - 12} ${p.shelf.y + p.shelf.h} v16 l-14 -16 Z`}
+                fill={spec.palette.propBottom}
+              />
+              <rect x={p.shelf.x} y={p.shelf.y} width={p.shelf.w} height={p.shelf.h} fill={spec.palette.propTop} />
+              <path d={`M${p.shelf.x} ${p.shelf.y} H${p.shelf.x + p.shelf.w}`} stroke="#f2cd7a" strokeOpacity="0.55" strokeWidth="1.5" />
+            </g>
+          )}
+          {p.stand &&
+            (openAir ? (
+              // out of doors: a crate
+              <g>
+                <ellipse cx={p.stand.x + p.stand.w / 2} cy={p.stand.y + p.stand.h} rx={p.stand.w * 0.6} ry="7" fill="#000000" opacity="0.5" />
+                <rect x={p.stand.x} y={p.stand.y} width={p.stand.w} height={p.stand.h} fill={spec.palette.propTop} />
+                <path
+                  d={`M${p.stand.x} ${p.stand.y + p.stand.h * 0.34} h${p.stand.w} M${p.stand.x} ${p.stand.y + p.stand.h * 0.68} h${p.stand.w} M${p.stand.x + p.stand.w * 0.5} ${p.stand.y} v${p.stand.h}`}
+                  stroke={spec.palette.propBottom}
+                  strokeWidth="3"
+                />
+                <path d={`M${p.stand.x} ${p.stand.y} h${p.stand.w} v${p.stand.h}`} stroke="#f2cd7a" strokeOpacity="0.5" strokeWidth="1.5" fill="none" />
+              </g>
+            ) : (
+              // indoors: a small side table
+              <g>
+                <ellipse cx={p.stand.x + p.stand.w / 2} cy={p.stand.y + p.stand.h} rx={p.stand.w * 0.42} ry="6" fill="#000000" opacity="0.5" />
+                <rect x={p.stand.x + p.stand.w / 2 - 3} y={p.stand.y + 4} width="6" height={p.stand.h - 6} fill={spec.palette.propBottom} />
+                <ellipse cx={p.stand.x + p.stand.w / 2} cy={p.stand.y + p.stand.h - 2} rx={p.stand.w * 0.26} ry="4" fill={spec.palette.propBottom} />
+                <ellipse cx={p.stand.x + p.stand.w / 2} cy={p.stand.y + 3} rx={p.stand.w / 2} ry="7" fill={spec.palette.propTop} />
+                <path
+                  d={`M${p.stand.x} ${p.stand.y + 3} a${p.stand.w / 2} 7 0 0 1 ${p.stand.w} 0`}
+                  stroke="#f2cd7a"
+                  strokeOpacity="0.55"
+                  strokeWidth="1.5"
+                  fill="none"
+                />
+              </g>
+            ))}
           {p.grounded && (
             <ellipse
               cx={cx + (cx - layout.lamp.poolX) * 0.05}
@@ -2467,11 +2892,11 @@ export function RoomScene({
               opacity="0.55"
             />
           )}
-          {renderProp({ label: p.label, box: p.box, paint, flip: p.flip, animated, seed: p.seed })}
+          {!p.hidden && renderProp({ label: p.label, box: p.box, paint, flip: p.flip, animated, seed: p.seed })}
         </g>
       );
     });
-  }, [art, layout, glowing, u, paint, animated]);
+  }, [art, layout, glowing, u, paint, animated, spec, openAir]);
 
   const classes = [styles.scene, thumbnail ? styles.thumb : '', className ?? ''].filter(Boolean).join(' ');
 
@@ -2539,10 +2964,12 @@ export function RoomScene({
           {ordered.map((h) => {
             const examined = examinedIds?.has(h.id) ?? false;
             const active = activeId === h.id;
-            const centre = h.x + h.width / 2;
+            // Click where the thing is drawn, which is not always where the case file put it.
+            const hit = hitById.get(h.id) ?? { x: h.x, y: h.y, w: h.width, h: h.height };
+            const centre = hit.x + hit.w / 2;
             const tagClass = [
               styles.tag,
-              h.y < 9 ? styles.tagBelow : '',
+              hit.y < 9 ? styles.tagBelow : '',
               centre < 14 ? styles.tagStart : centre > 86 ? styles.tagEnd : '',
             ]
               .filter(Boolean)
@@ -2553,10 +2980,12 @@ export function RoomScene({
                 type="button"
                 className={styles.hotspot}
                 style={{
-                  left: `${Math.max(0, h.x)}%`,
-                  top: `${Math.max(0, h.y)}%`,
-                  width: `${Math.min(h.width, 100 - h.x)}%`,
-                  height: `${Math.min(h.height, 100 - h.y)}%`,
+                  left: `${Math.max(0, hit.x)}%`,
+                  top: `${Math.max(0, hit.y)}%`,
+                  width: `${Math.min(hit.w, 100 - hit.x)}%`,
+                  height: `${Math.min(hit.h, 100 - hit.y)}%`,
+                  // A glass on a desk sits inside the desk's own area: smaller things go on top, so both can be clicked.
+                  zIndex: hit.w * hit.h < 120 ? 3 : hit.w * hit.h < 420 ? 2 : 1,
                 }}
                 aria-label={h.label}
                 aria-controls={controlsId}
@@ -2571,7 +3000,7 @@ export function RoomScene({
                 onPointerLeave={() => setHoverId((cur) => (cur === h.id ? null : cur))}
                 onFocus={(e) => {
                   setHoverId(h.id);
-                  if (e.currentTarget.matches(':focus-visible')) aimTorch(h.x + h.width / 2, h.y + h.height / 2);
+                  if (e.currentTarget.matches(':focus-visible')) aimTorch(hit.x + hit.w / 2, hit.y + hit.h / 2);
                 }}
                 onBlur={() => setHoverId((cur) => (cur === h.id ? null : cur))}
               >

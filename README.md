@@ -61,6 +61,7 @@ The server decides what a suspect is allowed to reveal, so you can't talk the an
 - [Accounts and cloud saves](#accounts-and-cloud-saves)
 - [Loading screens](#loading-screens)
 - [The film look](#the-film-look)
+- [Music](#music)
 - [Desktop app](#desktop-app-macos-and-windows)
 - [Your own art and sound](#your-own-art-and-sound)
 - [Accessibility](#accessibility)
@@ -302,11 +303,25 @@ The game is staged like a film noir picture. All of it is code: no image files.
 - **Case files**: each file carries a photograph of its crime scene. Sealed files are taped shut.
 - **The verdict**: a newspaper front page spins in, and the stamp lands on it.
 - **Evidence photographs** ([`EvidencePhoto.tsx`](web/src/components/EvidencePhoto.tsx)): every piece of evidence gets a picture of the object on a dark table, with a numbered police marker. They are drawn from the evidence name with the same prop drawings the rooms use, and appear on the board, in the notebook, in the evidence picker and on the accusation screen.
+- **A library of objects** ([`Props.tsx`](web/src/components/Props.tsx), [`PropsObjects.tsx`](web/src/components/PropsObjects.tsx), [`PropsFixtures.tsx`](web/src/components/PropsFixtures.tsx)): about a hundred kinds of thing, most with several looks, each picked from the words in a hotspot label or an evidence name. Shoes, a glove, a croquet mallet, jewellery, a wallet, banknotes, playing cards, a syringe, a bust, a camera, an anchor; sixteen sorts of paper from a telegram to an insurance policy; and room fixtures such as an elevator, a boiler, a switchboard, a soda fountain and a key board. A test checks that no hotspot in any story case falls back to the nameless box.
+- **Rooms that are furnished, not pasted** ([`scenePlacement.ts`](web/src/components/scenePlacement.ts)): the rectangles in a case file say which things are in a room and roughly on which side. The drawing lays the room out itself: doors and stairs go to the sides of the back wall, cabinets and bookcases stand along it, windows and pictures hang in the free stretches of wall, desks and tables stand free with the way to every door clear, and a glass or a letter goes on top of a piece of furniture (or gets a shelf or a small table). You click where the thing is drawn.
+- **Scenes that fit the room** ([`sceneKey.ts`](web/src/components/sceneKey.ts)): a case file can only name a background from a short list, so the drawing also reads the room's name, its description and the case's setting. A train's dining car, a chemist's shop, a snowed-in courtyard, a radio studio or a hotel laundry each get their own scene, without changing the case files.
 - **The board**: evidence hangs as photo prints, suspects show their own silhouette, and a street map and file label are pinned up behind them.
 - **The notebook**: wire binding down the edge, a stack of pages underneath, cards stuck in a little crooked.
 - **The lineup**: all suspects stand against the height chart behind one-way glass, each under a lamp in the colour of their mood. Narrow screens keep the small wall on each card.
 
 With reduced motion everything stands still: one frame of rain, no lightning, no train, no blinds. The light theme turns the city into an overcast afternoon.
+
+## Music
+
+All sound is made in the browser with the Web Audio API ([`web/src/audio/`](web/src/audio)); there are no audio files.
+
+- **Menu, "Last Call"**: slow noir jazz in C minor at 66 bpm. Electric piano, upright bass, a muted trumpet that plays one of two written takes or lays out, and brushes in the second half. Sixteen bars, about a minute per pass.
+- **On a case, "Paper Trail"**: suspense in D minor at 84 bpm. Low strings, plucked bass, vibraphone and celesta over a pedal note, in an A A B A form of thirty-two bars. Each eight bars it chooses between the written theme and improvised figures, so it does not sound like a short loop. The kind of place colours it: a club gets a brush backbeat, the harbour is sparser and darker.
+- The two pieces crossfade when you go from the menu into a case and back, and each resumes where it left off. Music pauses while the window is hidden.
+- There is no rain or noise bed any more. Short noise bursts remain only inside sound effects (a stamp, a page).
+
+The composition lives in [`music.ts`](web/src/audio/music.ts) as plain data with unit tests; [`instruments.ts`](web/src/audio/instruments.ts) holds the voices and [`musicPlayer.ts`](web/src/audio/musicPlayer.ts) the scheduler and the mix.
 
 ## Light mode
 

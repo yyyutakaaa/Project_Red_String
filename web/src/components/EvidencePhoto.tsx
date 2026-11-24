@@ -5,16 +5,32 @@
 import { useId } from 'react';
 import { hashString, propKindFor, renderProp, type PropPaint } from './Props.tsx';
 
-const TAIL = /\s+(?:from|in|on|of|for|to|at|with|under|behind)\s+/i;
+const TAIL = /\s+(?:from|in|on|of|for|to|at|with|under|behind|and)\s+/i;
 
-/** "Revolver from the rain barrel" is a picture of a revolver, not of a barrel. */
-function evidenceArtLabel(name: string): string {
-  const head = name.split(TAIL)[0] ?? name;
-  return propKindFor(head) !== 'item' ? head : name;
+/**
+ * The words to draw an evidence photograph from. Evidence names put the thing first and where it
+ * came from after ("Revolver from the rain barrel" is a picture of a revolver, not of a barrel), and
+ * a loose photograph is a print on the table, not a frame on the wall. The description settles
+ * what kind of bottle it is.
+ */
+function evidenceArtLabel(name: string, description = ''): string {
+  let head = name.split(TAIL)[0] ?? name;
+  if (propKindFor(head) === 'item') head = name;
+  head = head.replace(/\b(photograph|photo|print)\b/i, 'snapshot');
+  if (propKindFor(head) === 'bottle' && !/champagne|magnum|wine|whisk|gin|rum|bourbon/i.test(head)) {
+    if (/pharmac|tincture|chemist|medicine|poison|pill|drops|dose|strychnine|digitalis/i.test(`${name} ${description}`)) {
+      head = `medicine ${head}`;
+    }
+  }
+  return head;
 }
 
 interface EvidencePhotoProps {
   name: string;
+  /** The evidence description: helps pick the right drawing (a medicine bottle, not a wine bottle). */
+  description?: string;
+  /** Draw from the name exactly as given (a hotspot label), without the evidence rules. */
+  raw?: boolean;
   /** Number on the marker; leave out for no marker. */
   marker?: number;
   x?: number;
@@ -24,9 +40,9 @@ interface EvidencePhotoProps {
   className?: string;
 }
 
-export function EvidencePhoto({ name, marker, x, y, width = '100%', height = '100%', className }: EvidencePhotoProps) {
+export function EvidencePhoto({ name, description, raw = false, marker, x, y, width = '100%', height = '100%', className }: EvidencePhotoProps) {
   const uid = `ep${useId().replace(/[^a-zA-Z0-9]/g, '')}`;
-  const label = evidenceArtLabel(name);
+  const label = raw ? name : evidenceArtLabel(name, description);
   const paint: PropPaint = {
     body: `url(#${uid}-body)`,
     mid: '#2b3548',
