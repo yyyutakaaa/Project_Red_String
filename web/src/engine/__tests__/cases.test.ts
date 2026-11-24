@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 import { validateCase, computeReachability } from '@shared/validator.ts';
 import { parseCondition, type CaseFile } from '@shared/caseSchema.ts';
 import { BACKGROUND_KEYS, PORTRAIT_KEYS } from '@shared/assetKeys.ts';
@@ -84,7 +85,10 @@ describe.each(STORY_ORDER.map((id) => [id]))('story case %s', (id) => {
   it('is synced to the edge functions', () => {
     const synced = path.join(syncedDir, `${id}.json`);
     expect(existsSync(synced), 'run npm run sync:cases').toBe(true);
-    expect(readFileSync(synced, 'utf8')).toBe(readFileSync(path.join(casesDir, `${id}.json`), 'utf8'));
+    const minified = readFileSync(synced, 'utf8');
+    expect(minified, 'server copy is stale: run npm run sync:cases').toBe(JSON.stringify(load(id)));
+    const index = readFileSync(path.join(syncedDir, 'index.ts'), 'utf8');
+    expect(index).toContain(`'${id}': '${createHash('sha256').update(minified).digest('hex')}'`);
   });
 });
 

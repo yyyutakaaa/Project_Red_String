@@ -9,3 +9,5 @@ tools/eval/results/
 .DS_Store
 supabase/.temp/
 supabase/.branches/
+tools/eval/.env.local
+supabase/functions/**/deno.lock

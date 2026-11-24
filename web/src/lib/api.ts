@@ -187,21 +187,61 @@ export interface GenerateCaseResponse {
   attempts: number;
 }
 
-export async function generateCase(req: GenerateCaseRequest, signal?: AbortSignal): Promise<GenerateCaseResponse> {
+export interface GenerateProgress {
+  /** 1 for the first draft, 2 and 3 for repairs after validation errors. */
+  attempt: number;
+  errorCount: number;
+}
+
+interface GenerateStep {
+  status?: 'ready' | 'repairing';
+  job_id?: string;
+  attempts?: number;
+  error_count?: number;
+  remaining_today?: number | null;
+  generated_case_id?: string;
+  case?: CaseFile;
+}
+
+/**
+ * Generate a new case. The server makes one model call per request; when the validator rejects a draft
+ * it answers "repairing" with a job id and this client asks for the next repair (at most two).
+ */
+export async function generateCase(
+  req: GenerateCaseRequest,
+  signal?: AbortSignal,
+  onProgress?: (p: GenerateProgress) => void,
+): Promise<GenerateCaseResponse> {
   ensureConfigured();
-  let res: Response;
-  try {
-    res = await fetch(`${FUNCTIONS_URL}/generate-case`, {
-      method: 'POST',
-      headers: headers(),
-      body: JSON.stringify(req),
-      signal: signal ?? null,
-    });
-  } catch {
-    throw new ApiError('offline', 'Cannot reach the case office. Check your connection.');
+  let payload: Record<string, unknown> = { ...req };
+  let remaining: number | null = null;
+  for (let step = 0; step < 4; step++) {
+    let res: Response;
+    try {
+      res = await fetch(`${FUNCTIONS_URL}/generate-case`, {
+        method: 'POST',
+        headers: headers(),
+        body: JSON.stringify(payload),
+        signal: signal ?? null,
+      });
+    } catch {
+      if (signal?.aborted) throw new ApiError('timeout', 'Generation cancelled.');
+      throw new ApiError('offline', 'Cannot reach the case office. Check your connection.');
+    }
+    if (!res.ok) throw await errorFromResponse(res);
+    const body = (await res.json()) as GenerateStep;
+    if (typeof body.remaining_today === 'number' && body.remaining_today >= 0) remaining = body.remaining_today;
+    if (body.status === 'ready' && body.generated_case_id && body.case) {
+      return { generated_case_id: body.generated_case_id, case: body.case, remaining_today: remaining ?? 0, attempts: body.attempts ?? step + 1 };
+    }
+    if (body.status === 'repairing' && body.job_id) {
+      onProgress?.({ attempt: (body.attempts ?? step + 1) + 1, errorCount: body.error_count ?? 0 });
+      payload = { device_id: req.device_id, job_id: body.job_id };
+      continue;
+    }
+    throw new ApiError('server_error', 'Unexpected answer from the case office.');
   }
-  if (!res.ok) throw await errorFromResponse(res);
-  return (await res.json()) as GenerateCaseResponse;
+  throw new ApiError('invalid_case', 'The case writer could not produce a fair case. Try again.');
 }
 
 /** Cheap reachability probe used to show an offline banner before the player types. */

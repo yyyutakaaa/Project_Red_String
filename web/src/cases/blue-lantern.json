@@ -1,0 +1,868 @@
+{
+  "schema_version": 1,
+  "id": "blue-lantern",
+  "title": "The Blue Lantern",
+  "tagline": "Someone fired a shot during the drum solo. Nobody heard a thing.",
+  "setting": "The Blue Lantern, a jazz club in the Riverside district of Calder City",
+  "era": "February 1949",
+  "intro_briefing": [
+    "February 1949. It has rained on Calder City for three days straight, and tonight it hammers the tin awning of the Blue Lantern, the best jazz room in the Riverside district. It was a packed Saturday show: a full house, a hot band and a singer who can make a stevedore cry into his beer.",
+    "At five past midnight the bartender found the owner, Victor Kale, slumped behind the desk in his office behind the stage, shot once in the chest. Somewhere in a room full of horns and laughter a gun went off, and not one soul admits to hearing it.",
+    "The uniforms have locked the doors and sent the crowd home. Four people who matter are waiting for you: Kale's manager, Frank Dellow; his singer and former flame, Lena Marsh; her kid brother Danny, who tends the bar; and Kale's attorney, Leonard Vance, who came back through the rain when Frank telephoned him with the news.",
+    "Search the main floor, the bar, Kale's office, the dressing room and the alley out back. Question them, show them what you find, and pin it all to the board. When you know who pulled the trigger, make your accusation with proof that will stand up in court, Detective."
+  ],
+  "victim": {
+    "id": "kale",
+    "name": "Victor Kale",
+    "age": 49,
+    "description": "Owner of the Blue Lantern. A former rum-runner who bought his respectability one liquor license at a time: generous with drinks, merciless with debts, and trusting of nobody.",
+    "cause_of_death": "A single .38 bullet to the chest, fired at close range. The coroner puts death between 23:30 and 23:50. Nobody in the packed club reported hearing a shot.",
+    "found_in": "office",
+    "found_at": "at 00:05 by the bartender, Danny Marsh, slumped behind his desk"
+  },
+  "solution": {
+    "culprit_id": "frank",
+    "motive": "Victor Kale had found Frank Dellow's notebook proving he had skimmed the door take for a year, and told him that night he would be finished by Monday.",
+    "method": "During the long drum solo Frank sent the cashier on her break, took the club revolver from the bar safe whose combination only he and Kale knew, shot Kale in his office under cover of the drums, left by the alley door, dropped the gun in the rain barrel and walked round the block to come back in through the front entrance, soaked.",
+    "required_evidence": ["skim-ledger", "safe-revolver", "vance-statement"],
+    "reveal": "Frank Dellow had been robbing the Blue Lantern's door for a year, writing the true count in a black notebook and booking a smaller one. That week Victor Kale found the notebook, and at a quarter to ten on Saturday night he told Frank he was through on Monday. Frank arranged the noise himself: he ordered the drummer to play the long solo at 23:35 sharp, sent the cashier off on her break, and while the bar stood empty he opened the safe whose combination only he and Kale knew and took the tagged club revolver. Leonard Vance, sitting in Booth 9 where he had sworn he was not, watched him walk down the back corridor. Under cover of the drums Frank shot Kale across his own desk and tore the drawers apart hunting for the notebook, which Kale had taped behind the painting. He slipped out of the alley door, dropped the gun in the rain barrel, hurried past Lena and Danny Marsh, who were too busy hiding their own faces to see his, and walked round the block in the rain to come back in through the front entrance, soaked, just as the solo ended. The notebook gives him the motive, the safe tag on the revolver gives him the means, and Vance's statement breaks the alibi he built at the front door."
+  },
+  "timeline": [
+    {
+      "time": "20:00",
+      "location": "stage",
+      "who": ["kale", "frank", "danny", "lena"],
+      "what": "Doors open on a packed Saturday house at the Blue Lantern, with Lena Marsh to sing the first set at nine. It rains all night.",
+      "visibility": "public"
+    },
+    {
+      "time": "20:05",
+      "location": "bar",
+      "who": ["frank", "danny"],
+      "what": "Frank opens the bar safe to hand Danny the cash float for the till, then spins the dial shut.",
+      "visibility": "private"
+    },
+    {
+      "time": "20:30",
+      "location": "stage",
+      "who": ["vance"],
+      "what": "Leonard Vance arrives and takes Booth 9, beside the back corridor.",
+      "visibility": "public"
+    },
+    {
+      "time": "21:45",
+      "location": "office",
+      "who": ["kale", "frank"],
+      "what": "Kale calls Frank into the office, puts the black notebook he found on the desk, and tells him he is finished on Monday.",
+      "visibility": "hidden"
+    },
+    {
+      "time": "22:10",
+      "location": "bar",
+      "who": ["kale", "danny"],
+      "what": "In front of the whole bar, Victor Kale tells Danny Marsh that his $400 is due at midnight, and not a minute later.",
+      "visibility": "public"
+    },
+    {
+      "time": "22:20",
+      "location": "stage",
+      "who": ["frank"],
+      "what": "Frank tells the drummer, Eddie 'Sticks' Coyle, to play the long solo tonight at 23:35 sharp.",
+      "visibility": "private"
+    },
+    {
+      "time": "22:40",
+      "location": "office",
+      "who": ["lena", "kale"],
+      "what": "Between sets, Lena has a rye with Kale in his office and begs him to give Danny more time. He laughs at her.",
+      "visibility": "private"
+    },
+    {
+      "time": "23:00",
+      "location": "stage",
+      "who": ["lena"],
+      "what": "Lena Marsh's second set begins.",
+      "visibility": "public"
+    },
+    {
+      "time": "23:10",
+      "location": "office",
+      "who": ["vance", "kale"],
+      "what": "Vance calls on Kale in his office for ten minutes. Kale tells him to come back after the show.",
+      "visibility": "private"
+    },
+    {
+      "time": "23:30",
+      "location": "stage",
+      "who": ["lena"],
+      "what": "Lena finishes her second set and leaves the stage.",
+      "visibility": "public"
+    },
+    {
+      "time": "23:35",
+      "location": "stage",
+      "who": ["frank", "danny", "vance"],
+      "what": "The drummer launches into the long drum solo, which runs until about 23:50. The club is deafening and every head turns to the bandstand.",
+      "visibility": "public"
+    },
+    {
+      "time": "23:36",
+      "location": "alley",
+      "who": ["danny", "lena"],
+      "what": "Danny slips out through the kitchen door. Lena meets him in the laundry doorway across the alley and gives him $400 in a bank envelope.",
+      "visibility": "private"
+    },
+    {
+      "time": "23:37",
+      "location": "bar",
+      "who": ["frank"],
+      "what": "Frank sends Mae, the cashier, on her break, walks behind the empty bar, opens the safe and takes out the club revolver.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "time": "23:38",
+      "location": "stage",
+      "who": ["vance", "frank"],
+      "what": "From Booth 9, Vance sees Frank walk down the back corridor toward the office and the alley door.",
+      "visibility": "hidden"
+    },
+    {
+      "time": "23:40",
+      "location": "office",
+      "who": ["frank", "kale"],
+      "what": "Frank shoots Kale once in the chest under cover of the drums, then pulls the desk drawers apart looking for the notebook.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "time": "23:43",
+      "location": "alley",
+      "who": ["frank"],
+      "what": "Frank leaves by the alley door, drops the revolver into the rain barrel and walks out toward River Street with his hat pulled low.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "time": "23:44",
+      "location": "alley",
+      "who": ["lena", "danny"],
+      "what": "From the laundry doorway, Lena and Danny see a man in a dark overcoat and hat hurry past from the dead end toward River Street. They hide their faces, then Lena goes back in by the stage door and Danny by the kitchen.",
+      "visibility": "private"
+    },
+    {
+      "time": "23:50",
+      "location": "stage",
+      "who": ["vance", "frank"],
+      "what": "As the solo ends, Vance sees Frank come in through the front entrance from the street, soaked, and take up his place at the door.",
+      "visibility": "hidden"
+    },
+    {
+      "day": 1,
+      "time": "00:02",
+      "location": "stage",
+      "who": ["vance", "frank"],
+      "what": "Vance gives up waiting, leaves Booth 9 and goes out through the front entrance into the rain. Frank, back at the door, holds it open for him.",
+      "visibility": "private"
+    },
+    {
+      "day": 1,
+      "time": "00:05",
+      "location": "office",
+      "who": ["danny", "kale"],
+      "what": "Danny Marsh goes to the office to pay his debt and finds Victor Kale dead behind his desk.",
+      "visibility": "public"
+    }
+  ],
+  "offstage_locations": [],
+  "rooms": [
+    {
+      "id": "stage",
+      "name": "Main Floor and Stage",
+      "description": "Blue paper lanterns hang over thirty crowded little tables, emptied now, cigarettes still smoldering in the ashtrays. The bandstand sits at the far end with the instruments abandoned where the band dropped them. In one corner a back corridor runs toward the office and the alley door; at the other end of the room are the front entrance and the cashier's ticket window.",
+      "background": "stage",
+      "hotspots": [
+        {
+          "id": "piano",
+          "label": "Upright piano",
+          "x": 6,
+          "y": 46,
+          "width": 22,
+          "height": 30,
+          "description": "The house piano at the edge of the bandstand, its lid still up and a cold cup of coffee on top. Taped to the music desk is the band's set list for the night, one slot in the second half marked in heavy pencil and underlined twice.",
+          "evidence_id": "set-list"
+        },
+        {
+          "id": "microphone",
+          "label": "Microphone",
+          "x": 34,
+          "y": 40,
+          "width": 10,
+          "height": 32,
+          "description": "The singer's microphone stands alone at the lip of the stage under a blue spotlight nobody has thought to switch off. A silk scarf is draped over it, the way a singer does when her set is done.",
+          "evidence_id": null
+        },
+        {
+          "id": "ticket-window",
+          "label": "Ticket window",
+          "x": 50,
+          "y": 12,
+          "width": 16,
+          "height": 26,
+          "description": "The cashier's ticket window beside the front entrance. A card is propped against the glass in a round, schoolgirl hand: 'On my break, back by 11:50. Mr. Dellow has the door. - Mae.' Outside, the doorstep under the awning is bone dry; the pavement beyond it is a river.",
+          "evidence_id": null
+        },
+        {
+          "id": "booth",
+          "label": "Booth table",
+          "x": 70,
+          "y": 52,
+          "width": 22,
+          "height": 26,
+          "description": "Booth 9, in the corner where the back corridor begins. From this seat a man can watch the corridor to the office and, across the room, the front entrance at the same time. Two brandy rings stain the table, and the ashtray holds a neat row of cigarettes all smoked to exactly the same length.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "bar",
+      "name": "The Bar",
+      "description": "A long mahogany bar under a mirror gone smoky with years of cigarettes. A time clock is bolted beside the register so no chit goes unstamped. At the end of the bar a kitchen door swings onto the alley, and a squat green safe crouches under the back counter.",
+      "background": "bar",
+      "hotspots": [
+        {
+          "id": "tab-ledger",
+          "label": "Tab ledger",
+          "x": 8,
+          "y": 50,
+          "width": 18,
+          "height": 18,
+          "description": "The bar's tab ledger: every chit pinned in order, each one punched by the time clock Kale bolted to the bar because he trusted nobody's arithmetic but his own. One chit, for Booth 9, is initialled in a small, precise hand.",
+          "evidence_id": "vance-tab"
+        },
+        {
+          "id": "bottle-shelf",
+          "label": "Bottle shelf",
+          "x": 30,
+          "y": 10,
+          "width": 26,
+          "height": 28,
+          "description": "Rows of bottles glowing amber under the bar lights. On the top shelf a bottle of good Kentucky rye wears a strip of tape that reads 'V.K. ONLY'. The rest of the stock has been watered just enough to notice.",
+          "evidence_id": null
+        },
+        {
+          "id": "bar-safe",
+          "label": "Bar safe",
+          "x": 32,
+          "y": 58,
+          "width": 16,
+          "height": 22,
+          "description": "A squat green safe under the back counter, door shut, dial spun. A card is taped above the dial in Kale's heavy hand: 'COMBINATION - V.K. AND F.D. ONLY. NOBODY ELSE TOUCHES THIS SAFE.' A second card lists what lives inside: 'Float. Night deposit bags. Revolver (tagged).'",
+          "evidence_id": null
+        },
+        {
+          "id": "wall-phone",
+          "label": "Wall phone",
+          "x": 62,
+          "y": 14,
+          "width": 12,
+          "height": 26,
+          "description": "A wall telephone by the kitchen door. Pinned beside it is the staff roster, signed 'F.D.' in a backward-slanting hand that crosses its sevens, and a list of numbers: the bandleader, a cab company, the Riverside precinct, and one more that somebody has tried hard to scratch out.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "office",
+      "name": "Kale's Office",
+      "description": "A cramped, smoke-brown office behind the stage, where the drums still seem to throb through the wall. A chalk outline lies behind the desk. The drawers hang open, a barred window looks onto the alley, and a steel door lets out onto the dead end where the downspout empties into a rain barrel.",
+      "background": "office",
+      "hotspots": [
+        {
+          "id": "painting",
+          "label": "Oil painting",
+          "x": 8,
+          "y": 10,
+          "width": 22,
+          "height": 26,
+          "description": "An oil painting of the Blue Lantern's neon sign in the rain, a gift from some regular with more money than talent. It hangs a little crooked. Lifting it away from the wall, you find a cheap black notebook taped flat to the back of the canvas.",
+          "evidence_id": "skim-ledger"
+        },
+        {
+          "id": "cabinet",
+          "label": "Filing cabinet",
+          "x": 36,
+          "y": 24,
+          "width": 14,
+          "height": 38,
+          "description": "A dented green filing cabinet, every drawer still locked, untouched by whoever went through the desk. On top sits a parcel in brown paper and string with initials scrawled across it.",
+          "evidence_id": "green-ledger"
+        },
+        {
+          "id": "window",
+          "label": "Barred window",
+          "x": 56,
+          "y": 10,
+          "width": 18,
+          "height": 24,
+          "description": "Rain streams down a barred window onto the alley. Through it you can see the dead end: the steel alley door, the downspout, and a rain barrel brimming over. The bolt on the alley door has been drawn back from the inside.",
+          "evidence_id": null
+        },
+        {
+          "id": "desk",
+          "label": "Writing desk",
+          "x": 52,
+          "y": 52,
+          "width": 26,
+          "height": 28,
+          "description": "Kale's desk, with the chalk outline behind it. Every drawer has been yanked out and pawed through, papers everywhere, yet the cash box in the bottom drawer is still locked and heavy with money. Whoever searched this desk wanted something other than cash. On top of the mess lies a signed IOU.",
+          "evidence_id": "danny-iou"
+        },
+        {
+          "id": "glass",
+          "label": "Highball glass",
+          "x": 82,
+          "y": 56,
+          "width": 12,
+          "height": 16,
+          "description": "A highball glass on the side table by the door, a finger of rye left in the bottom and a crimson lipstick print on the rim. The ice melted a long time ago.",
+          "evidence_id": "lipstick-glass"
+        }
+      ]
+    },
+    {
+      "id": "dressing-room",
+      "name": "Lena's Dressing Room",
+      "description": "A narrow room off the stage corridor that smells of face powder and radiator dust. A ring of bare bulbs frames the mirror, gowns hang from an open wardrobe trunk, and the stage door to the alley is only a few steps down the corridor.",
+      "background": "dressing-room",
+      "hotspots": [
+        {
+          "id": "mirror",
+          "label": "Vanity mirror",
+          "x": 10,
+          "y": 10,
+          "width": 24,
+          "height": 30,
+          "description": "A mirror framed in bare bulbs, telegrams and photographs tucked into the frame, among them a snapshot of a girl and a much smaller boy on a Riverside pier. On the shelf below sits a gold lipstick tube, the shade printed on its base: 'Cherry Noir'. Dark, crimson and expensive.",
+          "evidence_id": null
+        },
+        {
+          "id": "chair",
+          "label": "Dressing chair",
+          "x": 14,
+          "y": 52,
+          "width": 18,
+          "height": 30,
+          "description": "A velvet dressing chair pushed back from the mirror. Kicked underneath it, beside the hissing radiator, is a pair of silver satin stage shoes.",
+          "evidence_id": "wet-shoes"
+        },
+        {
+          "id": "trunk",
+          "label": "Wardrobe trunk",
+          "x": 44,
+          "y": 46,
+          "width": 22,
+          "height": 36,
+          "description": "A battered wardrobe trunk stands open, gowns on hangers and a feather boa over the lid. Tucked into an inside pocket is a railway timetable for the Chicago line with Tuesday's train circled twice.",
+          "evidence_id": null
+        },
+        {
+          "id": "record-player",
+          "label": "Record player",
+          "x": 74,
+          "y": 50,
+          "width": 16,
+          "height": 20,
+          "description": "A portable record player on a stool, a stack of torch-song records beside it. The record on the turntable has played through, and the needle is hissing in the run-out groove. One side of a record like that plays for three minutes, no more; after that, anyone passing in the corridor hears only the hiss.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "alley",
+      "name": "The Back Alley",
+      "description": "A narrow cinder alley behind the club, running from a dead end at the steel door of Kale's office out to River Street. Rain sheets off the fire escapes and roars down the downspouts. Across from the stage door, a shuttered laundry offers the only dry doorway in the alley.",
+      "background": "alley",
+      "hotspots": [
+        {
+          "id": "barrel",
+          "label": "Rain barrel",
+          "x": 6,
+          "y": 50,
+          "width": 16,
+          "height": 30,
+          "description": "A wooden rain barrel at the dead end of the alley, under the downspout and two steps from the steel door of Kale's office. It is brimming over. You roll up your sleeve and reach to the bottom, and your fingers close on something heavy and metal.",
+          "evidence_id": "safe-revolver"
+        },
+        {
+          "id": "alley-door",
+          "label": "Alley door",
+          "x": 26,
+          "y": 14,
+          "width": 14,
+          "height": 40,
+          "description": "The steel back door of Kale's office. It can only be opened from the inside, and tonight somebody drew the bolt. Wet cinders are scuffed across the sill, tracked outward into the alley rather than in.",
+          "evidence_id": null
+        },
+        {
+          "id": "fire-escape",
+          "label": "Fire escape stairs",
+          "x": 46,
+          "y": 8,
+          "width": 22,
+          "height": 34,
+          "description": "The fire escape zigzags up the back wall above the stage door, its ladder pulled up out of reach. Rain pours off every landing in a curtain. Anyone standing under it would be soaked to the skin in seconds.",
+          "evidence_id": null
+        },
+        {
+          "id": "crates",
+          "label": "Gin crates",
+          "x": 44,
+          "y": 58,
+          "width": 18,
+          "height": 22,
+          "description": "Empty gin crates stacked by the kitchen door, a dozen cigarette butts ground into the cinders beside them: the bartender's smoking spot. One butt is fresh and barely smoked, thrown away in a hurry.",
+          "evidence_id": null
+        },
+        {
+          "id": "laundry-door",
+          "label": "Laundry door",
+          "x": 72,
+          "y": 30,
+          "width": 18,
+          "height": 40,
+          "description": "The deep, recessed doorway of the shuttered Riverside Steam Laundry, across from the stage door: the only dry spot in the alley, and deep enough for two people to stand out of the light. Something pale lies trodden into the cinders on the step.",
+          "evidence_id": "cash-envelope"
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "skim-ledger",
+      "name": "Black pocket notebook",
+      "description": "A cheap black notebook that was taped behind the painting in Kale's office. Fifty-odd weeks of figures in two columns headed 'Door' and 'Booked', the first always larger, the difference totalled in the margin: a little over six thousand dollars since last February. The hand slants backward and crosses its sevens, like the 'F.D.' on the staff roster by the bar telephone. Clipped inside is a slip in Victor Kale's heavy scrawl: 'F. - Monday. OUT.'",
+      "found_in": "office",
+      "points_to": ["frank"],
+      "is_red_herring": false
+    },
+    {
+      "id": "safe-revolver",
+      "name": "Revolver from the rain barrel",
+      "description": "A .38 revolver from the bottom of the rain barrel at the dead end of the alley, two steps from the back door of Kale's office. One chamber has been fired. A brass tag wired through the trigger guard is stamped 'BLUE LANTERN - BAR SAFE'. The water has taken any prints, but whoever dropped it here first had to get it out of a locked safe.",
+      "found_in": "alley",
+      "points_to": ["frank"],
+      "is_red_herring": false
+    },
+    {
+      "id": "vance-statement",
+      "name": "Leonard Vance's statement",
+      "description": "A statement signed by Leonard Vance. From Booth 9, beside the back corridor, he watched Frank Dellow walk down the corridor toward the office and the alley door two or three minutes into the drum solo, and never saw him come back that way. As the solo ended he saw Frank come in through the front entrance from the street, hat and overcoat soaked through, and take his place at the door as if he had never left it.",
+      "found_in": "vance",
+      "points_to": ["frank"],
+      "is_red_herring": false
+    },
+    {
+      "id": "set-list",
+      "name": "Band set list",
+      "description": "The house band's set list, taped to the piano. Under the second half of the night, in heavy pencil: '11:35 SHARP - STICKS, THE LONG ONE. 15 MIN, LOUD AS YOU LIKE. - F.D.' The drummer has underlined it twice. A solo that long would fill the club with noise from 23:35 until about 23:50, squarely inside the coroner's window.",
+      "found_in": "stage",
+      "points_to": ["frank"],
+      "is_red_herring": false
+    },
+    {
+      "id": "vance-tab",
+      "name": "Booth 9 bar chit",
+      "description": "A chit from the bar's tab ledger for Booth 9, initialled 'L.V.' in a small, precise hand. Two brandies punched by the bar's time clock at 23:22, then one brandy and a soda punched at 23:58. Whoever sat in Booth 9 was still ordering long after the drum solo was over.",
+      "found_in": "bar",
+      "points_to": ["vance"],
+      "is_red_herring": true
+    },
+    {
+      "id": "green-ledger",
+      "name": "Parcel for L.V.",
+      "description": "A parcel in brown paper and string from the top of the filing cabinet, marked 'L.V. - after the show' in Kale's scrawl. Inside is a green cloth ledger: two years of large deposits from 'L.V.', paid out again a few weeks later as 'band fees' to orchestras that never played the Blue Lantern. Somebody has been moving a great deal of money through this club, and Kale kept the books on it.",
+      "found_in": "office",
+      "points_to": ["vance"],
+      "is_red_herring": true
+    },
+    {
+      "id": "danny-iou",
+      "name": "Danny Marsh's IOU",
+      "description": "An IOU for $400 signed 'Danny Marsh', payable to V. Kale, lying on top of the rifled desk drawers. Underneath, in Kale's scrawl: 'Saturday midnight. Or the hands.' The bartender had a debt falling due at the very hour his boss died.",
+      "found_in": "office",
+      "points_to": ["danny"],
+      "is_red_herring": true
+    },
+    {
+      "id": "lipstick-glass",
+      "name": "Lipstick-marked glass",
+      "description": "A highball glass from the side table in Kale's office, a finger of rye left in it and a crisp crimson lipstick print on the rim. The shade is dark and expensive, the kind a singer wears under stage lights. The ice melted long ago; the glass has been standing a good while.",
+      "found_in": "office",
+      "points_to": ["lena"],
+      "is_red_herring": true
+    },
+    {
+      "id": "cash-envelope",
+      "name": "Wet bank envelope",
+      "description": "A Riverside Savings Bank envelope, soaked and empty, trodden into the cinders of the laundry doorway across from the stage door. Pencilled on the flap in a looping hand: 'D. - 400. Pay him and be done with it. L.' The doorway shows two sets of prints out of the rain: a man's shoes and a woman's narrow heels.",
+      "found_in": "alley",
+      "points_to": ["lena", "danny"],
+      "is_red_herring": true
+    },
+    {
+      "id": "wet-shoes",
+      "name": "Wet stage shoes",
+      "description": "A pair of silver satin stage shoes from under the dressing chair, soaked dark to the ankle straps and gritty with black alley cinders. Everything else in the dressing room is dry. Whoever wore them tonight stood outside in the rain.",
+      "found_in": "dressing-room",
+      "points_to": ["lena"],
+      "is_red_herring": true
+    }
+  ],
+  "suspects": [
+    {
+      "id": "frank",
+      "name": "Frank Dellow",
+      "role": "Manager of the Blue Lantern",
+      "age": 44,
+      "portrait": "man-hat",
+      "color": "#8a6a3c",
+      "personality": "Genial, back-slapping and endlessly helpful: the man who knows every regular's name and every patrolman's birthday. Underneath the grin he is a careful accountant of other people's weaknesses, and twelve years as Kale's right hand have taught him to smile while he counts. When cornered he gets more helpful, not less, and steers the talk toward other people's troubles.",
+      "speech_style": "Warm, quick big-city patter. Calls the detective 'pal' or 'Detective, my friend'. Laces his answers with club talk: the take, the door, the float, a full house. Says 'Honest to God' when he is lying. Answers a question with a question when he needs time, and his laugh always comes a beat too late.",
+      "alibi": "I stood at the front door with Mae, our cashier, the whole drum solo, same as every Saturday. The walk-ins never stop on a night like this. I didn't leave that door until Danny started hollering at five past twelve.",
+      "public_facts": [
+        "Frank Dellow has managed the Blue Lantern for Victor Kale for twelve years. He runs the door, the staff and the nightly take.",
+        "Frank and Victor Kale are the only two people who know the combination of the bar safe.",
+        "On winter nights Frank works the front door in his dark overcoat and hat, greeting every regular by name."
+      ],
+      "private_knowledge": [
+        "Danny Marsh lost $400 to Victor at the Thursday card game in the back room.",
+        "At about 23:10 you saw Leonard Vance leave Booth 9 and go down the back corridor to Victor's office for ten minutes.",
+        "Leonard Vance comes in most Saturdays and leaves with a parcel from Victor's office. You never asked what was in them.",
+        "Lena Marsh and Victor were an item until last autumn. She ended it, and Victor did not take it well.",
+        "You held the front door for Leonard Vance when he left at about two minutes past twelve. You have kept that to yourself: if he sat in Booth 9 right through the solo, you do not want anyone asking him what he saw."
+      ],
+      "lies": [
+        {
+          "topic": "Where he was during the drum solo",
+          "claim": "At the front door with Mae the whole solo. Never moved an inch.",
+          "truth": "You sent Mae off on her break as the drums started, went behind the empty bar and then down the back corridor, and only came back in from the street through the front entrance, soaked, as the solo finished."
+        },
+        {
+          "topic": "Money between him and Victor",
+          "claim": "Victor and I were square. Twelve years together and never a cross word about money.",
+          "truth": "Victor called you into the office at a quarter to ten, slapped your black notebook down on the desk, and told you that come Monday you were out on your ear and the police would hear about the door money."
+        },
+        {
+          "topic": "The bar safe and the club revolver",
+          "claim": "That safe was shut from eight o'clock on. I opened it once for Danny's float and never touched it again.",
+          "truth": "You opened the safe again while the bar stood empty during the solo and took the tagged revolver out of it."
+        },
+        {
+          "topic": "Why his hat and coat were wet",
+          "claim": "I stepped out to the curb for a minute to whistle up a cab for a regular, that's all.",
+          "truth": "You came round the block from the alley in the rain so nobody would see you come back up the back corridor."
+        }
+      ],
+      "secrets": [
+        "You were born Francis Dellacroce and did eighteen months in a New Jersey reformatory before you changed your name and came to Calder City."
+      ],
+      "never_reveal": [
+        "That you walked into Victor's office with the bar gun while Sticks was pounding the skins, put one bullet in his chest across his own desk, tore his drawers apart hunting for your book, then dumped the gun in the rain barrel and walked round the block in the rain."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "frank-danny-debt",
+          "text": "Volunteers that Danny Marsh lost $400 to Victor at the Thursday card game, and that Victor told the kid in front of the whole bar it was due at midnight.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "frank-vance-visit",
+          "text": "Mentions that Leonard Vance comes in most Saturdays and leaves with a parcel from Victor's office, and that tonight, at about 23:10, Vance went back to the office for ten minutes.",
+          "condition": "pressed"
+        },
+        {
+          "clue_id": "frank-combination",
+          "text": "Concedes that only he and Victor knew the bar safe combination and that the club's tagged revolver was kept inside it; insists he opened the safe only once, at 20:05, to give Danny the float.",
+          "condition": "pressed"
+        },
+        {
+          "clue_id": "frank-long-solo",
+          "text": "Admits he told the drummer to play the long solo at 23:35 sharp; claims a long solo keeps a Saturday crowd in its seats and buying drinks.",
+          "condition": "shown_evidence:set-list"
+        },
+        {
+          "clue_id": "frank-confronted",
+          "text": "Admits the black notebook is his, and that Victor called him into the office at a quarter to ten, threw it on the desk and told him to clear out on Monday. Swears he meant to pay back every dime.",
+          "condition": "shown_evidence:skim-ledger"
+        },
+        {
+          "clue_id": "frank-cab-story",
+          "text": "Admits he was away from the front door during the solo and came back in wet. Claims he walked a regular to the corner of River Street to find a cab, but cannot name the regular and cannot explain why he went down the back corridor.",
+          "condition": "shown_evidence:vance-statement"
+        }
+      ],
+      "breaks_on": ["skim-ledger", "safe-revolver", "vance-statement"],
+      "patience": 14,
+      "deflections": [
+        "*straightens his tie and flashes a grin*  Pal, I got a club full of cops and a dead boss. Give me a minute, huh?",
+        "*counts something on his fingers, then stops*  Honest to God, Detective, I told you everything I know.",
+        "*glances toward the front door*  Ask Mae. Ask anybody. I was where I always am.",
+        "*lights a fresh cigarette off the last one*  You want a drink? On the house. Then we talk."
+      ],
+      "alibi_verification": {
+        "status": "broken",
+        "evidence_ids": ["vance-statement", "set-list"],
+        "clue_ids": ["lena-stranger", "danny-alley"],
+        "note": "Mae's card in the ticket window shows Frank was alone at the door from the start of the solo. Vance's statement puts him in the back corridor two or three minutes into the solo and coming in from the street, soaked, as it ended. The set list shows Frank scheduled the long, loud solo himself, and Lena and Danny saw a man in a dark overcoat and hat leave the dead end by the office door at about 23:44, past the rain barrel."
+      }
+    },
+    {
+      "id": "vance",
+      "name": "Leonard Vance",
+      "role": "Attorney-at-law, Vance and Pryor; Victor Kale's lawyer",
+      "age": 54,
+      "portrait": "man-glasses",
+      "color": "#6b7f99",
+      "personality": "Smooth, precise and unfailingly courteous, a man who has spent thirty years making other people's trouble disappear on paper. He weighs every sentence before he lets it out and never quite says no. Beneath the polish he has been living on borrowed time and borrowed money, and the strain shows only in how carefully he keeps his hands still.",
+      "speech_style": "Measured, lawyerly and faintly amused. Fond of 'strictly speaking' and the occasional Latin tag: de minimis, caveat emptor, res ipsa loquitur. Addresses the detective as 'Detective' with a slight bow in the voice. Qualifies everything ('to the best of my recollection', 'I would not characterize it that way'). Never raises his voice; when pressed he becomes more formal, not less.",
+      "alibi": "I took a quiet brandy in a booth, conferred briefly with my client in his office, and left a little before half past eleven, well before that infernal drum solo. I was home before midnight, and in bed when Mr. Dellow telephoned with the news.",
+      "public_facts": [
+        "Leonard Vance, of the firm Vance and Pryor, has been Victor Kale's attorney for six years and handles the club's leases and liquor license.",
+        "Vance arrived at about 20:30 and took Booth 9, beside the back corridor that leads to the office and the alley door.",
+        "Vance also administers several old family trusts in Calder City, the Ashgrove trust among them.",
+        "Frank Dellow telephoned Vance at home after the body was found, and Vance came back to the club as Kale's attorney."
+      ],
+      "private_knowledge": [
+        "You do not know the combination of the bar safe, and you have never fired a gun in your life.",
+        "Danny Marsh served you all evening. You tipped him a dollar a drink because you know he is in debt, and you have a weakness for lost causes."
+      ],
+      "lies": [
+        {
+          "topic": "When he left the club",
+          "claim": "I left a little before half past eleven, before the drum solo began. I was home by midnight.",
+          "truth": "You never left before the solo. You sat in Booth 9 waiting for Kale, and from there you watched Frank Dellow go down the back corridor early in the drum solo and, as it ended, come in from the street through the front entrance, soaked to the skin. At about two minutes past twelve you gave up waiting and went out by the front door, a minute or two before Danny found the body."
+        },
+        {
+          "topic": "Why he came to the club tonight",
+          "claim": "A social call on a client, and a word about renewing the liquor license. Nothing more.",
+          "truth": "You came to collect 'the other books': the green ledger in which your own money has been passing through the club as band fees."
+        }
+      ],
+      "secrets": [
+        "The money that has passed through the Blue Lantern's books is not really yours: you have been quietly borrowing it from the Ashgrove Family Trust you administer, and running it through Kale's club so no auditor could follow it.",
+        "Since Edmund Ashgrove died last October, his daughter Clara has twice asked you for a full accounting of the Ashgrove trust. You came for the green ledger tonight to get it out of Kale's hands before anyone audits you."
+      ],
+      "never_reveal": [
+        "That the money in the green ledger was taken, without permission, from the Ashgrove Family Trust."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "vance-kale-alive",
+          "text": "Confirms he called on Victor in the office at about 23:10 on what he calls club business, and found him alive, cheerful and impatient to get back to the show.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "vance-clean-house",
+          "text": "Says that on Friday Victor told him he had caught one of his own people with a hand in the till for the better part of a year, and meant to clean house on Monday. Victor would not say who.",
+          "condition": "pressed"
+        },
+        {
+          "clue_id": "vance-green-ledger",
+          "text": "Admits the green ledger is a private account Victor kept for him: money of his own that he moved through the club's books as band fees, and the parcel was his to collect after the show. Points out that the parcel was still sitting on the cabinet; had he been in that office during the solo, it would have left with him.",
+          "condition": "shown_evidence:green-ledger"
+        },
+        {
+          "clue_id": "vance-saw-frank",
+          "text": "Admits he did not leave until about two minutes past twelve: he sat in Booth 9 waiting for his parcel. Two or three minutes into the drum solo he saw Frank Dellow walk down the back corridor toward the office and the alley door, and he never saw him come back that way. As the solo ended, Frank came in through the front entrance from the street, hat and coat soaked through, and took his place by the door as if he had never left it. Vance agrees to sign a statement.",
+          "condition": "shown_evidence:vance-tab",
+          "evidence_id": "vance-statement"
+        }
+      ],
+      "breaks_on": ["vance-tab", "green-ledger"],
+      "patience": 12,
+      "deflections": [
+        "*removes his spectacles and polishes them with great care*  Strictly speaking, Detective, that is a question for my client, and my client is no longer available.",
+        "*a thin smile*  I would not characterize it that way. Ask me something else.",
+        "*glances at his watch*  Tempus fugit, Detective. If you have a specific question, I am at your disposal.",
+        "*folds his hands on the table*  I have nothing further to add at this time."
+      ],
+      "alibi_verification": {
+        "status": "broken",
+        "evidence_ids": ["vance-tab"],
+        "clue_ids": ["danny-vance-booth"],
+        "note": "Vance claims he left before 23:30, but the Booth 9 chit was punched at 23:58 and Danny saw him in the booth near midnight. He lied to hide why he was there, not a killing: he does not know the safe combination, his parcel was left untouched in the office, and his account of Frank fits Mae's break card, the alley glimpse and the rain barrel."
+      }
+    },
+    {
+      "id": "lena",
+      "name": "Lena Marsh",
+      "role": "Singer at the Blue Lantern; Victor Kale's former lover",
+      "age": 31,
+      "portrait": "woman-long",
+      "color": "#7a5a9c",
+      "personality": "A torch singer with a voice like smoke and a temper she keeps on a short leash. Proud, weary and fiercely protective of her kid brother, whom she has been bailing out since their mother died. She ended things with Kale last autumn and has hated herself a little for every song she has sung for him since. She lies badly for herself and well for Danny.",
+      "speech_style": "Low, slow and husky, with long pauses she uses like rests in a song. Calls the detective 'honey' when she is annoyed and 'Detective' when she is scared. Talks in short, smoky images: rain on the skylight, cheap rye and cheaper promises. Turns cold and clipped whenever Danny is mentioned.",
+      "alibi": "When my set ended I went straight to my dressing room, shut the door and stayed there through the whole drum solo. Alone. Taking my face off.",
+      "public_facts": [
+        "Lena Marsh has sung at the Blue Lantern for four years and headlines the Saturday shows.",
+        "Lena and Victor Kale were lovers until last autumn, when she ended it.",
+        "Lena is the older sister of Danny Marsh, the bartender."
+      ],
+      "private_knowledge": [
+        "Danny lost $400 to Victor at cards, and Victor swore he would have Danny's hands broken if it was not paid by midnight.",
+        "On Friday you took most of your savings out of the Riverside Savings Bank to cover Danny's debt.",
+        "Out in the alley, over the rain and the drums coming through the wall, you heard nothing that sounded like a shot.",
+        "Before you slipped out, you put a record on in your dressing room so anyone passing would think you were inside."
+      ],
+      "lies": [
+        {
+          "topic": "Where she was during the drum solo",
+          "claim": "Alone in my dressing room with the door shut, taking my face off.",
+          "truth": "You slipped out the stage door into the alley and met Danny in the laundry doorway to give him $400 in a bank envelope so he could pay Victor. You were out there from about 23:36 until about 23:44."
+        },
+        {
+          "topic": "When she last saw Victor",
+          "claim": "I haven't set foot in his office in months. We were finished.",
+          "truth": "You had a rye with him in his office at about 22:40 and begged him to give Danny more time. He laughed at you."
+        }
+      ],
+      "secrets": [
+        "You have signed with a club in Chicago and mean to leave on Tuesday's train without telling Danny."
+      ],
+      "never_reveal": [
+        "That in 1946 you hid Danny in your rooms for a week while the police were looking for whoever broke a man's jaw outside a Riverside pool hall."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "lena-past",
+          "text": "Says she ended it with Victor last autumn because he treated people like entries in a ledger, and that she kept singing for him only because the Blue Lantern pays better than any room in town.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "lena-frank-jumpy",
+          "text": "Says Frank Dellow had been jumpy all week, snapping at the staff and watching the office door, and that he and Victor had stopped speaking to each other except in front of customers.",
+          "condition": "pressed"
+        },
+        {
+          "clue_id": "lena-drink",
+          "text": "Admits the lipstick on the glass is hers: at about 22:40, between sets, she had a rye with Victor in his office and begged him to give Danny more time. He laughed at her, and she walked out leaving him alive and pouring another.",
+          "condition": "shown_evidence:lipstick-glass"
+        },
+        {
+          "clue_id": "lena-alley",
+          "text": "Admits she lied about the dressing room: during the drum solo she slipped out the stage door and met Danny in the laundry doorway across the alley to give him $400 in a bank envelope for his debt. They were together the whole time, from about 23:36 to 23:44. She lied because she was afraid Danny would hang for it.",
+          "condition": "shown_evidence:cash-envelope"
+        },
+        {
+          "clue_id": "lena-stranger",
+          "text": "Admits she was out in the alley during the solo, and that while she stood in the laundry doorway a man in a dark overcoat, hat brim pulled low, came from the dead end by Victor's back door and hurried past toward River Street at about a quarter to twelve. She turned her face to the wall and never saw his.",
+          "condition": "shown_evidence:wet-shoes"
+        }
+      ],
+      "breaks_on": ["wet-shoes", "cash-envelope", "lipstick-glass"],
+      "patience": 12,
+      "deflections": [
+        "*draws her shawl tighter and looks at the rain on the window*  Ask me again tomorrow, Detective. I sang two sets tonight.",
+        "*lets out a long breath of smoke*  Honey, I've got nothing left to give tonight.",
+        "*turns her face toward the mirror*  Leave my brother out of this.",
+        "*hums a bar of something sad and doesn't answer*"
+      ],
+      "alibi_verification": {
+        "status": "broken",
+        "evidence_ids": ["wet-shoes", "cash-envelope"],
+        "clue_ids": ["danny-alley"],
+        "note": "Her dressing-room story is false: her stage shoes are soaked with alley cinders and her envelope lies in the laundry doorway. But Danny confirms she was with him in the doorway from about 23:36 to 23:44, the minutes the shot was fired, far from the office and with no way into the bar safe."
+      }
+    },
+    {
+      "id": "danny",
+      "name": "Danny Marsh",
+      "role": "Bartender at the Blue Lantern; Lena's younger brother",
+      "age": 23,
+      "portrait": "young-man",
+      "color": "#4f7a5a",
+      "personality": "Eager, jittery and too charming for his own good, a kid who thinks the next hand of cards will fix everything. He worships his sister and resents needing her. He found the body and has not stopped shaking since. He lies quickly and badly, then over-explains.",
+      "speech_style": "Fast, nervous Riverside slang: on the level, square, a sap, the dough. Calls the detective 'sir', and sometimes 'Officer' by mistake. Talks with his hands, interrupts himself, and says 'Look, look, look' whenever he is cornered.",
+      "alibi": "I was behind the bar the whole drum solo, polishing glasses. Nobody orders during the solo, so I just stood there. Then at five past twelve I went back to see Mr. Kale and found him.",
+      "public_facts": [
+        "Danny Marsh has tended bar at the Blue Lantern for two years.",
+        "Victor Kale told Danny in front of the whole bar that his $400 was due at midnight.",
+        "Danny found Victor Kale dead in the office at 00:05 and raised the alarm."
+      ],
+      "private_knowledge": [
+        "Frank Dellow opens the bar safe every night to give you the cash float. You do not know the combination.",
+        "You lost $400 to Victor Kale at the Thursday card game in the back room.",
+        "Mr. Vance in Booth 9 tipped you a dollar a drink all night."
+      ],
+      "lies": [
+        {
+          "topic": "Where he was during the drum solo",
+          "claim": "Behind the bar the whole time, polishing glasses.",
+          "truth": "You slipped out the kitchen door at the start of the solo and met Lena in the laundry doorway across the alley, where she gave you $400 to pay Kale. You came back in through the kitchen at about 23:44."
+        },
+        {
+          "topic": "The money in his pocket",
+          "claim": "That's my tips, sir. Saturday's a good night.",
+          "truth": "It is the $400 Lena gave you to pay off your IOU. You were carrying it to Kale's office when you found him dead."
+        }
+      ],
+      "secrets": [
+        "On weeknights you take numbers bets across the bar for a Riverside bookmaker."
+      ],
+      "never_reveal": [
+        "The name of the Riverside bookmaker you take numbers bets for."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "danny-safe",
+          "text": "Explains that the club revolver lives in the bar safe with a brass tag on it, and only Mr. Kale and Frank know the combination. Danny has to ask Frank to open it for the float, which Frank did at 20:05.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "danny-vance-booth",
+          "text": "Says Mr. Vance sat in Booth 9 by the back corridor all night, and was still there ordering a last brandy and a soda just before midnight.",
+          "condition": "pressed"
+        },
+        {
+          "clue_id": "danny-debt",
+          "text": "Admits he owed Mr. Kale $400 from the Thursday card game and that the $400 in his pocket was meant to pay it at midnight. He went to the office at 00:05 to pay and found Kale dead.",
+          "condition": "shown_evidence:danny-iou"
+        },
+        {
+          "clue_id": "danny-alley",
+          "text": "Admits he was not behind the bar during the solo: he slipped out the kitchen door and met Lena in the laundry doorway, where she gave him the $400 in the bank envelope. They were together from about 23:36 to 23:44. While they stood there, a man in a dark overcoat and a low hat hurried past from the dead end by the office door toward River Street, but Danny kept his face turned away and never saw the man's.",
+          "condition": "shown_evidence:cash-envelope"
+        }
+      ],
+      "breaks_on": ["cash-envelope", "danny-iou"],
+      "patience": 11,
+      "deflections": [
+        "*wipes the same glass for the third time*  Look, look, look, I told the other cops already, sir.",
+        "*jams his shaking hands into his apron*  Can I get some air? Just a minute.",
+        "*stares at the office door*  I keep seeing him in there. I can't. Not right now.",
+        "*swallows hard*  You want me to say I did something I didn't do? I won't, Officer. Sir."
+      ],
+      "alibi_verification": {
+        "status": "broken",
+        "evidence_ids": ["cash-envelope"],
+        "clue_ids": ["lena-alley"],
+        "note": "He was not behind the bar: he was in the laundry doorway with Lena from about 23:36 to 23:44, as her envelope and her confession show. He does not know the safe combination, and he was carrying the $400 to pay Kale, not to kill him."
+      }
+    }
+  ],
+  "hints": [
+    "Nobody in a packed club heard a shot. Find out when the room was at its loudest: the bandstand can tell you, and so can the coroner's window.",
+    "Every one of these four has lied about where they were during the drum solo. Pin each story to the board, then search each room for the thing that contradicts it: a bar chit, a pair of shoes, an envelope in the rain.",
+    "The gun went into the water, but it came out of a safe. Search the alley, then read the cards on the bar safe and ask the bartender who can open it.",
+    "Kale's desk was torn apart but his cash box was left full. Whoever searched it wanted a document, not money, and Kale was the kind of man who hid things behind other things.",
+    "Leonard Vance swears he went home before 23:30. The bar's time clock says otherwise. Show him his own chit and ask what he saw from Booth 9.",
+    "Lena and Danny Marsh are covering for each other, not for a killer. Show either of them the bank envelope from the laundry doorway, then ask yourself who walked past them in the rain, and who came back in through the front soaking wet.",
+    "Look hard at Frank Dellow: combine the black notebook behind the painting, the revolver from the rain barrel, and Leonard Vance's signed statement."
+  ],
+  "endings": {
+    "correct": "Frank Dellow takes the cuffs like a man settling a tab he always knew would come due. The black notebook, the gun from the rain barrel and the lawyer's statement close the books on the Blue Lantern for good. Outside, the rain keeps falling on Riverside, and for once it washes something clean.",
+    "wrong_culprit": "The cuffs close on the wrong wrists, and the real killer holds the door for you on your way out. By Monday the Blue Lantern has a new owner, a new set of books and a manager who smiles at you every time you pass. In this city the rain never stops, and neither do the mistakes.",
+    "weak_proof": "You have the right man, and he knows it, but any lawyer in Calder City could drive a truck through your case. Without the motive, the gun and a witness who saw him leave the door, the District Attorney will not touch it. Frank Dellow walks out into the rain whistling, and you go back inside to find what you missed."
+  }
+}

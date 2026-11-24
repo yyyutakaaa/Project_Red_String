@@ -1,0 +1,7 @@
+project_id = "project-red-string"
+
+[functions.interrogate]
+verify_jwt = false
+
+[functions.generate-case]
+verify_jwt = false

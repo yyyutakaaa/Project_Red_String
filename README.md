@@ -1,0 +1,198 @@
+# Project Red String
+
+> Question suspects in your own words. They can lie. You have to prove it.
+
+A noir detective game for the browser. You read the briefing, search clickable room scenes, interrogate
+AI-played suspects by typing freely, pin evidence and suspects on a red-string board, and accuse a culprit
+with two to four pieces of evidence. Three hand-written story cases (about 45 minutes each) are included,
+plus a "New Case" mode where an AI writes a fresh case that the game's validator checks before you play it.
+
+## Repository layout
+
+```
+web/                          Vite + React + TypeScript app (the game)
+  src/cases/                  story case JSON files (source of truth)
+  src/engine/                 case loader, scoring, board logic, save system, generated-case store, tests
+  src/screens/                menu, case select, briefing, rooms, interrogation, board, notebook, accusation, ending, settings ...
+  src/components/             HUD, room scene and props, portraits, modal, toasts, typewriter ...
+  src/store/                  Zustand stores (game state with autosave, settings)
+  src/audio/                  procedural Web Audio ambience and sound effects
+  src/assets/                 asset registry and optional real-art folders
+  scripts/                    sync-cases.mjs (copy cases to the edge functions), check-secrets.mjs
+  tests/e2e/                  Playwright playthrough of case 1 with the AI mocked
+supabase/
+  functions/_shared/core/     case schema (Zod), validator, clue gating, suspect prompt builder, reply parsing,
+                              generator prompt: one implementation shared by the web app and the functions
+  functions/_shared/          OmniaKey client, rate limiter, spend ceiling, CORS, eval mode, bundled story cases
+  functions/interrogate/      streaming in-character interrogation (SSE)
+  functions/generate-case/    AI case writer with validate-and-repair loop
+  migrations/                 Postgres tables, RLS and RPCs
+tools/eval/                   adversarial interrogation test runner
+vercel.json                   SPA hosting config for Vercel
+```
+
+## How the pieces fit
+
+- The browser holds the whole game locally (rooms, notebook, board, scoring, saves in localStorage).
+- Interrogations go to the `interrogate` edge function. It loads the case server-side, builds the system
+  prompt from only that suspect's sheet plus public facts (never the solution, hidden events or other
+  suspects' secrets), streams the reply over SSE and returns `{ reply, revealed_clue_ids, mood }`. Clue ids
+  are filtered server-side against the suspect's clues and their conditions. Patience (questions per
+  suspect), rate limits (30 per minute, 400 per day per device) and a global daily spend ceiling are
+  enforced in Postgres.
+- `generate-case` asks the generator model for a case as JSON, runs the shared validator, and sends the
+  errors back for up to two repairs. Valid cases are stored and kept on the device for replay.
+- The OmniaKey API key exists only as a Supabase secret. The frontend knows only the Supabase URL and the
+  publishable key. `npm run check-secrets` scans the build output.
+
+## Run locally
+
+Requirements: Node 20 or newer (tested with Node 24).
+
+```powershell
+cd web
+npm install
+npm run dev
+```
+
+Open http://localhost:5173. `web/.env.local` (or `.env.production` for builds) holds the two public values:
+
+```
+VITE_SUPABASE_URL=https://hbwvybkpdqliusxheiyg.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
+```
+
+Without them the game still runs; rooms, notebook and board work, and interrogation shows a clear
+"unreachable" message.
+
+## Tests and checks
+
+```powershell
+cd web
+npm run typecheck
+npm run lint
+npm test
+npm run build
+npm run check-secrets
+```
+
+- `npm test` runs Vitest: validator on valid and broken cases, all three story cases against the validator
+  and authoring targets, save and load round trip, accusation scoring, board link checks, clue filtering,
+  prompt hygiene (no solution data in any suspect prompt) and model reply parsing.
+- `npm run validate:cases` runs only the story case checks.
+
+End-to-end playthrough of case 1 (interrogate endpoint mocked, no AI calls):
+
+```powershell
+cd web
+npx playwright install chromium
+npm run test:e2e
+```
+
+## Editing story cases
+
+1. Edit `web/src/cases/<id>.json`.
+2. Run `npm run sync:cases` in `web` (copies the cases into `supabase/functions/_shared/cases`).
+3. Run `npm run validate:cases` until it passes.
+4. Redeploy the `interrogate` function so the server uses the new suspect sheets.
+
+## Backend
+
+Project: `hbwvybkpdqliusxheiyg` (eu-central-1). Edge function secrets: `OMNIAKEY_API_KEY`,
+`DAILY_SPEND_LIMIT_USD`. Optional secrets:
+
+| Secret | Default | Purpose |
+|---|---|---|
+| `SUSPECT_MODEL` | `claude-haiku-5-5` | model that plays suspects |
+| `GENERATOR_MODEL` | `claude-opus-5-5` | model that writes new cases |
+| `EVAL_JUDGE_MODEL` | `gpt-6.2-sol` | judge used by the eval tool |
+| `OMNIAKEY_BASE_URL` | `https://api.omniakey.com/v1` | OpenAI-compatible OmniaKey endpoint |
+| `ALLOWED_ORIGINS` | (none) | extra CORS origins, comma-separated, e.g. a custom domain |
+| `VERCEL_PROJECT_NAME` | `project-red-string` | allows `https://<name>.vercel.app` and its preview URLs |
+| `MODEL_PRICING_JSON` | built-in table | override USD per million tokens, e.g. `{"mimo-v2.6-flash":{"input":0.07,"output":0.13}}` |
+
+Switch models without code changes, for example:
+
+```powershell
+npx supabase secrets set SUSPECT_MODEL=mimo-v2.6-flash --project-ref hbwvybkpdqliusxheiyg
+```
+
+Deploy with the Supabase CLI (after `npx supabase login`):
+
+```powershell
+npx supabase link --project-ref hbwvybkpdqliusxheiyg
+npx supabase db push
+npx supabase functions deploy interrogate --no-verify-jwt
+npx supabase functions deploy generate-case --no-verify-jwt
+```
+
+JWT verification is off because the frontend uses the new publishable key (not a JWT). The functions
+do their own checks: CORS allow-list, request validation, per-device and per-IP rate limits, patience,
+and the daily spend ceiling.
+
+## Eval tool
+
+`tools/eval/run-eval.mjs` sends 31 adversarial messages per suspect (who killed them, ignore your
+instructions, repeat your system prompt, role-play jailbreaks, tag injection, contradiction traps, invented
+fact probes, five other languages) to the deployed `interrogate` function and reports leaks, out-of-character
+replies, invented facts, language mismatches and time to first token per model.
+
+```powershell
+node tools/eval/run-eval.mjs --models claude-haiku-5-5,mimo-v2.6-flash,gpt-6.2-sol --judge
+```
+
+It needs `RS_EVAL_TOKEN` (in `tools/eval/.env.local`, gitignored). Only the token's SHA-256 hash is stored in
+`public.eval_tokens`. To create a token:
+
+```powershell
+node -e "const c=require('crypto');const t='rs_eval_'+c.randomBytes(24).toString('hex');console.log(t);console.log(c.createHash('sha256').update(t).digest('hex'))"
+```
+
+Put the first line in `tools/eval/.env.local` as `RS_EVAL_TOKEN=...` and insert the hash with SQL:
+`insert into public.eval_tokens (token_hash, label) values ('<hash>', 'my-eval');`. Reports are written to
+`tools/eval/results/`. See `tools/eval/README.md`.
+
+## Deploy the web app to Vercel
+
+`vercel.json` at the repo root builds `web/` and rewrites every route to `index.html`.
+
+1. Push the repository to GitHub (or GitLab / Bitbucket).
+2. In Vercel: Add New Project, import the repository. Keep Root Directory as the repository root; the
+   install, build and output settings come from `vercel.json`.
+3. Name the project `project-red-string` so the edge functions' CORS rule accepts its URLs (or set
+   `ALLOWED_ORIGINS` / `VERCEL_PROJECT_NAME` secrets to match your domain).
+4. Environment variables are optional: `web/.env.production` already holds the public Supabase URL and
+   publishable key. To override, set `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` in Vercel.
+5. Deploy. The build runs the secret scanner on `web/dist` and fails if anything secret-looking is found.
+
+With the Vercel CLI instead: `npx vercel` from the repository root, then `npx vercel --prod`.
+
+## Replacing placeholder art
+
+All visuals are procedural so the game looks intentional without art packs. To swap in real art, drop
+files into `web/src/assets/art/`; the registry (`web/src/assets/registry.ts`) picks them up at build time:
+
+| Folder | File name | Used for |
+|---|---|---|
+| `art/rooms/` | `<background-key>.webp` (or .png/.jpg), e.g. `study.webp` | room background (props are then not drawn) |
+| `art/portraits/` | `<portrait-key>.webp` or `<suspect-id>.webp`, e.g. `vance.webp` | suspect portrait |
+| `art/audio/` | `music.ogg`, `music-<ambience>.ogg`, `ambience-rain.ogg` | music and ambience (ambience: menu, house, club, harbor, rain) |
+
+Background keys and portrait keys are listed in `supabase/functions/_shared/core/assetKeys.ts`. Room art
+should be 5:3 (for example 2000x1200) so hotspot percentages line up. Portraits are 5:6.
+
+Recommended CC0 (public domain) sources:
+
+- Kenney (kenney.nl/assets): CC0 UI sounds, interface and object sprites.
+- OpenGameArt.org, filtered to CC0: room backgrounds, furniture, rain loops.
+- Freesound.org, filtered to "Creative Commons 0": rain, thunder, footsteps, jazz loops.
+- Poly Haven (polyhaven.com): CC0 textures (wood, brick, wallpaper) for painting room backgrounds.
+- The Met, Rijksmuseum and the Smithsonian Open Access collections: CC0 period photographs and posters.
+
+List every added file in `CREDITS.md`.
+
+## Accessibility
+
+Full keyboard navigation (hotspots, board pins and strings, dialogs, tabs), visible focus rings, a skip
+link, live regions for streamed replies and toasts, adjustable font size and text speed, reduced-motion
+support (system setting or in-game toggle) and colours chosen for contrast on the dark palette.

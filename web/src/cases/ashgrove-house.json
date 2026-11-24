@@ -1,0 +1,815 @@
+{
+  "schema_version": 1,
+  "id": "ashgrove-house",
+  "title": "Ashgrove House",
+  "tagline": "A birthday, a bad heart, and a brandy glass nobody else was allowed to touch.",
+  "setting": "Ashgrove House, a storm-bound country house on the cliffs north of Calder City",
+  "era": "October 1948",
+  "intro_briefing": [
+    "Saturday, 16 October 1948. The storm came in off the Sound at dusk and has not let up since. Ashgrove House sits on the cliffs twelve miles north of Calder City, at the end of a road that is more mud than gravel tonight, and the telephone line to the house is down.",
+    "Edmund Ashgrove, sixty-five today, founder of Ashgrove Shipping, is dead in his study. He had a bad heart and lived on digitalis drops. The police surgeon who rode up with you sniffed his brandy glass and shook his head: the old man's heart did not give out on its own. Somebody gave him enough digitalis to stop a horse.",
+    "Three people sat down to his birthday dinner, and the uniforms at the door are keeping all of them here: his daughter Clara Ashgrove, who has run his Pier Seventeen offices for years; her husband Simon Whitlock, a charming man with expensive habits; and Leonard Vance, the family attorney and trustee, who drove down the cliff road through the storm to telephone for you. The cook, Mrs. Dunne, has already told the uniforms what little she saw from the kitchen wing.",
+    "Walk the rooms, Detective. Examine whatever looks out of place, question the three of them, and put what you find in front of them. When you can prove who did it, why they did it and how they managed it, make your accusation. You get one chance. Make it count."
+  ],
+  "victim": {
+    "id": "edmund",
+    "name": "Edmund Ashgrove",
+    "age": 65,
+    "description": "Founder of Ashgrove Shipping and its master for forty years; a hard, proud, careful man who wrote everything down. He had a weak heart and was kept going on digitalis drops. Tonight was his sixty-fifth birthday.",
+    "cause_of_death": "Heart failure from a massive overdose of digitalis, taken in his after-dinner brandy.",
+    "found_in": "study",
+    "found_at": "at about 21:55, slumped in his leather armchair by the study fire"
+  },
+  "solution": {
+    "culprit_id": "simon",
+    "motive": "Edmund had found out that Simon forged his signature on a forty-thousand-dollar loan guarantee at the Calder Harbor Trust to cover his debts, and he meant to take it to the police on Monday.",
+    "method": "While claiming to be on the hall telephone between 21:00 and 21:20, Simon climbed the back stairs to Edmund's bathroom, took the digitalis tincture, emptied it into the engraved brandy glass waiting on the study tray, and buried the empty bottle in the conservatory palm wrapped in his own monogrammed handkerchief.",
+    "required_evidence": ["digitalis-bottle", "bank-letter", "telephone-pad"],
+    "reveal": "Simon Whitlock was drowning. He owed his brokers more than thirty-eight thousand dollars, and in August he put Edmund's name on a forty-thousand-dollar loan guarantee at the Calder Harbor Trust to keep himself afloat. When the bank wrote asking Edmund to confirm it, the old man knew his own hand, and on the afternoon of his birthday he told Simon he would take the letter to Inspector Harrow of the fraud squad on Monday. At nine o'clock Simon left the drawing room saying he had to ring his broker. Instead he went up the back stairs to Edmund's bathroom, took the bottle of digitalis, and emptied it into the engraved brandy glass that Edmund, as everyone in the house knew, would fill at half past nine. He pushed the empty bottle into the soil of a conservatory palm, wrapped in the first thing that came to hand, his own S.W. handkerchief, and came back with rain in his hair and a story. The story had one flaw: the storm had brought the telephone line down at half past eight, and Edmund, who wrote everything down, had noted it on the hall pad when he tried to reach Harrow himself. The Harbor Trust letter gives the motive, the bottle in the S.W. handkerchief gives the means, and the dead line breaks the only alibi Simon had."
+  },
+  "timeline": [
+    {
+      "day": 0,
+      "time": "16:00",
+      "location": "study",
+      "who": ["edmund", "simon"],
+      "what": "Edmund calls Simon into the study, shows him the Calder Harbor Trust letter about the loan guarantee, and says he will put it in front of Inspector Harrow on Monday.",
+      "visibility": "private",
+      "tags": ["motive"]
+    },
+    {
+      "day": 0,
+      "time": "18:45",
+      "location": "hallway",
+      "who": ["vance", "edmund", "clara", "simon"],
+      "what": "Leonard Vance arrives from Calder City as the storm builds and leaves his overcoat and briefcase in the front hall. Clara and Simon have been staying at the house since Friday.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "19:30",
+      "location": "dining-room",
+      "who": ["edmund", "clara", "simon", "vance"],
+      "what": "The birthday dinner for Edmund's sixty-fifth begins. Mrs. Dunne, the cook, serves.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "20:10",
+      "location": "dining-room",
+      "who": ["edmund", "clara", "simon", "vance"],
+      "what": "Over the birthday cake Edmund announces that an outside man from Boston will run Ashgrove Shipping when he retires next spring. Dinner breaks up at 20:15; Edmund says he will see Vance on business and take his usual brandy in the study at half past nine.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "20:20",
+      "location": "study",
+      "who": ["clara", "edmund"],
+      "what": "Clara follows her father into the study and they quarrel loudly over the directorship. She storms out at about 20:28.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "20:30",
+      "location": "hallway",
+      "who": ["edmund"],
+      "what": "Edmund tries to telephone Inspector Harrow from the hall, finds the line dead from the storm, and notes it on the telephone pad.",
+      "visibility": "private",
+      "tags": ["alibi"]
+    },
+    {
+      "day": 0,
+      "time": "20:35",
+      "location": "study",
+      "who": ["edmund", "vance"],
+      "what": "Edmund tells Vance he is replacing him as trustee of the family trust with Clara and hands him a draft codicil to put into proper form by Monday. They part at 20:55.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "20:35",
+      "location": "dining-room",
+      "who": ["clara"],
+      "what": "Alone in the dining room, Clara writes her father a furious letter, then tears it up and throws it into the dying fire.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "20:55",
+      "location": "drawing-room",
+      "who": ["clara", "vance", "simon"],
+      "what": "Vance and Clara join Simon in the drawing room. Clara and Vance sit down to a game of cribbage.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "20:55",
+      "location": "kitchen",
+      "who": ["edmund"],
+      "what": "Edmund goes to the kitchen wing to thank Mrs. Dunne for the birthday cake and stays talking with her until about 21:25, as she told the first officers on the scene.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "21:00",
+      "location": "drawing-room",
+      "who": ["simon", "clara", "vance"],
+      "what": "Simon leaves the drawing room, saying he must telephone his broker in the city.",
+      "visibility": "public",
+      "tags": ["alibi"]
+    },
+    {
+      "day": 0,
+      "time": "21:03",
+      "location": "bedroom",
+      "who": ["simon"],
+      "what": "Simon slips up the back stairs to Edmund's bedroom and takes the digitalis bottle from the bathroom cabinet.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "day": 0,
+      "time": "21:10",
+      "location": "hallway",
+      "who": ["vance"],
+      "what": "Vance steps out of the drawing room for a minute or two to fetch cigars from his overcoat in the hall.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "21:10",
+      "location": "study",
+      "who": ["simon"],
+      "what": "Simon empties the digitalis into Edmund's engraved brandy glass on the study tray.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "day": 0,
+      "time": "21:15",
+      "location": "conservatory",
+      "who": ["simon"],
+      "what": "Simon wraps the empty bottle in his handkerchief and pushes it into the soil of a potted palm under the leaking roof.",
+      "visibility": "hidden",
+      "tags": ["crime"]
+    },
+    {
+      "day": 0,
+      "time": "21:20",
+      "location": "drawing-room",
+      "who": ["simon", "clara", "vance"],
+      "what": "Simon returns to the drawing room, saying his broker kept him on the line for twenty minutes.",
+      "visibility": "public",
+      "tags": ["alibi"]
+    },
+    {
+      "day": 0,
+      "time": "21:30",
+      "location": "study",
+      "who": ["edmund"],
+      "what": "Edmund returns to the study and, alone, pours his nightly brandy into his engraved glass by the light of the fire.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "21:55",
+      "location": "study",
+      "who": ["clara", "vance", "simon", "edmund"],
+      "what": "Clara goes in to say goodnight and finds her father slumped in his armchair; her cry brings Vance and Simon running. Edmund dies a few minutes later.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "22:00",
+      "location": "hallway",
+      "who": ["clara", "simon", "vance"],
+      "what": "Clara tries the hall telephone to call Dr. Peel and finds the line dead.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "22:15",
+      "location": "gull-point",
+      "who": ["vance"],
+      "what": "Vance drives down the cliff road through the storm and telephones the police from the Gull Point filling station.",
+      "visibility": "public",
+      "tags": []
+    }
+  ],
+  "offstage_locations": [
+    { "id": "drawing-room", "name": "Drawing room" },
+    { "id": "kitchen", "name": "Kitchen wing" },
+    { "id": "gull-point", "name": "Gull Point filling station" }
+  ],
+  "rooms": [
+    {
+      "id": "dining-room",
+      "name": "Dining room",
+      "description": "A long, dark-paneled room. The remains of the birthday dinner are still on the table: a cake barely cut, crumpled napkins, four chairs pushed back in a hurry. The fire in the grate has burned down to gray ash and a last few embers.",
+      "background": "dining-room",
+      "hotspots": [
+        {
+          "id": "painting",
+          "label": "Painting",
+          "x": 8,
+          "y": 10,
+          "width": 18,
+          "height": 24,
+          "description": "A portrait of the late Eleanor Ashgrove in gray silk, hung where Edmund could see it from the head of the table. Clara has her eyes, and her chin.",
+          "evidence_id": null
+        },
+        {
+          "id": "fireplace",
+          "label": "Fireplace",
+          "x": 38,
+          "y": 28,
+          "width": 22,
+          "height": 34,
+          "description": "The fire has burned low. Caught behind the andiron, where the flames never quite reached, are several torn scraps of cream notepaper, scorched at the edges. Someone wanted them gone and did not wait to watch them burn.",
+          "evidence_id": "torn-letter"
+        },
+        {
+          "id": "window",
+          "label": "Window",
+          "x": 68,
+          "y": 8,
+          "width": 22,
+          "height": 30,
+          "description": "Rain sheets down the tall windows. Beyond them is nothing but black sky and, far below the cliff, the white of the breakers. Nobody has been out of doors tonight without coming back soaked.",
+          "evidence_id": null
+        },
+        {
+          "id": "dining-table",
+          "label": "Dining table",
+          "x": 26,
+          "y": 66,
+          "width": 28,
+          "height": 20,
+          "description": "Four places. At the head, Edmund's plate with a single slice of cake untouched. At Clara's place the napkin has been twisted into a tight rope and her wine glass is still full.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "study",
+      "name": "Study",
+      "description": "Edmund's study smells of cigar smoke, leather and wet wool. His armchair faces the fire, the desk is stacked with company papers, and a silver drinks tray stands by the window. The police surgeon has taken the body away; the cushion still holds its shape.",
+      "background": "study",
+      "hotspots": [
+        {
+          "id": "painting",
+          "label": "Painting",
+          "x": 6,
+          "y": 10,
+          "width": 18,
+          "height": 22,
+          "description": "An oil painting of the first Ashgrove steamer, the Eleanor, leaving Pier Seventeen in 1907. A small brass plate on the frame reads: 'Built on credit. Paid in full.'",
+          "evidence_id": null
+        },
+        {
+          "id": "bookshelf",
+          "label": "Bookshelf",
+          "x": 70,
+          "y": 8,
+          "width": 22,
+          "height": 40,
+          "description": "Bound shipping registers and company ledgers going back forty years, every spine labeled in the same spiky pencil hand. Edmund Ashgrove was a man who wrote everything down.",
+          "evidence_id": null
+        },
+        {
+          "id": "writing-desk",
+          "label": "Writing desk",
+          "x": 10,
+          "y": 54,
+          "width": 28,
+          "height": 26,
+          "description": "The desk is tidy except for one letter laid squarely on the blotter and weighted down with a brass ship's compass, as if Edmund meant to read it again before bed.",
+          "evidence_id": "bank-letter"
+        },
+        {
+          "id": "armchair",
+          "label": "Leather armchair",
+          "x": 46,
+          "y": 50,
+          "width": 18,
+          "height": 30,
+          "description": "The cracked leather armchair by the fire where Clara found him. On the rug beside it there is a dark, sweet-smelling stain where the brandy spilled when the glass fell from his hand.",
+          "evidence_id": null
+        },
+        {
+          "id": "brandy-glass",
+          "label": "Brandy glass",
+          "x": 68,
+          "y": 60,
+          "width": 12,
+          "height": 14,
+          "description": "On the side table, where the police surgeon set it after lifting it off the rug, stands Edmund's own brandy glass. Beside it, the silver tray holds the decanter and the other glasses of the set.",
+          "evidence_id": "brandy-glass"
+        }
+      ]
+    },
+    {
+      "id": "conservatory",
+      "name": "Conservatory",
+      "description": "A Victorian glasshouse at the end of the back passage, crowded with palms and orchids. Rain hammers the glass roof and leaks through in a dozen places. The air is warm, wet and green.",
+      "background": "conservatory",
+      "hotspots": [
+        {
+          "id": "palm-planter",
+          "label": "Palm planter",
+          "x": 12,
+          "y": 48,
+          "width": 18,
+          "height": 36,
+          "description": "A big glazed pot holding a kentia palm, its soil dark and wet from the drips. On one side the earth has been dug up and pressed back down by hand, and something pale shows just under the surface.",
+          "evidence_id": "digitalis-bottle"
+        },
+        {
+          "id": "roof-window",
+          "label": "Roof window",
+          "x": 36,
+          "y": 6,
+          "width": 28,
+          "height": 22,
+          "description": "Rain drums on the glass roof and comes through the leaky panes in long, cold threads. Stand among the palms for a minute or two and your hair and collar are soaked through.",
+          "evidence_id": null
+        },
+        {
+          "id": "wicker-chair",
+          "label": "Wicker chair",
+          "x": 44,
+          "y": 56,
+          "width": 16,
+          "height": 26,
+          "description": "Edmund's wicker chair, a rug over one arm and the Calder Courier folded open at the tide tables. The ashtray beside it is clean and dry. Nobody sat out here smoking tonight.",
+          "evidence_id": null
+        },
+        {
+          "id": "potting-table",
+          "label": "Potting table",
+          "x": 68,
+          "y": 50,
+          "width": 22,
+          "height": 22,
+          "description": "Trowels, twine, clay pots and a watering can, all in their places. Across the tiles from the palms toward the passage door runs a thin, smeared trail of black soil, as if somebody carried it out on a shoe or a sleeve.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "bedroom",
+      "name": "Edmund's bedroom",
+      "description": "A plain, orderly bedroom at the top of the back stairs, with a small bathroom opening off it. The bed has been turned down for a man who will not use it.",
+      "background": "bedroom",
+      "hotspots": [
+        {
+          "id": "window",
+          "label": "Window",
+          "x": 8,
+          "y": 10,
+          "width": 20,
+          "height": 28,
+          "description": "The window looks straight down onto the lit glass roof of the conservatory. The back stairs come up beside this bedroom door; anyone could climb them from the back passage and be in here inside a minute without passing the drawing room.",
+          "evidence_id": null
+        },
+        {
+          "id": "bed",
+          "label": "Bed",
+          "x": 22,
+          "y": 50,
+          "width": 28,
+          "height": 30,
+          "description": "Turned down for the night, pajamas folded on the pillow. Propped against them is a birthday card: 'To Father. Many happy returns. C.' The handwriting is sharp and slanting.",
+          "evidence_id": null
+        },
+        {
+          "id": "bedside-lamp",
+          "label": "Bedside lamp",
+          "x": 54,
+          "y": 52,
+          "width": 10,
+          "height": 18,
+          "description": "Under the brass reading lamp lies a pharmacist's printed card: 'Digitalis tincture. Ten drops at night in water. DO NOT EXCEED: an overdose may stop the heart.' Edmund has underlined the last line twice.",
+          "evidence_id": null
+        },
+        {
+          "id": "medicine-cabinet",
+          "label": "Medicine cabinet",
+          "x": 72,
+          "y": 14,
+          "width": 14,
+          "height": 24,
+          "description": "The mirrored cabinet in the little bathroom stands slightly open. Shaving things, aspirin, bicarbonate of soda, and on the top shelf an empty space beside a pharmacist's carton.",
+          "evidence_id": "empty-shelf"
+        }
+      ]
+    },
+    {
+      "id": "hallway",
+      "name": "Front hallway",
+      "description": "A tall, drafty hall with a black-and-white tiled floor. The main staircase climbs to the bedrooms, a passage at the back runs to the back stairs and the conservatory, and the telephone sits in its alcove by the front door.",
+      "background": "hallway",
+      "hotspots": [
+        {
+          "id": "telephone",
+          "label": "Telephone",
+          "x": 8,
+          "y": 30,
+          "width": 12,
+          "height": 22,
+          "description": "The telephone sits in its alcove with a message pad and a pencil on a string beside it. You lift the receiver: nothing but a faint, dead hiss.",
+          "evidence_id": "telephone-pad"
+        },
+        {
+          "id": "coat-stand",
+          "label": "Coat stand",
+          "x": 24,
+          "y": 26,
+          "width": 10,
+          "height": 40,
+          "description": "Wet coats and hats: Vance's good black overcoat with a cigar case in the pocket, Clara's oilskin, and Simon's camel-hair coat, which is bone dry. Whatever Simon did tonight, he did it indoors.",
+          "evidence_id": null
+        },
+        {
+          "id": "hall-clock",
+          "label": "Hall clock",
+          "x": 40,
+          "y": 22,
+          "width": 10,
+          "height": 40,
+          "description": "A tall-case clock ticking loudly in the empty hall. It keeps good time; Edmund wound it himself every Sunday and set it by the time signal on the radio. Every clock in the house is set by this one.",
+          "evidence_id": null
+        },
+        {
+          "id": "staircase",
+          "label": "Stairs",
+          "x": 60,
+          "y": 14,
+          "width": 28,
+          "height": 40,
+          "description": "The main staircase climbs in full view of the drawing room door. Beside it a narrow passage runs back to the back stairs and the conservatory, out of sight of anyone sitting in the drawing room.",
+          "evidence_id": null
+        },
+        {
+          "id": "briefcase",
+          "label": "Hat and briefcase",
+          "x": 36,
+          "y": 68,
+          "width": 14,
+          "height": 14,
+          "description": "Leonard Vance's pigskin briefcase, left on the hall bench beside his hat. It is not locked. Among the trust statements inside is a freshly typed document covered in pencil corrections.",
+          "evidence_id": "draft-codicil"
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "torn-letter",
+      "name": "Scorched torn letter",
+      "description": "Scraps of cream notepaper from the dining room grate, scorched but legible, in a sharp, slanting hand: 'Father, ten years I have given that company... and you hand it to a stranger from Boston as if I were the office girl... I will make you regret this, I swear it.' Unsigned and never sent. Whoever wrote it was in a fury with Edmund tonight.",
+      "found_in": "dining-room",
+      "points_to": ["clara"],
+      "is_red_herring": true
+    },
+    {
+      "id": "bank-letter",
+      "name": "Harbor Trust letter",
+      "description": "A letter from the Calder Harbor Trust Company dated 11 October 1948, asking Mr. Edmund Ashgrove to kindly confirm his personal guarantee, signed 2 August, of a $40,000 loan to Whitlock Holdings. A photostat of the guarantee is pinned to it; the signature 'Edmund Ashgrove' is careful and a little too round. In the margin, in Edmund's spiky pencil: 'NOT MY HAND. Harrow - Monday.' You know the name: Inspector Harrow runs the fraud squad at headquarters.",
+      "found_in": "study",
+      "points_to": ["simon"],
+      "is_red_herring": false
+    },
+    {
+      "id": "brandy-glass",
+      "name": "Edmund's brandy glass",
+      "description": "A heavy cut-crystal balloon glass engraved 'E.A.', the one glass in the house nobody else was allowed to use. A finger of brandy remains, with a greenish-brown film on the bottom and a sharp, bitter, herbal smell under the spirit. The other brandy glasses of the set are clean and dry; the only other glasses used tonight are two plain whisky tumblers. The poison was in his glass and only his, so it was put there by someone who knew his habits.",
+      "found_in": "study",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "empty-shelf",
+      "name": "Gap in the medicine cabinet",
+      "description": "On the top shelf of Edmund's bathroom cabinet, a clean ring in the dust where a small bottle stood, beside its pharmacist's carton: 'Digitalis tincture, 30 ml. E. Ashgrove. Ten drops at night. Filled 14 Oct. 1948, Mercer's Pharmacy.' A bottle filled two days ago would be nearly full. It is gone, and this room is a minute up the back stairs from the hall passage.",
+      "found_in": "bedroom",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "digitalis-bottle",
+      "name": "Bottle in a handkerchief",
+      "description": "Dug out of the disturbed soil of the conservatory palm: a small brown pharmacy bottle, empty, labeled 'Digitalis tincture - E. Ashgrove - Mercer's Pharmacy', wrapped in a white linen handkerchief embroidered 'S.W.' in blue thread at one corner. The neck still smells bitter. Somebody carried Edmund's heart drops down from his bathroom and buried them here in a handkerchief marked with those initials.",
+      "found_in": "conservatory",
+      "points_to": ["simon"],
+      "is_red_herring": false
+    },
+    {
+      "id": "telephone-pad",
+      "name": "Hall telephone pad",
+      "description": "The message pad beside the dead hall telephone. The last entry is in Edmund's spiky pencil, the same hand as the margin of the bank letter: '8.30 pm. Tried Harrow. Line dead - storm. E.A.' The hall clock he set it by keeps good time. If the line was dead at half past eight, nobody in this house made or took a call on it after that.",
+      "found_in": "hallway",
+      "points_to": ["simon"],
+      "is_red_herring": false
+    },
+    {
+      "id": "draft-codicil",
+      "name": "Draft codicil",
+      "description": "A typed draft from Vance's briefcase headed 'Codicil to the Will of Edmund Ashgrove', dated today. It removes 'Leonard Vance, Esquire' as sole trustee of the Ashgrove Family Trust, appoints 'my daughter Clara Ashgrove' in his place from 1 January 1949, and calls for a full accounting of the trust. Edmund's pencil corrections and initials are on every page; it is unsigned and unwitnessed. Tonight Edmund was taking the family money out of Vance's hands.",
+      "found_in": "hallway",
+      "points_to": ["vance"],
+      "is_red_herring": true
+    },
+    {
+      "id": "creditor-demand",
+      "name": "Brokers' final demand",
+      "description": "A crumpled letter on Kittredge and Lowe letterhead, dated 1 October 1948 and addressed to Mr. Simon Whitlock: his margin account is in default, $38,400 falls due on 1 November, and failing payment the firm will 'proceed through the courts without further notice.' It is signed by Ambrose Kittredge himself. The man it was sent to was desperate for money and on anything but friendly terms with his broker.",
+      "found_in": "clara",
+      "points_to": ["simon"],
+      "is_red_herring": false
+    }
+  ],
+  "suspects": [
+    {
+      "id": "clara",
+      "name": "Clara Ashgrove",
+      "role": "Edmund's daughter; runs the Pier Seventeen offices of Ashgrove Shipping",
+      "age": 32,
+      "portrait": "woman-bun",
+      "color": "#8c4a5a",
+      "personality": "Sharp, proud and tightly controlled. She has run Ashgrove Shipping's offices in all but name for years and expected to be handed the company; being passed over in front of her husband and the family lawyer was a humiliation she will not let anyone see. Grief comes out of her as precision and cold anger. She hates being pitied far more than being suspected, and she is loyal to her husband in public even though he has worn her patience thin.",
+      "speech_style": "Clipped, exact sentences with times and figures in them. Never says 'um' or 'well'. Calls her father 'Father', never 'Dad'. Reaches for shipping language when she is cornered ('dead in the water', 'that's not on the manifest'). Answers an awkward question with a question: 'Is that what you think, Detective?' When she is shaken she gets quieter, not louder.",
+      "alibi": "From just before nine until about ten to ten I was in the drawing room playing cribbage with Leonard Vance. Then I went to the study to say goodnight to Father, and found him.",
+      "public_facts": [
+        "Clara Ashgrove is Edmund's only child and has worked at Ashgrove Shipping's Pier Seventeen offices for ten years.",
+        "Clara is married to Simon Whitlock; the couple came up to the house on Friday for the birthday weekend.",
+        "At dinner Edmund announced that an outside man from Boston, not Clara, would run Ashgrove Shipping after him.",
+        "Clara found her father collapsed in the study at about 21:55."
+      ],
+      "private_knowledge": [
+        "Your father took one brandy every night at half past nine, alone in the study, from his own engraved glass. The whole household knew the habit, and nobody else ever touched that glass.",
+        "Your father kept his digitalis drops in the bathroom cabinet off his bedroom, at the top of the back stairs.",
+        "You and Simon have been sleeping in the guest room along the corridor from your father's since Friday.",
+        "Simon has been edgy about money since the spring and stopped talking about his oil shares in June."
+      ],
+      "lies": [
+        {
+          "topic": "Her quarrel with her father tonight",
+          "claim": "There was no quarrel. Father told us his plans at dinner, I wished him a happy birthday and went through to the drawing room.",
+          "truth": "At about 20:20 you followed him into the study and shouted at him over the directorship. Afterwards you sat alone in the dining room, wrote him a furious letter saying you would make him regret it, tore it up and threw it in the grate. You meant you would resign and take your best customers to a rival line."
+        },
+        {
+          "topic": "Simon's finances",
+          "claim": "My husband's affairs are perfectly sound. He has had a dull year, like everyone on the market.",
+          "truth": "Simon is deep in debt to his brokers, and you have their final demand folded in your handbag."
+        }
+      ],
+      "secrets": [
+        "You have been meeting the Halvorsen Line in secret about leaving Ashgrove Shipping and taking two of its biggest contracts with you.",
+        "You quietly moved your own savings into an account in your maiden name this summer, because you no longer trust your husband with money."
+      ],
+      "never_reveal": [
+        "That you wept alone in the dining room after the quarrel. You will never admit to anyone that you cried."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "clara-argument",
+          "text": "Admits she argued with her father in the study at about 20:20 because he gave the directorship to an outsider, then wrote that letter alone in the dining room, tore it up and threw it in the grate. 'Make you regret this' meant she would resign and take her best customers to a rival line, nothing more.",
+          "condition": "shown_evidence:torn-letter"
+        },
+        {
+          "clue_id": "clara-debts",
+          "text": "Says Whitlock Holdings is Simon's company and that he is deep in debt to his brokers after losing on oil shares. She found their final demand in his jacket last week, has kept it in her handbag since, and hands it over.",
+          "condition": "shown_evidence:bank-letter",
+          "evidence_id": "creditor-demand"
+        },
+        {
+          "clue_id": "clara-handkerchief",
+          "text": "Recognizes the handkerchief at once: she gave Simon a dozen embroidered S.W. handkerchiefs last Christmas. He had one in his breast pocket at dinner tonight, and the pocket was empty when he came back to the drawing room at about 21:20.",
+          "condition": "shown_evidence:digitalis-bottle"
+        },
+        {
+          "clue_id": "clara-line-dead",
+          "text": "Says that when she ran to the hall telephone at about 22:00 to call Dr. Peel the line was dead, and Simon said at once that it must only just have gone down, because he had been talking to the city less than an hour before.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "clara-cribbage",
+          "text": "Confirms Leonard Vance played cribbage with her in the drawing room from about 20:55 until about 21:50, apart from a minute or two around 21:10 when he went out to his overcoat in the hall for cigars.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "clara-soil",
+          "text": "Remembers that when Simon came back at about 21:20 his hair was wet and there was a smear of black soil on his shirt cuff. He said he had stood at a window watching the storm.",
+          "condition": "pressed"
+        }
+      ],
+      "breaks_on": ["torn-letter", "bank-letter"],
+      "patience": 12,
+      "deflections": [
+        "*folds her hands very precisely in her lap*  I have answered that, Detective. Ask me something new.",
+        "*looks toward the study door*  My father is lying in there under a sheet. Forgive me if I don't feel talkative.",
+        "*a thin, cold smile*  You'll get more out of the ledgers than out of me tonight."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": [],
+        "clue_ids": ["vance-clara-alibi"],
+        "note": "Leonard Vance confirms Clara sat at the cribbage table in the drawing room from 20:55 until 21:50, the whole time the study stood empty and the glass was poisoned. Her quarrel and her torn letter are real, but they happened before 20:55, when Vance has Edmund's glass still clean."
+      }
+    },
+    {
+      "id": "simon",
+      "name": "Simon Whitlock",
+      "role": "Clara's husband; investor, of Whitlock Holdings",
+      "age": 38,
+      "portrait": "man-bare",
+      "color": "#5f7a4e",
+      "personality": "Boyish, quick and charming, the man everybody likes for the first hour. He has talked his way out of every bill and every scrape of his life and assumes he can talk his way out of this one. Underneath the charm is months of panic. He plays the grieving son-in-law and overplays it, and when he is cornered he offers a new story rather than admit the old one was false.",
+      "speech_style": "Easy, warm, clubby talk: 'old man', 'dear fellow', 'honestly, Detective', 'the thing is'. Laughs at his own jokes. Calls Edmund 'the old boy' and then corrects himself to 'Edmund'. When nervous he talks too fast and piles on details nobody asked for: names, times, the color of somebody's tie.",
+      "alibi": "Just after nine I went out to the hall telephone and rang my broker, Ambrose Kittredge, at his house in the city. Dull business about Monday's market. We talked until about twenty past and then I went straight back to the drawing room. The line must have gone down after I hung up.",
+      "public_facts": [
+        "Simon Whitlock has been married to Clara Ashgrove for six years and calls himself an investor; his company is Whitlock Holdings.",
+        "At 21:00 Simon left the drawing room saying he had to telephone his broker in the city, and he came back at about 21:20.",
+        "Simon and Clara have been staying at Ashgrove House since Friday, in the guest room along the bedroom corridor from Edmund's."
+      ],
+      "private_knowledge": [
+        "Edmund took one brandy every night at half past nine, alone, from his own engraved glass on the study tray.",
+        "Edmund kept his heart drops in the cabinet in his bathroom; you have watched him measure them out.",
+        "You owe your brokers, Kittredge and Lowe, more than thirty-eight thousand dollars, due on the first of November.",
+        "You did not know the telephone line was down until Clara tried it after Edmund collapsed."
+      ],
+      "lies": [
+        {
+          "topic": "Where he was from 21:00 to 21:20",
+          "claim": "On the hall telephone to my broker, Ambrose Kittredge, at his house in the city. Twenty minutes of the dullest talk you ever heard, then straight back to the drawing room.",
+          "truth": "You never lifted the receiver. You slipped away up the back stairs and down the back passage, out of sight of the drawing room, and came back by way of the conservatory with rain in your hair."
+        },
+        {
+          "topic": "The loan guarantee at the Calder Harbor Trust",
+          "claim": "Edmund agreed to stand behind one of my ventures. Family helping family, all perfectly above board.",
+          "truth": "Edmund never agreed to anything. You traced his signature onto the guarantee yourself in August, copying it from an old birthday check. This afternoon he showed you the bank's letter in the study and said Inspector Harrow would have it on Monday."
+        },
+        {
+          "topic": "His money troubles",
+          "claim": "A dry spell, Detective, nothing more. Everyone has had a dull year on the market.",
+          "truth": "Your brokers want thirty-eight thousand dollars by the first of November or they go to court, and you have nothing to pay them with."
+        }
+      ],
+      "secrets": [
+        "In August you pawned Clara's grandmother's pearl necklace and had a paste copy made; she has not noticed.",
+        "You tell everyone you went to Princeton. You left after one term."
+      ],
+      "never_reveal": [
+        "That you took the old boy's heart drops from his bathroom cabinet, tipped the whole bottle into his engraved glass waiting on the study tray, and pushed the empty bottle, wrapped in your handkerchief, down into the soil of the conservatory palm. You did it, and you will never say so."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "simon-broker",
+          "text": "Says he rang his broker, Ambrose Kittredge of Kittredge and Lowe, at his home in the city just after nine and talked with him until about twenty past about selling some oil shares on Monday.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "simon-stretched",
+          "text": "Admits with a laugh that he is 'a bit stretched' with his brokers this autumn and had hoped Edmund might help him out over the birthday weekend.",
+          "condition": "pressed"
+        },
+        {
+          "clue_id": "simon-loan",
+          "text": "Admits the guarantee bears Edmund's name but insists the old man agreed to it over lunch in July and he merely 'signed for him' to save a trip into town. Admits Edmund was angry about it this afternoon.",
+          "condition": "shown_evidence:bank-letter"
+        },
+        {
+          "clue_id": "simon-not-on-phone",
+          "text": "Admits he was never on the telephone. Claims instead that he spent those twenty minutes alone in the conservatory, smoking and working up the nerve to ask Edmund for money.",
+          "condition": "shown_evidence:telephone-pad"
+        },
+        {
+          "clue_id": "simon-handkerchief",
+          "text": "Admits the S.W. handkerchief is one of his, then insists he must have dropped it somewhere in the house and that anyone could have picked it up.",
+          "condition": "shown_evidence:digitalis-bottle"
+        }
+      ],
+      "breaks_on": ["telephone-pad", "digitalis-bottle", "creditor-demand"],
+      "patience": 14,
+      "deflections": [
+        "*laughs, a little too loudly, and straightens his tie*  Honestly, Detective, I've told you all I know. Which isn't much. Ask Clara, she's the clever one.",
+        "*lights a cigarette with a hand that is not quite steady*  Can we do this in the morning, old man? It's been a ghastly night.",
+        "*stares at the rain on the window*  The old boy was good to me. That's all I want to say just now."
+      ],
+      "alibi_verification": {
+        "status": "broken",
+        "evidence_ids": ["telephone-pad"],
+        "clue_ids": ["vance-empty-hall", "clara-line-dead", "vance-dead-line"],
+        "note": "Edmund's note on the hall telephone pad shows the line was dead from 20:30, and Vance watched him find it so, so Simon cannot have talked to his broker from 21:00 to 21:20. Vance also found the telephone alcove empty at 21:10, and Clara heard Simon insist the line had only just failed."
+      }
+    },
+    {
+      "id": "vance",
+      "name": "Leonard Vance",
+      "role": "Family attorney (Vance and Pryor) and trustee of the Ashgrove Family Trust",
+      "age": 54,
+      "portrait": "man-glasses",
+      "color": "#6b7f99",
+      "personality": "Smooth, precise and endlessly polite. He treats every question as a deposition and every answer as a contract, never raises his voice and never quite answers. He was fond of Edmund in his dry way and is genuinely shaken, but he is more frightened of an audit than of any detective. Vain about his memory, his cufflinks and his vocabulary.",
+      "speech_style": "A measured, lawyerly cadence: long sentences hedged with careful qualifications. Says 'strictly speaking' often, and drops the occasional Latin tag ('cui bono', 'res ipsa loquitur', 'de mortuis nil nisi bonum'). Calls the player 'Detective' with faint condescension. Deflects with procedure: 'I'm not certain that is a proper question.'",
+      "alibi": "Edmund and I had a short, routine meeting in the study from about twenty-five to nine until five to nine. After that I was in the drawing room playing cribbage with Clara until she went to say goodnight to her father.",
+      "public_facts": [
+        "Leonard Vance of Vance and Pryor has been the Ashgrove family's attorney for twenty years and is sole trustee of the Ashgrove Family Trust.",
+        "Vance drove up from Calder City this evening for the birthday dinner and met Edmund on business in the study after dinner.",
+        "After the death Vance drove down the cliff road through the storm to telephone the police from the Gull Point filling station."
+      ],
+      "private_knowledge": [
+        "Edmund took one brandy every night at half past nine, alone, from his own engraved glass on the study tray.",
+        "You have known Simon Whitlock for six years and think him a charming lightweight who borrows against his prospects.",
+        "You expected Edmund to give Clara the directorship and were as surprised as anyone when he did not."
+      ],
+      "lies": [
+        {
+          "topic": "His meeting with Edmund after dinner",
+          "claim": "Purely routine, Detective. The quarterly trust accounts, a signature or two, a little birthday business.",
+          "truth": "Edmund told you he was replacing you as trustee with Clara from the new year, handed you a draft codicil to put into proper form by Monday, and asked for a full accounting of the trust by the end of November. It shook you badly."
+        }
+      ],
+      "secrets": [
+        "Since the spring of 1945 you have quietly borrowed about eighteen thousand dollars from the Ashgrove Family Trust to cover your own losses, always meaning to pay it back. A full accounting would expose you.",
+        "You have a quiet financial interest in the Blue Lantern, a jazz club in the Riverside district of Calder City, and its owner keeps a private set of books for you. Your name is on none of it."
+      ],
+      "never_reveal": [
+        "That you have taken money from the Ashgrove Family Trust. You will never admit it, not even to explain why Edmund wanted you replaced."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "vance-codicil",
+          "text": "Admits the meeting was not routine: Edmund told him he was replacing him as trustee with Clara from 1 January and gave him the draft codicil to put into proper form by Monday. Insists Edmund gave no reason beyond wanting the family money in family hands.",
+          "condition": "shown_evidence:draft-codicil"
+        },
+        {
+          "clue_id": "vance-clean-glass",
+          "text": "Says that during their meeting Edmund poured them each a small whisky in the plain tumblers and set his own engraved brandy glass ready on the tray, clean and dry, as he did every night. It was still clean when they both left the study at 20:55.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "vance-clara-alibi",
+          "text": "Confirms Clara played cribbage with him in the drawing room from about 20:55 until about 21:50 and never left the room; when he came back from his minute in the hall she was still at the board. She won three games and was not gracious about it.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "vance-empty-hall",
+          "text": "Says that at about 21:10 he stepped into the hall for cigars from his overcoat. The telephone alcove was empty, the receiver on its hook, and nobody was talking anywhere in the hall. He assumed Simon had finished his call early.",
+          "condition": "pressed"
+        },
+        {
+          "clue_id": "vance-raised-voices",
+          "text": "Says that at about 20:20, waiting in the hall for his appointment, he heard Clara and Edmund shouting in the study. He caught only one word clearly, in Clara's voice: 'regret'.",
+          "condition": "pressed"
+        },
+        {
+          "clue_id": "vance-dead-line",
+          "text": "Says that at about half past eight, still waiting in the hall, he watched Edmund come out of the study, lift the hall telephone, rattle the hook and mutter 'Dead. The storm.' Edmund glanced at the hall clock and wrote something on the message pad before calling him in for their meeting.",
+          "condition": "pressed"
+        }
+      ],
+      "breaks_on": ["draft-codicil"],
+      "patience": 13,
+      "deflections": [
+        "*polishes his spectacles with a folded handkerchief*  Strictly speaking, Detective, I am not obliged to speculate.",
+        "*smiles thinly*  De mortuis nil nisi bonum. Let us leave it there for tonight.",
+        "*glances at his wristwatch*  I believe I have answered that question in every particular."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": [],
+        "clue_ids": ["clara-cribbage"],
+        "note": "Clara confirms Vance sat at the cribbage table with her from 20:55 to 21:50, except for a minute or two at 21:10 in the hall: far too short to climb the back stairs to Edmund's bathroom, reach the study and bury a bottle in the conservatory. The codicil gives him a motive, but not the opportunity."
+      }
+    }
+  ],
+  "hints": [
+    "Walk every room before you question anyone. Click on whatever catches your eye; anything that matters goes straight into your case file.",
+    "The poison was in Edmund's own glass. Find out when that glass was last seen clean, and who was out of everyone's sight between then and half past nine.",
+    "In an interrogation, press \"Show evidence\" and put an item on the table. A suspect confronted with the right item has to answer to it, and some will hand you something new. Try showing each of them the papers you find.",
+    "Two people had good reason to be furious with Edmund tonight, and their papers prove it. Fury is not poison. Ask each of them where they were between nine and half past, and who can vouch for them.",
+    "Edmund wrote everything down. Read the hall telephone pad, then remember who told you they spent those twenty minutes on that very telephone.",
+    "Use the red-string board: pin the items that belong together, connect them with string, and press \"Check theory\" to test your reasoning before you accuse. You want one item for motive, one for means and one that breaks an alibi.",
+    "Look hard at Simon Whitlock. Combine the Harbor Trust letter, the bottle wrapped in the S.W. handkerchief from the conservatory palm, and Edmund's note on the hall telephone pad, then make your accusation."
+  ],
+  "endings": {
+    "correct": "Simon Whitlock goes out into the rain in handcuffs, still explaining. He forged an old man's name to buy himself a little time, and when the old man found out, he bought some more with a bottle of heart drops. The storm cut the telephone line at half past eight, and with it the only alibi he had. Clara does not watch the car go.",
+    "wrong_culprit": "The cuffs close on the wrong wrists, and the hand that emptied the bottle shakes yours at the door and thanks you for your trouble. By the time the line is mended and the cliff road is clear, the truth has gone down the rocks with the rain. Somewhere in Calder City a man with a monogram on his handkerchief sleeps just fine.",
+    "weak_proof": "You have the right man and not enough to hold him. His lawyer will call it a lost handkerchief, a family loan and a faulty line, and a jury will believe two of the three. Come back with motive, means and a broken alibi, Detective, or don't come back at all."
+  }
+}
