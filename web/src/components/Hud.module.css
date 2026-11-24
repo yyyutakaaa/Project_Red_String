@@ -5,7 +5,9 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  min-height: var(--hud-height);
+  /* A fixed floor, not var(--hud-height): the HUD writes its measured height into that variable,
+     and reading it back here would stop the bar from ever shrinking again. */
+  min-height: 56px;
   padding: var(--space-2) var(--space-4);
   background: linear-gradient(180deg, rgba(8, 11, 18, 0.98), rgba(11, 15, 23, 0.94));
   border-bottom: 1px solid var(--ink-600);

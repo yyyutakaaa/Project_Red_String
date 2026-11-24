@@ -45,11 +45,16 @@ export interface InterrogateRequest {
   message: string;
   shown_evidence_id: string | null;
   device_id: string;
+  /** The run this save was copied from, so the server can carry its interrogation state over. */
+  parent_save_id?: string | null;
 }
 
 export interface InterrogateFinal {
   reply: string;
+  /** Clues newly revealed by this reply. */
   revealed_clue_ids: string[];
+  /** Every clue this suspect has revealed in this run, so a reply lost in transit is recovered next time. */
+  all_revealed_clue_ids?: string[];
   mood: Mood;
   patience_used: number;
   patience_max: number;
@@ -193,6 +198,9 @@ export interface GenerateProgress {
   errorCount: number;
 }
 
+/** Per request; the server stops its own model call at 135 s. */
+export const GENERATE_STEP_TIMEOUT_MS = 160_000;
+
 interface GenerateStep {
   status?: 'ready' | 'repairing';
   job_id?: string;
@@ -216,20 +224,32 @@ export async function generateCase(
   let payload: Record<string, unknown> = { ...req };
   let remaining: number | null = null;
   for (let step = 0; step < 4; step++) {
+    // Each request (one model call on the server) gets its own time budget.
+    const stepController = new AbortController();
+    const stepTimer = setTimeout(() => stepController.abort(), GENERATE_STEP_TIMEOUT_MS);
+    const onAbort = () => stepController.abort();
+    signal?.addEventListener('abort', onAbort);
     let res: Response;
+    let body: GenerateStep;
     try {
-      res = await fetch(`${FUNCTIONS_URL}/generate-case`, {
-        method: 'POST',
-        headers: headers(),
-        body: JSON.stringify(payload),
-        signal: signal ?? null,
-      });
-    } catch {
-      if (signal?.aborted) throw new ApiError('timeout', 'Generation cancelled.');
-      throw new ApiError('offline', 'Cannot reach the case office. Check your connection.');
+      try {
+        res = await fetch(`${FUNCTIONS_URL}/generate-case`, {
+          method: 'POST',
+          headers: headers(),
+          body: JSON.stringify(payload),
+          signal: stepController.signal,
+        });
+      } catch {
+        if (signal?.aborted) throw new ApiError('timeout', 'Generation cancelled.');
+        if (stepController.signal.aborted) throw new ApiError('timeout', 'The case office took too long. Try again.');
+        throw new ApiError('offline', 'Cannot reach the case office. Check your connection.');
+      }
+      if (!res.ok) throw await errorFromResponse(res);
+      body = (await res.json()) as GenerateStep;
+    } finally {
+      clearTimeout(stepTimer);
+      signal?.removeEventListener('abort', onAbort);
     }
-    if (!res.ok) throw await errorFromResponse(res);
-    const body = (await res.json()) as GenerateStep;
     if (typeof body.remaining_today === 'number' && body.remaining_today >= 0) remaining = body.remaining_today;
     if (body.status === 'ready' && body.generated_case_id && body.case) {
       return { generated_case_id: body.generated_case_id, case: body.case, remaining_today: remaining ?? 0, attempts: body.attempts ?? step + 1 };

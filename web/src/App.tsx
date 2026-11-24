@@ -5,7 +5,8 @@ import { audio } from './audio/audio.ts';
 import { applySettingsToDocument, useSettings } from './store/settings.ts';
 import { MainMenu } from './screens/MainMenu.tsx';
 import { NotFound } from './screens/NotFound.tsx';
-
+// Loaded eagerly: it has to render even when a screen's chunk could not be fetched.
+import { RouteError } from './screens/RouteError.tsx';
 
 // Screens load on demand so the menu appears quickly; story case data ships with the case screens.
 function screen<K extends string>(load: () => Promise<Record<K, ComponentType>>, name: K) {
@@ -52,6 +53,7 @@ function Root() {
 const router = createBrowserRouter([
   {
     element: <Root />,
+    errorElement: <RouteError />,
     children: [
       { path: '/', element: <MainMenu /> },
       { path: '/slots', element: page(screen(() => import('./screens/SaveSlots.tsx'), 'SaveSlots')) },
@@ -62,6 +64,7 @@ const router = createBrowserRouter([
       {
         path: '/case/:caseKey',
         element: page(screen(() => import('./screens/CaseLayout.tsx'), 'CaseLayout')),
+        errorElement: <RouteError />,
         children: [
           { path: 'briefing', element: page(screen(() => import('./screens/Briefing.tsx'), 'Briefing')) },
           { path: 'rooms', element: page(screen(() => import('./screens/RoomSelect.tsx'), 'RoomSelect')) },

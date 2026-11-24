@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import type { CaseFile } from '@shared/caseSchema.ts';
 import type { CaseProgress } from '../engine/types.ts';
@@ -28,6 +28,31 @@ export function Hud({ caseFile, caseKey, progress }: HudProps) {
   const total = totalDiscoverables(caseFile);
   const remainingHints = caseFile.hints.length - progress.hintsUsed;
   const closed = progress.accusation !== null;
+  const headerRef = useRef<HTMLElement>(null);
+
+  // The HUD wraps onto several rows on narrow screens. Sticky panels below it offset themselves by
+  // --hud-height, so publish the real height instead of the 56px default.
+  useLayoutEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const root = document.documentElement;
+    const apply = (height: number) => {
+      if (height > 0) root.style.setProperty('--hud-height', `${Math.ceil(height)}px`);
+    };
+    apply(el.getBoundingClientRect().height);
+    let ro: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver((entries) => {
+        const box = entries[0]?.borderBoxSize?.[0];
+        apply(box ? box.blockSize : el.getBoundingClientRect().height);
+      });
+      ro.observe(el, { box: 'border-box' });
+    }
+    return () => {
+      ro?.disconnect();
+      root.style.removeProperty('--hud-height');
+    };
+  }, []);
 
   const link = (to: string, label: string, extra = '') => (
     <NavLink to={casePath(caseKey, to)} className={({ isActive }) => `${styles.link} ${extra} ${isActive ? styles.active : ''}`}>
@@ -36,7 +61,7 @@ export function Hud({ caseFile, caseKey, progress }: HudProps) {
   );
 
   return (
-    <header className={styles.hud} aria-label="Case controls">
+    <header ref={headerRef} className={styles.hud} aria-label="Case controls">
       <a href="#main" className="skip-link">
         Skip to content
       </a>

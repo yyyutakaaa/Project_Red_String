@@ -3,7 +3,7 @@
 import { create } from 'zustand';
 import type { CaseFile, Hotspot, Mood } from '@shared/caseSchema.ts';
 import { syncPins } from '../engine/board.ts';
-import { evaluateAccusation, scoreProgress } from '../engine/scoring.ts';
+import { discoveredCount, evaluateAccusation, questionsUsed, scoreProgress, totalDiscoverables, totalPatience } from '../engine/scoring.ts';
 import {
   browserStorage,
   continueSlot,
@@ -114,7 +114,16 @@ export const useGame = create<GameStore>((set, get) => {
     saveToSlot: (n) => {
       const slot = get().slot;
       if (!slot) return;
-      write({ ...slot, slot: n });
+      if (n === slot.slot) {
+        get().saveNow();
+        return;
+      }
+      // The copy gets fresh run ids so the two slots never share server-side interrogation state;
+      // parentRunId lets the server carry over patience, clues and transcripts from the original run.
+      const progress = Object.fromEntries(
+        Object.entries(slot.progress).map(([key, p]) => [key, { ...p, runId: uuid(), parentRunId: p.runId }]),
+      );
+      write({ ...slot, slot: n, progress });
       get().pushToast(`Saved to slot ${n}.`, 'save');
     },
 
@@ -336,6 +345,17 @@ export function accuse(c: CaseFile, caseKey: string, culpritId: string, evidence
     score: score.total,
     rank: score.rank,
     at: Date.now(),
+    breakdown: {
+      base: score.base,
+      thoroughness: score.thoroughness,
+      efficiency: score.efficiency,
+      hintPenalty: score.hintPenalty,
+      discovered: discoveredCount(p),
+      discoverable: totalDiscoverables(c),
+      questionsUsed: questionsUsed(p),
+      questionBudget: totalPatience(c),
+      hintsUsed: p.hintsUsed,
+    },
   };
   const slot = G().slot!;
   const withProgress: SaveSlotData = {

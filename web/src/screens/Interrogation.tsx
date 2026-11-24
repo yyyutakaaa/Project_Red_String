@@ -79,6 +79,18 @@ function rememberBackend(ok: boolean): void {
   probeCache = { at: Date.now(), result: Promise.resolve(ok) };
 }
 
+/**
+ * Set by the "Bring in" links. Switching suspects remounts the room and drops the focused link, so the
+ * next room to mount takes focus on its heading instead of leaving keyboard users on the page body.
+ */
+let focusHeadingOnMount = false;
+
+/** True while the same save slot and the same attempt at the case are active as when a question was sent. */
+function isActiveRun(caseKey: string, slotNo: number, runId: string): boolean {
+  const slot = useGame.getState().slot;
+  return slot?.slot === slotNo && slot.progress[caseKey]?.runId === runId;
+}
+
 // ---------------------------------------------------------------------------
 // Small helpers
 
@@ -202,6 +214,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
   const [claimsOpen, setClaimsOpen] = useState(() => !narrow);
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
   const logRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const scrollState = useRef({ stick: true, lastTop: 0, smoothUntil: 0, first: true });
@@ -241,7 +254,16 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
     };
   }, []);
 
-  // A reload mid-reply can leave an empty placeholder in the save. Sweep it when nothing is streaming.
+  // Arrived here from another suspect's "Bring in" link: the clicked link is gone, so keep focus on this screen.
+  useEffect(() => {
+    if (!focusHeadingOnMount) return;
+    focusHeadingOnMount = false;
+    const active = document.activeElement;
+    if (!active || active === document.body) headingRef.current?.focus({ preventScroll: true });
+  }, []);
+
+  // A reload mid-reply (or a reply dropped because the slot changed under it) can leave an empty placeholder
+  // in the save. Sweep it whenever nothing is streaming.
   useEffect(() => {
     if (usePendingReplies.getState().byKey[convKey]) return;
     const live = liveConversation(caseFile, caseKey, suspect.id);
@@ -249,7 +271,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
     for (const m of live.messages) {
       if (m.role === 'suspect' && !m.text.trim()) removeChatMessage(caseFile, caseKey, suspect.id, m.id);
     }
-  }, [caseFile, caseKey, convKey, suspect.id]);
+  }, [caseFile, caseKey, convKey, suspect.id, inFlight]);
 
   // New message: jump to the bottom (smoothly, unless motion is reduced or this is the first paint).
   useEffect(() => {
@@ -297,8 +319,16 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
 
   async function ask(text: string, evidenceId: string | null, retryOfId: string | null): Promise<void> {
     if (usePendingReplies.getState().byKey[convKey]) return;
-    const current = liveConversation(caseFile, caseKey, suspect.id);
-    if (!current || current.patienceUsed >= current.patienceMax) return;
+    const activeSlot = useGame.getState().slot;
+    const run = activeSlot?.progress[caseKey];
+    if (!activeSlot || !run) return;
+    const slotNo = activeSlot.slot;
+    const runId = run.runId;
+    // The player can switch slot or restart the case while the reply is on its way. Anything that lands
+    // after that belongs to a game that is no longer on the table, so it is dropped without a word.
+    const stillActive = () => isActiveRun(caseKey, slotNo, runId);
+    const current = getConversation(run, caseFile, suspect.id);
+    if (current.patienceUsed >= current.patienceMax) return;
     const message = (text.trim() || (evidenceId ? DEFAULT_SHOW_LINE : '')).slice(0, MAX_LEN);
     if (!message) return;
 
@@ -338,7 +368,8 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
           case_id: source === 'story' ? caseFile.id : undefined,
           generated_case_id: generatedId ?? undefined,
           suspect_id: suspect.id,
-          save_id: progress.runId,
+          save_id: runId,
+          parent_save_id: run.parentRunId ?? null,
           conversation,
           message,
           shown_evidence_id: evidenceId,
@@ -346,15 +377,20 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
         },
         {
           onDelta: (delta) => {
+            if (!stillActive()) return;
             if (!streamed) setPending(convKey, { placeholderId, started: true });
             streamed += delta;
             patchChatMessage(caseFile, caseKey, suspect.id, placeholderId, { text: streamed }, false);
           },
         },
       );
+      if (!stillActive()) return;
 
       const reply = final.reply.trim() ? final.reply : streamed.trim() ? streamed : EMPTY_REPLY;
+      // The chips on this reply show what it revealed; the notebook also catches up on anything this
+      // suspect revealed earlier in the run whose reply never made it here.
       const revealed = Array.isArray(final.revealed_clue_ids) ? final.revealed_clue_ids : [];
+      const allRevealed = Array.isArray(final.all_revealed_clue_ids) ? final.all_revealed_clue_ids : revealed;
       patchChatMessage(
         caseFile,
         caseKey,
@@ -363,7 +399,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
         { text: reply, revealedClueIds: revealed, ...(final.silent ? { silent: true } : {}) },
         true,
       );
-      applyRevealedClues(caseFile, caseKey, revealed);
+      applyRevealedClues(caseFile, caseKey, allRevealed);
 
       const latest = liveConversation(caseFile, caseKey, suspect.id);
       const shownBefore = latest?.shownEvidence ?? [];
@@ -381,6 +417,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
       rememberBackend(true);
       setOffline(false);
     } catch (err) {
+      if (!stillActive()) return;
       removeChatMessage(caseFile, caseKey, suspect.id, placeholderId);
       const code = err instanceof ApiError ? err.code : null;
       if (code === 'patience_exhausted') {
@@ -454,7 +491,11 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
                     to={casePath(caseKey, `interrogate/${o.id}`)}
                     className={styles.otherLink}
                     data-testid={`switch-suspect-${o.id}`}
-                    onClick={() => sfx('click')}
+                    onClick={(e) => {
+                      sfx('click');
+                      // A plain activation navigates here; a modified click opens a new tab and keeps this room.
+                      if (e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) focusHeadingOnMount = true;
+                    }}
                   >
                     <Portrait
                       suspect={o}
@@ -498,7 +539,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
           </div>
           <div className={styles.identity}>
             <p className={styles.kicker}>Interview room</p>
-            <h1 id={nameId} className={styles.name}>
+            <h1 id={nameId} ref={headingRef} tabIndex={-1} className={styles.name}>
               {suspect.name}
             </h1>
             <p className={styles.role}>{suspect.role}</p>
@@ -540,6 +581,8 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
             className={`${styles.log} scroll-area`}
             role="log"
             aria-live="polite"
+            // Held busy while a reply is pending, so the log speaks the finished reply once.
+            aria-busy={inFlight || undefined}
             aria-label={`Conversation with ${suspect.name}`}
             tabIndex={0}
             onScroll={onLogScroll}

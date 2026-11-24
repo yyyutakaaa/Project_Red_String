@@ -116,6 +116,21 @@ Project: `hbwvybkpdqliusxheiyg` (eu-central-1). Edge function secrets: `OMNIAKEY
 | `ALLOWED_ORIGINS` | (none) | extra CORS origins, comma-separated, e.g. a custom domain |
 | `VERCEL_PROJECT_NAME` | `project-red-string` | allows `https://<name>.vercel.app` and its preview URLs |
 | `MODEL_PRICING_JSON` | built-in table | override USD per million tokens, e.g. `{"mimo-v2.6-flash":{"input":0.07,"output":0.13}}` |
+| `GLOBAL_GENERATIONS_PER_DAY` | `60` | cap on new generated cases per day across all players |
+| `OMNIAKEY_SEND_TEMPERATURE` | (off) | set to `1` to send sampling temperature (some models reject it) |
+
+Limits enforced server-side:
+
+| Limit | interrogate | generate-case |
+|---|---|---|
+| Per device | 30 per minute, 400 per day | 6 requests per minute, 5 new cases per day |
+| Per IP (hashed) | 90 per minute, 2000 per day | 3 per minute, 15 per day |
+| Global | daily spend ceiling | daily spend ceiling, `GLOBAL_GENERATIONS_PER_DAY` |
+| Per suspect | patience (questions) per save | at most 2 repairs per job |
+
+The spend ceiling is race-free: before each model call the worst-case cost is reserved in `usage_log`
+under a Postgres advisory lock and refused if it would pass `DAILY_SPEND_LIMIT_USD`; the row is settled
+to the real cost afterwards, and calls that fail after the provider accepted them keep their estimated cost.
 
 Switch models without code changes, for example:
 

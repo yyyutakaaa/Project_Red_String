@@ -58,9 +58,18 @@ export function isUuid(v: unknown): v is string {
   return typeof v === 'string' && UUID.test(v);
 }
 
+/**
+ * Client IP for rate limiting. Prefer headers set by the platform edge; X-Forwarded-For is appended to by
+ * each proxy, so only its right-most entry (added by the trusted proxy) is used, never the client-supplied left.
+ */
 export function clientIp(req: Request): string {
-  const fwd = req.headers.get('x-forwarded-for') ?? '';
-  return fwd.split(',')[0]?.trim() || req.headers.get('cf-connecting-ip') || 'unknown';
+  const edge = req.headers.get('cf-connecting-ip') ?? req.headers.get('x-real-ip');
+  if (edge?.trim()) return edge.trim();
+  const fwd = (req.headers.get('x-forwarded-for') ?? '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+  return fwd[fwd.length - 1] ?? 'unknown';
 }
 
 export async function sha256Hex(text: string): Promise<string> {
@@ -84,6 +93,11 @@ export class SseStream {
         this.closed = true;
       },
     });
+  }
+
+  /** True once the client went away (or the stream was closed). */
+  get isClosed(): boolean {
+    return this.closed;
   }
 
   send(event: string, data: unknown): void {

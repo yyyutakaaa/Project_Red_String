@@ -20,8 +20,8 @@ const SOUND_EVERY = 4;
 
 /**
  * Progressive text reveal. Speed follows the text speed setting; instant speed and reduced motion show
- * everything at once. Screen readers get the full text from a visually hidden copy, while the animated
- * copy is hidden from them, so nothing is read out letter by letter.
+ * everything at once. Screen readers get the full text from a visually hidden copy, filled once the stream
+ * has finished, while the animated copy is hidden from them, so nothing is read out letter by letter.
  */
 export function Typewriter({ text, animate = true, streaming = false, sound = true, className }: TypewriterProps) {
   const speed = useSettings((s) => s.textSpeed);
@@ -88,7 +88,8 @@ export function Typewriter({ text, animate = true, streaming = false, sound = tr
 
   return (
     <span className={`${styles.typewriter} ${className ?? ''}`}>
-      <span className="visually-hidden">{text}</span>
+      {/* Left empty until the stream ends: inside a live region every delta would otherwise be read out. */}
+      <span className="visually-hidden">{streaming ? '' : text}</span>
       <span aria-hidden="true">
         {text.slice(0, visible)}
         {showCaret && <span className={styles.caret} />}

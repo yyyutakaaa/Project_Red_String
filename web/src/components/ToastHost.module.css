@@ -10,7 +10,8 @@
   pointer-events: none;
 }
 .toast {
-  pointer-events: auto;
+  /* Clicks pass through to the controls underneath; only the dismiss button catches them. */
+  pointer-events: none;
   display: flex;
   align-items: flex-start;
   gap: var(--space-3);
@@ -38,6 +39,7 @@
 }
 .text { flex: 1; }
 .close {
+  pointer-events: auto;
   background: none;
   border: 0;
   color: var(--text-muted);

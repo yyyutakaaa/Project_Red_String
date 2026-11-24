@@ -7,6 +7,7 @@ import { useAmbience } from '../hooks/useAmbience.ts';
 import {
   TEXT_SPEED_CPS,
   systemPrefersReducedMotion,
+  useReducedMotion,
   useSettings,
   type FontSize,
   type MotionPref,
@@ -41,12 +42,16 @@ const VOLUMES: Array<{ key: VolumeKey; label: string; note: string }> = [
   { key: 'sfxVolume', label: 'Sound effects', note: 'Paper, pins and stamps.' },
 ];
 
-/** Types the preview line at the chosen speed, then starts over after a pause. */
-function usePreviewTyping(text: string, cps: number): number {
+/**
+ * Types the preview line at the chosen speed, then starts over after a pause. `instant` (instant speed or
+ * reduced motion, matching the in-game typewriter) shows the whole line and keeps it still.
+ */
+function usePreviewTyping(text: string, cps: number, instant: boolean): number {
   const [count, setCount] = useState(0);
   const [run, setRun] = useState(0);
+  const still = instant || !Number.isFinite(cps) || cps <= 0;
   useEffect(() => {
-    if (!Number.isFinite(cps)) {
+    if (still) {
       setCount(text.length);
       return;
     }
@@ -65,8 +70,8 @@ function usePreviewTyping(text: string, cps: number): number {
       cancelAnimationFrame(raf);
       window.clearTimeout(timer);
     };
-  }, [text, cps, run]);
-  return count;
+  }, [text, cps, run, still]);
+  return still ? text.length : count;
 }
 
 interface RadioGroupProps<T extends string> {
@@ -154,7 +159,9 @@ export function SettingsScreen() {
   const reset = useSettings((s) => s.reset);
   const [announcement, setAnnouncement] = useState('');
   const motionNoteId = useId();
-  const typed = usePreviewTyping(PREVIEW_LINE, TEXT_SPEED_CPS[settings.textSpeed]);
+  const previewNoteId = useId();
+  const reduced = useReducedMotion();
+  const typed = usePreviewTyping(PREVIEW_LINE, TEXT_SPEED_CPS[settings.textSpeed], reduced);
   const [systemReduced] = useState(() => systemPrefersReducedMotion());
 
   useEffect(() => {
@@ -216,7 +223,7 @@ export function SettingsScreen() {
               value={settings.textSpeed}
               options={TEXT_SPEEDS}
               onChange={(textSpeed) => patch({ textSpeed })}
-              describedBy="text-preview-label"
+              describedBy={reduced ? `text-preview-label ${previewNoteId}` : 'text-preview-label'}
             />
             <figure className={`paper ${styles.preview}`}>
               <figcaption id="text-preview-label" className={styles.previewLabel}>
@@ -228,6 +235,11 @@ export function SettingsScreen() {
               </p>
               <p className="visually-hidden">{PREVIEW_LINE}</p>
             </figure>
+            {reduced && (
+              <p id={previewNoteId} className={styles.panelNote} data-testid="text-speed-reduced-note">
+                Text appears instantly while motion is reduced.
+              </p>
+            )}
 
             <RadioCards
               legend="Type size"

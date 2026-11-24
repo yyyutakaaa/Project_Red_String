@@ -50,7 +50,7 @@ export function Room() {
     );
   }
 
-  return <RoomView key={room.id} room={room} caseFile={caseFile} caseKey={caseKey} progress={progress} />;
+  return <RoomView room={room} caseFile={caseFile} caseKey={caseKey} progress={progress} />;
 }
 
 interface RoomViewProps {
@@ -60,27 +60,13 @@ interface RoomViewProps {
   progress: CaseProgress;
 }
 
+/**
+ * The frame and the room strip stay mounted when the detective walks to another room, so keyboard
+ * focus stays on the room tab that was clicked. Only the search area below is keyed by room.
+ */
 function RoomView({ room, caseFile, caseKey, progress }: RoomViewProps) {
-  const [activeId, setActiveId] = useState<string | null>(null);
-  const panelRef = useRef<HTMLDivElement>(null);
-  const reducedMotion = useReducedMotion();
-  const examined = useMemo(() => examinedIn(progress.examinedHotspots, room.id), [progress.examinedHotspots, room.id]);
-  const active = room.hotspots.find((h) => h.id === activeId) ?? null;
   const index = caseFile.rooms.findIndex((r) => r.id === room.id);
   const bodyHere = caseFile.victim.found_in === room.id;
-  const evidenceHere = roomEvidenceIds(caseFile, room).filter((id) => progress.foundEvidence.includes(id));
-  const searched = room.hotspots.filter((h) => examined.has(h.id));
-  const left = room.hotspots.length - examined.size;
-
-  const onExamine = (h: Hotspot) => {
-    setActiveId(h.id);
-    const found = examineHotspot(caseFile, caseKey, room.id, h);
-    if (!found) sfx('page');
-    // On narrow screens the notes sit under the scene; bring them into view without moving focus.
-    if (typeof window !== 'undefined' && window.matchMedia?.('(max-width: 899px)').matches) {
-      panelRef.current?.scrollIntoView({ block: 'nearest', behavior: reducedMotion ? 'auto' : 'smooth' });
-    }
-  };
 
   return (
     <ScreenFrame
@@ -110,94 +96,120 @@ function RoomView({ room, caseFile, caseKey, progress }: RoomViewProps) {
         )}
       </div>
 
-      <div className={styles.layout}>
-        <section className={`${styles.stage} fade-in`} aria-labelledby="room-scene-heading">
-          <h2 id="room-scene-heading" className="visually-hidden">
-            Search the {room.name}
+      <RoomSearch key={room.id} room={room} caseFile={caseFile} caseKey={caseKey} progress={progress} />
+    </ScreenFrame>
+  );
+}
+
+/** Scene and field notes for one room. Keyed by room id, so the open note resets per room. */
+function RoomSearch({ room, caseFile, caseKey, progress }: RoomViewProps) {
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const reducedMotion = useReducedMotion();
+  const examined = useMemo(() => examinedIn(progress.examinedHotspots, room.id), [progress.examinedHotspots, room.id]);
+  const active = room.hotspots.find((h) => h.id === activeId) ?? null;
+  const evidenceHere = roomEvidenceIds(caseFile, room).filter((id) => progress.foundEvidence.includes(id));
+  const searched = room.hotspots.filter((h) => examined.has(h.id));
+  const left = room.hotspots.length - examined.size;
+
+  const onExamine = (h: Hotspot) => {
+    setActiveId(h.id);
+    const found = examineHotspot(caseFile, caseKey, room.id, h);
+    if (!found) sfx('page');
+    // On narrow screens the notes sit under the scene; bring them into view without moving focus.
+    if (typeof window !== 'undefined' && window.matchMedia?.('(max-width: 899px)').matches) {
+      panelRef.current?.scrollIntoView({ block: 'nearest', behavior: reducedMotion ? 'auto' : 'smooth' });
+    }
+  };
+
+  return (
+    <div className={styles.layout}>
+      <section className={`${styles.stage} fade-in`} aria-labelledby="room-scene-heading">
+        <h2 id="room-scene-heading" className="visually-hidden">
+          Search the {room.name}
+        </h2>
+        <RoomScene
+          background={room.background}
+          hotspots={room.hotspots}
+          examinedIds={examined}
+          activeId={activeId}
+          onExamine={onExamine}
+          controlsId={DESCRIPTION_ID}
+          label={`${room.name}: places to search`}
+        />
+        <p className={styles.help}>
+          <span>Tab</span> through the room. <span>Enter</span> or <span>Space</span> to look closer.
+        </p>
+      </section>
+
+      <aside className={styles.panel} aria-label="Field notes">
+        <div ref={panelRef} className={`paper ${styles.note}`}>
+          <span className={styles.clip} aria-hidden="true" />
+          <div id={DESCRIPTION_ID} data-testid="hotspot-description" aria-live="polite" className={styles.noteBody}>
+            {active ? (
+              <div key={active.id} className={`${styles.noteEntry} fade-up`}>
+                <p className={styles.noteKicker}>Examined</p>
+                <h2 className={styles.noteTitle}>{active.label}</h2>
+                <p className={styles.noteText}>{active.description}</p>
+                {active.evidence_id && (
+                  <p className={styles.evidenceLine}>
+                    <span className={styles.evidenceLabel}>Evidence collected:</span>{' '}
+                    <strong>{evidenceName(caseFile, active.evidence_id)}</strong>
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div className={`${styles.noteEntry} fade-up`}>
+                <p className={styles.noteKicker}>Field notes</p>
+                <h2 className={styles.noteTitle}>Nothing in hand yet.</h2>
+                <p className={styles.noteText}>
+                  Every room keeps a secret or two. Run the light over anything that looks out of place and see what it gives up.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <section className={styles.tally} aria-labelledby="room-tally-heading">
+          <h2 id="room-tally-heading" className={styles.tallyTitle}>
+            Searched {examined.size} of {room.hotspots.length}
           </h2>
-          <RoomScene
-            background={room.background}
-            hotspots={room.hotspots}
-            examinedIds={examined}
-            activeId={activeId}
-            onExamine={onExamine}
-            controlsId={DESCRIPTION_ID}
-            label={`${room.name}: places to search`}
-          />
-          <p className={styles.help}>
-            <span>Tab</span> through the room. <span>Enter</span> or <span>Space</span> to look closer.
+          <div className={styles.meter} aria-hidden="true">
+            <span style={{ width: `${room.hotspots.length ? (examined.size / room.hotspots.length) * 100 : 0}%` }} />
+          </div>
+          <p className={styles.tallyText}>
+            {left === 0 ? 'Room turned over. Nothing left to touch.' : left === 1 ? 'One place left to search.' : `${left} places left to search.`}
           </p>
+          {searched.length > 0 && (
+            <ul className={styles.searched}>
+              {searched.map((h) => (
+                <li key={h.id}>{h.label}</li>
+              ))}
+            </ul>
+          )}
         </section>
 
-        <aside className={styles.panel} aria-label="Field notes">
-          <div ref={panelRef} className={`paper ${styles.note}`}>
-            <span className={styles.clip} aria-hidden="true" />
-            <div id={DESCRIPTION_ID} data-testid="hotspot-description" aria-live="polite" className={styles.noteBody}>
-              {active ? (
-                <div key={active.id} className={`${styles.noteEntry} fade-up`}>
-                  <p className={styles.noteKicker}>Examined</p>
-                  <h2 className={styles.noteTitle}>{active.label}</h2>
-                  <p className={styles.noteText}>{active.description}</p>
-                  {active.evidence_id && (
-                    <p className={styles.evidenceLine}>
-                      <span className={styles.evidenceLabel}>Evidence collected:</span>{' '}
-                      <strong>{evidenceName(caseFile, active.evidence_id)}</strong>
-                    </p>
-                  )}
-                </div>
-              ) : (
-                <div className={`${styles.noteEntry} fade-up`}>
-                  <p className={styles.noteKicker}>Field notes</p>
-                  <h2 className={styles.noteTitle}>Nothing in hand yet.</h2>
-                  <p className={styles.noteText}>
-                    Every room keeps a secret or two. Run the light over anything that looks out of place and see what it gives up.
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <section className={styles.tally} aria-labelledby="room-tally-heading">
-            <h2 id="room-tally-heading" className={styles.tallyTitle}>
-              Searched {examined.size} of {room.hotspots.length}
-            </h2>
-            <div className={styles.meter} aria-hidden="true">
-              <span style={{ width: `${room.hotspots.length ? (examined.size / room.hotspots.length) * 100 : 0}%` }} />
-            </div>
-            <p className={styles.tallyText}>
-              {left === 0 ? 'Room turned over. Nothing left to touch.' : left === 1 ? 'One place left to search.' : `${left} places left to search.`}
-            </p>
-            {searched.length > 0 && (
-              <ul className={styles.searched}>
-                {searched.map((h) => (
-                  <li key={h.id}>{h.label}</li>
-                ))}
-              </ul>
-            )}
-          </section>
-
-          <section className={styles.bagged} aria-labelledby="room-evidence-heading">
-            <h2 id="room-evidence-heading" className={styles.tallyTitle}>
-              Bagged here
-            </h2>
-            {evidenceHere.length > 0 ? (
-              <ul className={styles.evidenceList}>
-                {evidenceHere.map((id) => (
-                  <li key={id}>{evidenceName(caseFile, id)}</li>
-                ))}
-              </ul>
-            ) : (
-              <p className={styles.tallyText}>Nothing bagged here yet.</p>
-            )}
-            {evidenceHere.length > 0 && (
-              <Link className={styles.boardLink} to={casePath(caseKey, 'board')}>
-                Pin it to the board
-              </Link>
-            )}
-          </section>
-        </aside>
-      </div>
-    </ScreenFrame>
+        <section className={styles.bagged} aria-labelledby="room-evidence-heading">
+          <h2 id="room-evidence-heading" className={styles.tallyTitle}>
+            Bagged here
+          </h2>
+          {evidenceHere.length > 0 ? (
+            <ul className={styles.evidenceList}>
+              {evidenceHere.map((id) => (
+                <li key={id}>{evidenceName(caseFile, id)}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className={styles.tallyText}>Nothing bagged here yet.</p>
+          )}
+          {evidenceHere.length > 0 && (
+            <Link className={styles.boardLink} to={casePath(caseKey, 'board')}>
+              Pin it to the board
+            </Link>
+          )}
+        </section>
+      </aside>
+    </div>
   );
 }
 

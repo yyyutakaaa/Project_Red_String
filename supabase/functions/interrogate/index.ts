@@ -15,8 +15,8 @@ import { resolveMood, resolveRevealedClues, normalizeMood, type ClueContext } fr
 import { limitWords, parseReplyMeta, sanitizeReply, spokenPart, visibleLength } from '../_shared/core/replyParsing.ts';
 import type { Mood } from '../_shared/core/caseSchema.ts';
 import { SseStream, clientIp, errorResponse, isUuid, json, originRejected, preflight, sha256Hex } from '../_shared/http.ts';
-import { claimQuestion, hitRateLimit, logUsage, recordTurn, releaseQuestion, spendCeilingReached, type StoredTurn } from '../_shared/db.ts';
-import { chat, streamChat, type ChatMessage, type Usage } from '../_shared/omniakey.ts';
+import { claimQuestion, hitRateLimit, logUsage, recordTurn, releaseQuestion, reserveSpend, settleSpend, worstCaseCostUsd, type StoredTurn } from '../_shared/db.ts';
+import { chat, providerRejected, ProviderError, streamChat, type ChatMessage, type Usage } from '../_shared/omniakey.ts';
 import { config } from '../_shared/env.ts';
 import { resolveCase, storyCaseDiagnostics } from '../_shared/cases.ts';
 import { judgeModel, judgeReply, resolveEval, type JudgeVerdict } from '../_shared/evalMode.ts';
@@ -39,6 +39,7 @@ const Body = z.object({
   message: z.string().max(4000),
   shown_evidence_id: z.string().max(64).nullable().optional(),
   device_id: z.string().refine(isUuid, 'device_id must be a uuid'),
+  parent_save_id: z.string().refine(isUuid, 'parent_save_id must be a uuid').nullable().optional(),
 });
 
 function pick<T>(items: readonly T[]): T {
@@ -94,9 +95,6 @@ Deno.serve(async (req: Request): Promise<Response> => {
         return errorResponse(req, 429, 'rate_limited', 'Too many questions from this network.', { 'Retry-After': String(ipRl.retryAfterSeconds) });
       }
     }
-    if (await spendCeilingReached()) {
-      return errorResponse(req, 503, 'spend_limit', 'The daily interrogation budget is used up. Try again tomorrow.');
-    }
   } catch (err) {
     console.error('limit check failed', (err as Error).message);
     return errorResponse(req, 503, 'server_error', 'The precinct is not answering. Try again shortly.');
@@ -105,7 +103,14 @@ Deno.serve(async (req: Request): Promise<Response> => {
   const patienceMax = suspect.patience;
   let claim;
   try {
-    claim = await claimQuestion(body.save_id, caseKey, suspect.id, body.device_id, evalCtx ? 1_000_000 : patienceMax);
+    claim = await claimQuestion(
+      body.save_id,
+      caseKey,
+      suspect.id,
+      body.device_id,
+      evalCtx ? 1_000_000 : patienceMax,
+      body.parent_save_id && body.parent_save_id !== body.save_id ? body.parent_save_id : null,
+    );
   } catch (err) {
     console.error('claim failed', (err as Error).message);
     return errorResponse(req, 503, 'server_error', 'The precinct is not answering. Try again shortly.');
@@ -115,6 +120,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
     return errorResponse(req, 409, 'patience_exhausted', `${suspect.name} will not answer any more questions.`, {}, {
       patience_used: claim.patienceUsed ?? patienceMax,
       patience_max: patienceMax,
+      all_revealed_clue_ids: claim.revealedClues ?? [],
     });
   }
 
@@ -136,9 +142,23 @@ Deno.serve(async (req: Request): Promise<Response> => {
   const model = evalCtx?.model ?? config.suspectModel();
   const clueIds = suspect.revealable_clues.map((c) => c.clue_id);
 
+  // Reserve the worst case (the reply plus one metadata retry) against the daily ceiling before calling
+  // the model, atomically, so concurrent requests cannot overshoot it.
+  const inputChars = messages.reduce((n, m) => n + m.content.length, 0);
+  const reservation = await reserveSpend(body.device_id, 'interrogate', model, worstCaseCostUsd(model, inputChars, MAX_OUTPUT_TOKENS, 2));
+  if (reservation === null) {
+    await releaseQuestion(body.save_id, caseKey, suspect.id);
+    return errorResponse(req, 503, 'spend_limit', 'The daily interrogation budget is used up. Try again tomorrow.');
+  }
+
   const sse = new SseStream();
   const run = async () => {
     const usages: Array<{ model: string; usage: Usage }> = [];
+    const settle = async (fn: string) => {
+      const own = usages.filter((u) => u.model === model).map((u) => u.usage);
+      if (own.length) await settleSpend(reservation, fn, model, own);
+      for (const u of usages.filter((x) => x.model !== model)) await logUsage(body.device_id, `${fn}-judge`, u.model, u.usage);
+    };
     let full = '';
     let emitted = 0;
     let firstTokenMs: number | null = null;
@@ -189,6 +209,14 @@ Deno.serve(async (req: Request): Promise<Response> => {
       const revealed = flagged ? resolveRevealedClues(suspect, [], ctx) : resolveRevealedClues(suspect, meta?.revealed_clue_ids, ctx);
       const mood = resolveMood(suspect, meta?.mood, ctx, prevMood);
 
+      if (sse.isClosed && !evalCtx) {
+        // The player left before the reply arrived: give the question back and do not record the turn,
+        // so the reply and its clues are not lost (the player can ask again).
+        await releaseQuestion(body.save_id, caseKey, suspect.id);
+        await settle('interrogate-abandoned');
+        return;
+      }
+
       await recordTurn(
         body.save_id,
         caseKey,
@@ -213,11 +241,13 @@ Deno.serve(async (req: Request): Promise<Response> => {
         evalReport = { verdict, first_token_ms: firstTokenMs, total_ms: performance.now() - started, model, flagged, raw: spokenPart(result.text) };
       }
 
-      for (const u of usages) await logUsage(body.device_id, evalCtx ? 'interrogate-eval' : 'interrogate', u.model, u.usage);
+      await settle(evalCtx ? 'interrogate-eval' : 'interrogate');
 
       sse.send('final', {
         reply,
         revealed_clue_ids: revealed,
+        // Every clue revealed in this run, so a reply whose final event was lost in transit is recovered.
+        all_revealed_clue_ids: [...new Set([...claim.revealedClues, ...revealed])],
         mood,
         patience_used: claim.patienceUsedBefore + 1,
         patience_max: patienceMax,
@@ -227,10 +257,14 @@ Deno.serve(async (req: Request): Promise<Response> => {
     } catch (err) {
       console.error('provider failure', (err as Error).message);
       await releaseQuestion(body.save_id, caseKey, suspect.id);
-      for (const u of usages) await logUsage(body.device_id, 'interrogate', u.model, u.usage);
+      // A call the provider accepted may have been billed: count its estimate. A rejected call cost nothing.
+      if (err instanceof ProviderError && err.usage) usages.push({ model, usage: err.usage });
+      if (usages.some((u) => u.model === model)) await settle('interrogate-failed');
+      else if (providerRejected(err)) await settleSpend(reservation, 'interrogate-rejected', model, [{ inputTokens: 0, outputTokens: 0, estimated: false }]);
       sse.send('final', {
         reply: pick(suspect.deflections),
         revealed_clue_ids: [],
+        all_revealed_clue_ids: claim.revealedClues,
         mood: prevMood,
         patience_used: claim.patienceUsedBefore,
         patience_max: patienceMax,

@@ -77,6 +77,18 @@ describe('validateCase', () => {
     expect(r.ok).toBe(false);
   });
 
+  it('rejects required evidence that only a free or pressed clue can hand over', () => {
+    const errors = errorsOf((c) => {
+      c.solution.required_evidence = ['bloody-clock', 'ben-note'];
+    });
+    expect(errors.join('\n')).toMatch(/"ben-note" must come from a hotspot or from a shown_evidence clue/);
+    // The same evidence behind a shown_evidence trigger is fine.
+    const ok = miniCase();
+    ok.suspects[1]!.revealable_clues[0]!.condition = 'shown_evidence:racing-slips';
+    ok.solution.required_evidence = ['bloody-clock', 'ben-note'];
+    expect(validateCase(ok).errors).toEqual([]);
+  });
+
   it('requires a suspicious innocent', () => {
     const errors = errorsOf((c) => {
       c.suspects[1]!.lies = [];

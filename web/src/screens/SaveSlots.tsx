@@ -37,6 +37,8 @@ function bestScores(storage: KeyValueStorage, slot: SaveSlotData): BestScore[] {
     .slice(0, 4);
 }
 
+const slotHeadingId = (n: number) => `slot-heading-${n}`;
+
 function hasAnything(slot: SaveSlotData): boolean {
   return Object.keys(slot.progress).length > 0 || Object.keys(slot.completions).length > 0;
 }
@@ -83,10 +85,13 @@ export function SaveSlots() {
       startFresh(pending.slot);
       return;
     }
-    removeSlot(pending.slot);
+    const emptied = pending.slot;
+    removeSlot(emptied);
     setPending(null);
     refresh();
-    setAnnouncement(`Slot ${pending.slot} emptied.`);
+    setAnnouncement(`Slot ${emptied} emptied.`);
+    // The Delete button that opened the dialog is gone now; keep the keyboard in the same drawer.
+    requestAnimationFrame(() => document.getElementById(slotHeadingId(emptied))?.focus());
   };
 
   return (
@@ -107,7 +112,7 @@ export function SaveSlots() {
           {Array.from({ length: SLOT_COUNT }, (_, i) => i + 1).map((n) => {
             const data = slots[n - 1] ?? null;
             const isCurrent = current === n && data !== null;
-            const headingId = `slot-heading-${n}`;
+            const headingId = slotHeadingId(n);
             const solved = data ? STORY_ORDER.filter((id) => data.completions[id]?.solved).length : 0;
             const scores = data ? bestScores(storage, data) : [];
             const activeTitle = data?.activeCaseKey ? caseTitle(storage, data.activeCaseKey) : null;
@@ -122,7 +127,7 @@ export function SaveSlots() {
                     Drawer {n}
                   </div>
                   <header className={styles.head}>
-                    <h2 id={headingId} className={styles.heading}>
+                    <h2 id={headingId} className={styles.heading} tabIndex={-1}>
                       Slot {n}
                       {isCurrent && <span className="visually-hidden"> (in use)</span>}
                     </h2>

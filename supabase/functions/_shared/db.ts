@@ -74,6 +74,46 @@ export async function spendCeilingReached(): Promise<boolean> {
   }
 }
 
+/**
+ * Reserve the worst-case cost of a model call against the daily ceiling, atomically (advisory lock in
+ * Postgres). Returns the usage_log row id, or null when the ceiling would be passed. Fails closed.
+ */
+export async function reserveSpend(deviceId: string, fn: string, model: string, estimateUsd: number): Promise<number | null> {
+  const { data, error } = await db().rpc('rs_reserve_spend', {
+    p_device_id: deviceId,
+    p_function: fn,
+    p_model: model,
+    p_estimate: Number(estimateUsd.toFixed(6)),
+    p_limit: config.dailySpendLimitUsd(),
+  });
+  if (error) {
+    console.error('reserve spend failed', error.message);
+    return null;
+  }
+  return typeof data === 'number' ? data : data === null ? null : Number(data);
+}
+
+/** Replace a reservation with what the calls actually cost (summed). */
+export async function settleSpend(id: number, fn: string, model: string, usages: Usage[]): Promise<void> {
+  const total = usages.reduce(
+    (acc, u) => ({ inputTokens: acc.inputTokens + u.inputTokens, outputTokens: acc.outputTokens + u.outputTokens, estimated: acc.estimated || u.estimated }),
+    { inputTokens: 0, outputTokens: 0, estimated: false },
+  );
+  const { error } = await db().rpc('rs_settle_spend', {
+    p_id: id,
+    p_function: fn,
+    p_input_tokens: Math.round(total.inputTokens),
+    p_output_tokens: Math.round(total.outputTokens),
+    p_cost: Number(estimateCostUsd(model, total).toFixed(6)),
+  });
+  if (error) console.error('settle spend failed', error.message);
+}
+
+/** Worst-case cost of a call: estimated input plus the full output budget. */
+export function worstCaseCostUsd(model: string, inputChars: number, maxOutputTokens: number, calls = 1): number {
+  return estimateCostUsd(model, { inputTokens: Math.ceil(inputChars / 3.6) * calls, outputTokens: maxOutputTokens * calls, estimated: true });
+}
+
 export async function logUsage(deviceId: string, fn: string, model: string, usage: Usage): Promise<number> {
   const cost = estimateCostUsd(model, usage);
   const { error } = await db()
@@ -105,19 +145,36 @@ export interface ClaimedQuestion {
   messages: StoredTurn[];
 }
 
-export type ClaimResult = ClaimedQuestion | { ok: false; reason: 'patience_exhausted' | 'device_mismatch'; patienceUsed?: number };
+export type ClaimResult =
+  | ClaimedQuestion
+  | { ok: false; reason: 'patience_exhausted' | 'device_mismatch'; patienceUsed?: number; revealedClues?: string[] };
 
-export async function claimQuestion(saveId: string, caseKey: string, suspectId: string, deviceId: string, patienceMax: number): Promise<ClaimResult> {
+export async function claimQuestion(
+  saveId: string,
+  caseKey: string,
+  suspectId: string,
+  deviceId: string,
+  patienceMax: number,
+  parentSaveId: string | null = null,
+): Promise<ClaimResult> {
   const { data, error } = await db().rpc('rs_claim_question', {
     p_save_id: saveId,
     p_case_key: caseKey,
     p_suspect_id: suspectId,
     p_device_id: deviceId,
     p_patience_max: patienceMax,
+    p_parent_save_id: parentSaveId,
   });
   if (error) throw new Error(`claim rpc failed: ${error.message}`);
   const r = data as Record<string, unknown>;
-  if (!r.ok) return { ok: false, reason: r.reason as 'patience_exhausted' | 'device_mismatch', patienceUsed: Number(r.patience_used) || 0 };
+  if (!r.ok) {
+    return {
+      ok: false,
+      reason: r.reason as 'patience_exhausted' | 'device_mismatch',
+      patienceUsed: Number(r.patience_used) || 0,
+      revealedClues: Array.isArray(r.revealed_clues) ? (r.revealed_clues as string[]) : [],
+    };
+  }
   return {
     ok: true,
     patienceUsedBefore: Number(r.patience_used_before) || 0,

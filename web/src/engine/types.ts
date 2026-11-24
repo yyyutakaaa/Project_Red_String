@@ -47,6 +47,18 @@ export interface BoardState {
 
 export type AccusationOutcome = 'correct' | 'wrong_culprit' | 'weak_proof';
 
+export interface ScoreSnapshot {
+  base: number;
+  thoroughness: number;
+  efficiency: number;
+  hintPenalty: number;
+  discovered: number;
+  discoverable: number;
+  questionsUsed: number;
+  questionBudget: number;
+  hintsUsed: number;
+}
+
 export interface AccusationRecord {
   culpritId: string;
   evidenceIds: string[];
@@ -54,11 +66,18 @@ export interface AccusationRecord {
   score: number;
   rank: string;
   at: number;
+  /** Score breakdown frozen at the moment of the accusation (missing in older saves). */
+  breakdown?: ScoreSnapshot;
 }
 
 export interface CaseProgress {
   /** Unique per attempt; sent to the backend as save_id so patience is tracked per run. */
   runId: string;
+  /**
+   * Set when this run was copied from another slot ("save to slot N"). The server copies that run's
+   * interrogation state (patience, clues, transcript) the first time this run questions each suspect.
+   */
+  parentRunId?: string | null;
   caseKey: string;
   source: CaseSource;
   startedAt: number;

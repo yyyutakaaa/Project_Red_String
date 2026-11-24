@@ -36,6 +36,11 @@ export interface ChatResult {
 }
 
 export class ProviderError extends Error {
+  /**
+   * What the failed call probably cost: set when the provider accepted the request (it may have billed
+   * tokens before the stream broke, timed out or came back empty). Null for rejected requests.
+   */
+  usage: Usage | null = null;
   constructor(
     message: string,
     public status: number,
@@ -44,6 +49,11 @@ export class ProviderError extends Error {
     super(message);
     this.name = 'ProviderError';
   }
+}
+
+/** True when the provider never started work, so nothing was billed (bad request, auth, config). */
+export function providerRejected(err: unknown): boolean {
+  return err instanceof ProviderError && (err.kind === 'config' || (err.kind === 'http' && err.usage === null));
 }
 
 /** USD per million tokens, from the OmniaKey pricing tables (docs.omniakey.com/en/models, 2026-11-23). */
@@ -208,8 +218,22 @@ export async function streamChat(opts: ChatOptions, onDelta: (text: string) => v
   // A few raw payloads, kept only to explain an empty completion in the logs (no secrets are in them).
   const samples: string[] = [];
   let finishReason: string | null = null;
+  const inputChars = opts.messages.reduce((n, m) => n + m.content.length, 0);
+  let accepted = false;
+  // Attach a cost estimate to failures after the provider accepted the request.
+  const withUsage = (err: ProviderError): ProviderError => {
+    if (accepted) {
+      err.usage = {
+        inputTokens: usage?.input ?? Math.ceil(inputChars / 3.6),
+        outputTokens: usage?.output ?? Math.max(estimateTokens(text), err.kind === 'timeout' ? opts.maxTokens : 0),
+        estimated: true,
+      };
+    }
+    return err;
+  };
   try {
     const res = await post(opts, true, controller);
+    accepted = true;
     const type = res.headers.get('Content-Type') ?? '';
     if (!type.includes('event-stream') || !res.body) {
       // Gateway answered without streaming: treat as a single chunk.
@@ -230,8 +254,8 @@ export async function streamChat(opts: ChatOptions, onDelta: (text: string) => v
         try {
           chunk = await reader.read();
         } catch {
-          if (controller.signal.aborted) throw new ProviderError('Provider timed out', 0, 'timeout');
-          throw new ProviderError('Stream interrupted', 0, 'network');
+          if (controller.signal.aborted) throw withUsage(new ProviderError('Provider timed out', 0, 'timeout'));
+          throw withUsage(new ProviderError('Stream interrupted', 0, 'network'));
         }
         if (chunk.done) break;
         buffer += decoder.decode(chunk.value, { stream: true }).replace(/\r\n/g, '\n');
@@ -275,9 +299,8 @@ export async function streamChat(opts: ChatOptions, onDelta: (text: string) => v
   }
   if (!text) {
     console.error(`empty completion from ${opts.model}; finish_reason=${finishReason}; usage=${JSON.stringify(usage)}; samples=${JSON.stringify(samples)}`);
-    throw new ProviderError('Empty completion', 0, 'empty');
+    throw withUsage(new ProviderError('Empty completion', 0, 'empty'));
   }
-  const inputChars = opts.messages.reduce((n, m) => n + m.content.length, 0);
   return {
     text,
     model: opts.model,
@@ -293,19 +316,23 @@ export async function streamChat(opts: ChatOptions, onDelta: (text: string) => v
 export async function chat(opts: ChatOptions): Promise<ChatResult> {
   const started = performance.now();
   const { controller, clear } = withTimeout(opts);
+  const inputChars = opts.messages.reduce((n, m) => n + m.content.length, 0);
+  const billed = (err: ProviderError): ProviderError => {
+    err.usage = { inputTokens: Math.ceil(inputChars / 3.6), outputTokens: opts.maxTokens, estimated: true };
+    return err;
+  };
   try {
     const res = await post(opts, false, controller);
     let data: unknown;
     try {
       data = await res.json();
     } catch {
-      if (controller.signal.aborted) throw new ProviderError('Provider timed out', 0, 'timeout');
-      throw new ProviderError('Invalid JSON from provider', res.status, 'http');
+      if (controller.signal.aborted) throw billed(new ProviderError('Provider timed out', 0, 'timeout'));
+      throw billed(new ProviderError('Invalid JSON from provider', res.status, 'network'));
     }
     const text = deltaText(data);
-    if (!text) throw new ProviderError('Empty completion', 0, 'empty');
+    if (!text) throw billed(new ProviderError('Empty completion', 0, 'empty'));
     const u = readUsage((data as Record<string, unknown>)?.usage);
-    const inputChars = opts.messages.reduce((n, m) => n + m.content.length, 0);
     return {
       text,
       model: opts.model,

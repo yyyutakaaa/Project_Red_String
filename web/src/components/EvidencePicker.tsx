@@ -1,3 +1,4 @@
+import { useEffect, useId, useLayoutEffect, useRef } from 'react';
 import type { CaseFile, Evidence } from '@shared/caseSchema.ts';
 import { Button } from './Button.tsx';
 import { EvidenceCard } from './EvidenceCard.tsx';
@@ -34,6 +35,37 @@ export function EvidencePicker({
   const items = evidenceIds
     .map((id) => caseFile.evidence.find((e) => e.id === id))
     .filter((e): e is Evidence => e !== undefined);
+  const doneId = `${useId()}-done`;
+  const opener = useRef<HTMLElement | null>(null);
+
+  // Remember the control that opened the picker. A layout effect runs before the dialog takes focus.
+  useLayoutEffect(() => {
+    if (!open) return;
+    const active = document.activeElement;
+    opener.current = active instanceof HTMLElement && active !== document.body ? active : null;
+  }, [open]);
+
+  // When the picker closes and focus was left nowhere, hand it back to that control.
+  useEffect(() => {
+    if (open) return;
+    const trigger = opener.current;
+    opener.current = null;
+    if (!trigger?.isConnected) return;
+    const active = document.activeElement;
+    if (!active || active === document.body || active.closest('dialog:not([open])')) trigger.focus({ preventScroll: true });
+  }, [open]);
+
+  const pick = (id: string | null) => {
+    onPick(id);
+    // If the dialog stays open, keep the keyboard in it: on Done after choosing an item, or when the
+    // focused control went away ("Put it away" disappears once nothing is attached).
+    requestAnimationFrame(() => {
+      const done = document.getElementById(doneId);
+      if (!done) return;
+      const active = document.activeElement;
+      if (id !== null || !active || !done.closest('dialog')?.contains(active)) done.focus();
+    });
+  };
 
   return (
     <Modal
@@ -44,11 +76,13 @@ export function EvidencePicker({
       footer={
         <>
           {selectedId && (
-            <Button variant="ghost" onClick={() => onPick(null)}>
+            <Button variant="ghost" onClick={() => pick(null)}>
               Put it away
             </Button>
           )}
-          <Button onClick={onClose}>Done</Button>
+          <Button id={doneId} onClick={onClose}>
+            Done
+          </Button>
         </>
       }
     >
@@ -70,7 +104,7 @@ export function EvidencePicker({
                       evidence={e}
                       caseFile={caseFile}
                       selected={selected}
-                      onToggle={() => onPick(selected ? null : e.id)}
+                      onToggle={() => pick(selected ? null : e.id)}
                     />
                   </div>
                   {(selected || shown) && (

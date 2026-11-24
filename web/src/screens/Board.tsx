@@ -392,8 +392,10 @@ export function Board() {
   const uid = `b${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`;
   const instructionsId = `${uid}-instructions`;
   const connectionsId = `${uid}-connections`;
+  const checkId = `${uid}-check`;
 
   const svgRef = useRef<SVGSVGElement>(null);
+  const connectionsRef = useRef<HTMLElement>(null);
   const session = useRef<DragSession | null>(null);
   const suppressClickUntil = useRef(0);
   const viewsRef = useRef<PinView[]>([]);
@@ -694,6 +696,20 @@ export function Board() {
     });
   };
 
+  /** Remove from the Connections list: focus moves to the next Remove button, or the list heading. */
+  const onRemoveFromList = (link: BoardLink) => {
+    const ids = board.links.map((l) => l.id);
+    const index = ids.indexOf(link.id);
+    const nextId = ids[index + 1] ?? ids[index - 1] ?? null;
+    cut(link);
+    requestAnimationFrame(() => {
+      const section = connectionsRef.current;
+      if (!section) return;
+      const nextEl = nextId ? section.querySelector<HTMLButtonElement>(`[data-remove-id="${CSS.escape(nextId)}"]`) : null;
+      (nextEl ?? section.querySelector<HTMLElement>(`#${CSS.escape(connectionsId)}`))?.focus();
+    });
+  };
+
   const onCheck = () => {
     setBoard(caseKey, checkTheory(latestBoard(), caseFile));
     setFresh(null);
@@ -707,6 +723,8 @@ export function Board() {
     setFresh(null);
     sfx('snap');
     announce('Board cleared. Every string is down.');
+    // The dialog would hand focus back to "Clear strings", which is now disabled.
+    requestAnimationFrame(() => document.getElementById(checkId)?.focus());
   };
 
   // --- derived view
@@ -730,7 +748,7 @@ export function Board() {
       kicker={caseFile.title}
       actions={
         <>
-          <Button variant="primary" data-testid="check-theory" onClick={onCheck}>
+          <Button id={checkId} variant="primary" data-testid="check-theory" onClick={onCheck}>
             Check theory
           </Button>
           <Button onClick={() => setConfirmClear(true)} disabled={linkCount === 0} aria-haspopup="dialog">
@@ -938,8 +956,8 @@ export function Board() {
           ))}
         </ul>
 
-        <section className={styles.connections} aria-labelledby={connectionsId}>
-          <h2 id={connectionsId}>
+        <section ref={connectionsRef} className={styles.connections} aria-labelledby={connectionsId}>
+          <h2 id={connectionsId} tabIndex={-1}>
             Connections <span className={styles.count}>({linkCount})</span>
           </h2>
           {linkCount === 0 ? (
@@ -956,7 +974,8 @@ export function Board() {
                     <span className={`${styles.connectionStatus} ${styles[`status_${status}`] ?? ''}`}>{STATUS_LABEL[status]}</span>
                     <Button
                       variant="ghost"
-                      onClick={() => cut(link)}
+                      onClick={() => onRemoveFromList(link)}
+                      data-remove-id={link.id}
                       aria-label={`Remove string from ${nameOf(link.from)} to ${nameOf(link.to)}`}
                     >
                       Remove

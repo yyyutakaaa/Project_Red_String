@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import type { CaseFile } from '@shared/caseSchema.ts';
 import { Button, ButtonLink } from '../components/Button.tsx';
 import { Portrait } from '../components/Portrait.tsx';
 import { ScreenFrame } from '../components/ScreenFrame.tsx';
@@ -7,7 +8,7 @@ import { useAmbience } from '../hooks/useAmbience.ts';
 import { casePath, useCaseContext } from '../hooks/useCase.ts';
 import { STORY_ORDER, getStoryCase, isStoryUnlocked } from '../engine/caseLoader.ts';
 import { discoveredCount, questionsUsed, scoreProgress, totalDiscoverables, totalPatience } from '../engine/scoring.ts';
-import type { AccusationOutcome } from '../engine/types.ts';
+import type { AccusationOutcome, AccusationRecord, CaseProgress, ScoreSnapshot } from '../engine/types.ts';
 import { evidenceName, useGame } from '../store/game.ts';
 import { sfx } from '../audio/audio.ts';
 import styles from './Ending.module.css';
@@ -26,6 +27,26 @@ const HEADLINE: Record<AccusationOutcome, string> = {
 
 /** Delay so the sound lands with the stamp rather than on top of the accusation's own thump. */
 const STAMP_SOUND_DELAY_MS = 420;
+
+/**
+ * The tally as it stood when the accusation was made. Older saves have no frozen breakdown, so it is
+ * rebuilt from the current progress for them.
+ */
+function tallyAt(caseFile: CaseFile, progress: CaseProgress, accusation: AccusationRecord): ScoreSnapshot {
+  if (accusation.breakdown) return accusation.breakdown;
+  const live = scoreProgress(caseFile, progress, accusation.outcome);
+  return {
+    base: live.base,
+    thoroughness: live.thoroughness,
+    efficiency: live.efficiency,
+    hintPenalty: live.hintPenalty,
+    discovered: discoveredCount(progress),
+    discoverable: totalDiscoverables(caseFile),
+    questionsUsed: questionsUsed(progress),
+    questionBudget: totalPatience(caseFile),
+    hintsUsed: progress.hintsUsed,
+  };
+}
 
 export function Ending() {
   const { caseFile, caseKey, progress, source } = useCaseContext();
@@ -60,7 +81,7 @@ export function Ending() {
   }
 
   const outcome = accusation.outcome;
-  const breakdown = scoreProgress(caseFile, progress, outcome);
+  const breakdown = tallyAt(caseFile, progress, accusation);
   const accused = caseFile.suspects.find((s) => s.id === accusation.culpritId);
   const culprit = caseFile.suspects.find((s) => s.id === caseFile.solution.culprit_id);
   const required = caseFile.solution.required_evidence;
@@ -83,13 +104,13 @@ export function Ending() {
 
   const rows: Array<{ label: string; value: number; note: string }> = [
     { label: 'Verdict', value: breakdown.base, note: STAMP[outcome] },
-    { label: 'Thoroughness', value: breakdown.thoroughness, note: `${discoveredCount(progress)} of ${totalDiscoverables(caseFile)} found` },
+    { label: 'Thoroughness', value: breakdown.thoroughness, note: `${breakdown.discovered} of ${breakdown.discoverable} found` },
     {
       label: 'Efficiency',
       value: breakdown.efficiency,
-      note: outcome === 'correct' ? `${questionsUsed(progress)} of ${totalPatience(caseFile)} questions` : 'Only paid on a clean solve',
+      note: outcome === 'correct' ? `${breakdown.questionsUsed} of ${breakdown.questionBudget} questions` : 'Only paid on a clean solve',
     },
-    { label: 'Hints', value: -breakdown.hintPenalty, note: `${progress.hintsUsed} taken` },
+    { label: 'Hints', value: -breakdown.hintPenalty, note: `${breakdown.hintsUsed} taken` },
   ];
 
   return (
@@ -160,18 +181,18 @@ export function Ending() {
             <div>
               <dt>Clues found</dt>
               <dd>
-                {discoveredCount(progress)} / {totalDiscoverables(caseFile)}
+                {breakdown.discovered} / {breakdown.discoverable}
               </dd>
             </div>
             <div>
               <dt>Questions used</dt>
               <dd>
-                {questionsUsed(progress)} / {totalPatience(caseFile)}
+                {breakdown.questionsUsed} / {breakdown.questionBudget}
               </dd>
             </div>
             <div>
               <dt>Hints taken</dt>
-              <dd>{progress.hintsUsed}</dd>
+              <dd>{breakdown.hintsUsed}</dd>
             </div>
           </dl>
         </section>

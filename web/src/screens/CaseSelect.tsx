@@ -8,6 +8,7 @@ import { useAmbience } from '../hooks/useAmbience.ts';
 import { casePath } from '../hooks/useCase.ts';
 import { STORY_ORDER, caseKeyFor, getStoryCase, isStoryUnlocked } from '../engine/caseLoader.ts';
 import { deleteGeneratedCase, listGeneratedCases } from '../engine/generatedCases.ts';
+import { loadSlot } from '../engine/save.ts';
 import type { CaseProgress, CaseSource, CompletionRecord } from '../engine/types.ts';
 import { formatDate } from '../lib/format.ts';
 import { useGame } from '../store/game.ts';
@@ -137,8 +138,9 @@ export function CaseSelect() {
       navigate(casePath(pending.key, 'briefing'));
       return;
     }
+    // Removes the case and its progress from every slot, then reload the active slot from storage.
     deleteGeneratedCase(storage, pending.id);
-    if (slot.activeCaseKey === pending.key) setActiveCase(null);
+    useGame.setState({ slot: loadSlot(storage, slot.slot) ?? slot });
     setGenerated(listGeneratedCases(storage));
     setAnnouncement(`${pending.title} removed from the shelf.`);
   };

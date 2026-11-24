@@ -19,10 +19,19 @@ import styles from './NewCase.module.css';
 type Difficulty = NonNullable<GenerateCaseRequest['preferences']['difficulty']>;
 
 const SETTING_MAX = 80;
-/** The server normally answers within two minutes; give up a little after that. */
-const CLIENT_TIMEOUT_MS = 180_000;
+/**
+ * Backstop for the whole run. Each server step already has its own GENERATE_STEP_TIMEOUT_MS (160 s), and a
+ * run is a first draft plus up to two repairs, so this covers three full steps with some slack.
+ */
+const CLIENT_TIMEOUT_MS = 520_000;
 const LINE_INTERVAL_MS = 5200;
 const TYPE_CPS = 26;
+/** Live regions tend to skip text that arrives together with the region, so it is filled a moment later. */
+const ANNOUNCE_DELAY_MS = 150;
+
+const START_ANNOUNCEMENT = 'Typing up your case. This takes one to two minutes.';
+const CANCEL_NOTICE = "Cancelled. A case that was already being written may still count toward today's limit.";
+const TIMEOUT_MESSAGE = 'The case office took too long to answer. Try again.';
 
 const SUGGESTIONS = ['a snowed-in mountain lodge', 'a 1920s ocean liner', 'a film studio backlot', 'a night train to the border'];
 
@@ -63,6 +72,20 @@ function useTypewriter(text: string, cps: number, instant: boolean): string {
   return instant ? text : text.slice(0, count);
 }
 
+/** The text for a polite live region: set shortly after it changes, so the region exists before it speaks. */
+function useAnnouncement(text: string): string {
+  const [said, setSaid] = useState('');
+  useEffect(() => {
+    if (!text) {
+      setSaid('');
+      return;
+    }
+    const id = window.setTimeout(() => setSaid(text), ANNOUNCE_DELAY_MS);
+    return () => window.clearTimeout(id);
+  }, [text]);
+  return said;
+}
+
 function formatElapsed(seconds: number): string {
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
@@ -75,6 +98,8 @@ function LoadingFile({ startedAt, attempt, onCancel }: { startedAt: number; atte
   const [elapsed, setElapsed] = useState(0);
   const line = STATUS_LINES[lineIndex % STATUS_LINES.length] ?? '';
   const typed = useTypewriter(line, TYPE_CPS, reduced);
+  // Spoken once at the start and once per redraft. The cycling office lines are for the eyes only.
+  const status = useAnnouncement(attempt > 1 ? `Draft ${attempt}. The office is rewriting.` : START_ANNOUNCEMENT);
 
   useEffect(() => {
     const id = window.setInterval(() => setLineIndex((i) => i + 1), LINE_INTERVAL_MS);
@@ -113,7 +138,7 @@ function LoadingFile({ startedAt, attempt, onCancel }: { startedAt: number; atte
           </p>
         )}
         <p className="visually-hidden" role="status" aria-live="polite">
-          {attempt > 1 ? `Draft ${attempt}. ${line}.` : `${line}.`}
+          {status}
         </p>
         <p className={styles.timer}>
           <span className={styles.timerLabel}>Elapsed</span>{' '}
@@ -149,6 +174,7 @@ export function NewCase() {
   const controllerRef = useRef<AbortController | null>(null);
   const settingId = useId();
   const countId = useId();
+  const spokenNotice = useAnnouncement(notice);
 
   useEffect(() => {
     document.title = 'New case - Project Red String';
@@ -204,13 +230,15 @@ export function NewCase() {
       navigate(casePath(key, 'briefing'));
     } catch (err) {
       if (timedOut) {
-        setPhase({ kind: 'error', message: 'The case office took too long to answer. Try again.', canRetry: true });
+        setPhase({ kind: 'error', message: TIMEOUT_MESSAGE, canRetry: true });
         sfx('error');
         return;
       }
       if (controller.signal.aborted) return;
       const code = err instanceof ApiError ? err.code : null;
-      setPhase({ kind: 'error', message: describeApiError(err), canRetry: code !== 'generation_limit' && code !== 'not_configured' });
+      // A single step running out of time (api.ts) reads as the office, not as a suspect, being slow.
+      const message = code === 'timeout' ? TIMEOUT_MESSAGE : describeApiError(err);
+      setPhase({ kind: 'error', message, canRetry: code !== 'generation_limit' && code !== 'not_configured' });
       sfx('error');
     } finally {
       window.clearTimeout(timer);
@@ -222,7 +250,8 @@ export function NewCase() {
     controllerRef.current?.abort();
     controllerRef.current = null;
     setPhase({ kind: 'form' });
-    setNotice('Cancelled. Nothing was filed.');
+    // The server may already be writing the case, and a started case can still count toward the daily limit.
+    setNotice(CANCEL_NOTICE);
     setFocusGenerate(true);
   };
 
@@ -376,7 +405,7 @@ export function NewCase() {
                 </p>
               </div>
               <p className="visually-hidden" role="status" aria-live="polite">
-                {notice}
+                {spokenNotice}
               </p>
               {notice && (
                 <p className={styles.notice} aria-hidden="true">

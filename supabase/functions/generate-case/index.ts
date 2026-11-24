@@ -13,14 +13,17 @@ import { z } from 'zod';
 import { validateCase } from '../_shared/core/validator.ts';
 import { buildGeneratorSystemPrompt, buildGeneratorUserPrompt, buildRepairPrompt } from '../_shared/core/generatorPrompt.ts';
 import { extractJson } from '../_shared/core/replyParsing.ts';
-import { errorResponse, isUuid, json, originRejected, preflight } from '../_shared/http.ts';
-import { db, hitDailyCounter, hitRateLimit, logUsage, releaseCounter, spendCeilingReached } from '../_shared/db.ts';
-import { streamChat, ProviderError, type ChatMessage } from '../_shared/omniakey.ts';
-import { config } from '../_shared/env.ts';
+import { clientIp, errorResponse, isUuid, json, originRejected, preflight, sha256Hex } from '../_shared/http.ts';
+import { db, hitDailyCounter, hitRateLimit, releaseCounter, reserveSpend, settleSpend, worstCaseCostUsd } from '../_shared/db.ts';
+import { providerRejected, streamChat, ProviderError, type ChatMessage } from '../_shared/omniakey.ts';
+import { config, envNumber } from '../_shared/env.ts';
 
 const MAX_ATTEMPTS = 3;
 const GENERATIONS_PER_DAY = 5;
-const MAX_OUTPUT_TOKENS = 14_000;
+// Sized so a complete case can finish inside the provider timeout.
+const MAX_OUTPUT_TOKENS = 10_000;
+const IP_LIMITS = { perMinute: 3, perDay: 15 };
+const globalGenerationsPerDay = () => envNumber('GLOBAL_GENERATIONS_PER_DAY', 60);
 const PROVIDER_TIMEOUT_MS = 135_000;
 
 const Body = z.object({
@@ -52,7 +55,14 @@ function normalizeDraft(draft: unknown, jobId: string): unknown {
   return { ...(draft as Record<string, unknown>), id: `generated-${jobId.slice(0, 8)}`, schema_version: 1 };
 }
 
-async function runAttempt(job: JobRow, remainingToday: number): Promise<Response | { body: unknown; status: number }> {
+interface AttemptResult {
+  status: number;
+  body: unknown;
+  /** False when no model call was billed (refused reservation, or the provider rejected the request). */
+  billed: boolean;
+}
+
+async function runAttempt(job: JobRow, remainingToday: number): Promise<AttemptResult> {
   const model = config.generatorModel();
   const messages: ChatMessage[] = [
     { role: 'system', content: buildGeneratorSystemPrompt() },
@@ -64,16 +74,32 @@ async function runAttempt(job: JobRow, remainingToday: number): Promise<Response
   }
 
   const attempt = job.attempts + 1;
+  const inputChars = messages.reduce((n, m) => n + m.content.length, 0);
+  // Reserve the worst-case cost against the daily ceiling before calling the model (atomic, no race).
+  const reservation = await reserveSpend(job.device_id, 'generate-case', model, worstCaseCostUsd(model, inputChars, MAX_OUTPUT_TOKENS));
+  if (reservation === null) {
+    if (job.attempts === 0) await db().from('generated_cases').update({ status: 'failed', updated_at: new Date().toISOString() }).eq('id', job.id);
+    return { status: 503, body: { error: { code: 'spend_limit', message: 'The daily budget is used up. Try again tomorrow.' } }, billed: false };
+  }
+
   let text: string;
   try {
     const result = await streamChat({ model, messages, maxTokens: MAX_OUTPUT_TOKENS, temperature: 0.9, timeoutMs: PROVIDER_TIMEOUT_MS }, () => {});
     text = result.text;
-    await logUsage(job.device_id, 'generate-case', model, result.usage);
+    await settleSpend(reservation, 'generate-case', model, [result.usage]);
   } catch (err) {
     const timeout = err instanceof ProviderError && err.kind === 'timeout';
+    const billed = !providerRejected(err);
     console.error('generator provider failure', (err as Error).message);
+    // A call the provider accepted keeps its (partial) cost on the books; a rejected call cost nothing.
+    if (err instanceof ProviderError && err.usage) await settleSpend(reservation, 'generate-case-failed', model, [err.usage]);
+    else if (!billed) await settleSpend(reservation, 'generate-case-rejected', model, [{ inputTokens: 0, outputTokens: 0, estimated: false }]);
     await db().from('generated_cases').update({ status: 'failed', attempts: attempt, updated_at: new Date().toISOString() }).eq('id', job.id);
-    return { status: timeout ? 504 : 502, body: { error: { code: timeout ? 'timeout' : 'server_error', message: 'The case writer did not deliver. Try again.' } } };
+    return {
+      status: timeout ? 504 : 502,
+      body: { error: { code: timeout ? 'timeout' : 'server_error', message: 'The case writer did not deliver. Try again.' } },
+      billed,
+    };
   }
 
   let draft = extractJson(text);
@@ -91,12 +117,12 @@ async function runAttempt(job: JobRow, remainingToday: number): Promise<Response
       .from('generated_cases')
       .update({ status: 'ready', attempts: attempt, case_json: caseJson, draft_json: null, last_errors: [], updated_at: new Date().toISOString() })
       .eq('id', job.id);
-    return { status: 200, body: { status: 'ready', generated_case_id: job.id, case: caseJson, remaining_today: remainingToday, attempts: attempt } };
+    return { status: 200, body: { status: 'ready', generated_case_id: job.id, case: caseJson, remaining_today: remainingToday, attempts: attempt }, billed: true };
   }
   return saveRepairOrFail(job, attempt, draft, v.errors, remainingToday);
 }
 
-async function saveRepairOrFail(job: JobRow, attempt: number, draft: unknown, errors: string[], remainingToday: number) {
+async function saveRepairOrFail(job: JobRow, attempt: number, draft: unknown, errors: string[], remainingToday: number): Promise<AttemptResult> {
   const failed = attempt >= MAX_ATTEMPTS;
   await db()
     .from('generated_cases')
@@ -112,9 +138,10 @@ async function saveRepairOrFail(job: JobRow, attempt: number, draft: unknown, er
     return {
       status: 422,
       body: { error: { code: 'invalid_case', message: 'The case writer could not produce a fair case. Try again.', errors: errors.slice(0, 20) } },
+      billed: true,
     };
   }
-  return { status: 202, body: { status: 'repairing', job_id: job.id, attempts: attempt, error_count: errors.length, remaining_today: remainingToday } };
+  return { status: 202, body: { status: 'repairing', job_id: job.id, attempts: attempt, error_count: errors.length, remaining_today: remainingToday }, billed: true };
 }
 
 Deno.serve(async (req: Request): Promise<Response> => {
@@ -134,7 +161,10 @@ Deno.serve(async (req: Request): Promise<Response> => {
   try {
     const rl = await hitRateLimit(body.device_id, 6, 40, 'gen');
     if (!rl.allowed) return errorResponse(req, 429, 'rate_limited', 'Too many requests.', { 'Retry-After': String(rl.retryAfterSeconds) });
-    if (await spendCeilingReached()) return errorResponse(req, 503, 'spend_limit', 'The daily budget is used up. Try again tomorrow.');
+    // device_id is chosen by the client, so also limit per network (IP hash).
+    const ipKey = `ip:${(await sha256Hex(clientIp(req))).slice(0, 32)}`;
+    const ipRl = await hitRateLimit(ipKey, IP_LIMITS.perMinute, IP_LIMITS.perDay, 'gen');
+    if (!ipRl.allowed) return errorResponse(req, 429, 'rate_limited', 'Too many case requests from this network.', { 'Retry-After': String(ipRl.retryAfterSeconds) });
   } catch (err) {
     console.error('limit check failed', (err as Error).message);
     return errorResponse(req, 503, 'server_error', 'The case office is not answering.');
@@ -153,7 +183,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
       return errorResponse(req, 422, 'invalid_case', 'This generation job has ended. Start a new case.', {}, { errors: job.last_errors ?? [] });
     }
     const out = await runAttempt(job, -1);
-    return out instanceof Response ? out : json(req, out.body, out.status);
+    return json(req, out.body, out.status);
   }
 
   // Start a new job: counts against the 5-per-day generation limit.
@@ -165,6 +195,23 @@ Deno.serve(async (req: Request): Promise<Response> => {
     return errorResponse(req, 503, 'server_error', 'The case office is not answering.');
   }
   if (!counter.allowed) return errorResponse(req, 429, 'generation_limit', `You can generate ${GENERATIONS_PER_DAY} cases per day.`);
+  // A global cap as well, so many fresh device ids cannot spend the whole budget on generation.
+  let globalCounter: { allowed: boolean; remaining: number; window: string };
+  try {
+    globalCounter = await hitDailyCounter('global', 'gen-cases-all', globalGenerationsPerDay());
+  } catch (err) {
+    console.error('global generation counter failed', (err as Error).message);
+    await releaseCounter(body.device_id, counter.window);
+    return errorResponse(req, 503, 'server_error', 'The case office is not answering.');
+  }
+  if (!globalCounter.allowed) {
+    await releaseCounter(body.device_id, counter.window);
+    return errorResponse(req, 429, 'generation_limit', 'The case office has written all the case files it can today. Come back tomorrow.');
+  }
+  const releaseBoth = async () => {
+    await releaseCounter(body.device_id, counter.window);
+    await releaseCounter('global', globalCounter.window);
+  };
 
   const { data: inserted, error: insertError } = await db()
     .from('generated_cases')
@@ -172,13 +219,11 @@ Deno.serve(async (req: Request): Promise<Response> => {
     .select('*')
     .single();
   if (insertError || !inserted) {
-    await releaseCounter(body.device_id, counter.window);
+    await releaseBoth();
     return errorResponse(req, 503, 'server_error', 'The case office is not answering.');
   }
   const out = await runAttempt(inserted as JobRow, counter.remaining);
-  if (!(out instanceof Response) && (out.status === 504 || out.status === 502)) {
-    // The provider failed before producing anything: do not charge the daily generation.
-    await releaseCounter(body.device_id, counter.window);
-  }
-  return out instanceof Response ? out : json(req, out.body, out.status);
+  // Only refund the daily generation when no model call was billed (refused budget or rejected request).
+  if (!out.billed) await releaseBoth();
+  return json(req, out.body, out.status);
 });

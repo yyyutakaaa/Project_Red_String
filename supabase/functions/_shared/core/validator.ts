@@ -65,6 +65,31 @@ export function computeReachability(c: CaseFile): { evidence: Set<string>; clues
   return { evidence, clues };
 }
 
+/**
+ * Evidence a player can obtain without depending on how the model words its replies: hotspot evidence,
+ * plus evidence granted by shown_evidence clues whose trigger is itself deterministic. Those clues are
+ * forced by the server when the player shows the evidence (see clues.ts forcedClues).
+ */
+export function computeDeterministicEvidence(c: CaseFile): Set<string> {
+  const evidence = new Set<string>();
+  for (const room of c.rooms) for (const h of room.hotspots) if (h.evidence_id) evidence.add(h.evidence_id);
+  let changed = true;
+  while (changed) {
+    changed = false;
+    for (const s of c.suspects) {
+      for (const clue of s.revealable_clues) {
+        if (!clue.evidence_id || evidence.has(clue.evidence_id)) continue;
+        const cond = parseCondition(clue.condition);
+        if (cond.kind === 'shown_evidence' && evidence.has(cond.evidenceId)) {
+          evidence.add(clue.evidence_id);
+          changed = true;
+        }
+      }
+    }
+  }
+  return evidence;
+}
+
 function timeKey(day: number, time: string): number {
   const [h, m] = time.split(':').map(Number);
   return day * 24 * 60 + (h ?? 0) * 60 + (m ?? 0);
@@ -191,6 +216,7 @@ export function validateCase(input: unknown): ValidationResult {
   if (!culprit) errors.push(`solution.culprit_id "${culprit_id}" is not a suspect.`);
 
   const reach = computeReachability(c);
+  const deterministic = computeDeterministicEvidence(c);
   if (new Set(required_evidence).size !== required_evidence.length) errors.push('solution.required_evidence contains duplicates.');
   for (const rid of required_evidence) {
     const ev = evidenceById.get(rid);
@@ -199,6 +225,11 @@ export function validateCase(input: unknown): ValidationResult {
       continue;
     }
     if (!reach.evidence.has(rid)) errors.push(`Required evidence "${rid}" cannot be obtained from any hotspot or reachable clue.`);
+    else if (!deterministic.has(rid)) {
+      errors.push(
+        `Required evidence "${rid}" must come from a hotspot or from a shown_evidence clue whose trigger is itself obtainable that way, not from a free or pressed clue (those depend on how the player phrases questions).`,
+      );
+    }
     if (ev.is_red_herring) errors.push(`Required evidence "${rid}" is marked as a red herring.`);
   }
   if (culprit && !required_evidence.some((rid) => evidenceById.get(rid)?.points_to.includes(culprit_id))) {
