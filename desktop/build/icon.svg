@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- Project Red String logo: red string pulled around brass pins into an eye, a keyhole for a pupil, one loose thread. -->
+  <defs>
+    <linearGradient id="night" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1a2338"/><stop offset=".55" stop-color="#0d121d"/><stop offset="1" stop-color="#06080c"/>
+    </linearGradient>
+    <radialGradient id="lamp" cx="512" cy="150" r="640" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f3c665" stop-opacity=".42"/><stop offset=".45" stop-color="#e8b54a" stop-opacity=".10"/><stop offset="1" stop-color="#e8b54a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="brass" cx=".35" cy=".3" r=".8">
+      <stop offset="0" stop-color="#ffe19a"/><stop offset=".5" stop-color="#e8b54a"/><stop offset="1" stop-color="#8f6418"/>
+    </radialGradient>
+    <radialGradient id="iris" cx=".5" cy=".5" r=".5">
+      <stop offset=".42" stop-color="#7d1820"/><stop offset=".75" stop-color="#c8323c"/><stop offset="1" stop-color="#e4575f"/>
+    </radialGradient>
+    <linearGradient id="string" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e4575f"/><stop offset="1" stop-color="#b02530"/>
+    </linearGradient>
+    <clipPath id="tile"><rect x="100" y="100" width="824" height="824" rx="186"/></clipPath>
+  </defs>
+  <g clip-path="url(#tile)">
+    <rect x="100" y="100" width="824" height="824" fill="url(#night)"/>
+    <!-- Street lamp: a cone of light falling on the board. -->
+    <path d="M512 60 L930 924 L94 924 Z" fill="url(#lamp)"/>
+    <rect x="100" y="100" width="824" height="824" fill="url(#lamp)"/>
+
+    <!-- The loose end: the thread you pull to unravel the case. -->
+    <path d="M848 512 C 900 610, 800 700, 842 790 S 900 900, 870 960" fill="none" stroke="#000" stroke-opacity=".4" stroke-width="20" stroke-linecap="round" transform="translate(6 10)"/>
+    <path d="M848 512 C 900 610, 800 700, 842 790 S 900 900, 870 960" fill="none" stroke="url(#string)" stroke-width="20" stroke-linecap="round"/>
+
+    <!-- Red string pulled taut around eight pins: an eye. -->
+    <polygon points="176,512 300,392 512,328 724,392 848,512 724,632 512,696 300,632" fill="none" stroke="#000" stroke-opacity=".5" stroke-width="30" stroke-linejoin="round" transform="translate(6 12)"/>
+    <polygon points="176,512 300,392 512,328 724,392 848,512 724,632 512,696 300,632" fill="#05070b" fill-opacity=".55" stroke="#c8323c" stroke-width="30" stroke-linejoin="round"/>
+    <polygon points="176,512 300,392 512,328 724,392 848,512 724,632 512,696 300,632" fill="none" stroke="#f08088" stroke-opacity=".55" stroke-width="7" stroke-linejoin="round" transform="translate(0 -7)"/>
+
+    <!-- Iris wound from string, with a keyhole for a pupil. -->
+    <circle cx="512" cy="512" r="150" fill="url(#iris)"/>
+    <g fill="none" stroke="#5c1016" stroke-opacity=".55" stroke-width="5">
+      <circle cx="512" cy="512" r="132"/><circle cx="512" cy="512" r="112"/><circle cx="512" cy="512" r="92"/>
+    </g>
+    <circle cx="512" cy="512" r="74" fill="#05070b"/>
+    <path d="M512 462 a30 30 0 0 1 17 55 l13 45 h-60 l13 -45 a30 30 0 0 1 17 -55 z" fill="#f3c665"/>
+    <circle cx="458" cy="452" r="20" fill="#fff" opacity=".8"/>
+
+    <circle cx="181" cy="521" r="30" fill="#000" opacity=".45"/><circle cx="176" cy="512" r="30" fill="url(#brass)"/><circle cx="167" cy="502" r="8" fill="#fff6d8" opacity=".75"/><circle cx="305" cy="401" r="30" fill="#000" opacity=".45"/><circle cx="300" cy="392" r="30" fill="url(#brass)"/><circle cx="291" cy="382" r="8" fill="#fff6d8" opacity=".75"/><circle cx="517" cy="337" r="30" fill="#000" opacity=".45"/><circle cx="512" cy="328" r="30" fill="url(#brass)"/><circle cx="503" cy="318" r="8" fill="#fff6d8" opacity=".75"/><circle cx="729" cy="401" r="30" fill="#000" opacity=".45"/><circle cx="724" cy="392" r="30" fill="url(#brass)"/><circle cx="715" cy="382" r="8" fill="#fff6d8" opacity=".75"/><circle cx="853" cy="521" r="30" fill="#000" opacity=".45"/><circle cx="848" cy="512" r="30" fill="url(#brass)"/><circle cx="839" cy="502" r="8" fill="#fff6d8" opacity=".75"/><circle cx="729" cy="641" r="30" fill="#000" opacity=".45"/><circle cx="724" cy="632" r="30" fill="url(#brass)"/><circle cx="715" cy="622" r="8" fill="#fff6d8" opacity=".75"/><circle cx="517" cy="705" r="30" fill="#000" opacity=".45"/><circle cx="512" cy="696" r="30" fill="url(#brass)"/><circle cx="503" cy="686" r="8" fill="#fff6d8" opacity=".75"/><circle cx="305" cy="641" r="30" fill="#000" opacity=".45"/><circle cx="300" cy="632" r="30" fill="url(#brass)"/><circle cx="291" cy="622" r="8" fill="#fff6d8" opacity=".75"/>
+  </g>
+</svg>

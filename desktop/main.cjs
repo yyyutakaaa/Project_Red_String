@@ -8,10 +8,17 @@ const { app, BrowserWindow, Menu, shell } = require('electron');
 const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
+const { pickGameRoot, startUpdates } = require('./updater.cjs');
 
-const ROOT = path.join(__dirname, 'renderer');
+app.setName('Red String');
+
+const BUNDLED_ROOT = path.join(__dirname, 'renderer');
+const ICON = path.join(__dirname, 'build', 'icon.png');
 const PREFERRED_PORT = 47615;
 const PORT_ATTEMPTS = 10;
+
+// The build being served: the one shipped with the app, or a newer downloaded update.
+let game = { root: BUNDLED_ROOT, manifest: null };
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -43,15 +50,16 @@ function resolveFile(urlPath) {
   } catch {
     return null;
   }
-  const target = path.normalize(path.join(ROOT, decoded));
-  if (target !== ROOT && !target.startsWith(ROOT + path.sep)) return null;
+  const root = game.root;
+  const target = path.normalize(path.join(root, decoded));
+  if (target !== root && !target.startsWith(root + path.sep)) return null;
   try {
     if (fs.statSync(target).isFile()) return target;
   } catch {
     // Not a file on disk; fall through to the SPA fallback below.
   }
   // Client-side routes (no file extension) get index.html; missing assets get a 404.
-  return path.extname(decoded) ? null : path.join(ROOT, 'index.html');
+  return path.extname(decoded) ? null : path.join(root, 'index.html');
 }
 
 function handle(req, res) {
@@ -102,6 +110,7 @@ function createWindow(origin) {
     minHeight: 600,
     backgroundColor: '#0b0b0d',
     title: 'Red String',
+    icon: ICON,
     show: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.cjs'),
@@ -131,10 +140,27 @@ function createWindow(origin) {
   });
 }
 
-function buildMenu() {
+function buildMenu(checkForUpdates) {
   const isMac = process.platform === 'darwin';
+  const updateItem = { label: 'Check for Updates…', click: () => checkForUpdates(true) };
   const template = [
-    ...(isMac ? [{ role: 'appMenu' }] : []),
+    ...(isMac
+      ? [
+          {
+            label: app.name,
+            submenu: [
+              { role: 'about' },
+              updateItem,
+              { type: 'separator' },
+              { role: 'hide' },
+              { role: 'hideOthers' },
+              { role: 'unhide' },
+              { type: 'separator' },
+              { role: 'quit' },
+            ],
+          },
+        ]
+      : [{ label: 'File', submenu: [updateItem, { type: 'separator' }, { role: 'quit' }] }]),
     { role: 'editMenu' },
     {
       label: 'View',
@@ -168,7 +194,19 @@ if (!app.requestSingleInstanceLock()) {
     const origin = `http://127.0.0.1:${port}`;
     app.on('before-quit', () => server.close());
 
-    buildMenu();
+    game = pickGameRoot(BUNDLED_ROOT);
+    if (process.platform === 'darwin' && !app.isPackaged) app.dock.setIcon(ICON);
+
+    const checkForUpdates = startUpdates({
+      getWindow: () => mainWindow,
+      getCurrent: () => game.manifest,
+      applyBuild: (root, manifest) => {
+        game = { root, manifest };
+        if (mainWindow) mainWindow.webContents.reloadIgnoringCache();
+      },
+    });
+
+    buildMenu(checkForUpdates);
     createWindow(origin);
 
     app.on('activate', () => {

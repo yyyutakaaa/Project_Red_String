@@ -263,6 +263,12 @@ npm run dist:win   # release/Red String Setup <version>.exe
 
 The builds are not code-signed, so macOS Gatekeeper and Windows SmartScreen will warn the first time you open them.
 
+**Updates.** The app stays installed and updates the game by itself. Each web build writes `version.json` (commit, build time, and every file with its sha256). The app compares its own copy with the one on the live site. When the live one is newer it asks, downloads the new files into its data folder, checks every hash, and reloads. Saves are kept. You can also pick *Check for Updates…* from the menu.
+
+**Releases.** Every commit on `main` runs [`desktop-release.yml`](.github/workflows/desktop-release.yml), which builds both installers and publishes them as a GitHub release (`v1.0.<run>`). You only need a new installer for a first install or when the shell in `desktop/` changes.
+
+**Logo.** The app icon is `desktop/build/icon.svg`; the website uses the same drawing as `web/public/favicon.svg`. After editing it, run `npm run icon` in `desktop/` to re-render `icon.png`.
+
 ## Your own art and sound
 
 Everything you see and hear is drawn and made in code right now. To use real art, drop files in `web/src/assets/art/`. The registry in `web/src/assets/registry.ts` picks them up at build time.
