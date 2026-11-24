@@ -25,7 +25,7 @@ You question suspects in your own words. They can lie. You have to prove it.
 ### How you play
 
 1. Read the briefing.
-2. Search the rooms and click on what stands out.
+2. Search the rooms. Nothing is marked: click wherever you want to look closer, and the field notes say whether it was worth it.
 3. Question the suspects by typing. An AI plays them.
 4. Put evidence on the table and watch them react.
 5. Pin it all on the red-string board.
@@ -301,7 +301,8 @@ The game is staged like a film noir picture. All of it is code: no image files.
 
 - **The city** behind the menus ([`RainBackdrop.tsx`](web/src/components/RainBackdrop.tsx)): three skylines with lit windows, an elevated train, a flickering HOTEL sign, lightning, fog, and a detective smoking under the street lamp. Rain is drawn on a canvas in three depths, with splashes on the street. The layers shift with the pointer.
 - **Between screens** ([`Cinema.tsx`](web/src/cinema/Cinema.tsx)): venetian blinds open onto each new scene, and film grain moves over everything.
-- **Crime scenes**: the room dims and a torch follows the pointer (or the hotspot with keyboard focus). Dust hangs in the air, and a flashbulb fires when evidence turns up.
+- **Crime scenes**: the room dims and a torch follows the pointer (or the arrow keys). Dust hangs in the air, and a flashbulb fires when evidence turns up.
+- **Hidden search**: a room does not point at its clues. The places worth searching have no outline, no name and no Tab stop, and each room also gets three or four ordinary things drawn the same way ([`sceneDecoys.ts`](web/src/components/sceneDecoys.ts)), so the drawing gives nothing away. Every click is answered: a place worth searching opens its note, anything else gets a line like "Nothing here but dust." With the keyboard, Tab to the room, aim with the arrow keys and press Enter. Settings → Searching → Show the places brings back the outlined, named places (the way to play with a screen reader).
 - **Interview room**: a lamp swings over the suspect, and its light takes the colour of their mood.
 - **Case files**: each file carries a photograph of its crime scene. Sealed files are taped shut.
 - **The verdict**: a newspaper front page spins in, and the stamp lands on it.
@@ -380,7 +381,7 @@ Good CC0 sources are Kenney, OpenGameArt, Freesound, Poly Haven and the open col
 
 ## Accessibility
 
-You can play the whole game with the keyboard, including the click zones and the board. Focus is always visible. Screen readers get the suspects' replies as they come in. You can change the font size and the text speed, and animations turn off when your system asks for it or when you switch them off in the game.
+You can play the whole game with the keyboard, including searching the rooms (arrow keys aim the torch, Enter looks) and the board. Focus is always visible. Screen readers get the suspects' replies as they come in. You can change the font size and the text speed, and animations turn off when your system asks for it or when you switch them off in the game.
 
 ---
 

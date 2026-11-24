@@ -714,6 +714,24 @@ export const en = {
   'presence.closedFailed': "Case closed. It did not hold",
   'presence.onCase': "On the case",
   'presence.case': "Case: {title}",
+
+  // Hidden search
+  'room.searchArea': "The room. Move the light with the arrow keys, Enter to look closer.",
+  'room.helpHidden': "Run the light over the room and click wherever you want to look closer. Keyboard: Tab to the room, arrow keys to aim, Enter to look.",
+  'room.missKicker': "Nothing of interest",
+  'room.miss.0': "Nothing here but dust.",
+  'room.miss.1': "You look closer. It is exactly what it seems.",
+  'room.miss.2': "Nothing. Whatever happened tonight, it did not happen here.",
+  'room.miss.3': "Just part of the room. Nothing to bag.",
+  'room.miss.4': "You run the light over it and come up empty.",
+  'room.miss.5': "Nothing worth writing down.",
+  'settings.search': "Searching",
+  'settings.searchNote': "How a room shows the places worth searching.",
+  'settings.searchLegend': "Places to search",
+  'settings.searchHidden': "Hidden",
+  'settings.searchHiddenNote': "Only the drawing. Click wherever you want to look and you hear whether it was worth it.",
+  'settings.searchShown': "Show the places",
+  'settings.searchShownNote': "Every place worth searching lights up and has a name. Easier, and the way to play with a screen reader.",
 };
 
 export type MessageKey = keyof typeof en;

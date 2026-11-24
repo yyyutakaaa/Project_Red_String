@@ -377,3 +377,102 @@
   from { transform: rotate(-7deg); }
   to { transform: rotate(7deg); }
 }
+
+/* ---- Hidden search ----
+   Nothing marks the places worth searching: no outline, no name, the same cursor everywhere. The
+   detective clicks where the light falls and the field notes say whether it was worth it. */
+
+.hiddenSearch {
+  cursor: crosshair;
+}
+
+.hiddenSearch:focus-visible {
+  outline: 2px solid var(--lamp-300);
+  outline-offset: -3px;
+}
+
+.hiddenSearch .hotspot {
+  min-width: 0;
+  min-height: 0;
+  cursor: inherit;
+}
+
+.hiddenSearch .hotspot:hover,
+.hiddenSearch .hotspot:focus-visible {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+/* Also on touch screens, where the open search would show a faint outline. The one just looked at
+   keeps its frame. */
+.hiddenSearch .hotspot:not([data-active])::before {
+  border-color: transparent;
+}
+
+/* Where a keyboard detective is aiming. */
+.aimMark {
+  position: absolute;
+  left: var(--lx, 50%);
+  top: var(--ly, 58%);
+  width: 30px;
+  height: 30px;
+  margin: -15px 0 0 -15px;
+  border: 1.5px solid var(--lamp-300);
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(232, 181, 74, 0.45);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-fast) var(--ease-out);
+  z-index: 4;
+}
+
+.aimMark::before,
+.aimMark::after {
+  content: '';
+  position: absolute;
+  background: var(--lamp-300);
+}
+
+.aimMark::before {
+  left: 50%;
+  top: 6px;
+  bottom: 6px;
+  width: 1.5px;
+  margin-left: -0.75px;
+}
+
+.aimMark::after {
+  top: 50%;
+  left: 6px;
+  right: 6px;
+  height: 1.5px;
+  margin-top: -0.75px;
+}
+
+.hiddenSearch:focus-visible .aimMark {
+  opacity: 1;
+}
+
+/* A ring where the detective looked: the answer itself is in the field notes. */
+.ping {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  margin: -24px 0 0 -24px;
+  border: 2px solid rgba(242, 205, 122, 0.85);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: ping 650ms var(--ease-out) forwards;
+  z-index: 4;
+}
+
+@keyframes ping {
+  from {
+    transform: scale(0.3);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
