@@ -204,3 +204,56 @@
   font-weight: 700;
   color: var(--lamp-300);
 }
+
+/* Wide screens: who did it on the left, the proof on the right, the verdict bar under both, so the
+   whole accusation is in view at once. */
+@media (min-width: 1100px) {
+  .lede {
+    margin-bottom: var(--space-3);
+  }
+  .form {
+    display: grid;
+    grid-template-columns: minmax(20rem, 34rem) minmax(0, 1fr);
+    align-items: start;
+    gap: var(--space-4) var(--space-6);
+  }
+  .bar {
+    grid-column: 1 / -1;
+  }
+  .suspects {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+  }
+  .suspect {
+    flex-direction: row;
+    text-align: left;
+    padding: var(--space-2) var(--space-3);
+    gap: var(--space-3);
+  }
+  .suspect > :not(input):first-of-type {
+    flex-shrink: 0;
+  }
+  .suspectText {
+    min-width: 0;
+    flex: 1 1 0%;
+    width: 0;
+  }
+  .suspectName {
+    font-size: var(--fs-md);
+  }
+  .suspectRole {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .stepTitle {
+    margin-bottom: var(--space-3);
+    font-size: var(--fs-lg);
+  }
+  .evidence {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
+    gap: var(--space-3);
+  }
+}

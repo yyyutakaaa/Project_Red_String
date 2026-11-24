@@ -48,7 +48,7 @@ export function Accusation() {
   };
 
   return (
-    <ScreenFrame title={t('accuse.title')} kicker={caseFile.title}>
+    <ScreenFrame wide title={t('accuse.title')} kicker={caseFile.title}>
       <p className={styles.lede}>{t('accuse.lede')}</p>
 
       <form
@@ -79,7 +79,7 @@ export function Accusation() {
                     }}
                     className="visually-hidden"
                   />
-                  <Portrait suspect={s} size={112} showInitials={false} decorative />
+                  <Portrait suspect={s} size={72} showInitials={false} decorative />
                   <span className={styles.suspectText}>
                     <span className={styles.suspectName}>{s.name}</span>
                     <span className={styles.suspectRole}>{s.role}</span>

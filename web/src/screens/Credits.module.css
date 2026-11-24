@@ -143,3 +143,34 @@
   color: var(--paper-ink);
   opacity: 0.8;
 }
+
+/* Wide screens: the file opens out to two columns, so all of it is in view at once. */
+@media (min-width: 1000px) {
+  .file {
+    max-width: 74rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(1.5rem, 4vw, 3.5rem);
+    align-items: start;
+    padding-top: clamp(1rem, 3vh, 2rem);
+    padding-bottom: clamp(1rem, 3vh, 2rem);
+  }
+  .head,
+  .foot {
+    grid-column: 1 / -1;
+  }
+  .head {
+    padding-bottom: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+  .block {
+    margin-bottom: var(--space-4);
+  }
+  .fonts {
+    gap: var(--space-1);
+  }
+  .foot {
+    margin-top: 0;
+    padding-top: var(--space-3);
+  }
+}

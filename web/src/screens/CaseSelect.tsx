@@ -179,7 +179,7 @@ export function CaseSelect() {
   return (
     <>
       <RainBackdrop lamp="right" intensity="soft" />
-      <ScreenFrame title={t('cases.title')} kicker={t('cases.kicker', { n: slot.slot })} actions={backLink}>
+      <ScreenFrame wide title={t('cases.title')} kicker={t('cases.kicker', { n: slot.slot })} actions={backLink}>
         <section aria-labelledby="story-heading" className={styles.section}>
           <div className={styles.sectionHead}>
             <h2 id="story-heading">{t('cases.storyHeading')}</h2>

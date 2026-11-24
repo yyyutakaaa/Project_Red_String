@@ -827,6 +827,8 @@ export function Board() {
       }
     >
       <div className={styles.layout}>
+        {/* Beside the board on a wide screen, so the whole board fits on the screen. */}
+        <div className={styles.side}>
         <p id={instructionsId} className={styles.instructions}>
           {t('board.instructions')}
         </p>
@@ -875,6 +877,47 @@ export function Board() {
           ) : (
             <span>{t('board.noString')}</span>
           )}
+        </div>
+
+        <ul className={styles.legend} aria-label={t('board.legend')}>
+          {(['unchecked', 'supported', 'unsupported', 'neutral'] as const).map((s) => (
+            <li key={s}>
+              <LegendSwatch status={s} />
+              <span>{t(STATUS_LABEL[s])}</span>
+            </li>
+          ))}
+        </ul>
+
+        <section ref={connectionsRef} className={styles.connections} aria-labelledby={connectionsId}>
+          <h2 id={connectionsId} tabIndex={-1}>
+            {t('board.connections')} <span className={styles.count}>({linkCount})</span>
+          </h2>
+          {linkCount === 0 ? (
+            <p className={styles.empty}>{t('board.noConnections')}</p>
+          ) : (
+            <ul className={styles.connectionList}>
+              {board.links.map((link) => {
+                const status = statusKey(link.status);
+                return (
+                  <li key={link.id} className={styles.connection}>
+                    <span className={styles.connectionNames}>
+                      {nameOf(link.from)} <span className={styles.connectionTo}>{t('board.to')}</span> {nameOf(link.to)}
+                    </span>
+                    <span className={`${styles.connectionStatus} ${styles[`status_${status}`] ?? ''}`}>{t(STATUS_LABEL[status])}</span>
+                    <Button
+                      variant="ghost"
+                      onClick={() => onRemoveFromList(link)}
+                      data-remove-id={link.id}
+                      aria-label={t('board.removeLabel', { a: nameOf(link.from), b: nameOf(link.to) })}
+                    >
+                      {t('board.remove')}
+                    </Button>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </section>
         </div>
 
         <div className={styles.frame}>
@@ -1015,45 +1058,6 @@ export function Board() {
           </div>
         </div>
 
-        <ul className={styles.legend} aria-label={t('board.legend')}>
-          {(['unchecked', 'supported', 'unsupported', 'neutral'] as const).map((s) => (
-            <li key={s}>
-              <LegendSwatch status={s} />
-              <span>{t(STATUS_LABEL[s])}</span>
-            </li>
-          ))}
-        </ul>
-
-        <section ref={connectionsRef} className={styles.connections} aria-labelledby={connectionsId}>
-          <h2 id={connectionsId} tabIndex={-1}>
-            {t('board.connections')} <span className={styles.count}>({linkCount})</span>
-          </h2>
-          {linkCount === 0 ? (
-            <p className={styles.empty}>{t('board.noConnections')}</p>
-          ) : (
-            <ul className={styles.connectionList}>
-              {board.links.map((link) => {
-                const status = statusKey(link.status);
-                return (
-                  <li key={link.id} className={styles.connection}>
-                    <span className={styles.connectionNames}>
-                      {nameOf(link.from)} <span className={styles.connectionTo}>{t('board.to')}</span> {nameOf(link.to)}
-                    </span>
-                    <span className={`${styles.connectionStatus} ${styles[`status_${status}`] ?? ''}`}>{t(STATUS_LABEL[status])}</span>
-                    <Button
-                      variant="ghost"
-                      onClick={() => onRemoveFromList(link)}
-                      data-remove-id={link.id}
-                      aria-label={t('board.removeLabel', { a: nameOf(link.from), b: nameOf(link.to) })}
-                    >
-                      {t('board.remove')}
-                    </Button>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </section>
 
         <p className="visually-hidden" role="status" aria-live="polite">
           {announcement.text}

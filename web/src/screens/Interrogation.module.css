@@ -842,14 +842,8 @@
 }
 .outcomeCaught .outcomeStamp { color: var(--red-400); }
 
-/* Short windows: the transcript keeps its room. The suggestions become one row that scrolls
-   sideways, and the question box and its spacing tighten. */
-.suggestList {
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  padding-bottom: 2px;
-  scrollbar-width: thin;
-}
+/* The suggestions wrap instead of scrolling sideways: with no scrollbars a sideways list would hide
+   its last questions without a trace. Short windows: the question box and its spacing tighten. */
 .suggestChip { white-space: nowrap; }
 @media (max-height: 760px) {
   .composer { padding: var(--space-2) var(--space-3) var(--space-3); gap: var(--space-1); }

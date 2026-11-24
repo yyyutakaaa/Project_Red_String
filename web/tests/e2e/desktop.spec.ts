@@ -51,6 +51,7 @@ test('an up-to-date app sees no banner, and gets Discord settings and status', a
   await expect.poll(() => page.evaluate(() => (window as unknown as { __presence: Array<{ details: string } | null> }).__presence.at(-1)?.details)).toBe('In the main menu');
 
   await page.goto('/settings');
+  await page.getByTestId('settings-tab-discord').click();
   await expect(page.getByRole('heading', { name: 'Discord' })).toBeVisible();
   // Settings has more than one 'Hidden' option (Discord status, places to search): pick the Discord one.
   await page.getByRole('group', { name: 'Discord status' }).getByText('Hidden', { exact: true }).click();
@@ -60,6 +61,7 @@ test('an up-to-date app sees no banner, and gets Discord settings and status', a
 test('a browser shows neither', async ({ page }) => {
   await page.goto('/settings');
   await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible();
+  await expect(page.getByTestId('settings-tab-discord')).toHaveCount(0);
   await expect(page.getByRole('heading', { name: 'Discord' })).toHaveCount(0);
   await page.goto('/');
   await expect(page.getByTestId('menu-story-cases')).toBeVisible();
