@@ -41,6 +41,8 @@ button.card:disabled { opacity: 0.55; cursor: not-allowed; }
 }
 .desc { font-size: var(--fs-sm); line-height: 1.5; color: var(--paper-ink); }
 .source {
+  /* On the bottom edge, so cards of the same height line up. */
+  margin-top: auto;
   font-family: var(--font-type);
   font-size: var(--fs-xs);
   color: var(--paper-ink-muted);

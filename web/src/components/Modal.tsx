@@ -49,7 +49,7 @@ export function Modal({ open, title, onClose, children, footer, wide }: ModalPro
           <div className={styles.header}>
             <h2 id={titleId}>{title}</h2>
             <Button variant="ghost" size="small" onClick={onClose} aria-label={t('modal.close')}>
-              Close
+              {t('common.close')}
             </Button>
           </div>
           <div className={styles.body}>{children}</div>
