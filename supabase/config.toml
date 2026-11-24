@@ -15,3 +15,6 @@ verify_jwt = false
 
 [functions.events]
 verify_jwt = false
+
+[functions.translate]
+verify_jwt = false

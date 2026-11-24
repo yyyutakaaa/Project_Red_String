@@ -1,5 +1,6 @@
 import type { CaseFile } from '@shared/caseSchema.ts';
 import type { AccusationOutcome, CaseProgress } from './types.ts';
+import { t } from '../i18n/index.ts';
 
 export const HINT_COST = 75;
 export const MIN_ACCUSATION_EVIDENCE = 2;
@@ -22,9 +23,9 @@ export function evaluateAccusation(c: CaseFile, culpritId: string, evidenceIds: 
 }
 
 export function accusationSelectionError(culpritId: string | null, evidenceIds: readonly string[]): string | null {
-  if (!culpritId) return 'Choose who you are accusing.';
-  if (evidenceIds.length < MIN_ACCUSATION_EVIDENCE) return `Select at least ${MIN_ACCUSATION_EVIDENCE} pieces of evidence.`;
-  if (evidenceIds.length > MAX_ACCUSATION_EVIDENCE) return `Select at most ${MAX_ACCUSATION_EVIDENCE} pieces of evidence.`;
+  if (!culpritId) return t('accuse.errChoose');
+  if (evidenceIds.length < MIN_ACCUSATION_EVIDENCE) return t('accuse.errMin', { n: MIN_ACCUSATION_EVIDENCE });
+  if (evidenceIds.length > MAX_ACCUSATION_EVIDENCE) return t('accuse.errMax', { n: MAX_ACCUSATION_EVIDENCE });
   return null;
 }
 

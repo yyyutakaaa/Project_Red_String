@@ -38,11 +38,10 @@ import {
 } from '../store/game.ts';
 import { useReducedMotion } from '../store/settings.ts';
 import styles from './Interrogation.module.css';
+import { t, useT } from '../i18n/index.ts';
 
 const MAX_LEN = 500;
 const HISTORY_TURNS = 12;
-const DEFAULT_SHOW_LINE = 'Take a look at this.';
-const EMPTY_REPLY = 'Nothing. Just a long, flat stare.';
 const NARROW_QUERY = '(max-width: 899px)';
 const PROBE_TTL_MS = 20_000;
 
@@ -161,13 +160,14 @@ export function Interrogation() {
   const { caseFile, caseKey } = useCaseContext();
   useAmbience(ambienceForBackground(caseFile.rooms[0]?.background));
   const suspect = caseFile.suspects.find((s) => s.id === suspectId);
+  const { t } = useT();
 
   if (!suspect) {
     return (
-      <ScreenFrame title="Nobody by that name" kicker="Interview room">
-        <p>No one in this case file answers to that name. Wrong door, Detective.</p>
+      <ScreenFrame title={t('interro.nobody')} kicker={t('interro.room')}>
+        <p>{t('interro.nobodyText')}</p>
         <ButtonLink to={casePath(caseKey, 'suspects')} variant="lamp">
-          Back to the suspects
+          {t('interro.backToSuspects')}
         </ButtonLink>
       </ScreenFrame>
     );
@@ -190,6 +190,7 @@ interface Failure {
 function InterrogationRoom({ suspect }: { suspect: Suspect }) {
   const { caseFile, caseKey, progress } = useCaseContext();
   const reduced = useReducedMotion();
+  const { t } = useT();
   const narrow = useMediaQuery(NARROW_QUERY);
   const nameId = useId();
   const othersId = useId();
@@ -330,7 +331,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
     const stillActive = () => isActiveRun(caseKey, slotNo, runId);
     const current = getConversation(run, caseFile, suspect.id);
     if (current.patienceUsed >= current.patienceMax) return;
-    const message = (text.trim() || (evidenceId ? DEFAULT_SHOW_LINE : '')).slice(0, MAX_LEN);
+    const message = (text.trim() || (evidenceId ? t('interro.showLine') : '')).slice(0, MAX_LEN);
     if (!message) return;
 
     // Everything said before this question. A retry leaves out the question being retried.
@@ -386,7 +387,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
       );
       if (!stillActive()) return;
 
-      const reply = final.reply.trim() ? final.reply : streamed.trim() ? streamed : EMPTY_REPLY;
+      const reply = final.reply.trim() ? final.reply : streamed.trim() ? streamed : t('interro.emptyReply');
       // The chips on this reply show what it revealed; the notebook also catches up on anything this
       // suspect revealed earlier in the run whose reply never made it here.
       const revealed = Array.isArray(final.revealed_clue_ids) ? final.revealed_clue_ids : [];
@@ -487,14 +488,14 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
 
   return (
     <main id="main" tabIndex={-1} className={styles.page}>
-      <nav className={styles.topbar} aria-label="Interview room">
+      <nav className={styles.topbar} aria-label={t('interro.room')}>
         <ButtonLink to={casePath(caseKey, 'suspects')} variant="ghost" data-testid="leave-room">
-          Leave the room
+          {t('interro.leave')}
         </ButtonLink>
         {others.length > 0 && (
           <div className={styles.others}>
             <span className={styles.othersLabel} id={othersId}>
-              Bring in
+              {t('interro.bringIn')}
             </span>
             <ul className={styles.othersList} aria-labelledby={othersId}>
               {others.map((o) => (
@@ -529,11 +530,10 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
       {offline && (
         <div className={styles.banner} data-testid="offline-banner" role="status">
           <span className={`stamp ${styles.bannerStamp}`} aria-hidden="true">
-            Line dead
+            {t('interro.lineDead')}
           </span>
           <p>
-            <strong>The interrogation room is unreachable.</strong> The scenes, your notebook and the board still work.
-            You can still try a question. If the call drops, you will hear about it.
+            <strong>{t('interro.unreachable')}</strong> {t('interro.unreachableText')}
           </p>
         </div>
       )}
@@ -561,7 +561,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
             </div>
           </div>
           <div className={styles.identity}>
-            <p className={styles.kicker}>Interview room</p>
+            <p className={styles.kicker}>{t('interro.room')}</p>
             <h1 id={nameId} ref={headingRef} tabIndex={-1} className={styles.name}>
               {suspect.name}
             </h1>
@@ -572,13 +572,13 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
             <PatienceMeter used={conv.patienceUsed} max={conv.patienceMax} />
           </div>
           <details className={styles.claims} open={claimsOpen} onToggle={(e) => setClaimsOpen(e.currentTarget.open)}>
-            <summary className={styles.claimsSummary}>On the record</summary>
+            <summary className={styles.claimsSummary}>{t('interro.onRecord')}</summary>
             <div className={styles.claimsBody}>
-              <h2 className={styles.claimsHeading}>Their story</h2>
+              <h2 className={styles.claimsHeading}>{t('interro.theirStory')}</h2>
               <blockquote className={styles.alibi} data-testid="suspect-alibi">
                 <p>{suspect.alibi}</p>
               </blockquote>
-              <h2 className={styles.claimsHeading}>What the file says</h2>
+              <h2 className={styles.claimsHeading}>{t('interro.fileSays')}</h2>
               <ul className={styles.factList}>
                 {suspect.public_facts.map((f) => (
                   <li key={f}>{f}</li>
@@ -586,7 +586,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
               </ul>
               {noted.length > 0 && (
                 <>
-                  <h2 className={styles.claimsHeading}>Noted from {short}</h2>
+                  <h2 className={styles.claimsHeading}>{t('interro.notedFrom', { name: short })}</h2>
                   <ul className={styles.notedList}>
                     {noted.map((c) => (
                       <li key={c.clue_id}>{c.text}</li>
@@ -598,7 +598,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
           </details>
         </aside>
 
-        <section className={styles.room} aria-label={`Questioning ${suspect.name}`}>
+        <section className={styles.room} aria-label={t('interro.questioning', { name: suspect.name })}>
           <div
             ref={logRef}
             className={`${styles.log} scroll-area`}
@@ -606,7 +606,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
             aria-live="polite"
             // Held busy while a reply is pending, so the log speaks the finished reply once.
             aria-busy={inFlight || undefined}
-            aria-label={`Conversation with ${suspect.name}`}
+            aria-label={t('interro.conversation', { name: suspect.name })}
             tabIndex={0}
             onScroll={onLogScroll}
             data-testid="chat-log"
@@ -614,7 +614,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
             <div ref={contentRef} className={`selectable ${styles.logContent}`}>
               {messages.length === 0 && (
                 <p className={styles.opening}>
-                  {suspect.name} sits under the lamp, waiting. Ask about the night. Show what you found. Watch for the lie.
+                  {t('interro.opening', { name: suspect.name })}
                 </p>
               )}
               {messages.map((m) => (
@@ -634,7 +634,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
           <div className={styles.waitingRegion} aria-live="polite">
             {pending && !pending.started && (
               <p className={styles.waiting} data-testid="waiting-indicator">
-                {short} is thinking
+                {t('interro.thinking', { name: short })}
                 <span className={styles.dots} aria-hidden="true">
                   {reduced ? (
                     '...'
@@ -653,11 +653,10 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
           {silentNotice && (
             <div className={styles.notice} data-testid="silent-banner" role="status">
               <p>
-                <strong>{suspect.name} falls silent.</strong> The line crackled and no real answer came through. That one
-                did not cost you a question.
+                <strong>{t('interro.silent', { name: suspect.name })}</strong> {t('interro.silentText')}
               </p>
               <Button size="small" variant="ghost" onClick={() => setSilentNotice(false)}>
-                Dismiss
+                {t('interro.dismiss')}
               </Button>
             </div>
           )}
@@ -667,23 +666,23 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
               <p>{failure.message}</p>
               {failure.retry && !exhausted && (
                 <Button size="small" variant="lamp" onClick={retry} disabled={inFlight}>
-                  Try again
+                  {t('interro.tryAgain')}
                 </Button>
               )}
             </div>
           )}
 
-          <form className={styles.composer} onSubmit={onSubmit} aria-label={`Question ${suspect.name}`}>
+          <form className={styles.composer} onSubmit={onSubmit} aria-label={t('interro.formLabel', { name: suspect.name })}>
             {exhausted && (
               <p className={styles.refusal} role="status" data-testid="refusal-line">
-                {suspect.name} refuses to say another word.
-                <span className={styles.refusalNote}> Take what you have to the board.</span>
+                {t('interro.refuses', { name: suspect.name })}
+                <span className={styles.refusalNote}>{t('interro.refusesNote')}</span>
               </p>
             )}
             {attachedEvidence && (
               <div className={styles.attachedRow}>
                 <span className={styles.attachedChip} data-testid="attached-evidence">
-                  <span className={styles.attachedLabel}>Showing</span>
+                  <span className={styles.attachedLabel}>{t('interro.showing')}</span>
                   <span>{attachedEvidence.name}</span>
                   <button
                     type="button"
@@ -692,7 +691,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
                       setAttached(null);
                       inputRef.current?.focus({ preventScroll: true });
                     }}
-                    aria-label={`Put away ${attachedEvidence.name}`}
+                    aria-label={t('interro.putAway', { name: attachedEvidence.name })}
                     data-testid="remove-attached-evidence"
                   >
                     x
@@ -701,7 +700,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
               </div>
             )}
             <label htmlFor={questionId} className={styles.inputLabel}>
-              Your question
+              {t('interro.yourQuestion')}
             </label>
             <textarea
               ref={inputRef}
@@ -712,7 +711,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
               maxLength={MAX_LEN}
               rows={3}
               disabled={exhausted}
-              placeholder={exhausted ? '' : `Ask ${short} anything. In your own words.`}
+              placeholder={exhausted ? '' : t('interro.placeholder', { name: short })}
               aria-describedby={`${hintId} ${counterId}`}
               onChange={(e) => setDraft(e.target.value.slice(0, MAX_LEN))}
               onKeyDown={onKeyDown}
@@ -721,9 +720,9 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
               <p className={styles.meta}>
                 <span id={counterId} className={`${styles.counter} ${nearLimit ? styles.counterNear : ''}`}>
                   {draft.length}/{MAX_LEN}
-                  <span className="visually-hidden"> characters</span>
+                  <span className="visually-hidden">{t('interro.characters')}</span>
                 </span>
-                <span id={hintId}>Enter sends. Shift+Enter for a new line.</span>
+                <span id={hintId}>{t('interro.keys')}</span>
               </p>
               <div className={styles.actions}>
                 <Button
@@ -732,10 +731,10 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
                   aria-haspopup="dialog"
                   disabled={exhausted}
                 >
-                  Show evidence
+                  {t('interro.showEvidence')}
                 </Button>
                 <Button type="submit" variant="primary" data-testid="send-question" disabled={!canSend}>
-                  Send
+                  {t('interro.send')}
                 </Button>
               </div>
             </div>
@@ -787,12 +786,12 @@ function MessageView({ message: m, caseFile, speaker, typed, animate, streaming 
     return (
       <div className={`${styles.row} ${styles.rowDetective}`}>
         <div className={`${styles.msg} ${styles.detective}`} data-testid="chat-message" data-role="detective">
-          <p className={styles.speaker}>You</p>
+          <p className={styles.speaker}>{t('interro.you')}</p>
           <p className={styles.text}>{m.text}</p>
           {m.shownEvidenceId && (
             <p className={styles.evidenceTag} data-testid="shown-evidence-tag">
               <span className={styles.tagHole} aria-hidden="true" />
-              <span className={styles.tagLabel}>Shown:</span>
+              <span className={styles.tagLabel}>{t('interro.shown')}</span>
               <span>{evidenceName(caseFile, m.shownEvidenceId)}</span>
             </p>
           )}
@@ -816,16 +815,16 @@ function MessageView({ message: m, caseFile, speaker, typed, animate, streaming 
       >
         <p className={styles.speaker}>
           {speaker}
-          {m.silent && <span className={styles.silentTag}>Brush-off. No question spent.</span>}
+          {m.silent && <span className={styles.silentTag}>{t('interro.brushOff')}</span>}
         </p>
         <p className={styles.text}>
           {typed ? <Typewriter text={m.text} animate={animate} streaming={streaming} /> : m.text}
         </p>
         {clues.length > 0 && (
-          <ul className={styles.clues} aria-label="Noted in your notebook">
+          <ul className={styles.clues} aria-label={t('interro.notedLabel')}>
             {clues.map((c) => (
               <li key={c.clue_id} className={styles.clueChip} data-testid="clue-chip">
-                <span className={styles.clueLabel}>Noted:</span> {c.text}
+                <span className={styles.clueLabel}>{t('interro.noted')}</span> {c.text}
               </li>
             ))}
           </ul>

@@ -11,6 +11,8 @@ import { evidenceName, examineHotspot, visitRoom } from '../store/game.ts';
 import { useReducedMotion } from '../store/settings.ts';
 import type { CaseProgress } from '../engine/types.ts';
 import styles from './Room.module.css';
+import { scenePlaceOf, useT } from '../i18n/index.ts';
+import { rich } from '../i18n/rich.tsx';
 
 const DESCRIPTION_ID = 'hotspot-description';
 
@@ -34,6 +36,7 @@ export function Room() {
   const room = caseFile.rooms.find((r) => r.id === roomId);
 
   useAmbience(ambienceForBackground(room?.background));
+  const { t } = useT();
 
   useEffect(() => {
     if (room) visitRoom(caseKey, room.id);
@@ -41,10 +44,10 @@ export function Room() {
 
   if (!room) {
     return (
-      <ScreenFrame title="Nothing behind this door" kicker="Dead end">
-        <p className={styles.lede}>There is no room by that name in this case file. Somebody gave you a bad address.</p>
+      <ScreenFrame title={t('room.missingTitle')} kicker={t('room.missingKicker')}>
+        <p className={styles.lede}>{t('room.missingText')}</p>
         <ButtonLink to={casePath(caseKey, 'rooms')} variant="lamp">
-          Back to the scenes
+          {t('room.backToScenes')}
         </ButtonLink>
       </ScreenFrame>
     );
@@ -67,19 +70,20 @@ interface RoomViewProps {
 function RoomView({ room, caseFile, caseKey, progress }: RoomViewProps) {
   const index = caseFile.rooms.findIndex((r) => r.id === room.id);
   const bodyHere = caseFile.victim.found_in === room.id;
+  const { t } = useT();
 
   return (
     <ScreenFrame
       wide
-      kicker={`Scene ${index + 1} of ${caseFile.rooms.length}`}
+      kicker={t('room.kicker', { n: index + 1, total: caseFile.rooms.length })}
       title={room.name}
       actions={
         <>
           <ButtonLink to={casePath(caseKey, 'rooms')} variant="ghost">
-            All scenes
+            {t('room.allScenes')}
           </ButtonLink>
-          <ButtonLink to={casePath(caseKey, 'suspects')}>Suspects</ButtonLink>
-          <ButtonLink to={casePath(caseKey, 'board')}>Board</ButtonLink>
+          <ButtonLink to={casePath(caseKey, 'suspects')}>{t('nav.suspects')}</ButtonLink>
+          <ButtonLink to={casePath(caseKey, 'board')}>{t('nav.board')}</ButtonLink>
         </>
       }
     >
@@ -89,10 +93,8 @@ function RoomView({ room, caseFile, caseKey, progress }: RoomViewProps) {
         <p className={styles.lede}>{room.description}</p>
         {bodyHere && (
           <p className={styles.bodyNote}>
-            <span className={`stamp ${styles.bodyStamp}`}>Body found here</span>
-            <span>
-              {caseFile.victim.name}, {caseFile.victim.found_at}.
-            </span>
+            <span className={`stamp ${styles.bodyStamp}`}>{t('room.bodyHere')}</span>
+            <span>{t('room.bodyWhen', { name: caseFile.victim.name, when: caseFile.victim.found_at })}</span>
           </p>
         )}
       </div>
@@ -113,6 +115,7 @@ function RoomSearch({ room, caseFile, caseKey, progress }: RoomViewProps) {
   const evidenceHere = roomEvidenceIds(caseFile, room).filter((id) => progress.foundEvidence.includes(id));
   const searched = room.hotspots.filter((h) => examined.has(h.id));
   const left = room.hotspots.length - examined.size;
+  const { t, tn } = useT();
 
   const onExamine = (h: Hotspot) => {
     setActiveId(h.id);
@@ -129,7 +132,7 @@ function RoomSearch({ room, caseFile, caseKey, progress }: RoomViewProps) {
     <div className={styles.layout}>
       <section className={`${styles.stage} fade-in`} aria-labelledby="room-scene-heading">
         <h2 id="room-scene-heading" className="visually-hidden">
-          Search the {room.name}
+          {t('room.searchHeading', { room: room.name })}
         </h2>
         <RoomScene
           background={room.background}
@@ -138,38 +141,36 @@ function RoomSearch({ room, caseFile, caseKey, progress }: RoomViewProps) {
           activeId={activeId}
           onExamine={onExamine}
           controlsId={DESCRIPTION_ID}
-          label={`${room.name}: places to search`}
+          label={t('room.placesLabel', { room: room.name })}
           flashKey={flashKey}
-          place={{ name: room.name, description: room.description, setting: caseFile.setting }}
+          place={scenePlaceOf(room, caseFile)}
         />
         <p className={styles.help}>
-          <span>Tab</span> through the room. <span>Enter</span> or <span>Space</span> to look closer.
+          {rich(t('room.help'), { tab: <span>{t('room.helpTab')}</span>, enter: <span>{t('room.helpEnter')}</span>, space: <span>{t('room.helpSpace')}</span> })}
         </p>
       </section>
 
-      <aside className={styles.panel} aria-label="Field notes">
+      <aside className={styles.panel} aria-label={t('room.fieldNotes')}>
         <div ref={panelRef} className={`paper ${styles.note}`}>
           <span className={styles.clip} aria-hidden="true" />
           <div id={DESCRIPTION_ID} data-testid="hotspot-description" aria-live="polite" className={styles.noteBody}>
             {active ? (
               <div key={active.id} className={`${styles.noteEntry} fade-up`}>
-                <p className={styles.noteKicker}>Examined</p>
+                <p className={styles.noteKicker}>{t('room.examined')}</p>
                 <h2 className={styles.noteTitle}>{active.label}</h2>
                 <p className={styles.noteText}>{active.description}</p>
                 {active.evidence_id && (
                   <p className={styles.evidenceLine}>
-                    <span className={styles.evidenceLabel}>Evidence collected:</span>{' '}
+                    <span className={styles.evidenceLabel}>{t('room.collected')}</span>{' '}
                     <strong>{evidenceName(caseFile, active.evidence_id)}</strong>
                   </p>
                 )}
               </div>
             ) : (
               <div className={`${styles.noteEntry} fade-up`}>
-                <p className={styles.noteKicker}>Field notes</p>
-                <h2 className={styles.noteTitle}>Nothing in hand yet.</h2>
-                <p className={styles.noteText}>
-                  Every room keeps a secret or two. Run the light over anything that looks out of place and see what it gives up.
-                </p>
+                <p className={styles.noteKicker}>{t('room.fieldNotes')}</p>
+                <h2 className={styles.noteTitle}>{t('room.nothingInHand')}</h2>
+                <p className={styles.noteText}>{t('room.intro')}</p>
               </div>
             )}
           </div>
@@ -177,13 +178,13 @@ function RoomSearch({ room, caseFile, caseKey, progress }: RoomViewProps) {
 
         <section className={styles.tally} aria-labelledby="room-tally-heading">
           <h2 id="room-tally-heading" className={styles.tallyTitle}>
-            Searched {examined.size} of {room.hotspots.length}
+            {t('room.searched', { n: examined.size, total: room.hotspots.length })}
           </h2>
           <div className={styles.meter} aria-hidden="true">
             <span style={{ width: `${room.hotspots.length ? (examined.size / room.hotspots.length) * 100 : 0}%` }} />
           </div>
           <p className={styles.tallyText}>
-            {left === 0 ? 'Room turned over. Nothing left to touch.' : left === 1 ? 'One place left to search.' : `${left} places left to search.`}
+            {left === 0 ? t('room.turnedOver') : tn('room.left', left)}
           </p>
           {searched.length > 0 && (
             <ul className={styles.searched}>
@@ -196,7 +197,7 @@ function RoomSearch({ room, caseFile, caseKey, progress }: RoomViewProps) {
 
         <section className={styles.bagged} aria-labelledby="room-evidence-heading">
           <h2 id="room-evidence-heading" className={styles.tallyTitle}>
-            Bagged here
+            {t('room.bagged')}
           </h2>
           {evidenceHere.length > 0 ? (
             <ul className={styles.evidenceList}>
@@ -205,11 +206,11 @@ function RoomSearch({ room, caseFile, caseKey, progress }: RoomViewProps) {
               ))}
             </ul>
           ) : (
-            <p className={styles.tallyText}>Nothing bagged here yet.</p>
+            <p className={styles.tallyText}>{t('room.nothingBagged')}</p>
           )}
           {evidenceHere.length > 0 && (
             <Link className={styles.boardLink} to={casePath(caseKey, 'board')}>
-              Pin it to the board
+              {t('room.pinIt')}
             </Link>
           )}
         </section>
@@ -226,8 +227,9 @@ interface RoomStripProps {
 }
 
 function RoomStrip({ caseFile, caseKey, progress, currentId }: RoomStripProps) {
+  const { t } = useT();
   return (
-    <nav className={styles.strip} aria-label="Rooms">
+    <nav className={styles.strip} aria-label={t('room.rooms')}>
       <ul>
         {caseFile.rooms.map((r) => {
           const done = examinedIn(progress.examinedHotspots, r.id).size;
@@ -246,7 +248,7 @@ function RoomStrip({ caseFile, caseKey, progress, currentId }: RoomStripProps) {
                 <span className={styles.tabName}>{r.name}</span>
                 <span className={styles.tabCount}>
                   {done}/{total}
-                  <span className="visually-hidden"> searched</span>
+                  <span className="visually-hidden">{t('room.searchedHidden')}</span>
                 </span>
               </Link>
             </li>

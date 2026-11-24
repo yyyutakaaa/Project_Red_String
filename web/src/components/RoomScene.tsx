@@ -11,6 +11,7 @@ import { describeProp, hashString, rainPath, renderProp, seededRandom, type Prop
 import { sceneKeyFor, type ScenePlace } from './sceneKey.ts';
 import { placeProps, type Placed } from './scenePlacement.ts';
 import styles from './RoomScene.module.css';
+import { englishOf } from '../i18n/caseText.ts';
 
 const W = 1000;
 const H = 600;
@@ -2789,7 +2790,9 @@ export function RoomScene({
     [background, placeName, placeDescription, placeSetting],
   );
   const spec = useMemo(() => specFor(sceneKey), [sceneKey]);
-  const layout = useMemo(() => computeLayout(spec, hotspots, sceneKey), [spec, hotspots, sceneKey]);
+  // Furniture is picked from the English hotspot labels, so a room looks the same in every language.
+  const drawnHotspots = useMemo(() => hotspots.map((h) => englishOf(h)), [hotspots]);
+  const layout = useMemo(() => computeLayout(spec, drawnHotspots, sceneKey), [spec, drawnHotspots, sceneKey]);
   const layers = useMemo(() => (art ? null : buildLayers(spec, layout, u, animated)), [art, spec, layout, u, animated]);
   // Hit areas in percent of the scene, from where each prop was seated. Real art keeps the authored boxes.
   const hitById = useMemo(() => {

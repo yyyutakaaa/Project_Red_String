@@ -7,11 +7,11 @@
 // invented facts, language mismatches and time to first token.
 //
 // Usage (from the repo root):
-//   node tools/eval/run-eval.mjs --models claude-haiku-5-5,mimo-v2.6-flash --judge
+//   node tools/eval/run-eval.mjs --models deepseek-flash --judge
 //   node tools/eval/run-eval.mjs --cases ashgrove-house --suspects simon --limit 10
 //
 // Options:
-//   --models a,b,c     model ids to compare (must be in the eval token's allow-list). Default: claude-haiku-5-5
+//   --models a,b,c     model ids to compare (must be in the eval token's allow-list). Default: deepseek-flash
 //   --cases a,b        story case ids. Default: all three
 //   --suspects a,b     restrict to these suspect ids
 //   --limit N          max probes per suspect (default: all, at least 25)
@@ -50,7 +50,7 @@ function arg(name, fallback) {
   return v && !v.startsWith('--') ? v : true;
 }
 
-const MODELS = String(arg('models', 'claude-haiku-5-5')).split(',').filter(Boolean);
+const MODELS = String(arg('models', 'deepseek-flash')).split(',').filter(Boolean);
 const CASES = String(arg('cases', 'ashgrove-house,blue-lantern,pier-seventeen')).split(',').filter(Boolean);
 const ONLY_SUSPECTS = arg('suspects', '') ? String(arg('suspects')).split(',') : null;
 const LIMIT = Number(arg('limit', 0)) || Infinity;

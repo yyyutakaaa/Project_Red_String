@@ -1,12 +1,12 @@
 import type { Mood } from '@shared/caseSchema.ts';
-import { moodLabel } from '../store/game.ts';
 import styles from './Interrogation.parts.module.css';
+import { useT, type MessageKey } from '../i18n/index.ts';
 
-const MOOD_NOTE: Record<Mood, string> = {
-  calm: 'Composed. Giving nothing away.',
-  nervous: 'Sweating. You are close to something.',
-  angry: 'Hostile. Push too hard and the door shuts.',
-  broken: 'Cracked. The truth is leaking out.',
+const MOOD_NOTE: Record<Mood, MessageKey> = {
+  calm: 'interro.moodCalm',
+  nervous: 'interro.moodNervous',
+  angry: 'interro.moodAngry',
+  broken: 'interro.moodBroken',
 };
 
 interface MoodIndicatorProps {
@@ -16,6 +16,7 @@ interface MoodIndicatorProps {
 
 /** The suspect's current temper: a colour, a word and a line. Announced politely when it changes. */
 export function MoodIndicator({ mood, className }: MoodIndicatorProps) {
+  const { t } = useT();
   return (
     <div
       className={`${styles.mood} ${className ?? ''}`}
@@ -26,10 +27,10 @@ export function MoodIndicator({ mood, className }: MoodIndicatorProps) {
     >
       <span className={styles.moodDot} aria-hidden="true" />
       <span className={styles.moodLine}>
-        <span className={styles.moodLabel}>Mood</span>
-        <strong className={styles.moodValue}>{moodLabel(mood)}</strong>
+        <span className={styles.moodLabel}>{t('interro.mood')}</span>
+        <strong className={styles.moodValue}>{t(`mood.${mood}`)}</strong>
       </span>
-      <span className={styles.moodNote}>{MOOD_NOTE[mood]}</span>
+      <span className={styles.moodNote}>{t(MOOD_NOTE[mood])}</span>
     </div>
   );
 }

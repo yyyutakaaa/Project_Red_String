@@ -20,30 +20,30 @@ import {
 import { sfx } from '../audio/audio.ts';
 import { desktop } from '../desktop/bridge.ts';
 import styles from './Settings.module.css';
+import { AVAILABLE_LANGUAGES, setLanguage, t, useT, type LanguageCode, type MessageKey } from '../i18n/index.ts';
 
-const PREVIEW_LINE = 'The rain had not stopped since Tuesday, and nobody in Calder City was telling the truth.';
 const PREVIEW_PAUSE_MS = 1800;
 
-const TEXT_SPEEDS: Array<{ value: TextSpeed; label: string }> = [
-  { value: 'slow', label: 'Slow' },
-  { value: 'normal', label: 'Normal' },
-  { value: 'fast', label: 'Fast' },
-  { value: 'instant', label: 'Instant' },
+const TEXT_SPEEDS: Array<{ value: TextSpeed; label: MessageKey }> = [
+  { value: 'slow', label: 'settings.speedSlow' },
+  { value: 'normal', label: 'settings.speedNormal' },
+  { value: 'fast', label: 'settings.speedFast' },
+  { value: 'instant', label: 'settings.speedInstant' },
 ];
 
-const FONT_SIZES: Array<{ value: FontSize; label: string; scale: number }> = [
-  { value: 'small', label: 'Small', scale: 0.9375 },
-  { value: 'medium', label: 'Medium', scale: 1 },
-  { value: 'large', label: 'Large', scale: 1.125 },
-  { value: 'xlarge', label: 'Extra large', scale: 1.25 },
+const FONT_SIZES: Array<{ value: FontSize; label: MessageKey; scale: number }> = [
+  { value: 'small', label: 'settings.sizeSmall', scale: 0.9375 },
+  { value: 'medium', label: 'settings.sizeMedium', scale: 1 },
+  { value: 'large', label: 'settings.sizeLarge', scale: 1.125 },
+  { value: 'xlarge', label: 'settings.sizeXlarge', scale: 1.25 },
 ];
 
 type VolumeKey = 'masterVolume' | 'musicVolume' | 'sfxVolume';
 
-const VOLUMES: Array<{ key: VolumeKey; label: string; note: string }> = [
-  { key: 'masterVolume', label: 'Master volume', note: 'Everything at once.' },
-  { key: 'musicVolume', label: 'Music', note: 'Slow jazz in the menus, suspense on a case.' },
-  { key: 'sfxVolume', label: 'Sound effects', note: 'Paper, pins and stamps.' },
+const VOLUMES: Array<{ key: VolumeKey; label: MessageKey; note: MessageKey }> = [
+  { key: 'masterVolume', label: 'settings.volMaster', note: 'settings.volMasterNote' },
+  { key: 'musicVolume', label: 'settings.volMusic', note: 'settings.volMusicNote' },
+  { key: 'sfxVolume', label: 'settings.volSfx', note: 'settings.volSfxNote' },
 ];
 
 /**
@@ -142,7 +142,7 @@ function VolumeSlider({ id, label, note, value, onChange }: { id: string; label:
         value={percent}
         className={styles.range}
         style={{ ['--fill' as string]: `${percent}%` }}
-        aria-valuetext={`${percent} percent`}
+        aria-valuetext={t('settings.percent', { n: percent })}
         aria-describedby={`${id}-note`}
         onChange={(e) => onChange(Number(e.target.value) / 100)}
         data-testid={id}
@@ -165,18 +165,21 @@ export function SettingsScreen() {
   const motionNoteId = useId();
   const previewNoteId = useId();
   const reduced = useReducedMotion();
+  const { language } = useT();
+  const PREVIEW_LINE = t('settings.preview');
   const typed = usePreviewTyping(PREVIEW_LINE, TEXT_SPEED_CPS[settings.textSpeed], reduced);
   const [systemReduced] = useState(() => systemPrefersReducedMotion());
   const [systemLight] = useState(() => systemPrefersLight());
   const themeNoteId = useId();
   const discordNoteId = useId();
   const statsNoteId = useId();
+  const languageNoteId = useId();
   // Only desktop shells with presence support (v1.0.5 and later) can talk to Discord.
   const [hasDiscord] = useState(() => Boolean(desktop()?.setPresence));
 
   useEffect(() => {
-    document.title = 'Settings - Project Red String';
-  }, []);
+    document.title = `${t('settings.title')} - Project Red String`;
+  }, [language]);
 
   const back = () => {
     if (location.key !== 'default') navigate(-1);
@@ -186,75 +189,106 @@ export function SettingsScreen() {
   const patch = (p: Partial<Settings>) => set(p);
 
   const themeOptions: Array<{ value: ThemePref; label: string; note: string }> = [
-    { value: 'dark', label: 'Night shift', note: 'Dark streets, lamp light. The way it was made.' },
-    { value: 'light', label: 'Day shift', note: 'Bright and warm, easier in a sunny room.' },
-    { value: 'system', label: 'Follow system', note: `Your device is in ${systemLight ? 'light' : 'dark'} mode now.` },
+    { value: 'dark', label: t('settings.night'), note: t('settings.nightNote') },
+    { value: 'light', label: t('settings.day'), note: t('settings.dayNote') },
+    { value: 'system', label: t('settings.followSystem'), note: t(systemLight ? 'settings.systemLight' : 'settings.systemDark') },
   ];
 
   const discordOptions: Array<{ value: DiscordPref; label: string; note: string }> = [
-    { value: 'full', label: 'Show the case', note: 'Friends see the case and who you are questioning.' },
-    { value: 'minimal', label: 'Just playing', note: 'Only that you are playing Red String.' },
-    { value: 'off', label: 'Hidden', note: 'Nothing on Discord.' },
+    { value: 'full', label: t('settings.discordFull'), note: t('settings.discordFullNote') },
+    { value: 'minimal', label: t('settings.discordMinimal'), note: t('settings.discordMinimalNote') },
+    { value: 'off', label: t('settings.discordOff'), note: t('settings.discordOffNote') },
   ];
 
   const statsOptions: Array<{ value: 'on' | 'off'; label: string; note: string }> = [
-    { value: 'on', label: 'Share', note: 'Helps tune the cases where people get stuck.' },
-    { value: 'off', label: 'Keep to myself', note: 'Nothing about your play leaves this device.' },
+    { value: 'on', label: t('settings.statsOn'), note: t('settings.statsOnNote') },
+    { value: 'off', label: t('settings.statsOff'), note: t('settings.statsOffNote') },
   ];
 
   const motionOptions: Array<{ value: MotionPref; label: string; note: string }> = [
-    { value: 'system', label: 'Follow system', note: `Your device says: ${systemReduced ? 'reduce' : 'full'}.` },
-    { value: 'reduced', label: 'Reduce', note: 'No flicker, no drift, no rain in motion.' },
-    { value: 'full', label: 'Full', note: 'Every lamp and every drop.' },
+    { value: 'system', label: t('settings.followSystem'), note: t(systemReduced ? 'settings.motionSystemReduce' : 'settings.motionSystemFull') },
+    { value: 'reduced', label: t('settings.motionReduce'), note: t('settings.motionReduceNote') },
+    { value: 'full', label: t('settings.motionFull'), note: t('settings.motionFullNote') },
   ];
+
+  const languageOptions: Array<{ value: LanguageCode; label: string; note: string }> = AVAILABLE_LANGUAGES.map((l) => ({
+    value: l.code,
+    label: l.name,
+    note: l.code === 'en' ? t('settings.languageOriginal') : t('settings.languageTranslated'),
+  }));
 
   return (
     <>
       <RainBackdrop lamp="right" intensity="soft" />
       <ScreenFrame
-        title="Settings"
-        kicker="Desk drawer"
+        title={t('settings.title')}
+        kicker={t('settings.kicker')}
         actions={
           <Button variant="ghost" onClick={back}>
-            Back
+            {t('common.back')}
           </Button>
         }
       >
         <div className={styles.grid}>
+          <section className={styles.panel} aria-labelledby="language-heading">
+            <h2 id="language-heading" className={styles.panelTitle}>
+              {t('settings.language')}
+              {/* Also in English, so a player who cannot read the current language still finds the switch. */}
+              {language !== 'en' && (
+                <span className={styles.panelTitleNote} lang="en">
+                  {' '}
+                  · Language
+                </span>
+              )}
+            </h2>
+            <p id={languageNoteId} className={styles.panelNote}>
+              {t('settings.languageNote')}
+            </p>
+            <RadioCards
+              legend={t('settings.languageLegend')}
+              name="language"
+              value={language}
+              options={languageOptions}
+              onChange={(code) => void setLanguage(code)}
+              describedBy={languageNoteId}
+              stack
+            />
+          </section>
+
           <section className={styles.panel} aria-labelledby="sound-heading">
             <h2 id="sound-heading" className={styles.panelTitle}>
-              Sound
+              {t('settings.sound')}
             </h2>
             {VOLUMES.map((v) => (
               <VolumeSlider
                 key={v.key}
                 id={`volume-${v.key.replace('Volume', '')}`}
-                label={v.label}
-                note={v.note}
+                label={t(v.label)}
+                note={t(v.note)}
                 value={settings[v.key]}
                 onChange={(value) => patch({ [v.key]: value })}
               />
             ))}
             <Button onClick={() => sfx('pickup')} data-testid="test-sound">
-              Test sound
+              {t('settings.testSound')}
             </Button>
           </section>
 
           <section className={styles.panel} aria-labelledby="text-heading">
             <h2 id="text-heading" className={styles.panelTitle}>
-              Text
+              {t('settings.text')}
             </h2>
             <RadioCards
-              legend="Text speed"
+              legend={t('settings.textSpeed')}
               name="text-speed"
               value={settings.textSpeed}
-              options={TEXT_SPEEDS}
+              options={TEXT_SPEEDS.map((s) => ({ value: s.value, label: t(s.label) }))}
               onChange={(textSpeed) => patch({ textSpeed })}
               describedBy={reduced ? `text-preview-label ${previewNoteId}` : 'text-preview-label'}
             />
             <figure className={`paper ${styles.preview}`}>
               <figcaption id="text-preview-label" className={styles.previewLabel}>
-                Preview
+                {t('settings.previewLabel')}
               </figcaption>
               <p className={styles.previewLine} aria-hidden="true">
                 {PREVIEW_LINE.slice(0, typed)}
@@ -264,28 +298,28 @@ export function SettingsScreen() {
             </figure>
             {reduced && (
               <p id={previewNoteId} className={styles.panelNote} data-testid="text-speed-reduced-note">
-                Text appears instantly while motion is reduced.
+                {t('settings.instantNote')}
               </p>
             )}
 
             <RadioCards
-              legend="Type size"
+              legend={t('settings.typeSize')}
               name="font-size"
               value={settings.fontSize}
-              options={FONT_SIZES.map((f) => ({ value: f.value, label: f.label, sample: f.scale }))}
+              options={FONT_SIZES.map((f) => ({ value: f.value, label: t(f.label), sample: f.scale }))}
               onChange={(fontSize) => patch({ fontSize })}
             />
           </section>
 
           <section className={styles.panel} aria-labelledby="theme-heading">
             <h2 id="theme-heading" className={styles.panelTitle}>
-              Lighting
+              {t('settings.lighting')}
             </h2>
             <p id={themeNoteId} className={styles.panelNote}>
-              Work the night shift or the day shift. Case files and photographs stay the same.
+              {t('settings.lightingNote')}
             </p>
             <RadioCards
-              legend="Colour theme"
+              legend={t('settings.theme')}
               name="theme"
               value={settings.theme}
               options={themeOptions}
@@ -301,10 +335,10 @@ export function SettingsScreen() {
                 Discord
               </h2>
               <p id={discordNoteId} className={styles.panelNote}>
-                What your friends see on your Discord profile while you play. Never the culprit.
+                {t('settings.discordNote')}
               </p>
               <RadioCards
-                legend="Discord status"
+                legend={t('settings.discordStatus')}
                 name="discord"
                 value={settings.discordPresence}
                 options={discordOptions}
@@ -317,13 +351,13 @@ export function SettingsScreen() {
 
           <section className={styles.panel} aria-labelledby="motion-heading">
             <h2 id="motion-heading" className={styles.panelTitle}>
-              Motion
+              {t('settings.motion')}
             </h2>
             <p id={motionNoteId} className={styles.panelNote}>
-              Lamp flicker, falling rain and fades. Reduce keeps the picture still.
+              {t('settings.motionNote')}
             </p>
             <RadioCards
-              legend="Reduced motion"
+              legend={t('settings.reducedMotion')}
               name="motion"
               value={settings.reducedMotion}
               options={motionOptions}
@@ -335,14 +369,13 @@ export function SettingsScreen() {
 
           <section className={styles.panel} aria-labelledby="stats-heading">
             <h2 id="stats-heading" className={styles.panelTitle}>
-              Play statistics
+              {t('settings.stats')}
             </h2>
             <p id={statsNoteId} className={styles.panelNote}>
-              Which rooms you open, the evidence you find, how many questions you ask and what they turn up, with a
-              random device number. Never what you type, your name or your account.
+              {t('settings.statsNote')}
             </p>
             <RadioCards
-              legend="Play statistics"
+              legend={t('settings.stats')}
               name="stats"
               value={settings.shareStats ? 'on' : 'off'}
               options={statsOptions}
@@ -357,13 +390,13 @@ export function SettingsScreen() {
           <Button
             onClick={() => {
               reset();
-              setAnnouncement('Settings put back the way they came.');
+              setAnnouncement(t('settings.resetDone'));
             }}
             data-testid="reset-settings"
           >
-            Reset to defaults
+            {t('settings.reset')}
           </Button>
-          <p className={styles.saved}>Changes are kept on this device as you make them.</p>
+          <p className={styles.saved}>{t('settings.saved')}</p>
           <p className="visually-hidden" role="status" aria-live="polite">
             {announcement}
           </p>

@@ -11,6 +11,8 @@ import { MAX_ACCUSATION_EVIDENCE, MIN_ACCUSATION_EVIDENCE, accusationSelectionEr
 import { accuse } from '../store/game.ts';
 import { ambienceForBackground, sfx } from '../audio/audio.ts';
 import styles from './Accusation.module.css';
+import { useT } from '../i18n/index.ts';
+import { rich } from '../i18n/rich.tsx';
 
 export function Accusation() {
   const { caseFile, caseKey, progress } = useCaseContext();
@@ -20,10 +22,11 @@ export function Accusation() {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const validationId = useId();
   useAmbience(ambienceForBackground(caseFile.rooms[0]?.background));
+  const { t, language } = useT();
 
   useEffect(() => {
-    document.title = `Accusation - ${caseFile.title} - Project Red String`;
-  }, [caseFile.title]);
+    document.title = `${t('accuse.docTitle')} - ${caseFile.title} - Project Red String`;
+  }, [caseFile.title, t, language]);
 
   if (progress.accusation) return <Navigate to={casePath(caseKey, 'ending')} replace />;
 
@@ -45,10 +48,8 @@ export function Accusation() {
   };
 
   return (
-    <ScreenFrame title="The accusation" kicker={caseFile.title}>
-      <p className={styles.lede}>
-        Name one person and back it with two to four pieces of proof. Once you say it out loud the case is closed, right or wrong.
-      </p>
+    <ScreenFrame title={t('accuse.title')} kicker={caseFile.title}>
+      <p className={styles.lede}>{t('accuse.lede')}</p>
 
       <form
         className={styles.form}
@@ -56,11 +57,11 @@ export function Accusation() {
           e.preventDefault();
           if (!error) setConfirmOpen(true);
         }}
-        aria-label="Accusation"
+        aria-label={t('accuse.formLabel')}
       >
         <fieldset className={styles.step}>
           <legend className={styles.stepTitle}>
-            <span className={styles.stepNo}>1</span> Who did it?
+            <span className={styles.stepNo}>1</span> {t('accuse.who')}
           </legend>
           <div className={styles.suspects}>
             {caseFile.suspects.map((s) => {
@@ -85,7 +86,7 @@ export function Accusation() {
                   </span>
                   {selected && (
                     <span className={styles.accusedTag} aria-hidden="true">
-                      Accused
+                      {t('accuse.accused')}
                     </span>
                   )}
                 </label>
@@ -96,16 +97,13 @@ export function Accusation() {
 
         <fieldset className={styles.step}>
           <legend className={styles.stepTitle}>
-            <span className={styles.stepNo}>2</span> What proves it?
+            <span className={styles.stepNo}>2</span> {t('accuse.what')}
           </legend>
-          <p className={styles.stepNote}>
-            Pick {MIN_ACCUSATION_EVIDENCE} to {MAX_ACCUSATION_EVIDENCE} pieces from what you have found. Motive, means, a broken alibi: a
-            jury wants to see how it was done.
-          </p>
+          <p className={styles.stepNote}>{t('accuse.pickNote', { min: MIN_ACCUSATION_EVIDENCE, max: MAX_ACCUSATION_EVIDENCE })}</p>
           {found.length === 0 ? (
             <div className={styles.nothing}>
-              <p>Your evidence bag is empty. Search the scenes before you accuse anyone.</p>
-              <ButtonLink to={casePath(caseKey, 'rooms')}>Back to the scenes</ButtonLink>
+              <p>{t('accuse.bagEmpty')}</p>
+              <ButtonLink to={casePath(caseKey, 'rooms')}>{t('room.backToScenes')}</ButtonLink>
             </div>
           ) : (
             <>
@@ -118,7 +116,7 @@ export function Accusation() {
               </ul>
               {found.length < MIN_ACCUSATION_EVIDENCE && (
                 <p className={styles.stepNote}>
-                  You need more than you have. <Link to={casePath(caseKey, 'rooms')}>Keep digging.</Link>
+                  {t('accuse.needMore')} <Link to={casePath(caseKey, 'rooms')}>{t('accuse.keepDigging')}</Link>
                 </p>
               )}
             </>
@@ -128,46 +126,44 @@ export function Accusation() {
         <div className={styles.bar}>
           <div className={styles.barText}>
             <p className={styles.tally}>
-              <span>{culprit ? culprit.name : 'No suspect chosen'}</span>
+              <span>{culprit ? culprit.name : t('accuse.noSuspect')}</span>
               <span className={styles.dot} aria-hidden="true" />
-              <span>
-                {evidenceIds.length} of {MIN_ACCUSATION_EVIDENCE} to {MAX_ACCUSATION_EVIDENCE} pieces
-              </span>
+              <span>{t('accuse.pieces', { n: evidenceIds.length, min: MIN_ACCUSATION_EVIDENCE, max: MAX_ACCUSATION_EVIDENCE })}</span>
             </p>
             <p id={validationId} className={`${styles.validation} ${error ? '' : styles.ready}`} aria-live="polite" data-testid="accusation-validation">
-              {error ?? 'Ready. Say it to their face.'}
+              {error ?? t('accuse.ready')}
             </p>
           </div>
           <Button type="submit" variant="primary" size="large" disabled={error !== null} aria-describedby={validationId} data-testid="submit-accusation">
-            Make the accusation
+            {t('accuse.submit')}
           </Button>
         </div>
       </form>
 
       <Modal
         open={confirmOpen}
-        title="Close the case?"
+        title={t('accuse.confirmTitle')}
         onClose={() => setConfirmOpen(false)}
         footer={
           <>
             <Button variant="ghost" onClick={() => setConfirmOpen(false)}>
-              Not yet
+              {t('accuse.notYet')}
             </Button>
             <Button variant="primary" onClick={submit} data-testid="confirm-accusation">
-              Accuse {culprit?.name ?? 'them'}
+              {t('accuse.accuseName', { name: culprit?.name ?? t('accuse.them') })}
             </Button>
           </>
         }
       >
         <p className={styles.confirmLead}>
-          You are naming <strong>{culprit?.name}</strong> for the death of {caseFile.victim.name}, on the strength of:
+          {rich(t('accuse.confirmLead'), { name: <strong>{culprit?.name}</strong>, victim: caseFile.victim.name })}
         </p>
         <ul className={styles.confirmList}>
           {chosen.map((e) => (
             <li key={e.id}>{e.name}</li>
           ))}
         </ul>
-        <p className={styles.confirmWarn}>This closes the case. There is no going back.</p>
+        <p className={styles.confirmWarn}>{t('accuse.confirmWarn')}</p>
       </Modal>
     </ScreenFrame>
   );

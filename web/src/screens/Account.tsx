@@ -11,18 +11,27 @@ import { formatDate } from '../lib/format.ts';
 import { SignOutBlocked, useAccount, type SyncState } from '../store/account.ts';
 import { useGame } from '../store/game.ts';
 import styles from './Account.module.css';
+import { useT, type MessageKey } from '../i18n/index.ts';
 
 type Mode = 'signin' | 'signup';
 
-const SYNC_TEXT: Record<SyncState, string> = {
-  local: 'Saved on this device only.',
-  syncing: 'Filing your saves...',
-  synced: 'Every save is in your account.',
-  offline: 'Offline. Saves wait on this device and go up when you are back.',
+const SYNC_TEXT: Record<SyncState, MessageKey> = {
+  local: 'account.syncLocal',
+  syncing: 'account.syncSyncing',
+  synced: 'account.syncSynced',
+  offline: 'account.syncOffline',
+};
+
+const SYNC_BADGE: Record<SyncState, MessageKey> = {
+  local: 'account.badgeLocal',
+  syncing: 'account.badgeSyncing',
+  synced: 'account.badgeSynced',
+  offline: 'account.badgeOffline',
 };
 
 export function SyncBadge({ state, compact = false }: { state: SyncState; compact?: boolean }) {
-  const label = compact ? { local: 'This device only', syncing: 'Syncing', synced: 'Synced', offline: 'Offline' }[state] : SYNC_TEXT[state];
+  const { t } = useT();
+  const label = t(compact ? SYNC_BADGE[state] : SYNC_TEXT[state]);
   return (
     <span className={`${styles.sync} ${styles[`sync_${state}`]}`}>
       <span className={styles.dot} aria-hidden="true" />
@@ -39,6 +48,7 @@ function SignedIn() {
   const signOut = useAccount((s) => s.signOut);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
+  const { t } = useT();
 
   const doSignOut = async () => {
     setBusy(true);
@@ -46,7 +56,7 @@ function SignedIn() {
     try {
       await signOut();
     } catch (err) {
-      setError(err instanceof SignOutBlocked ? err.message : 'Could not sign out. Try again.');
+      setError(err instanceof SignOutBlocked ? err.message : t('account.signOutFailed'));
     } finally {
       setBusy(false);
     }
@@ -59,18 +69,15 @@ function SignedIn() {
           <LogoEye />
         </div>
         <div>
-          <p className={styles.badgeKicker}>Detective</p>
+          <p className={styles.badgeKicker}>{t('account.detective')}</p>
           <h2 id="badge-heading" className={styles.badgeName}>
             {user.username}
           </h2>
           <SyncBadge state={sync} />
-          {lastSyncedAt && sync === 'synced' && <p className={styles.small}>Last filed {formatDate(lastSyncedAt)}.</p>}
+          {lastSyncedAt && sync === 'synced' && <p className={styles.small}>{t('account.lastFiled', { date: formatDate(lastSyncedAt) })}</p>}
         </div>
       </div>
-      <p className={styles.note}>
-        Your three save slots live in your account. Sign in with this name on another computer, in the browser or in the
-        desktop app, and you pick up where you left off.
-      </p>
+      <p className={styles.note}>{t('account.signedInNote')}</p>
       {error && (
         <p className={styles.error} role="alert">
           {error}
@@ -78,13 +85,13 @@ function SignedIn() {
       )}
       <div className={styles.actions}>
         <Button onClick={() => void syncNow()} disabled={busy || sync === 'syncing'}>
-          Sync now
+          {t('account.syncNow')}
         </Button>
         <Button variant="ghost" onClick={() => void doSignOut()} disabled={busy} data-testid="account-signout">
-          Sign out
+          {t('account.signOut')}
         </Button>
       </div>
-      <p className={styles.small}>Signing out takes your saves off this device. They stay safe in your account.</p>
+      <p className={styles.small}>{t('account.signOutNote')}</p>
     </section>
   );
 }
@@ -101,6 +108,7 @@ function SignInForm() {
   const storage = useGame((s) => s.storage);
   const [hasLocal] = useState(() => listSlots(storage).some(Boolean));
   const ids = { name: useId(), pass: useId(), confirm: useId(), hint: useId() };
+  const { t } = useT();
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -108,16 +116,16 @@ function SignInForm() {
     if (mode === 'signup') {
       const problem = usernameProblem(username) ?? passwordProblem(password);
       if (problem) return setError(problem);
-      if (password !== confirm) return setError('The two passwords do not match.');
+      if (password !== confirm) return setError(t('account.mismatch'));
     } else if (!username.trim() || !password) {
-      return setError('Fill in your name and password.');
+      return setError(t('account.fillIn'));
     }
     setBusy(true);
     try {
       if (mode === 'signup') await signUp(username, password);
       else await signIn(username, password);
     } catch (err) {
-      setError(err instanceof AccountError ? err.message : 'Something went wrong. Try again.');
+      setError(err instanceof AccountError ? err.message : t('account.genericError'));
       setBusy(false);
     }
   };
@@ -130,9 +138,9 @@ function SignInForm() {
 
   return (
     <section className={styles.panel} aria-labelledby="form-heading">
-      <div className={styles.tabs} role="tablist" aria-label="Account">
+      <div className={styles.tabs} role="tablist" aria-label={t('account.tabs')}>
         <button type="button" role="tab" aria-selected={mode === 'signin'} className={styles.tab} onClick={() => switchMode('signin')}>
-          Sign in
+          {t('account.signIn')}
         </button>
         <button
           type="button"
@@ -142,16 +150,16 @@ function SignInForm() {
           onClick={() => switchMode('signup')}
           data-testid="account-tab-signup"
         >
-          New detective
+          {t('account.newDetective')}
         </button>
       </div>
       <h2 id="form-heading" className="visually-hidden">
-        {mode === 'signin' ? 'Sign in' : 'Create an account'}
+        {mode === 'signin' ? t('account.signIn') : t('account.create')}
       </h2>
 
       <form className={styles.form} onSubmit={(e) => void submit(e)} noValidate>
         <label htmlFor={ids.name} className={styles.label}>
-          Detective name
+          {t('account.name')}
         </label>
         <input
           id={ids.name}
@@ -167,12 +175,12 @@ function SignInForm() {
         />
         {mode === 'signup' && (
           <p id={ids.hint} className={styles.small}>
-            3 to 20 letters, digits or underscores. Other players never see it.
+            {t('account.nameHint')}
           </p>
         )}
 
         <label htmlFor={ids.pass} className={styles.label}>
-          Password
+          {t('account.password')}
         </label>
         <input
           id={ids.pass}
@@ -188,7 +196,7 @@ function SignInForm() {
         {mode === 'signup' && (
           <>
             <label htmlFor={ids.confirm} className={styles.label}>
-              Password again
+              {t('account.passwordAgain')}
             </label>
             <input
               id={ids.confirm}
@@ -200,7 +208,7 @@ function SignInForm() {
               onChange={(e) => setConfirm(e.target.value)}
               data-testid="account-confirm"
             />
-            <p className={styles.small}>There is no email, so there is no reset. Pick a password you will remember.</p>
+            <p className={styles.small}>{t('account.noReset')}</p>
           </>
         )}
 
@@ -209,10 +217,10 @@ function SignInForm() {
             {error}
           </p>
         )}
-        {hasLocal && <p className={styles.small}>The saves on this device get filed under this account. Per slot, the newest one wins.</p>}
+        {hasLocal && <p className={styles.small}>{t('account.mergeNote')}</p>}
 
         <Button type="submit" variant="lamp" disabled={busy} data-testid="account-submit">
-          {busy ? 'Checking the records...' : mode === 'signin' ? 'Sign in' : 'Open my file'}
+          {busy ? t('account.checking') : mode === 'signin' ? t('account.signIn') : t('account.openFile')}
         </Button>
       </form>
     </section>
@@ -222,40 +230,39 @@ function SignInForm() {
 export function AccountScreen() {
   useAmbience('menu');
   const user = useAccount((s) => s.user);
+  const { t, language } = useT();
 
   useEffect(() => {
-    document.title = 'Account - Project Red String';
-  }, []);
+    document.title = `${t('account.docTitle')} - Project Red String`;
+  }, [t, language]);
 
   return (
     <>
       <RainBackdrop lamp="left" intensity="soft" />
       <ScreenFrame
-        title="Your badge"
-        kicker="Records office"
+        title={t('account.title')}
+        kicker={t('common.recordsOffice')}
         actions={
           <ButtonLink to="/" variant="ghost">
-            Back to the menu
+            {t('common.backToMenu')}
           </ButtonLink>
         }
       >
         {!BACKEND_CONFIGURED ? (
-          <p className="muted">Accounts are not available in this build. Your progress is saved on this device.</p>
+          <p className="muted">{t('account.unavailable')}</p>
         ) : (
           <div className={styles.layout}>
             {user ? <SignedIn /> : <SignInForm />}
             <aside className={styles.aside}>
-              <h2 className={styles.asideTitle}>{user ? 'How saving works' : 'Why sign in?'}</h2>
+              <h2 className={styles.asideTitle}>{user ? t('account.howSaving') : t('account.whySignIn')}</h2>
               <ul className={styles.list}>
                 <li>
-                  <strong>With an account</strong> every move is filed in your account. Play on any computer, in the
-                  browser or the desktop app.
+                  <strong>{t('account.withAccount')}</strong> {t('account.withAccountText')}
                 </li>
                 <li>
-                  <strong>As a guest</strong> your progress stays on this device only. Clear the browser data and it is
-                  gone.
+                  <strong>{t('account.asGuest')}</strong> {t('account.asGuestText')}
                 </li>
-                <li>No email, no newsletter. Just a name and a password.</li>
+                <li>{t('account.noEmail')}</li>
               </ul>
             </aside>
           </div>

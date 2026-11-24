@@ -10,6 +10,7 @@ import { STORY_ORDER } from '../engine/caseLoader.ts';
 import { markBriefingSeen } from '../store/game.ts';
 import { ambienceForBackground, sfx } from '../audio/audio.ts';
 import styles from './Briefing.module.css';
+import { useT } from '../i18n/index.ts';
 
 function placeName(c: CaseFile, id: string): string {
   return c.rooms.find((r) => r.id === id)?.name ?? c.offstage_locations.find((o) => o.id === id)?.name ?? id;
@@ -39,31 +40,32 @@ export function Briefing() {
 
   const { victim } = caseFile;
   const seen = progress.briefingSeen;
+  const { t } = useT();
 
   return (
-    <ScreenFrame title={caseFile.title} kicker="Case briefing">
+    <ScreenFrame title={caseFile.title} kicker={t('briefing.kicker')}>
       <article className={`paper selectable ${styles.file}`} aria-labelledby="briefing-heading">
         <header className={styles.head}>
           <dl className={styles.headLines}>
             <div>
-              <dt>File</dt>
+              <dt>{t('briefing.file')}</dt>
               <dd>{fileNumber(caseKey)}</dd>
             </div>
             <div>
-              <dt>Date</dt>
+              <dt>{t('briefing.date')}</dt>
               <dd>{caseFile.era}</dd>
             </div>
             <div>
-              <dt>Re</dt>
-              <dd>Death of {victim.name}</dd>
+              <dt>{t('briefing.re')}</dt>
+              <dd>{t('briefing.death', { name: victim.name })}</dd>
             </div>
             <div>
-              <dt>To</dt>
-              <dd>Detective on the night shift</dd>
+              <dt>{t('briefing.to')}</dt>
+              <dd>{t('briefing.toWho')}</dd>
             </div>
           </dl>
           <span className={`stamp ${styles.confidential}`}>
-            Confidential
+            {t('briefing.confidential')}
           </span>
         </header>
 
@@ -72,7 +74,7 @@ export function Briefing() {
         </h2>
 
         <div className={styles.columns}>
-          <section className={styles.summary} aria-label="Summary">
+          <section className={styles.summary} aria-label={t('briefing.summary')}>
             {caseFile.intro_briefing.map((para, i) => (
               <p key={i}>{para}</p>
             ))}
@@ -80,23 +82,23 @@ export function Briefing() {
 
           <aside className={styles.side}>
             <section className={styles.victim} aria-labelledby="victim-heading">
-              <p className={styles.cardLabel}>Coroner&apos;s card</p>
+              <p className={styles.cardLabel}>{t('briefing.coroner')}</p>
               <h3 id="victim-heading" className={styles.victimName}>
                 {victim.name}
               </h3>
-              <p className={styles.victimAge}>Age {victim.age}</p>
+              <p className={styles.victimAge}>{t('briefing.age', { age: victim.age })}</p>
               <p className={styles.victimDesc}>{victim.description}</p>
               <dl className={styles.facts}>
                 <div>
-                  <dt>Cause of death</dt>
+                  <dt>{t('briefing.cause')}</dt>
                   <dd>{victim.cause_of_death}</dd>
                 </div>
                 <div>
-                  <dt>Found in</dt>
+                  <dt>{t('briefing.foundIn')}</dt>
                   <dd>{placeName(caseFile, victim.found_in)}</dd>
                 </div>
                 <div>
-                  <dt>Found</dt>
+                  <dt>{t('briefing.found')}</dt>
                   <dd>{victim.found_at}</dd>
                 </div>
               </dl>
@@ -104,7 +106,7 @@ export function Briefing() {
 
             <section className={styles.scene} aria-labelledby="scene-heading">
               <h3 id="scene-heading" className={styles.cardLabel}>
-                The scene
+                {t('briefing.scene')}
               </h3>
               <p>{caseFile.setting}</p>
               <p className={styles.era}>{caseFile.era}</p>
@@ -114,7 +116,7 @@ export function Briefing() {
 
         <section className={styles.persons} aria-labelledby="persons-heading">
           <h3 id="persons-heading" className={styles.sectionTitle}>
-            Persons present
+            {t('briefing.persons')}
           </h3>
           <ul className={styles.personList}>
             {caseFile.suspects.map((s) => (
@@ -123,7 +125,7 @@ export function Briefing() {
                 <div>
                   <p className={styles.personName}>{s.name}</p>
                   <p className={styles.personRole}>{s.role}</p>
-                  <p className={styles.personAge}>Age {s.age}</p>
+                  <p className={styles.personAge}>{t('briefing.age', { age: s.age })}</p>
                 </div>
               </li>
             ))}
@@ -131,9 +133,9 @@ export function Briefing() {
         </section>
 
         <footer className={styles.foot}>
-          <p className={styles.signoff}>Walk the rooms, question the people in them, and bring back proof.</p>
+          <p className={styles.signoff}>{t('briefing.signoff')}</p>
           <Button variant="primary" size="large" onClick={begin} data-testid="begin-investigation">
-            {seen ? 'Return to the investigation' : 'Begin investigation'}
+            {seen ? t('briefing.return') : t('briefing.begin')}
           </Button>
         </footer>
       </article>

@@ -14,10 +14,12 @@ import { STORY_ORDER, getStoryCase, isStoryUnlocked } from '../engine/caseLoader
 import type { CaseProgress, CaseSource, CompletionRecord } from '../engine/types.ts';
 import { useGame } from '../store/game.ts';
 import styles from './CaseSelect.module.css';
+import { localizedCase, scenePlaceOf, useT, type MessageKey } from '../i18n/index.ts';
+import { rich } from '../i18n/rich.tsx';
 
 type Status = 'new' | 'open' | 'closed';
 
-const STATUS_LABEL: Record<Status, string> = { new: 'Not started', open: 'In progress', closed: 'Closed' };
+const STATUS_LABEL: Record<Status, MessageKey> = { new: 'cases.statusNew', open: 'cases.statusOpen', closed: 'cases.statusClosed' };
 
 function statusOf(p: CaseProgress | undefined): Status {
   if (!p) return 'new';
@@ -38,15 +40,16 @@ interface CaseActionsProps {
   testKey: string;
 }
 
-function CaseActions({ caseKey, source, status, title, onOpen, onVerdict, onReplay, openLabel = 'Open case', testKey }: CaseActionsProps) {
+function CaseActions({ caseKey, source, status, title, onOpen, onVerdict, onReplay, openLabel, testKey }: CaseActionsProps) {
+  const { t } = useT();
   if (status === 'closed') {
     return (
       <>
-        <Button variant="lamp" onClick={() => onVerdict(caseKey)} data-testid={`view-verdict-${testKey}`} aria-label={`View verdict: ${title}`}>
-          View verdict
+        <Button variant="lamp" onClick={() => onVerdict(caseKey)} data-testid={`view-verdict-${testKey}`} aria-label={t('cases.viewVerdictLabel', { title })}>
+          {t('cases.viewVerdict')}
         </Button>
-        <Button onClick={() => onReplay(caseKey, source, title)} data-testid={`replay-case-${testKey}`} aria-label={`Replay case: ${title}`}>
-          Replay case
+        <Button onClick={() => onReplay(caseKey, source, title)} data-testid={`replay-case-${testKey}`} aria-label={t('cases.replayLabel', { title })}>
+          {t('cases.replay')}
         </Button>
       </>
     );
@@ -56,15 +59,16 @@ function CaseActions({ caseKey, source, status, title, onOpen, onVerdict, onRepl
       variant="lamp"
       onClick={() => onOpen(caseKey, source, status)}
       data-testid={`open-case-${testKey}`}
-      aria-label={`${openLabel}: ${title}`}
+      aria-label={openLabel ? `${openLabel}: ${title}` : t('cases.openCaseLabel', { title })}
     >
-      {openLabel}
+      {openLabel ?? t('cases.openCase')}
     </Button>
   );
 }
 
 /** The crime scene photograph clipped to the file: the room where the body was found. */
 function ScenePhoto({ caseFile, sealed = false }: { caseFile: CaseFile; sealed?: boolean }) {
+  const { t } = useT();
   const room = caseFile.rooms.find((r) => r.id === caseFile.victim.found_in) ?? caseFile.rooms[0];
   if (!room) return null;
   return (
@@ -73,12 +77,12 @@ function ScenePhoto({ caseFile, sealed = false }: { caseFile: CaseFile; sealed?:
         background={room.background}
         hotspots={room.hotspots}
         thumbnail
-        place={{ name: room.name, description: room.description, setting: caseFile.setting }}
+        place={scenePlaceOf(room, caseFile)}
       />
       {sealed && (
         <>
-          <span className={styles.tape}>Sealed · Sealed · Sealed · Sealed · Sealed</span>
-          <span className={`${styles.tape} ${styles.tapeB}`}>Sealed · Sealed · Sealed · Sealed · Sealed</span>
+          <span className={styles.tape}>{t('cases.sealedTape')}</span>
+          <span className={`${styles.tape} ${styles.tapeB}`}>{t('cases.sealedTape')}</span>
         </>
       )}
       {!sealed && <span className={styles.clip} />}
@@ -87,18 +91,19 @@ function ScenePhoto({ caseFile, sealed = false }: { caseFile: CaseFile; sealed?:
 }
 
 function CompletionStamp({ completion }: { completion: CompletionRecord | undefined }) {
+  const { t } = useT();
   if (!completion) return null;
   return (
     <div className={styles.record}>
-      <span className={`stamp ${completion.solved ? styles.stampSolved : styles.stampClosed}`}>{completion.solved ? 'Solved' : 'Closed'}</span>
+      <span className={`stamp ${completion.solved ? styles.stampSolved : styles.stampClosed}`}>{completion.solved ? t('cases.solved') : t('cases.closed')}</span>
       {completion.bestTimeMs !== undefined && (
-        <span className={styles.best} title="Fastest correct solve">
+        <span className={styles.best} title={t('cases.fastest')}>
           {formatDuration(completion.bestTimeMs)}
         </span>
       )}
       <span className={styles.best}>
-        Best {completion.bestScore}
-        <span className={styles.rank} aria-label={`rank ${completion.bestRank}`}>
+        {t('cases.best', { score: completion.bestScore })}
+        <span className={styles.rank} aria-label={t('cases.rankLabel', { rank: completion.bestRank })}>
           {completion.bestRank}
         </span>
       </span>
@@ -116,22 +121,23 @@ export function CaseSelect() {
   const restartCase = useGame((s) => s.restartCase);
   const setActiveCase = useGame((s) => s.setActiveCase);
   const [pending, setPending] = useState<Pending | null>(null);
+  const { t, language } = useT();
 
   useEffect(() => {
     if (!slot) ensureActiveSlot();
   }, [slot, ensureActiveSlot]);
 
   useEffect(() => {
-    document.title = 'Case files - Project Red String';
-  }, []);
+    document.title = `${t('cases.title')} - Project Red String`;
+  }, [t, language]);
 
   const backLink = (
     <>
       <ButtonLink to="/slots" variant="ghost">
-        Save slots
+        {t('slots.title')}
       </ButtonLink>
       <ButtonLink to="/" variant="ghost">
-        Back to the menu
+        {t('common.backToMenu')}
       </ButtonLink>
     </>
   );
@@ -140,18 +146,18 @@ export function CaseSelect() {
     return (
       <>
         <RainBackdrop lamp="right" intensity="soft" />
-        <ScreenFrame title="Case files" kicker="Records office" actions={backLink}>
-          <p className="muted">Pulling the drawer.</p>
+        <ScreenFrame title={t('cases.title')} kicker={t('common.recordsOffice')} actions={backLink}>
+          <p className="muted">{t('cases.pulling')}</p>
         </ScreenFrame>
       </>
     );
   }
 
-  const titleOf = (key: string) => resolveCase(key)?.caseFile.title ?? 'The case file';
+  const titleOf = (key: string) => resolveCase(key)?.caseFile.title ?? t('cases.fallbackTitle');
   const open = (key: string, source: CaseSource, status: Status) => {
     ensureProgress(key, source);
     void launch(status === 'new' ? casePath(key, 'briefing') : casePath(key), {
-      kicker: status === 'new' ? 'New case' : `Slot ${slot.slot}`,
+      kicker: status === 'new' ? t('cases.newCase') : t('common.slot', { n: slot.slot }),
       title: titleOf(key),
     });
   };
@@ -165,7 +171,7 @@ export function CaseSelect() {
     if (!pending) return;
     setPending(null);
     restartCase(pending.key, pending.source);
-    void launch(casePath(pending.key, 'briefing'), { kicker: 'Starting over', title: pending.title });
+    void launch(casePath(pending.key, 'briefing'), { kicker: t('cases.startingOver'), title: pending.title });
   };
 
   const completed = (id: string) => Boolean(slot.completions[id]);
@@ -173,16 +179,17 @@ export function CaseSelect() {
   return (
     <>
       <RainBackdrop lamp="right" intensity="soft" />
-      <ScreenFrame title="Case files" kicker={`Records office. Slot ${slot.slot}.`} actions={backLink}>
+      <ScreenFrame title={t('cases.title')} kicker={t('cases.kicker', { n: slot.slot })} actions={backLink}>
         <section aria-labelledby="story-heading" className={styles.section}>
           <div className={styles.sectionHead}>
-            <h2 id="story-heading">Story cases</h2>
-            <p className={styles.sectionNote}>Hand-written, in order. Close one to open the next.</p>
+            <h2 id="story-heading">{t('cases.storyHeading')}</h2>
+            <p className={styles.sectionNote}>{t('cases.storyNote')}</p>
           </div>
           <ol className={styles.storyGrid}>
             {STORY_ORDER.map((id, index) => {
-              const c = getStoryCase(id);
-              const number = `Case No. ${index + 1}`;
+              const english = getStoryCase(id);
+              const c = english ? localizedCase(english) : null;
+              const number = t('cases.number', { n: index + 1 });
               const unlocked = isStoryUnlocked(index, completed);
               const progress = slot.progress[id];
               const status = statusOf(progress);
@@ -194,9 +201,9 @@ export function CaseSelect() {
                     <article className={`${styles.file} ${styles.missing}`} aria-labelledby={headingId} data-testid={`case-card-${id}`}>
                       <p className={styles.number}>{number}</p>
                       <h3 id={headingId} className={styles.fileTitle}>
-                        File not on the desk
+                        {t('cases.missingTitle')}
                       </h3>
-                      <p className={styles.tagline}>This case file is missing or failed inspection.</p>
+                      <p className={styles.tagline}>{t('cases.missingNote')}</p>
                     </article>
                   </li>
                 );
@@ -216,7 +223,7 @@ export function CaseSelect() {
                         <span style={{ width: '48%' }} />
                       </div>
                       <p className={styles.lockNote}>
-                        <span className={styles.sealed}>Sealed</span> Solve the previous case to unlock
+                        <span className={styles.sealed}>{t('cases.sealed')}</span> {t('cases.sealedNote')}
                       </p>
                     </article>
                   </li>
@@ -228,7 +235,7 @@ export function CaseSelect() {
                     <ScenePhoto caseFile={c} />
                     <div className={styles.fileHead}>
                       <p className={styles.number}>{number}</p>
-                      <p className={`${styles.status} ${styles[`status-${status}`] ?? ''}`}>{STATUS_LABEL[status]}</p>
+                      <p className={`${styles.status} ${styles[`status-${status}`] ?? ''}`}>{t(STATUS_LABEL[status])}</p>
                     </div>
                     <h3 id={headingId} className={styles.fileTitle}>
                       {c.title}
@@ -236,11 +243,11 @@ export function CaseSelect() {
                     <p className={styles.tagline}>{c.tagline}</p>
                     <dl className={styles.meta}>
                       <div>
-                        <dt>Setting</dt>
+                        <dt>{t('cases.setting')}</dt>
                         <dd>{c.setting}</dd>
                       </div>
                       <div>
-                        <dt>Era</dt>
+                        <dt>{t('cases.era')}</dt>
                         <dd>{c.era}</dd>
                       </div>
                     </dl>
@@ -268,22 +275,21 @@ export function CaseSelect() {
 
       <Modal
         open={pending !== null}
-        title="Reopen the case?"
+        title={t('cases.reopenTitle')}
         onClose={() => setPending(null)}
         footer={
           <>
             <Button variant="ghost" onClick={() => setPending(null)}>
-              Keep it
+              {t('slots.keepIt')}
             </Button>
             <Button variant="primary" onClick={confirmPending} data-testid="case-confirm">
-              Reopen the file
+              {t('cases.reopen')}
             </Button>
           </>
         }
       >
           <p>
-            Start <strong>{pending?.title}</strong> from the briefing. Your notes, board and interrogations from the last run are cleared. Your best
-            score stays on record.
+            {rich(t('cases.reopenBody'), { title: <strong>{pending?.title}</strong> })}
           </p>
       </Modal>
     </>

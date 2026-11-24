@@ -13,27 +13,29 @@ import { evidenceName, useGame } from '../store/game.ts';
 import { sfx } from '../audio/audio.ts';
 import { formatDuration } from '../lib/format.ts';
 import styles from './Ending.module.css';
+import { localizedCase, useT, type MessageKey } from '../i18n/index.ts';
+import { rich } from '../i18n/rich.tsx';
 
-const STAMP: Record<AccusationOutcome, string> = {
-  correct: 'Case closed',
-  weak_proof: 'Weak case',
-  wrong_culprit: 'Wrong suspect',
+const STAMP: Record<AccusationOutcome, MessageKey> = {
+  correct: 'ending.stampCorrect',
+  weak_proof: 'ending.stampWeak',
+  wrong_culprit: 'ending.stampWrong',
 };
 
-const HEADLINE: Record<AccusationOutcome, string> = {
-  correct: 'You got your man. And the proof to keep him.',
-  weak_proof: 'Right name. Not enough to hold it.',
-  wrong_culprit: 'The wrong door got knocked on.',
+const HEADLINE: Record<AccusationOutcome, MessageKey> = {
+  correct: 'ending.headCorrect',
+  weak_proof: 'ending.headWeak',
+  wrong_culprit: 'ending.headWrong',
 };
 
 /** Delay so the sound lands with the stamp rather than on top of the accusation's own thump. */
 // The stamp lands after the front page has spun in.
 const STAMP_SOUND_DELAY_MS = 1350;
 
-const DECK: Record<AccusationOutcome, string> = {
-  correct: 'Detective names the guilty party. District attorney to bring charges at once.',
-  weak_proof: 'Detective names a suspect, but the proof falls short. Counsel expects to walk.',
-  wrong_culprit: 'Detective names the wrong party. The guilty one is still at large.',
+const DECK: Record<AccusationOutcome, MessageKey> = {
+  correct: 'ending.deckCorrect',
+  weak_proof: 'ending.deckWeak',
+  wrong_culprit: 'ending.deckWrong',
 };
 
 /**
@@ -66,23 +68,24 @@ export function Ending() {
   const accusation = progress.accusation;
   const stampAt = accusation?.at ?? null;
   useAmbience('rain');
+  const { t, language } = useT();
 
   useEffect(() => {
-    document.title = `Verdict - ${caseFile.title} - Project Red String`;
-  }, [caseFile.title]);
+    document.title = `${t('ending.docTitle')} - ${caseFile.title} - Project Red String`;
+  }, [caseFile.title, t, language]);
 
   useEffect(() => {
     if (stampAt === null) return;
-    const t = window.setTimeout(() => sfx('stamp'), STAMP_SOUND_DELAY_MS);
-    return () => window.clearTimeout(t);
+    const timer = window.setTimeout(() => sfx('stamp'), STAMP_SOUND_DELAY_MS);
+    return () => window.clearTimeout(timer);
   }, [stampAt]);
 
   if (!accusation) {
     return (
-      <ScreenFrame title="No verdict yet" kicker={caseFile.title}>
-        <p className={styles.pending}>The case is still open. Nobody has been named.</p>
+      <ScreenFrame title={t('ending.noVerdict')} kicker={caseFile.title}>
+        <p className={styles.pending}>{t('ending.stillOpen')}</p>
         <ButtonLink to={casePath(caseKey, 'accuse')} variant="primary">
-          Make the accusation
+          {t('accuse.submit')}
         </ButtonLink>
       </ScreenFrame>
     );
@@ -97,7 +100,8 @@ export function Ending() {
 
   const storyIndex = source === 'story' ? (STORY_ORDER as readonly string[]).indexOf(caseKey) : -1;
   const nextId = storyIndex >= 0 ? STORY_ORDER[storyIndex + 1] : undefined;
-  const nextCase = nextId ? getStoryCase(nextId) : null;
+  const nextEnglish = nextId ? getStoryCase(nextId) : null;
+  const nextCase = nextEnglish ? localizedCase(nextEnglish) : null;
   const nextUnlocked = nextId ? isStoryUnlocked(storyIndex + 1, (id) => Boolean(completions?.[id])) : false;
 
   const replay = () => {
@@ -116,55 +120,54 @@ export function Ending() {
   const newRecord = outcome === 'correct' && timeMs !== null && bestTimeMs !== undefined && timeMs <= bestTimeMs;
 
   const rows: Array<{ label: string; value: number; note: string }> = [
-    { label: 'Verdict', value: breakdown.base, note: STAMP[outcome] },
-    { label: 'Thoroughness', value: breakdown.thoroughness, note: `${breakdown.discovered} of ${breakdown.discoverable} found` },
+    { label: t('ending.rowVerdict'), value: breakdown.base, note: t(STAMP[outcome]) },
+    { label: t('ending.rowThoroughness'), value: breakdown.thoroughness, note: t('ending.rowFound', { n: breakdown.discovered, total: breakdown.discoverable }) },
     {
-      label: 'Efficiency',
+      label: t('ending.rowEfficiency'),
       value: breakdown.efficiency,
-      note: outcome === 'correct' ? `${breakdown.questionsUsed} of ${breakdown.questionBudget} questions` : 'Only paid on a clean solve',
+      note: outcome === 'correct' ? t('ending.rowQuestions', { n: breakdown.questionsUsed, total: breakdown.questionBudget }) : t('ending.rowCleanOnly'),
     },
-    { label: 'Hints', value: -breakdown.hintPenalty, note: `${breakdown.hintsUsed} taken` },
+    { label: t('ending.rowHints'), value: -breakdown.hintPenalty, note: t('ending.rowTaken', { n: breakdown.hintsUsed }) },
   ];
 
   return (
-    <ScreenFrame title="The verdict" kicker={caseFile.title}>
+    <ScreenFrame title={t('ending.title')} kicker={caseFile.title}>
       <section className={`${styles.outcome} ${styles[outcome] ?? ''}`} data-testid="ending-outcome" data-outcome={outcome} aria-labelledby="outcome-heading">
         {/* The verdict arrives the way it does in the pictures: a front page spinning out of the dark. */}
         <article className={`paper selectable ${styles.frontPage}`}>
           <header className={styles.masthead}>
             <p className={styles.edition}>
-              <span>Late city edition</span>
+              <span>{t('ending.edition')}</span>
               <span>{caseFile.era}</span>
-              <span>Five cents</span>
+              <span>{t('ending.price')}</span>
             </p>
             <p className={styles.paperName}>The Calder City Ledger</p>
           </header>
           <h2 id="outcome-heading" className={styles.headline}>
-            {HEADLINE[outcome]}
+            {t(HEADLINE[outcome])}
           </h2>
-          <p className={styles.deck}>{DECK[outcome]}</p>
+          <p className={styles.deck}>{t(DECK[outcome])}</p>
           <div className={styles.story}>
             {accused && (
               <figure className={styles.photo}>
                 <Portrait suspect={accused} size={190} decorative showInitials={false} />
-                <figcaption>{accused.name}, named by the detective.</figcaption>
+                <figcaption>{t('ending.caption', { name: accused.name })}</figcaption>
               </figure>
             )}
             <div className={styles.storyText}>
               <p className={styles.accusedLine}>
-                You named <strong>{accused?.name ?? 'nobody'}</strong>
-                {accusation.evidenceIds.length > 0 && (
-                  <>
-                    {' '}
-                    on the strength of {accusation.evidenceIds.map((id) => evidenceName(caseFile, id)).join(', ')}.
-                  </>
-                )}
+                {accusation.evidenceIds.length > 0
+                  ? rich(t('ending.namedWith'), {
+                      name: <strong>{accused?.name ?? t('ending.nobody')}</strong>,
+                      evidence: accusation.evidenceIds.map((id) => evidenceName(caseFile, id)).join(', '),
+                    })
+                  : rich(t('ending.named'), { name: <strong>{accused?.name ?? t('ending.nobody')}</strong> })}
               </p>
               <p className={styles.endingText}>{caseFile.endings[outcome]}</p>
             </div>
           </div>
           <div className={styles.stampWrap}>
-            <p className={`stamp ${styles.bigStamp}`}>{STAMP[outcome]}</p>
+            <p className={`stamp ${styles.bigStamp}`}>{t(STAMP[outcome])}</p>
           </div>
         </article>
       </section>
@@ -172,26 +175,26 @@ export function Ending() {
       <div className={styles.columns}>
         <section className={styles.scoreCard} aria-labelledby="score-heading">
           <h2 id="score-heading" className={styles.cardTitle}>
-            The tally
+            {t('ending.tally')}
           </h2>
           <div className={styles.scoreTop}>
-            <div className={styles.rankStamp} aria-label={`Rank ${accusation.rank}`}>
+            <div className={styles.rankStamp} aria-label={t('common.rank', { rank: accusation.rank })}>
               <span className={styles.rankLabel} aria-hidden="true">
-                Rank
+                {t('ending.rank')}
               </span>
               <span className={styles.rankLetter} aria-hidden="true">
                 {accusation.rank}
               </span>
             </div>
             <p className={styles.total}>
-              <span className={styles.totalLabel}>Final score</span>
+              <span className={styles.totalLabel}>{t('ending.finalScore')}</span>
               <span className={styles.totalValue} data-testid="final-score">
                 {accusation.score}
               </span>
             </p>
           </div>
           <table className={styles.breakdown}>
-            <caption className="visually-hidden">Score breakdown</caption>
+            <caption className="visually-hidden">{t('ending.breakdown')}</caption>
             <tbody>
               {rows.map((r) => (
                 <tr key={r.label}>
@@ -205,40 +208,40 @@ export function Ending() {
             </tbody>
             <tfoot>
               <tr>
-                <th scope="row">Total</th>
+                <th scope="row">{t('ending.total')}</th>
                 <td>{accusation.score}</td>
               </tr>
             </tfoot>
           </table>
           <dl className={styles.stats}>
             <div>
-              <dt>Clues found</dt>
+              <dt>{t('ending.cluesFound')}</dt>
               <dd>
                 {breakdown.discovered} / {breakdown.discoverable}
               </dd>
             </div>
             <div>
-              <dt>Questions used</dt>
+              <dt>{t('ending.questionsUsed')}</dt>
               <dd>
                 {breakdown.questionsUsed} / {breakdown.questionBudget}
               </dd>
             </div>
             <div>
-              <dt>Hints taken</dt>
+              <dt>{t('ending.hintsTaken')}</dt>
               <dd>{breakdown.hintsUsed}</dd>
             </div>
             {timeMs !== null && (
               <div>
-                <dt>Time on the case</dt>
+                <dt>{t('ending.time')}</dt>
                 <dd data-testid="case-time">{formatDuration(timeMs)}</dd>
               </div>
             )}
             {bestTimeMs !== undefined && (
               <div>
-                <dt>Fastest solve</dt>
+                <dt>{t('ending.fastest')}</dt>
                 <dd>
                   {formatDuration(bestTimeMs)}
-                  {newRecord && <span className={styles.record}>New record</span>}
+                  {newRecord && <span className={styles.record}>{t('ending.newRecord')}</span>}
                 </dd>
               </div>
             )}
@@ -247,11 +250,11 @@ export function Ending() {
 
         <section className={styles.solution} aria-labelledby="solution-heading">
           <h2 id="solution-heading" className={styles.cardTitle}>
-            What really happened
+            {t('ending.whatHappened')}
           </h2>
           {outcome === 'wrong_culprit' && (
             <div className={styles.disclosure}>
-              <p>The real answer is in the file. Read it now, or close the folder and try the case again.</p>
+              <p>{t('ending.realAnswer')}</p>
               <Button
                 variant="lamp"
                 aria-expanded={showSolution}
@@ -259,7 +262,7 @@ export function Ending() {
                 onClick={() => setShowSolution((v) => !v)}
                 data-testid="reveal-solution"
               >
-                {showSolution ? 'Hide the solution' : 'Read the full solution'}
+                {showSolution ? t('ending.hideSolution') : t('ending.readSolution')}
               </Button>
             </div>
           )}
@@ -268,7 +271,7 @@ export function Ending() {
               <div className={styles.culprit}>
                 <Portrait suspect={culprit} size={84} showInitials={false} decorative />
                 <div>
-                  <p className={styles.culpritLabel}>The killer</p>
+                  <p className={styles.culpritLabel}>{t('ending.killer')}</p>
                   <p className={styles.culpritName}>{culprit.name}</p>
                   <p className={styles.culpritRole}>{culprit.role}</p>
                 </div>
@@ -282,14 +285,14 @@ export function Ending() {
                   <p key={i}>{para}</p>
                 ))}
             </div>
-            <h3 className={styles.requiredTitle}>The proof that holds</h3>
+            <h3 className={styles.requiredTitle}>{t('ending.proof')}</h3>
             <ul className={styles.required}>
               {required.map((id) => {
                 const presented = accusation.evidenceIds.includes(id);
                 return (
                   <li key={id} className={presented ? styles.presented : styles.missed}>
                     <span className={styles.reqName}>{evidenceName(caseFile, id)}</span>
-                    <span className={styles.reqStatus}>{presented ? 'You presented it' : 'Missing from your case'}</span>
+                    <span className={styles.reqStatus}>{presented ? t('ending.presented') : t('ending.missing')}</span>
                   </li>
                 );
               })}
@@ -298,20 +301,20 @@ export function Ending() {
         </section>
       </div>
 
-      <nav className={styles.actions} aria-label="After the verdict">
+      <nav className={styles.actions} aria-label={t('ending.after')}>
         <Button onClick={replay} data-testid="replay-case">
-          Replay case
+          {t('ending.replay')}
         </Button>
         {nextId && nextCase && nextUnlocked && (
           <Button variant="lamp" onClick={goNext} data-testid="next-case">
-            Next case: {nextCase.title}
+            {t('ending.next', { title: nextCase.title })}
           </Button>
         )}
         <ButtonLink to="/cases" data-testid="to-case-select">
-          Case select
+          {t('ending.caseSelect')}
         </ButtonLink>
         <ButtonLink to="/" variant="ghost" data-testid="to-main-menu">
-          Main menu
+          {t('ending.mainMenu')}
         </ButtonLink>
       </nav>
     </ScreenFrame>

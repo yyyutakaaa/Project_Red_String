@@ -5,6 +5,7 @@ import type { Mood } from '@shared/caseSchema.ts';
 import { portraitArt } from '../assets/registry.ts';
 import styles from './Portrait.module.css';
 import { initials } from '../lib/format.ts';
+import { t } from '../i18n/index.ts';
 
 export interface PortraitSubject {
   id: string;
@@ -140,7 +141,7 @@ export function Portrait({ suspect, size = 160, mood = null, showInitials = true
   const uid = useId().replace(/:/g, '');
   const art = portraitArt(suspect.portrait, suspect.id);
   const ring = mood ? MOOD_COLOR[mood] : 'var(--ink-500)';
-  const label = decorative ? undefined : `Portrait of ${suspect.name}`;
+  const label = decorative ? undefined : t('portrait.label', { name: suspect.name });
   const bg1 = shade(suspect.color, 30);
   const bg2 = shade(suspect.color, -60);
   return (

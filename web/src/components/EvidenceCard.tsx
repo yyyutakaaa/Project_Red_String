@@ -2,6 +2,7 @@ import type { CaseFile, Evidence } from '@shared/caseSchema.ts';
 import styles from './EvidenceCard.module.css';
 import { sourceLabel } from '../lib/format.ts';
 import { EvidencePhoto } from './EvidencePhoto.tsx';
+import { englishOf } from '../i18n/caseText.ts';
 
 interface EvidenceCardProps {
   evidence: Evidence;
@@ -21,7 +22,8 @@ export function EvidenceCard({ evidence, caseFile, compact, selected, onToggle, 
   const body = (
     <>
       <span className={styles.photo} aria-hidden="true">
-        <EvidencePhoto name={evidence.name} description={evidence.description} marker={exhibit} />
+        {/* Drawn from the English name, so the photograph is the same object in every language. */}
+        <EvidencePhoto name={englishOf(evidence).name} description={englishOf(evidence).description} marker={exhibit} />
       </span>
       <span className={styles.name}>{evidence.name}</span>
       {!compact && <span className={styles.desc}>{evidence.description}</span>}

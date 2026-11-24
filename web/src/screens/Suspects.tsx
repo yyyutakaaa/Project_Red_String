@@ -6,8 +6,10 @@ import { Figure, Portrait } from '../components/Portrait.tsx';
 import { casePath, useCaseContext } from '../hooks/useCase.ts';
 import { useAmbience } from '../hooks/useAmbience.ts';
 import { ambienceForBackground } from '../audio/audio.ts';
-import { getConversation, moodLabel } from '../store/game.ts';
+import { getConversation } from '../store/game.ts';
 import styles from './Suspects.module.css';
+import { useT } from '../i18n/index.ts';
+import { rich } from '../i18n/rich.tsx';
 
 /** Height marks painted on the lineup wall behind each portrait. */
 const HEIGHT_MARKS = ['6′6″', '6′', '5′6″', '5′', '4′6″'];
@@ -16,23 +18,24 @@ export function Suspects() {
   const { caseFile, caseKey, progress } = useCaseContext();
   const victimRoom = caseFile.rooms.find((r) => r.id === caseFile.victim.found_in);
   useAmbience(ambienceForBackground(victimRoom?.background ?? caseFile.rooms[0]?.background));
+  const { t, tn } = useT();
 
   return (
     <ScreenFrame
       wide
       kicker={caseFile.title}
-      title="The lineup"
+      title={t('lineup.title')}
       actions={
         <>
           <ButtonLink to={casePath(caseKey, 'rooms')} variant="ghost">
-            Scenes
+            {t('nav.scenes')}
           </ButtonLink>
-          <ButtonLink to={casePath(caseKey, 'board')}>Board</ButtonLink>
+          <ButtonLink to={casePath(caseKey, 'board')}>{t('nav.board')}</ButtonLink>
         </>
       }
     >
       <p className={styles.lede}>
-        {caseFile.suspects.length} people with a reason to lie tonight. Each one has a story ready. Find the one that does not hold.
+        {t('lineup.lede', { count: caseFile.suspects.length })}
       </p>
 
       {/* The lineup room, seen through the one-way glass. A picture of the list below; wide screens only. */}
@@ -68,7 +71,7 @@ export function Suspects() {
                     <Figure kind={s.portrait} fill={`url(#lineup-${s.id})`} rim="#f2cd7a" />
                   </svg>
                   <span className={styles.slate}>
-                    <span className={styles.slateNo}>No. {i + 1}</span>
+                    <span className={styles.slateNo}>{t('lineup.no', { n: i + 1 })}</span>
                     <span className={styles.slateName}>{s.name}</span>
                   </span>
                 </Link>
@@ -78,7 +81,7 @@ export function Suspects() {
         </ul>
         <div className={styles.floor} />
         <div className={styles.glass} />
-        <p className={styles.roomLabel}>One-way glass</p>
+        <p className={styles.roomLabel}>{t('lineup.glass')}</p>
       </div>
 
       <ol className={styles.lineup}>
@@ -89,7 +92,7 @@ export function Suspects() {
           const asked = conv.messages.filter((m) => m.role === 'detective').length;
           const slips = s.revealable_clues.filter((c) => progress.revealedClues.includes(c.clue_id)).length;
           const shown = conv.shownEvidence.length;
-          const action = left === 0 ? 'Read the transcript' : asked === 0 ? 'Interrogate' : 'Resume interrogation';
+          const action = left === 0 ? t('lineup.readTranscript') : asked === 0 ? t('lineup.interrogate') : t('lineup.resume');
           const pct = max > 0 ? (left / max) * 100 : 0;
           return (
             <li key={s.id} className={styles.card} data-mood={conv.mood} data-spent={left === 0 || undefined} style={{ '--delay': `${i * 70}ms` } as CSSProperties}>
@@ -102,7 +105,7 @@ export function Suspects() {
                 <div className={styles.lamp} aria-hidden="true" />
                 <Portrait suspect={s} mood={conv.mood} size={168} showInitials={false} className={styles.portrait} />
                 <span className={styles.placard} aria-hidden="true">
-                  No. {i + 1}
+                  {t('lineup.no', { n: i + 1 })}
                 </span>
               </div>
 
@@ -111,24 +114,22 @@ export function Suspects() {
                   <h2 className={styles.name}>{s.name}</h2>
                   <p className={styles.role}>
                     {s.role}
-                    <span className={styles.age}>Age {s.age}</span>
+                    <span className={styles.age}>{t('lineup.age', { age: s.age })}</span>
                   </p>
                 </header>
 
                 <dl className={styles.stats}>
                   <div className={styles.stat}>
-                    <dt>Mood</dt>
+                    <dt>{t('lineup.mood')}</dt>
                     <dd>
                       <span className={styles.mood} data-mood={conv.mood}>
-                        {moodLabel(conv.mood)}
+                        {t(`mood.${conv.mood}`)}
                       </span>
                     </dd>
                   </div>
                   <div className={styles.stat}>
-                    <dt>Questions left</dt>
-                    <dd>
-                      <strong>{left}</strong> of {max}
-                    </dd>
+                    <dt>{t('lineup.questionsLeft')}</dt>
+                    <dd>{rich(t('lineup.leftOf'), { left: <strong>{left}</strong>, max })}</dd>
                   </div>
                 </dl>
                 <div className={styles.patience} aria-hidden="true">
@@ -137,12 +138,12 @@ export function Suspects() {
 
                 <blockquote className={styles.alibi}>
                   <p>
-                    <span className={styles.claims}>Claims:</span> {s.alibi}
+                    <span className={styles.claims}>{t('lineup.claims')}</span> {s.alibi}
                   </p>
                 </blockquote>
 
-                <section className={styles.factsBlock} aria-label={`What is on record about ${s.name}`}>
-                  <h3 className={styles.factsTitle}>On record</h3>
+                <section className={styles.factsBlock} aria-label={t('lineup.onRecordLabel', { name: s.name })}>
+                  <h3 className={styles.factsTitle}>{t('lineup.onRecord')}</h3>
                   <ul className={styles.facts}>
                     {s.public_facts.map((f) => (
                       <li key={f}>{f}</li>
@@ -151,10 +152,10 @@ export function Suspects() {
                 </section>
 
                 <p className={styles.status}>
-                  {asked === 0 ? 'Not yet questioned.' : `${asked} ${asked === 1 ? 'question' : 'questions'} on record.`}
-                  {shown > 0 && ` Shown ${shown} ${shown === 1 ? 'exhibit' : 'exhibits'}.`}
-                  {slips > 0 && ` ${slips} ${slips === 1 ? 'slip' : 'slips'} noted.`}
-                  {left === 0 && ' Has nothing more to say.'}
+                  {asked === 0 ? t('lineup.notQuestioned') : tn('lineup.asked', asked)}
+                  {shown > 0 && ` ${tn('lineup.shown', shown)}`}
+                  {slips > 0 && ` ${tn('lineup.slips', slips)}`}
+                  {left === 0 && ` ${t('lineup.nothingMore')}`}
                 </p>
 
                 <ButtonLink

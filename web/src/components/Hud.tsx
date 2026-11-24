@@ -10,6 +10,8 @@ import { casePath } from '../hooks/useCase.ts';
 import { Button } from './Button.tsx';
 import { Modal } from './Modal.tsx';
 import styles from './Hud.module.css';
+import { useT } from '../i18n/index.ts';
+import { rich } from '../i18n/rich.tsx';
 
 interface HudProps {
   caseFile: CaseFile;
@@ -22,12 +24,13 @@ function CaseTimer({ caseKey, progress }: { caseKey: string; progress: CaseProgr
   const live = useCaseClock((s) => (s.caseKey === caseKey ? s.ms : null));
   const closed = progress.accusation !== null;
   const ms = closed ? (progress.accusation?.timeMs ?? progress.playMs ?? 0) : (live ?? progress.playMs ?? 0);
+  const { t } = useT();
   return (
     <span
       className={`${styles.timer} ${closed ? styles.timerStopped : ''}`}
       role="timer"
-      aria-label={`${closed ? 'Case closed in' : 'Time on the case'}: ${spokenDuration(ms)}`}
-      title={closed ? 'Time it took to close the case' : 'Time on the case. It pauses when you step away.'}
+      aria-label={t(closed ? 'hud.closedIn' : 'hud.timeOn', { time: spokenDuration(ms) })}
+      title={closed ? t('hud.closedTitle') : t('hud.timeTitle')}
       data-testid="case-timer"
     >
       <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
@@ -52,6 +55,7 @@ export function Hud({ caseFile, caseKey, progress }: HudProps) {
   const remainingHints = caseFile.hints.length - progress.hintsUsed;
   const closed = progress.accusation !== null;
   const headerRef = useRef<HTMLElement>(null);
+  const { t } = useT();
 
   // The HUD wraps onto several rows on narrow screens. Sticky panels below it offset themselves by
   // --hud-height, so publish the real height instead of the 56px default.
@@ -84,39 +88,39 @@ export function Hud({ caseFile, caseKey, progress }: HudProps) {
   );
 
   return (
-    <header ref={headerRef} className={styles.hud} aria-label="Case controls">
+    <header ref={headerRef} className={styles.hud} aria-label={t('hud.controls')}>
       <a href="#main" className="skip-link">
-        Skip to content
+        {t('hud.skip')}
       </a>
-      <NavLink to={casePath(caseKey, 'briefing')} className={styles.title} title="Open the case briefing">
+      <NavLink to={casePath(caseKey, 'briefing')} className={styles.title} title={t('hud.openBriefing')}>
         {caseFile.title}
       </NavLink>
-      <nav className={styles.nav} aria-label="Case sections">
-        {link('rooms', 'Scenes')}
-        {link('suspects', 'Suspects')}
-        {link('board', 'Board')}
-        {link('notebook', 'Notebook')}
-        {closed ? link('ending', 'Verdict', styles.accuse) : link('accuse', 'Accuse', styles.accuse)}
+      <nav className={styles.nav} aria-label={t('hud.sections')}>
+        {link('rooms', t('nav.scenes'))}
+        {link('suspects', t('nav.suspects'))}
+        {link('board', t('nav.board'))}
+        {link('notebook', t('nav.notebook'))}
+        {closed ? link('ending', t('hud.verdict'), styles.accuse) : link('accuse', t('nav.accuse'), styles.accuse)}
       </nav>
       <div className={styles.tools}>
-        <span className={styles.counter} aria-label={`Clues found: ${discovered} of ${total}`} data-testid="clue-counter">
-          Clues <strong>{discovered}</strong>/{total}
+        <span className={styles.counter} aria-label={t('hud.cluesLabel', { n: discovered, total })} data-testid="clue-counter">
+          {rich(t('hud.clues'), { n: <strong>{discovered}</strong>, total })}
         </span>
         <CaseTimer caseKey={caseKey} progress={progress} />
         <Button size="small" onClick={() => setHintOpen(true)} aria-haspopup="dialog">
-          Hint
+          {t('hud.hint')}
         </Button>
         <Button size="small" onClick={() => setSaveOpen(true)} aria-haspopup="dialog">
-          Save
+          {t('hud.save')}
         </Button>
         <Button size="small" variant="ghost" onClick={() => navigate('/')}>
-          Menu
+          {t('hud.menu')}
         </Button>
       </div>
 
       <Modal
         open={hintOpen}
-        title="Ask the Captain for a hint"
+        title={t('hud.hintTitle')}
         onClose={() => {
           setHintOpen(false);
           setLatestHint(null);
@@ -124,14 +128,14 @@ export function Hud({ caseFile, caseKey, progress }: HudProps) {
         footer={
           <>
             <Button variant="ghost" onClick={() => setHintOpen(false)}>
-              Close
+              {t('common.close')}
             </Button>
             <Button
               variant="lamp"
               disabled={remainingHints <= 0 || closed}
               onClick={() => setLatestHint(takeHint(caseFile, caseKey))}
             >
-              {remainingHints > 0 ? `Take a hint (-${HINT_COST} points)` : 'No hints left'}
+              {remainingHints > 0 ? t('hud.takeHint', { cost: HINT_COST }) : t('hud.noHints')}
             </Button>
           </>
         }
@@ -141,13 +145,11 @@ export function Hud({ caseFile, caseKey, progress }: HudProps) {
             {latestHint}
           </p>
         ) : (
-          <p>
-            Each hint costs {HINT_COST} points from your final score. {remainingHints} of {caseFile.hints.length} hints remain.
-          </p>
+          <p>{t('hud.hintCost', { cost: HINT_COST, remaining: remainingHints, total: caseFile.hints.length })}</p>
         )}
         {hintsShown(caseFile, progress).length > 0 && (
           <>
-            <h3>Hints so far</h3>
+            <h3>{t('hud.hintsSoFar')}</h3>
             <ol className={styles.hintList}>
               {hintsShown(caseFile, progress).map((h) => (
                 <li key={h}>{h}</li>
@@ -159,7 +161,7 @@ export function Hud({ caseFile, caseKey, progress }: HudProps) {
 
       <Modal
         open={saveOpen}
-        title="Save the case"
+        title={t('hud.saveTitle')}
         onClose={() => setSaveOpen(false)}
         footer={
           <Button
@@ -169,11 +171,11 @@ export function Hud({ caseFile, caseKey, progress }: HudProps) {
               setSaveOpen(false);
             }}
           >
-            Save to slot {activeSlot}
+            {t('hud.saveToSlot', { n: activeSlot })}
           </Button>
         }
       >
-        <p>The game also saves automatically after every action. You can copy this game into another slot:</p>
+        <p>{t('hud.saveNote')}</p>
         <div className={styles.slotRow}>
           {Array.from({ length: SLOT_COUNT }, (_, i) => i + 1)
             .filter((n) => n !== activeSlot)
@@ -185,7 +187,7 @@ export function Hud({ caseFile, caseKey, progress }: HudProps) {
                   setSaveOpen(false);
                 }}
               >
-                Save to slot {n} and continue there
+                {t('hud.saveCopy', { n })}
               </Button>
             ))}
         </div>

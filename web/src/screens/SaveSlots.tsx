@@ -12,6 +12,7 @@ import { formatDate } from '../lib/format.ts';
 import { useGame } from '../store/game.ts';
 import { useLaunch } from '../boot/launch.ts';
 import styles from './SaveSlots.module.css';
+import { localizedCase, t, useT } from '../i18n/index.ts';
 
 type Pending = { kind: 'new' | 'delete'; slot: number } | null;
 
@@ -25,8 +26,11 @@ interface BestScore {
 
 function caseTitle(key: string): string {
   const { source, id } = parseCaseKey(key);
-  if (source === 'story') return getStoryCase(id)?.title ?? 'A missing file';
-  return 'A retired case file';
+  if (source === 'story') {
+    const c = getStoryCase(id);
+    return c ? localizedCase(c).title : t('common.missingFile');
+  }
+  return t('common.retiredFile');
 }
 
 function bestScores(slot: SaveSlotData): BestScore[] {
@@ -54,10 +58,11 @@ export function SaveSlots() {
   const [pending, setPending] = useState<Pending>(null);
   const [announcement, setAnnouncement] = useState('');
   const launch = useLaunch();
+  const { t, language } = useT();
 
   useEffect(() => {
-    document.title = 'Save slots - Project Red String';
-  }, []);
+    document.title = `${t('slots.title')} - Project Red String`;
+  }, [t, language]);
 
   const refresh = () => {
     setSlots(listSlots(storage));
@@ -71,14 +76,14 @@ export function SaveSlots() {
     const key = slot.activeCaseKey;
     const resolved = key ? resolveCase(key) : null;
     void launch(key && resolved ? casePath(key) : '/cases', {
-      kicker: `Slot ${n}`,
-      title: resolved?.caseFile.title ?? 'The case files',
+      kicker: t('common.slot', { n }),
+      title: resolved?.caseFile.title ?? t('menu.caseFilesTitle'),
     });
   };
 
   const startFresh = (n: number) => {
     createSlot(n);
-    void launch('/cases', { kicker: `Slot ${n}`, title: 'A new game' });
+    void launch('/cases', { kicker: t('common.slot', { n }), title: t('slots.newGameTitle') });
   };
 
   const confirmPending = () => {
@@ -92,7 +97,7 @@ export function SaveSlots() {
     removeSlot(emptied);
     setPending(null);
     refresh();
-    setAnnouncement(`Slot ${emptied} emptied.`);
+    setAnnouncement(t('slots.emptied', { n: emptied }));
     // The Delete button that opened the dialog is gone now; keep the keyboard in the same drawer.
     requestAnimationFrame(() => document.getElementById(slotHeadingId(emptied))?.focus());
   };
@@ -101,17 +106,17 @@ export function SaveSlots() {
     <>
       <RainBackdrop lamp="left" intensity="soft" />
       <ScreenFrame
-        title="Save slots"
-        kicker="Records office"
+        title={t('slots.title')}
+        kicker={t('common.recordsOffice')}
         actions={
           <ButtonLink to="/" variant="ghost">
-            Back to the menu
+            {t('common.backToMenu')}
           </ButtonLink>
         }
       >
-        <p className={styles.lede}>You have three drawers. The game saves itself after every move you make.</p>
+        <p className={styles.lede}>{t('slots.lede')}</p>
 
-        <ol className={styles.grid} aria-label="Save slots">
+        <ol className={styles.grid} aria-label={t('slots.title')}>
           {Array.from({ length: SLOT_COUNT }, (_, i) => i + 1).map((n) => {
             const data = slots[n - 1] ?? null;
             const isCurrent = current === n && data !== null;
@@ -127,16 +132,16 @@ export function SaveSlots() {
                   data-testid={`slot-${n}`}
                 >
                   <div className={styles.tab} aria-hidden="true">
-                    Drawer {n}
+                    {t('slots.drawer', { n })}
                   </div>
                   <header className={styles.head}>
                     <h2 id={headingId} className={styles.heading} tabIndex={-1}>
-                      Slot {n}
-                      {isCurrent && <span className="visually-hidden"> (in use)</span>}
+                      {t('common.slot', { n })}
+                      {isCurrent && <span className="visually-hidden">{t('slots.inUseHidden')}</span>}
                     </h2>
                     {isCurrent && (
                       <span className={`stamp ${styles.inUse}`} aria-hidden="true">
-                        In use
+                        {t('slots.inUse')}
                       </span>
                     )}
                   </header>
@@ -144,31 +149,29 @@ export function SaveSlots() {
                   {data ? (
                     <dl className={styles.facts}>
                       <div>
-                        <dt>Last saved</dt>
+                        <dt>{t('slots.lastSaved')}</dt>
                         <dd>{formatDate(data.updatedAt)}</dd>
                       </div>
                       <div>
-                        <dt>Open case</dt>
-                        <dd>{activeTitle ?? 'None open'}</dd>
+                        <dt>{t('slots.openCase')}</dt>
+                        <dd>{activeTitle ?? t('slots.noneOpen')}</dd>
                       </div>
                       <div>
-                        <dt>Story cases solved</dt>
-                        <dd>
-                          {solved} of {STORY_ORDER.length}
-                        </dd>
+                        <dt>{t('slots.solved')}</dt>
+                        <dd>{t('slots.solvedCount', { n: solved, total: STORY_ORDER.length })}</dd>
                       </div>
                       <div>
-                        <dt>Best scores</dt>
+                        <dt>{t('slots.bestScores')}</dt>
                         <dd>
                           {scores.length === 0 ? (
-                            'Nothing closed yet'
+                            t('slots.nothingClosed')
                           ) : (
                             <ul className={styles.scores}>
                               {scores.map((s) => (
                                 <li key={s.key}>
                                   <span className={styles.scoreTitle}>{s.title}</span>
                                   <span className={styles.scoreValue}>
-                                    {s.score} <abbr title={`Rank ${s.rank}`}>{s.rank}</abbr>
+                                    {s.score} <abbr title={t('common.rank', { rank: s.rank })}>{s.rank}</abbr>
                                   </span>
                                 </li>
                               ))}
@@ -178,20 +181,20 @@ export function SaveSlots() {
                       </div>
                     </dl>
                   ) : (
-                    <p className={styles.emptyText}>Empty drawer. Nothing filed here yet.</p>
+                    <p className={styles.emptyText}>{t('slots.empty')}</p>
                   )}
 
                   <div className={styles.actions}>
                     {data ? (
                       <>
                         <Button variant="lamp" onClick={() => load(n)} data-testid={`slot-load-${n}`}>
-                          Load
+                          {t('slots.load')}
                         </Button>
                         <Button
                           onClick={() => (hasAnything(data) ? setPending({ kind: 'new', slot: n }) : startFresh(n))}
                           data-testid={`slot-new-${n}`}
                         >
-                          New game
+                          {t('slots.newGame')}
                         </Button>
                         <Button
                           variant="ghost"
@@ -199,12 +202,12 @@ export function SaveSlots() {
                           onClick={() => setPending({ kind: 'delete', slot: n })}
                           data-testid={`slot-delete-${n}`}
                         >
-                          Delete
+                          {t('slots.delete')}
                         </Button>
                       </>
                     ) : (
                       <Button variant="lamp" onClick={() => startFresh(n)} data-testid={`slot-new-${n}`}>
-                        New game
+                        {t('slots.newGame')}
                       </Button>
                     )}
                   </div>
@@ -221,26 +224,23 @@ export function SaveSlots() {
 
       <Modal
         open={pending !== null}
-        title={pending?.kind === 'delete' ? `Empty slot ${pending.slot}?` : `Start over in slot ${pending?.slot ?? ''}?`}
+        title={pending?.kind === 'delete' ? t('slots.confirmDeleteTitle', { n: pending.slot }) : t('slots.confirmNewTitle', { n: pending?.slot ?? '' })}
         onClose={() => setPending(null)}
         footer={
           <>
             <Button variant="ghost" onClick={() => setPending(null)}>
-              Keep it
+              {t('slots.keepIt')}
             </Button>
             <Button variant="primary" onClick={confirmPending} data-testid="slot-confirm">
-              {pending?.kind === 'delete' ? 'Burn the file' : 'Start over'}
+              {pending?.kind === 'delete' ? t('slots.burn') : t('slots.startOver')}
             </Button>
           </>
         }
       >
         {pending?.kind === 'delete' ? (
-          <p>Every case, verdict and best score in this drawer goes into the furnace. There is no getting it back.</p>
+          <p>{t('slots.deleteBody')}</p>
         ) : (
-          <p>
-            A fresh start wipes this drawer: open cases, verdicts and best scores. There is no getting
-            the old game back.
-          </p>
+          <p>{t('slots.newBody')}</p>
         )}
       </Modal>
     </>

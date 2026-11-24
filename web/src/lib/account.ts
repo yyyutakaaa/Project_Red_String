@@ -5,6 +5,7 @@
 // the account edge function; signing in goes straight to Supabase Auth.
 import { FUNCTIONS_URL, SUPABASE_PUBLISHABLE_KEY } from './config.ts';
 import { supabase } from './supabase.ts';
+import { t } from '../i18n/index.ts';
 
 export const ACCOUNT_EMAIL_DOMAIN = 'players.redstring.local';
 export const USERNAME_RE = /^[a-z0-9_]{3,20}$/;
@@ -28,15 +29,15 @@ export function normalizeUsername(raw: string): string {
 /** A message when the name is not allowed, else null. */
 export function usernameProblem(raw: string): string | null {
   const name = normalizeUsername(raw);
-  if (name.length < 3) return 'Use at least 3 characters.';
-  if (name.length > 20) return 'Use at most 20 characters.';
-  if (!USERNAME_RE.test(name)) return 'Use only letters, digits and underscores.';
+  if (name.length < 3) return t('account.errMinName');
+  if (name.length > 20) return t('account.errMaxName');
+  if (!USERNAME_RE.test(name)) return t('account.errNameChars');
   return null;
 }
 
 export function passwordProblem(password: string): string | null {
-  if (password.length < PASSWORD_MIN) return `Use at least ${PASSWORD_MIN} characters.`;
-  if (password.length > PASSWORD_MAX) return `Use at most ${PASSWORD_MAX} characters.`;
+  if (password.length < PASSWORD_MIN) return t('account.errMinPass', { n: PASSWORD_MIN });
+  if (password.length > PASSWORD_MAX) return t('account.errMaxPass', { n: PASSWORD_MAX });
   return null;
 }
 
@@ -48,7 +49,7 @@ export function usernameFromEmail(email: string | undefined | null): string {
 
 function client() {
   const c = supabase();
-  if (!c) throw new AccountError('unavailable', 'Accounts are not available in this build.');
+  if (!c) throw new AccountError('unavailable', t('account.errUnavailableBuild'));
   return c;
 }
 
@@ -56,13 +57,13 @@ export async function signIn(username: string, password: string): Promise<void> 
   const { error } = await client().auth.signInWithPassword({ email: emailFor(username), password });
   if (!error) return;
   if (error.status === 400 || /invalid login/i.test(error.message)) {
-    throw new AccountError('wrong_credentials', 'That name and password do not match our records.');
+    throw new AccountError('wrong_credentials', t('account.errWrong'));
   }
-  if (error.status === 429) throw new AccountError('rate_limited', 'Too many tries. Wait a minute and try again.');
+  if (error.status === 429) throw new AccountError('rate_limited', t('account.errTooMany'));
   if (error.name === 'AuthRetryableFetchError' || error.status === 0) {
-    throw new AccountError('offline', 'No connection. Check your internet and try again.');
+    throw new AccountError('offline', t('account.errOffline'));
   }
-  throw new AccountError('unavailable', 'The records office is closed right now. Try again in a moment.');
+  throw new AccountError('unavailable', t('account.errClosed'));
 }
 
 export async function createAccount(username: string, password: string): Promise<void> {
@@ -74,22 +75,21 @@ export async function createAccount(username: string, password: string): Promise
       body: JSON.stringify({ username: normalizeUsername(username), password }),
     });
   } catch {
-    throw new AccountError('offline', 'No connection. Check your internet and try again.');
+    throw new AccountError('offline', t('account.errOffline'));
   }
   if (!res.ok) {
     let code = '';
-    let message = 'Could not open the file. Try again in a moment.';
     try {
-      const body = (await res.json()) as { error?: { code?: string; message?: string } };
+      const body = (await res.json()) as { error?: { code?: string } };
       code = body.error?.code ?? '';
-      message = body.error?.message ?? message;
     } catch {
-      /* keep the default message */
+      /* no code: the generic message */
     }
-    if (code === 'username_taken') throw new AccountError('taken', message);
-    if (code === 'rate_limited') throw new AccountError('rate_limited', message);
-    if (code === 'bad_request') throw new AccountError('invalid', message);
-    throw new AccountError('unavailable', message);
+    // The server's messages are English; the player reads them in their own language.
+    if (code === 'username_taken') throw new AccountError('taken', t('account.errTaken'));
+    if (code === 'rate_limited') throw new AccountError('rate_limited', t('account.errTooManyNew'));
+    if (code === 'bad_request') throw new AccountError('invalid', t('account.errInvalid'));
+    throw new AccountError('unavailable', t('account.errOpenFile'));
   }
   await signIn(username, password);
 }

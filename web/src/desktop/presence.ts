@@ -3,6 +3,7 @@
 // and the "Play Red String" button. Nothing here names a culprit or a clue.
 import type { CaseFile } from '@shared/caseSchema.ts';
 import type { SaveSlotData } from '../engine/types.ts';
+import { t, type MessageKey } from '../i18n/index.ts';
 
 export type PresenceMode = 'full' | 'minimal' | 'off';
 
@@ -14,13 +15,13 @@ export interface PresenceStatus {
 // opened, so the timer on Discord runs on steadily instead of jumping back to 0:00 whenever the
 // player walks into a case or back to the menu.
 
-const MENU_LINES: Record<string, string> = {
-  '/': 'In the main menu',
-  '/cases': 'Choosing a case file',
-  '/slots': 'Going through the save drawers',
-  '/settings': 'Adjusting the settings',
-  '/account': 'At the records office',
-  '/credits': 'Reading the credits',
+const MENU_LINES: Record<string, MessageKey> = {
+  '/': 'presence.mainMenu',
+  '/cases': 'presence.cases',
+  '/slots': 'presence.slots',
+  '/settings': 'presence.settings',
+  '/account': 'presence.account',
+  '/credits': 'presence.credits',
 };
 
 export interface PresenceInput {
@@ -36,59 +37,59 @@ export function describePresence({ pathname, mode, slot, caseFile }: PresenceInp
   const match = /^\/case\/([^/]+)(?:\/([^/]+)(?:\/([^/]+))?)?/.exec(pathname);
 
   if (!match) {
-    if (mode === 'minimal') return { details: 'In the menus' };
-    return { details: MENU_LINES[pathname] ?? 'In the menus' };
+    if (mode === 'minimal') return { details: t('presence.menus') };
+    return { details: t(MENU_LINES[pathname] ?? 'presence.menus') };
   }
 
-  if (mode === 'minimal') return { details: 'Working a case' };
+  if (mode === 'minimal') return { details: t('presence.working') };
 
   const caseKey = decodeURIComponent(match[1]!);
   const screen = match[2] ?? '';
   const param = match[3] ? decodeURIComponent(match[3]) : '';
   const c = caseFile(caseKey);
-  if (!c) return { details: 'Working a case' };
+  if (!c) return { details: t('presence.working') };
 
   const progress = slot?.progress[caseKey];
   let state: string;
   switch (screen) {
     case 'briefing':
-      state = 'Reading the briefing';
+      state = t('presence.briefing');
       break;
     case 'rooms':
-      state = 'Choosing a scene to search';
+      state = t('presence.rooms');
       break;
     case 'room': {
       const room = c.rooms.find((r) => r.id === param);
-      state = room ? `At the scene: ${room.name}` : 'Searching the scenes';
+      state = room ? t('presence.atScene', { room: room.name }) : t('presence.searching');
       break;
     }
     case 'suspects':
-      state = 'Looking over the lineup';
+      state = t('presence.lineup');
       break;
     case 'interrogate': {
       const suspect = c.suspects.find((s) => s.id === param);
-      state = suspect ? `Questioning ${suspect.name}` : 'In the interview room';
+      state = suspect ? t('presence.questioning', { name: suspect.name }) : t('presence.interview');
       break;
     }
     case 'board':
-      state = 'Tying strings on the board';
+      state = t('presence.board');
       break;
     case 'notebook':
-      state = 'Going through the notebook';
+      state = t('presence.notebook');
       break;
     case 'accuse':
-      state = 'Making the accusation';
+      state = t('presence.accuse');
       break;
     case 'ending': {
       const verdict = progress?.accusation;
-      if (!verdict) state = 'Waiting for the verdict';
-      else if (verdict.outcome === 'correct') state = `Case closed. Rank ${verdict.rank}`;
-      else state = 'Case closed. It did not hold';
+      if (!verdict) state = t('presence.waiting');
+      else if (verdict.outcome === 'correct') state = t('presence.closedRank', { rank: verdict.rank });
+      else state = t('presence.closedFailed');
       break;
     }
     default:
-      state = 'On the case';
+      state = t('presence.onCase');
   }
 
-  return { details: `Case: ${c.title}`, state };
+  return { details: t('presence.case', { title: c.title }), state };
 }

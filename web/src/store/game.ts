@@ -20,6 +20,7 @@ import {
 import type { AccusationRecord, BoardState, CaseProgress, CaseSource, ChatMessage, ConversationState, SaveSlotData } from '../engine/types.ts';
 import { sfx } from '../audio/audio.ts';
 import { track } from '../lib/telemetry.ts';
+import { t, tn } from '../i18n/index.ts';
 
 export interface Toast {
   id: string;
@@ -74,7 +75,7 @@ export const useGame = create<GameStore>((set, get) => {
       emitWritten(stamped);
     } catch {
       set({ slot });
-      get().pushToast('Could not write the save. Storage may be full or disabled.', 'error');
+      get().pushToast(t('toast.saveFailed'), 'error');
     }
   };
 
@@ -119,7 +120,7 @@ export const useGame = create<GameStore>((set, get) => {
       const slot = get().slot;
       if (!slot) return;
       write(slot);
-      get().pushToast(`Saved to slot ${slot.slot}.`, 'save');
+      get().pushToast(t('toast.saved', { n: slot.slot }), 'save');
     },
     saveToSlot: (n) => {
       const slot = get().slot;
@@ -134,7 +135,7 @@ export const useGame = create<GameStore>((set, get) => {
         Object.entries(slot.progress).map(([key, p]) => [key, { ...p, runId: uuid(), parentRunId: p.runId }]),
       );
       write({ ...slot, slot: n, progress });
-      get().pushToast(`Saved to slot ${n}.`, 'save');
+      get().pushToast(t('toast.saved', { n }), 'save');
     },
 
     ensureProgress: (caseKey, source) => {
@@ -240,7 +241,7 @@ export function examineHotspot(c: CaseFile, caseKey: string, roomId: string, hot
     return { ...p, examinedHotspots: examined, foundEvidence, board: syncPins(p.board, c, foundEvidence) };
   });
   if (found) {
-    G().pushToast(`Evidence added: ${evidenceName(c, found)}`, 'evidence');
+    G().pushToast(t('toast.evidence', { name: evidenceName(c, found) }), 'evidence');
     sfx('pickup');
     track('evidence_found', caseKey, { evidence: found, via: 'search', room: roomId });
   }
@@ -269,10 +270,10 @@ export function applyRevealedClues(c: CaseFile, caseKey: string, clueIds: readon
     return { ...p, revealedClues: revealed, foundEvidence: found, board: syncPins(p.board, c, found) };
   });
   if (added.length) {
-    G().pushToast(added.length === 1 ? 'New clue noted in your notebook.' : `${added.length} new clues noted in your notebook.`, 'clue');
+    G().pushToast(tn('toast.clue', added.length), 'clue');
     sfx('clue');
   }
-  for (const ev of newEvidence) G().pushToast(`Evidence added: ${evidenceName(c, ev)}`, 'evidence');
+  for (const ev of newEvidence) G().pushToast(t('toast.evidence', { name: evidenceName(c, ev) }), 'evidence');
   for (const id of added) track('clue_revealed', caseKey, { clue: id, suspect: clueById(c, id)?.suspect.id ?? null });
   for (const ev of newEvidence) track('evidence_found', caseKey, { evidence: ev, via: 'clue' });
   return added;
@@ -410,7 +411,7 @@ export function accuse(c: CaseFile, caseKey: string, culpritId: string, evidence
 }
 
 export function moodLabel(m: Mood): string {
-  return { calm: 'Calm', nervous: 'Nervous', angry: 'Angry', broken: 'Broken' }[m];
+  return t(`mood.${m}`);
 }
 
 // ---------------------------------------------------------------------------

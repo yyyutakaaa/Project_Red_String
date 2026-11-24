@@ -11,6 +11,7 @@ import { useLaunch } from '../boot/launch.ts';
 import { SyncBadge } from './Account.tsx';
 import { ShellNotice } from '../desktop/ShellNotice.tsx';
 import { sfx } from '../audio/audio.ts';
+import { useT } from '../i18n/index.ts';
 import styles from './MainMenu.module.css';
 
 interface ContinueInfo {
@@ -48,6 +49,7 @@ export function MainMenu() {
   const launch = useLaunch();
   const theme = resolveTheme(useSettings((s) => s.theme));
   const listRef = useRef<HTMLUListElement>(null);
+  const { t } = useT();
 
   useEffect(() => {
     document.title = 'Project Red String';
@@ -96,38 +98,38 @@ export function MainMenu() {
     const resolved = key ? resolveCase(key) : null;
     if (key && resolved) {
       const closed = Boolean(slot.progress[key]?.accusation);
-      void launch(casePath(key, closed ? 'ending' : ''), { kicker: `Slot ${slot.slot}`, title: resolved.caseFile.title });
+      void launch(casePath(key, closed ? 'ending' : ''), { kicker: t('common.slot', { n: slot.slot }), title: resolved.caseFile.title });
     } else {
-      void launch('/cases', { kicker: `Slot ${slot.slot}`, title: 'The case files' });
+      void launch('/cases', { kicker: t('common.slot', { n: slot.slot }), title: t('menu.caseFilesTitle') });
     }
   };
 
   const items: MenuItem[] = [
     {
       id: 'continue',
-      label: 'Continue',
-      sub: lastSave ? `Slot ${lastSave.slot}. ${lastSave.caseTitle ?? 'No case open.'}` : 'No save on file.',
+      label: t('menu.continue'),
+      sub: lastSave ? t('menu.continueSub', { n: lastSave.slot, case: lastSave.caseTitle ?? t('menu.noCaseOpen') }) : t('menu.noSave'),
       onSelect: handleContinue,
       disabled: !lastSave,
     },
     {
       id: 'story-cases',
-      label: 'Story Cases',
-      sub: 'Hand-written files. One city.',
+      label: t('menu.storyCases'),
+      sub: t('menu.storyCasesSub'),
       onSelect: () => {
         ensureActiveSlot();
         navigate('/cases');
       },
     },
-    { id: 'save-slots', label: 'Save Slots', sub: 'Three drawers. Pick one.', to: '/slots' },
+    { id: 'save-slots', label: t('menu.saveSlots'), sub: t('menu.saveSlotsSub'), to: '/slots' },
     {
       id: 'account',
-      label: 'Account',
-      sub: user ? `Signed in as ${user.username}.` : 'Sign in to keep your progress anywhere.',
+      label: t('menu.account'),
+      sub: user ? t('menu.accountSignedIn', { name: user.username }) : t('menu.accountGuest'),
       to: '/account',
     },
-    { id: 'settings', label: 'Settings', sub: 'Volume, text speed, type size.', to: '/settings' },
-    { id: 'credits', label: 'Credits', sub: 'Who did what.', to: '/credits' },
+    { id: 'settings', label: t('menu.settings'), sub: t('menu.settingsSub'), to: '/settings' },
+    { id: 'credits', label: t('menu.credits'), sub: t('menu.creditsSub'), to: '/credits' },
   ];
 
   return (
@@ -142,14 +144,14 @@ export function MainMenu() {
           </>
         ) : (
           <>
-            <span className={styles.chipName}>Guest</span>
-            <span className={styles.chipNote}>Progress stays on this device. Sign in</span>
+            <span className={styles.chipName}>{t('menu.guest')}</span>
+            <span className={styles.chipNote}>{t('menu.guestNote')}</span>
           </>
         )}
       </Link>
       <main id="main" tabIndex={-1} className={styles.main}>
         <header className={styles.masthead}>
-          <p className={styles.kicker}>Calder City. {theme === 'light' ? 'Day shift.' : 'Night shift.'}</p>
+          <p className={styles.kicker}>{theme === 'light' ? t('menu.kickerDay') : t('menu.kickerNight')}</p>
           <h1 className={styles.title}>
             <span className={styles.titleSmall}>Project</span>
             <span className={styles.titleBig}>Red String</span>
@@ -162,11 +164,11 @@ export function MainMenu() {
             <circle className={styles.pinShine} cx="506" cy="20" r="1.8" />
           </svg>
           <p className={styles.pitch}>
-            Question suspects in your own words. <span className={styles.pitchTail}>They can lie. You have to prove it.</span>
+            {t('menu.pitch')} <span className={styles.pitchTail}>{t('menu.pitchTail')}</span>
           </p>
         </header>
 
-        <nav className={styles.nav} aria-label="Main menu">
+        <nav className={styles.nav} aria-label={t('menu.navLabel')}>
           <ul ref={listRef} className={styles.menu} onKeyDown={onListKeyDown}>
             {items.map((item, index) => {
               const subId = `menu-sub-${item.id}`;
@@ -218,8 +220,8 @@ export function MainMenu() {
         </nav>
 
         <footer className={styles.footer}>
-          <p>Arrow keys to move. Enter to choose.</p>
-          <p>Headphones help. The rain is real enough.</p>
+          <p>{t('menu.footerKeys')}</p>
+          <p>{t('menu.footerRain')}</p>
         </footer>
       </main>
     </div>

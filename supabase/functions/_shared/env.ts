@@ -1,6 +1,6 @@
 // Runtime configuration for the edge functions. Secrets are read from Supabase function secrets.
 // Model ids are config values so they can be switched without code changes:
-//   supabase secrets set SUSPECT_MODEL=claude-haiku-5-5
+//   supabase secrets set SUSPECT_MODEL=deepseek-flash
 
 export function env(name: string, fallback = ''): string {
   return Deno.env.get(name) ?? fallback;
