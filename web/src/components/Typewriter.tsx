@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { sfx } from '../audio/audio.ts';
 import { TEXT_SPEED_CPS, useReducedMotion, useSettings } from '../store/settings.ts';
 import styles from './Interrogation.parts.module.css';
@@ -13,6 +13,8 @@ interface TypewriterProps {
   /** Play the soft key tick while revealing. */
   sound?: boolean;
   className?: string;
+  /** How to draw the text revealed so far, e.g. with actions set apart. Default: as it is. */
+  format?: (text: string) => ReactNode;
 }
 
 /** Reveal a tick every few characters, not on every one. The audio engine also throttles. */
@@ -23,7 +25,7 @@ const SOUND_EVERY = 4;
  * everything at once. Screen readers get the full text from a visually hidden copy, filled once the stream
  * has finished, while the animated copy is hidden from them, so nothing is read out letter by letter.
  */
-export function Typewriter({ text, animate = true, streaming = false, sound = true, className }: TypewriterProps) {
+export function Typewriter({ text, animate = true, streaming = false, sound = true, className, format }: TypewriterProps) {
   const speed = useSettings((s) => s.textSpeed);
   const reduced = useReducedMotion();
   const cps = TEXT_SPEED_CPS[speed];
@@ -89,9 +91,9 @@ export function Typewriter({ text, animate = true, streaming = false, sound = tr
   return (
     <span className={`${styles.typewriter} ${className ?? ''}`}>
       {/* Left empty until the stream ends: inside a live region every delta would otherwise be read out. */}
-      <span className="visually-hidden">{streaming ? '' : text}</span>
+      <span className="visually-hidden">{streaming ? '' : format ? format(text) : text}</span>
       <span aria-hidden="true">
-        {text.slice(0, visible)}
+        {format ? format(text.slice(0, visible)) : text.slice(0, visible)}
         {showCaret && <span className={styles.caret} />}
       </span>
     </span>

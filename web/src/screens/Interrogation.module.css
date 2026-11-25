@@ -497,6 +497,12 @@
 }
 .suspect .speaker { color: var(--lamp-300); }
 
+/* What the suspect does, set apart from what they say, the way a script prints a stage direction. */
+.action {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
 .silent {
   border-style: dashed;
   border-left-style: solid;

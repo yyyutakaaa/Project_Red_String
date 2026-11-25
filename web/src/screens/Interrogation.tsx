@@ -7,6 +7,7 @@ import {
   useSyncExternalStore,
   type FormEvent,
   type KeyboardEvent,
+  type ReactNode,
 } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { create } from 'zustand';
@@ -19,6 +20,7 @@ import { PatienceMeter } from '../components/PatienceMeter.tsx';
 import { Portrait } from '../components/Portrait.tsx';
 import { ScreenFrame } from '../components/ScreenFrame.tsx';
 import { Typewriter } from '../components/Typewriter.tsx';
+import { splitReply, spokenOnly } from '../lib/replyText.ts';
 import { uuid } from '../engine/save.ts';
 import type { CaughtLie, ChatMessage } from '../engine/types.ts';
 import { useAmbience } from '../hooks/useAmbience.ts';
@@ -154,10 +156,23 @@ function lastShownEvidence(messages: readonly ChatMessage[]): string | null {
   return null;
 }
 
-/** A statement short enough to show on a chip. */
+/** A statement short enough to show on a chip: the spoken words only, without the actions. */
 function excerpt(text: string, max = 90): string {
-  const flat = text.replace(/\s+/g, ' ').trim();
+  const flat = (spokenOnly(text) || text.replace(/\*/g, '')).replace(/\s+/g, ' ').trim();
   return flat.length <= max ? flat : `${flat.slice(0, max - 1).trimEnd()}…`;
+}
+
+/** A suspect's reply with each action between asterisks drawn as a stage direction. */
+function replyWithActions(text: string): ReactNode {
+  return splitReply(text).map((seg, i) =>
+    seg.kind === 'action' ? (
+      <span key={i} className={styles.action}>
+        {seg.text}
+      </span>
+    ) : (
+      <span key={i}>{seg.text}</span>
+    ),
+  );
 }
 
 function scrollToBottom(el: HTMLElement, smooth: boolean): void {
@@ -938,7 +953,7 @@ function MessageView({ message: m, caseFile, speaker, typed, animate, streaming,
           {m.silent && <span className={styles.silentTag}>{t('interro.brushOff')}</span>}
         </p>
         <p className={styles.text}>
-          {typed ? <Typewriter text={m.text} animate={animate} streaming={streaming} /> : m.text}
+          {typed ? <Typewriter text={m.text} animate={animate} streaming={streaming} format={replyWithActions} /> : replyWithActions(m.text)}
         </p>
         {m.challenge && (
           <p className={`${styles.outcome} ${m.challenge === 'caught' ? styles.outcomeCaught : ''}`} data-testid="lie-outcome" data-outcome={m.challenge}>
