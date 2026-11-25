@@ -82,7 +82,7 @@ export function Hud({ caseFile, caseKey, progress }: HudProps) {
   }, []);
 
   const link = (to: string, label: string, extra = '') => (
-    <NavLink to={casePath(caseKey, to)} className={({ isActive }) => `${styles.link} ${extra} ${isActive ? styles.active : ''}`}>
+    <NavLink to={casePath(caseKey, to)} className={({ isActive }) => `${styles.link} ${extra} ${isActive ? styles.active : ''}`} data-tour={`nav-${to}`}>
       {label}
     </NavLink>
   );
@@ -117,7 +117,7 @@ export function Hud({ caseFile, caseKey, progress }: HudProps) {
           </span>
         </span>
         <CaseTimer caseKey={caseKey} progress={progress} />
-        <Button size="small" onClick={() => setHintOpen(true)} aria-haspopup="dialog">
+        <Button size="small" onClick={() => setHintOpen(true)} aria-haspopup="dialog" data-tour="hint">
           {t('hud.hint')}
         </Button>
         <Button size="small" onClick={() => setSaveOpen(true)} aria-haspopup="dialog">

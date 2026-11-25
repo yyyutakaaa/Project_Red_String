@@ -1,0 +1,452 @@
+{
+  "schema_version": 1,
+  "id": "tutorial",
+  "title": "The Night Desk",
+  "tagline": "Your first case: a quiet hotel, one dead owner, two people who were awake.",
+  "setting": "The Hotel Cardinal, a small hotel on Delancey Street in Calder City",
+  "era": "October 1948",
+  "intro_briefing": [
+    "Wednesday, 13 October 1948. At half past six this morning Margaret Finch unlocked the office of the Hotel Cardinal and found her brother Walter dead on the floor beside his desk. Someone had struck him once with the heavy brass doorstop. The police surgeon puts the time at around eleven last night.",
+    "Only two people were awake in the hotel at that hour: Leonard Pike, the night clerk at the front desk, and Margaret herself, who lives upstairs and runs the hotel with her brother. Both are waiting for you in the lobby.",
+    "This is a small case, Detective, and a good one to learn on. Search the lobby and the office, question the two of them, and find out who went into that office at eleven o'clock."
+  ],
+  "victim": {
+    "id": "walter",
+    "name": "Walter Finch",
+    "age": 58,
+    "description": "Owner of the Hotel Cardinal for twenty years. Careful with money, proud of the old place and stubborn about it. He kept the accounts himself and counted the office safe every evening.",
+    "cause_of_death": "One blow to the head with the brass doorstop from the office door.",
+    "found_in": "office",
+    "found_at": "at 06:30 this morning, on the office floor beside his desk"
+  },
+  "solution": {
+    "culprit_id": "pike",
+    "motive": "Walter Finch had worked out that the night clerk was stealing from the office safe and planned to hand him to the police in the morning.",
+    "method": "Just after eleven Pike left the front desk to put money back in the safe, was caught by Finch in the office, struck him with the brass doorstop and went back to the desk as if nothing had happened.",
+    "required_evidence": [
+      "finch-diary",
+      "bell-note"
+    ],
+    "reveal": "For two months Leonard Pike had been borrowing from the office safe with the second key, a few dollars at a time, to pay what he owed at the card table in the back of Rudy's bar. Walter Finch counted the safe every evening, and on Tuesday he wrote in his diary that only Pike had the other key and that he would call the police in the morning. Just after eleven Pike slipped away from the front desk to put money back before anyone noticed. Finch was still in the office. There was a shout, and Pike grabbed the brass doorstop. He was back behind the desk by twenty past eleven, but a guest from room 12 had been ringing the bell for a quarter of an hour, and left a note to say so. Margaret Finch had argued with her brother about selling the hotel, but she spent those minutes on a long-distance call to Chicago, and the switchboard log proves it."
+  },
+  "timeline": [
+    {
+      "day": 0,
+      "time": "19:30",
+      "location": "dining-room",
+      "who": [
+        "walter",
+        "margaret"
+      ],
+      "what": "Walter and Margaret Finch have dinner together and argue about an offer to buy the hotel. Margaret wants to sell; Walter will not hear of it.",
+      "visibility": "private",
+      "tags": [
+        "motive"
+      ]
+    },
+    {
+      "day": 0,
+      "time": "20:00",
+      "location": "office",
+      "who": [
+        "walter"
+      ],
+      "what": "Walter counts the office safe, finds it short again and writes in his diary that only Pike has the second key.",
+      "visibility": "private",
+      "tags": [
+        "motive"
+      ]
+    },
+    {
+      "day": 0,
+      "time": "22:00",
+      "location": "lobby",
+      "who": [
+        "pike"
+      ],
+      "what": "Leonard Pike starts the night shift at the front desk.",
+      "visibility": "public",
+      "tags": []
+    },
+    {
+      "day": 0,
+      "time": "23:00",
+      "location": "margaret-room",
+      "who": [
+        "margaret"
+      ],
+      "what": "Margaret Finch places a long-distance call from her room to Chicago, to the man who wants to buy the hotel. The call lasts forty minutes.",
+      "visibility": "private",
+      "tags": [
+        "alibi"
+      ]
+    },
+    {
+      "day": 0,
+      "time": "23:05",
+      "location": "office",
+      "who": [
+        "pike",
+        "walter"
+      ],
+      "what": "Pike leaves the front desk and goes into the office. Walter catches him at the safe and Pike strikes him with the brass doorstop.",
+      "visibility": "hidden",
+      "tags": [
+        "crime"
+      ]
+    },
+    {
+      "day": 0,
+      "time": "23:20",
+      "location": "lobby",
+      "who": [
+        "pike"
+      ],
+      "what": "Pike is back behind the front desk.",
+      "visibility": "private",
+      "tags": []
+    },
+    {
+      "day": 1,
+      "time": "06:30",
+      "location": "office",
+      "who": [
+        "margaret",
+        "walter"
+      ],
+      "what": "Margaret Finch unlocks the office and finds her brother dead.",
+      "visibility": "public",
+      "tags": []
+    }
+  ],
+  "offstage_locations": [
+    {
+      "id": "dining-room",
+      "name": "Hotel dining room"
+    },
+    {
+      "id": "margaret-room",
+      "name": "Margaret Finch's room upstairs"
+    }
+  ],
+  "rooms": [
+    {
+      "id": "lobby",
+      "name": "Lobby",
+      "description": "A narrow hotel lobby with a worn red carpet, a brass bell on the front desk and a switchboard behind it. The clock over the stairs says it is nearly morning. A coat rack stands by the door to the office.",
+      "background": "lobby",
+      "hotspots": [
+        {
+          "id": "front-desk",
+          "label": "Front desk",
+          "x": 8,
+          "y": 30,
+          "width": 26,
+          "height": 26,
+          "description": "The front desk, with the brass bell and the room keys on their hooks. A note in a guest's hand is tucked under the bell.",
+          "evidence_id": "bell-note"
+        },
+        {
+          "id": "switchboard",
+          "label": "Switchboard",
+          "x": 40,
+          "y": 12,
+          "width": 18,
+          "height": 26,
+          "description": "The hotel switchboard. The night's calls are written up in the log beside it, with the room and the time of each one.",
+          "evidence_id": "switchboard-log"
+        },
+        {
+          "id": "coat-rack",
+          "label": "Coat rack",
+          "x": 66,
+          "y": 14,
+          "width": 14,
+          "height": 40,
+          "description": "Leonard Pike's raincoat hangs on the rack. There is an envelope in the inside pocket.",
+          "evidence_id": "cash-envelope"
+        },
+        {
+          "id": "armchair",
+          "label": "Leather armchair",
+          "x": 70,
+          "y": 62,
+          "width": 22,
+          "height": 26,
+          "description": "A sagging leather armchair by the window, with this morning's newspaper folded on the seat. Nothing here but a cold cup of coffee.",
+          "evidence_id": null
+        }
+      ]
+    },
+    {
+      "id": "office",
+      "name": "Office",
+      "description": "Walter Finch's office behind the lobby: a writing desk, a wall safe with its door shut, a wastebasket and a window onto the alley. The brass doorstop has already gone to the station as evidence.",
+      "background": "office",
+      "hotspots": [
+        {
+          "id": "writing-desk",
+          "label": "Writing desk",
+          "x": 10,
+          "y": 40,
+          "width": 30,
+          "height": 26,
+          "description": "Walter's writing desk. His diary lies open at yesterday's page.",
+          "evidence_id": "finch-diary"
+        },
+        {
+          "id": "wastebasket",
+          "label": "Wastebasket",
+          "x": 46,
+          "y": 68,
+          "width": 14,
+          "height": 20,
+          "description": "A wire wastebasket. A typed letter has been crumpled up and thrown away.",
+          "evidence_id": "buyer-letter"
+        },
+        {
+          "id": "wall-safe",
+          "label": "Wall safe",
+          "x": 64,
+          "y": 16,
+          "width": 18,
+          "height": 22,
+          "description": "The office safe, shut and locked. It takes one of two keys: Walter kept one on his watch chain. The safe has not been forced.",
+          "evidence_id": null
+        },
+        {
+          "id": "window",
+          "label": "Window",
+          "x": 40,
+          "y": 8,
+          "width": 18,
+          "height": 26,
+          "description": "The window onto the alley is locked from the inside, and there is dust on the sill. Nobody came in this way.",
+          "evidence_id": null
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "bell-note",
+      "name": "Note from room 12",
+      "description": "A note in pencil, signed by the guest in room 12: 'Rang this bell from five past eleven until twenty past. Nobody came. I want a word with the manager in the morning. H. Gale, Room 12.'",
+      "found_in": "lobby",
+      "points_to": [
+        "pike"
+      ],
+      "is_red_herring": false
+    },
+    {
+      "id": "switchboard-log",
+      "name": "Switchboard log",
+      "description": "The night's calls in the clerk's handwriting. One line reads: 'Room 3 (Miss Finch), long distance to Chicago, 23:00 to 23:40.'",
+      "found_in": "lobby",
+      "points_to": [],
+      "is_red_herring": false
+    },
+    {
+      "id": "cash-envelope",
+      "name": "Envelope of cash",
+      "description": "A hotel envelope from Pike's coat with thirty-five dollars in it. On the back, in Walter Finch's handwriting: 'Safe, Tuesday.'",
+      "found_in": "lobby",
+      "points_to": [
+        "pike"
+      ],
+      "is_red_herring": false
+    },
+    {
+      "id": "finch-diary",
+      "name": "Walter Finch's diary",
+      "description": "Yesterday's page: 'Safe short again, forty dollars this time. Only Pike has the other key. I will ring Sergeant Doyle in the morning and have it out with him.'",
+      "found_in": "office",
+      "points_to": [
+        "pike"
+      ],
+      "is_red_herring": false
+    },
+    {
+      "id": "buyer-letter",
+      "name": "Crumpled letter from Chicago",
+      "description": "A typed offer from a Chicago hotel company to buy the Hotel Cardinal. Across the top, in Walter's hand: 'Over my dead body. Margaret can whistle for it.'",
+      "found_in": "office",
+      "points_to": [
+        "margaret"
+      ],
+      "is_red_herring": true
+    }
+  ],
+  "suspects": [
+    {
+      "id": "pike",
+      "name": "Leonard Pike",
+      "role": "Night clerk at the Hotel Cardinal",
+      "age": 27,
+      "portrait": "young-man",
+      "color": "#6a7f9a",
+      "personality": "Polite, eager to please and very nervous. He has worked the night desk for a year and likes the quiet. Tonight he keeps smoothing his hair and looking at the office door. He is not a hard man and he cracks quickly once the evidence is in front of him.",
+      "speech_style": "Short, careful answers with a lot of 'sir' and 'ma'am'. Says 'honest' when he is lying. When he is scared he starts a sentence twice.",
+      "alibi": "I was at the front desk all night, sir, from ten o'clock until Miss Finch came down this morning. I never left the lobby. Honest.",
+      "public_facts": [
+        "Leonard Pike has been the night clerk at the Hotel Cardinal for a year.",
+        "He started his shift at the front desk at ten o'clock last night.",
+        "Mr. Finch gave him the second key to the office safe, for the night deposits."
+      ],
+      "private_knowledge": [
+        "You owe sixty dollars at the card table in the back of Rudy's bar, and the men there want it this week.",
+        "For two months you have taken a few dollars from the office safe with the second key, meaning to put it back.",
+        "Just after eleven you left the desk and went into the office, and you were not back until twenty past eleven.",
+        "The envelope in your coat is money from the safe, not your wages."
+      ],
+      "lies": [
+        {
+          "topic": "Where he was just after eleven",
+          "claim": "At the front desk, sir. I never left it all night.",
+          "truth": "You left the desk at about five past eleven and went into the office. You were back at twenty past."
+        },
+        {
+          "topic": "The envelope in his coat",
+          "claim": "That's my wages. Mr. Finch paid me early this week.",
+          "truth": "The money came out of the office safe. Mr. Finch had not paid you early."
+        }
+      ],
+      "secrets": [
+        "You owe sixty dollars to the card players at Rudy's bar."
+      ],
+      "never_reveal": [
+        "That Mr. Finch caught you at the safe, that you hit him with the brass doorstop, and that you went back to the desk and said nothing."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "pike-desk",
+          "text": "Says he was at the front desk all night from ten o'clock and never left the lobby.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "pike-key",
+          "text": "Admits he has the second key to the office safe; Mr. Finch gave it to him for the night deposits.",
+          "condition": "pressed"
+        },
+        {
+          "clue_id": "pike-left-desk",
+          "text": "Shown the note from room 12, he admits he left the desk at about five past eleven. First he says he went out for a smoke, then that he went to the office to put the night's takings in the safe.",
+          "condition": "shown_evidence:bell-note"
+        },
+        {
+          "clue_id": "pike-debt",
+          "text": "Shown the diary, he admits he owes money at the card table at Rudy's bar and has been 'borrowing' from the safe to pay it, meaning to put it back.",
+          "condition": "shown_evidence:finch-diary"
+        }
+      ],
+      "breaks_on": [
+        "bell-note",
+        "finch-diary"
+      ],
+      "patience": 16,
+      "temperament": {
+        "holds_out": 0,
+        "under_pressure": "fearful"
+      },
+      "deflections": [
+        "*swallows*  I, I'm sorry, sir. Could you ask me that again?",
+        "*smooths his hair*  I just work the desk, sir. Honest.",
+        "*looks at the office door*  I don't, I don't know anything about that."
+      ],
+      "alibi_verification": {
+        "status": "broken",
+        "evidence_ids": [
+          "bell-note"
+        ],
+        "clue_ids": [],
+        "note": "The guest in room 12 rang the desk bell from 23:05 to 23:20 and nobody came."
+      }
+    },
+    {
+      "id": "margaret",
+      "name": "Margaret Finch",
+      "role": "Walter's sister; runs the hotel with him",
+      "age": 52,
+      "portrait": "woman-hat",
+      "color": "#9a5a5a",
+      "personality": "Brisk, proud and tired of the old hotel. She is grieving and does not want to show it to a policeman. She is sharp with anyone who suggests she wanted her brother dead, but she answers straight once she sees you are fair.",
+      "speech_style": "Clipped and businesslike. Calls her brother 'Walter', never 'my brother'. Says 'I beg your pardon?' when she is offended.",
+      "alibi": "I was in my room from ten o'clock. At eleven I telephoned Chicago and talked for the best part of an hour. The switchboard will tell you.",
+      "public_facts": [
+        "Margaret Finch is Walter's younger sister and owns a third of the Hotel Cardinal.",
+        "She lives in room 3, upstairs.",
+        "She found Walter in the office at half past six this morning."
+      ],
+      "private_knowledge": [
+        "A hotel company in Chicago has offered to buy the Cardinal, and you want to sell.",
+        "You and Walter argued about the offer at dinner, at half past seven.",
+        "At dinner Walter told you money was going missing from the safe and that he would deal with it in the morning.",
+        "From eleven until twenty to twelve you were on the telephone to the buyer in Chicago."
+      ],
+      "lies": [
+        {
+          "topic": "Her quarrel with Walter",
+          "claim": "Walter and I agreed on everything that mattered. We had a quiet dinner.",
+          "truth": "You argued at dinner about selling the hotel to the Chicago company. Walter said it would be sold over his dead body."
+        }
+      ],
+      "secrets": [
+        "You had already told the buyer in Chicago that you would talk Walter round."
+      ],
+      "never_reveal": [
+        "That for a moment at dinner you wished Walter would just go away and let you sell."
+      ],
+      "revealable_clues": [
+        {
+          "clue_id": "margaret-call",
+          "text": "Says she was in her room all evening and on a long-distance call to Chicago from eleven o'clock until twenty to twelve.",
+          "condition": "free"
+        },
+        {
+          "clue_id": "margaret-safe",
+          "text": "Says that at dinner Walter told her money was going missing from the office safe and that he meant to deal with it in the morning. Only he and the night clerk had keys.",
+          "condition": "pressed"
+        },
+        {
+          "clue_id": "margaret-sale",
+          "text": "Shown the letter from Chicago, she admits she wanted to sell the hotel and that she and Walter quarreled about it at dinner. She says a quarrel about a hotel is not a reason to kill your own brother.",
+          "condition": "shown_evidence:buyer-letter"
+        }
+      ],
+      "breaks_on": [
+        "buyer-letter"
+      ],
+      "patience": 16,
+      "temperament": {
+        "holds_out": 0,
+        "under_pressure": "cold"
+      },
+      "deflections": [
+        "*folds her hands*  I beg your pardon? Ask me something sensible.",
+        "*looks away*  Walter would have known. Walter always knew. Ask the clerk.",
+        "*sharply*  I have told you what I know, Detective."
+      ],
+      "alibi_verification": {
+        "status": "confirmed",
+        "evidence_ids": [
+          "switchboard-log"
+        ],
+        "clue_ids": [],
+        "note": "The switchboard log shows her long-distance call from room 3 from 23:00 to 23:40."
+      }
+    }
+  ],
+  "hints": [
+    "Start in the lobby. Click the front desk, the switchboard and the coat rack: everything that matters goes into your case file.",
+    "Read Walter Finch's diary on the desk in the office. It says who had the second key to the safe.",
+    "Ask Leonard Pike where he was at eleven o'clock. Then press Show evidence and put the note from room 12 on the table.",
+    "Margaret Finch wanted to sell the hotel. Does that make her a killer? Look at the switchboard log before you decide.",
+    "On the board, connect Leonard Pike to the diary and to the note from room 12, then press Check theory.",
+    "Accuse Leonard Pike with the diary (why he did it) and the note from room 12 (his alibi does not hold)."
+  ],
+  "endings": {
+    "correct": "Leonard Pike gives up before they reach the car. He tells it all at the station: the card table, the second key, the shout in the office. Margaret Finch sells the Cardinal in the spring. Your first case is closed, Detective, and it will not be your last.",
+    "wrong_culprit": "You take the wrong person downtown. By the time the sergeant reads the guest's note from room 12, the night clerk has packed a bag and left Calder City on the morning bus.",
+    "weak_proof": "You had the right man, but not the proof. A diary says why someone might do it; the note from room 12 says he was not where he claimed to be. You needed both on the table."
+  }
+}

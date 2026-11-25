@@ -166,6 +166,8 @@ test('later story cases stay sealed until the previous case is closed', async ({
 
 test('interrogation shows a clear message when the backend is unreachable', async ({ page }) => {
   await page.route('**/functions/v1/interrogate', (route) => route.abort('internetdisconnected'));
+  // A returning player: no first-start popups.
+  await page.addInitScript(() => localStorage.setItem('redstring.settings', JSON.stringify({ reducedMotion: 'reduced', masterVolume: 0 })));
   await page.goto('/');
   await page.getByRole('button', { name: /story cases/i }).or(page.getByRole('link', { name: /story cases/i })).first().click();
   await page.getByTestId(`open-case-${c.id}`).click();

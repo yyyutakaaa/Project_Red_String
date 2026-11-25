@@ -1,0 +1,159 @@
+.dialog {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  width: min(36rem, calc(100vw - 2rem));
+  max-height: calc(var(--app-h) - 2rem);
+  overflow: visible;
+}
+.wide {
+  width: min(58rem, calc(100vw - 2rem));
+}
+.dialog::backdrop {
+  background: var(--scrim);
+  backdrop-filter: blur(3px);
+}
+.dialog[open] .sheet {
+  animation: deal 560ms var(--ease-out) both;
+}
+@keyframes deal {
+  from {
+    opacity: 0;
+    transform: translateY(32px) rotate(2deg);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(-0.5deg);
+  }
+}
+
+/* A sheet from the personnel file of a new detective. */
+.sheet {
+  position: relative;
+  max-height: calc(var(--app-h) - 2rem);
+  overflow-y: auto;
+  padding: var(--space-5) var(--space-6) var(--space-5);
+  transform: rotate(-0.5deg);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(42, 34, 24, 0.25);
+  font-family: var(--font-type);
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  color: var(--paper-ink);
+}
+.sheet p {
+  margin: 0 0 var(--space-3);
+}
+.kicker {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 var(--space-3) !important;
+  padding-bottom: var(--space-2);
+  border-bottom: 3px double rgba(42, 34, 24, 0.45);
+  font-weight: 700;
+  font-size: var(--fs-xs);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--paper-ink-muted);
+}
+.title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--fs-2xl, 2rem);
+  line-height: 1.15;
+  color: var(--paper-ink);
+}
+.alsoTitle {
+  color: var(--paper-ink-muted);
+  font-style: italic;
+}
+.small {
+  font-size: var(--fs-xs);
+  color: var(--paper-ink-muted);
+}
+
+/* Languages: four index cards. */
+.languages {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin: var(--space-4) 0 var(--space-2);
+  padding: 0;
+  list-style: none;
+}
+.language {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 4.25rem;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid rgba(42, 34, 24, 0.35);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.45);
+  color: var(--paper-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast), border-color var(--dur-fast);
+}
+.language:hover,
+.language:focus-visible {
+  transform: translateY(-2px) rotate(-0.4deg);
+  border-color: var(--red-700);
+  box-shadow: 0 8px 18px rgba(42, 34, 24, 0.25);
+}
+.language[data-selected] {
+  border-color: var(--red-700);
+  box-shadow: inset 0 0 0 1px var(--red-700);
+}
+.languageCode {
+  display: inline-grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border: 2px solid var(--red-700);
+  border-radius: 50%;
+  color: var(--red-700);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  transform: rotate(-8deg);
+}
+.languageName {
+  font-family: var(--font-display, inherit);
+  font-size: var(--fs-lg);
+}
+
+/* Account: the reasons on the left, the form on the right. */
+.accountLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 24rem);
+  gap: var(--space-5);
+  align-items: start;
+}
+.accountText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+.points,
+.steps {
+  margin: 0 0 var(--space-3);
+  padding-left: 1.2rem;
+}
+.points li + li,
+.steps li + li {
+  margin-top: var(--space-1);
+}
+@media (max-width: 760px) {
+  .accountLayout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: var(--space-4) 0 var(--space-3);
+}

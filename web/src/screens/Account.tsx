@@ -96,8 +96,9 @@ function SignedIn() {
   );
 }
 
-function SignInForm() {
-  const [mode, setMode] = useState<Mode>('signin');
+/** Sign in or open a new account. Also used by the first-start popup (onboarding/FirstRun.tsx). */
+export function SignInForm({ initialMode = 'signin' }: { initialMode?: Mode }) {
+  const [mode, setMode] = useState<Mode>(initialMode);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');

@@ -16,6 +16,10 @@ export const STORY_ORDER = [
 ] as const;
 export type StoryCaseId = (typeof STORY_ORDER)[number];
 
+/** The practice case: offered on the first start and from the main menu, outside the story order. */
+export const TUTORIAL_ID = 'tutorial';
+export const isTutorial = (caseKey: string | null | undefined): boolean => caseKey === TUTORIAL_ID;
+
 const modules = import.meta.glob<unknown>('../cases/*.json', { eager: true, import: 'default' });
 
 const rawById = new Map<string, unknown>();
@@ -47,8 +51,9 @@ export function storyCaseErrors(id: string): string[] {
   return errorsById.get(id) ?? [];
 }
 
+/** Every hand-written case: the tutorial, then the story in order. */
 export function listStoryCases(): CaseFile[] {
-  return STORY_ORDER.map((id) => getStoryCase(id)).filter((c): c is CaseFile => c !== null);
+  return [TUTORIAL_ID, ...STORY_ORDER].map((id) => getStoryCase(id)).filter((c): c is CaseFile => c !== null);
 }
 
 export function rawStoryCases(): Map<string, unknown> {

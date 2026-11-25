@@ -10,6 +10,9 @@ import { useAccount } from '../store/account.ts';
 import { useLaunch } from '../boot/launch.ts';
 import { SyncBadge } from './Account.tsx';
 import { ShellNotice } from '../desktop/ShellNotice.tsx';
+import { FirstRun } from '../onboarding/FirstRun.tsx';
+import { useOnboarding } from '../onboarding/onboarding.ts';
+import { useStartTutorial } from '../onboarding/useStartTutorial.ts';
 import { sfx } from '../audio/audio.ts';
 import { useT } from '../i18n/index.ts';
 import styles from './MainMenu.module.css';
@@ -50,6 +53,8 @@ export function MainMenu() {
   const theme = resolveTheme(useSettings((s) => s.theme));
   const listRef = useRef<HTMLUListElement>(null);
   const { t } = useT();
+  const startTutorial = useStartTutorial();
+  const tutorialDone = useOnboarding((s) => s.tutorialDone);
 
   useEffect(() => {
     document.title = 'Project Red String';
@@ -121,6 +126,12 @@ export function MainMenu() {
         navigate('/cases');
       },
     },
+    {
+      id: 'tutorial',
+      label: t('menu.tutorial'),
+      sub: tutorialDone ? t('menu.tutorialAgain') : t('menu.tutorialSub'),
+      onSelect: startTutorial,
+    },
     { id: 'save-slots', label: t('menu.saveSlots'), sub: t('menu.saveSlotsSub'), to: '/slots' },
     {
       id: 'account',
@@ -136,6 +147,7 @@ export function MainMenu() {
     <div className={styles.screen}>
       <RainBackdrop lamp="right" />
       <ShellNotice />
+      <FirstRun />
       <Link to="/account" className={styles.accountChip} data-testid="account-chip" onClick={() => sfx('click')}>
         {user ? (
           <>

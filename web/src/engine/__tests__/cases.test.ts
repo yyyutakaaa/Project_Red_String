@@ -9,7 +9,7 @@ import { validateCase, computeReachability } from '@shared/validator.ts';
 import { parseCondition, type CaseFile } from '@shared/caseSchema.ts';
 import { BACKGROUND_KEYS, PORTRAIT_KEYS } from '@shared/assetKeys.ts';
 import { buildSuspectPrompt } from '@shared/suspectPrompt.ts';
-import { STORY_ORDER } from '../caseLoader.ts';
+import { STORY_ORDER, TUTORIAL_ID } from '../caseLoader.ts';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const casesDir = path.resolve(here, '../../cases');
@@ -26,7 +26,7 @@ function overlaps(a: { x: number; y: number; width: number; height: number }, b:
 
 const parsed = new Map<string, CaseFile>();
 
-describe.each(STORY_ORDER.map((id) => [id]))('story case %s', (id) => {
+describe.each([...STORY_ORDER, TUTORIAL_ID].map((id) => [id]))('story case %s', (id) => {
   it('exists and passes the validator', () => {
     expect(existsSync(path.join(casesDir, `${id}.json`)), `missing src/cases/${id}.json`).toBe(true);
     const r = validateCase(load(id));
@@ -107,6 +107,19 @@ describe('story targets', () => {
     const hints = c.hints.join(' ').toLowerCase();
     expect(hints).toMatch(/board/);
     expect(hints).toMatch(/show/);
+  });
+
+  it('the tutorial is the smallest case: two rooms, two suspects, two items of proof', () => {
+    const c = get(TUTORIAL_ID);
+    expect(c.rooms).toHaveLength(2);
+    expect(c.suspects).toHaveLength(2);
+    expect(c.solution.required_evidence).toHaveLength(2);
+    // The guide (onboarding/tutorialSteps.ts) points at these by id.
+    expect(c.rooms.map((r) => r.id)).toEqual(['lobby', 'office']);
+    expect(c.suspects.map((s) => s.id).sort()).toEqual(['margaret', 'pike']);
+    expect(c.evidence.map((e) => e.id).sort()).toEqual(['bell-note', 'buyer-letter', 'cash-envelope', 'finch-diary', 'switchboard-log']);
+    const hotspots = c.rooms.flatMap((r) => r.hotspots.map((h) => h.id));
+    for (const h of ['front-desk', 'switchboard', 'coat-rack', 'writing-desk', 'wastebasket']) expect(hotspots).toContain(h);
   });
 
   it('case two and three have four suspects', () => {

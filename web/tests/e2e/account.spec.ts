@@ -6,6 +6,8 @@ import { test, expect, type Page, type Route } from '@playwright/test';
 interface Account {
   id: string;
   password: string;
+  /** What the account remembers besides saves (user_metadata.prefs). */
+  prefs?: Record<string, unknown>;
 }
 
 /** A tiny stand-in for Supabase Auth, the account function and the cloud_saves table. */
@@ -15,9 +17,18 @@ async function mockSupabase(page: Page) {
   const upserts: Array<{ slot: number }> = [];
 
   const b64 = (o: unknown) => Buffer.from(JSON.stringify(o)).toString('base64url');
+  const userOf = (email: string, acc: Account) => ({
+    id: acc.id,
+    aud: 'authenticated',
+    role: 'authenticated',
+    email,
+    user_metadata: { username: email.split('@')[0], ...(acc.prefs ? { prefs: acc.prefs } : {}) },
+    app_metadata: {},
+    created_at: new Date().toISOString(),
+  });
   const session = (email: string, acc: Account) => {
     const exp = Math.floor(Date.now() / 1000) + 3600;
-    const user = { id: acc.id, aud: 'authenticated', role: 'authenticated', email, user_metadata: { username: email.split('@')[0] }, app_metadata: {}, created_at: new Date().toISOString() };
+    const user = userOf(email, acc);
     return {
       access_token: `${b64({ alg: 'HS256', typ: 'JWT' })}.${b64({ sub: acc.id, exp, role: 'authenticated', aud: 'authenticated', email })}.sig`,
       token_type: 'bearer',
@@ -61,6 +72,18 @@ async function mockSupabase(page: Page) {
       return reply(route, 200, session(email, acc));
     }
     if (url.pathname.endsWith('/logout')) return route.fulfill({ status: 204, headers: cors });
+    if (url.pathname.endsWith('/user')) {
+      // GET the signed-in user, or PUT new metadata (merged, as Supabase does).
+      const uid = tokenUser(route);
+      const entry = [...accounts.entries()].find(([, a]) => a.id === uid);
+      if (!entry) return reply(route, 401, { message: 'not signed in' });
+      const [email, acc] = entry;
+      if (req.method() === 'PUT') {
+        const { data } = JSON.parse(req.postData() ?? '{}') as { data?: { prefs?: Record<string, unknown> } };
+        if (data?.prefs) acc.prefs = data.prefs;
+      }
+      return reply(route, 200, userOf(email, acc));
+    }
     return reply(route, 200, {});
   });
 
@@ -157,4 +180,38 @@ test('guest save moves into a new account, leaves on sign-out and returns on sig
   await page.goto('/');
   await expect(page.getByTestId('account-chip')).toContainText('sam_spade');
   await expect(page.getByTestId('menu-continue')).toContainText('Ashgrove House');
+});
+
+test('the account remembers the language and the tutorial, so another computer skips the first-start popups', async ({ page }) => {
+  const backend = await mockSupabase(page);
+  await page.addInitScript(() => {
+    if (sessionStorage.getItem('fresh')) return;
+    sessionStorage.setItem('fresh', '1');
+    localStorage.clear();
+  });
+  await page.goto('/');
+  await page.getByTestId('first-run-language-de').click();
+  // Open an account straight from the popup.
+  const popup = page.getByTestId('first-run-account');
+  await popup.getByTestId('account-username').fill('marlowe');
+  await popup.getByTestId('account-password').fill('a-long-password');
+  await popup.getByTestId('account-confirm').fill('a-long-password');
+  await popup.getByTestId('account-submit').click();
+  await expect(page.getByTestId('first-run-tutorial')).toBeVisible();
+  await page.getByTestId('first-run-skip-tutorial').click();
+  await expect.poll(() => backend.accounts.get('marlowe@players.redstring.local')?.prefs).toEqual({ language: 'de', tutorialSeen: true });
+
+  // Another computer: nothing on it yet. The storage is wiped as the page loads, before the game
+  // starts (the running game would write its session back). Then sign in from the account popup.
+  await page.evaluate(() => sessionStorage.removeItem('fresh'));
+  await page.reload();
+  await page.getByTestId('first-run-language-en').click();
+  const again = page.getByTestId('first-run-account');
+  await again.getByRole('tab', { name: 'Sign in' }).click();
+  await again.getByTestId('account-username').fill('marlowe');
+  await again.getByTestId('account-password').fill('a-long-password');
+  await again.getByTestId('account-submit').click();
+  // The account's language comes back and the tutorial is not offered again.
+  await expect(page.getByTestId('menu-story-cases')).toContainText('Fälle');
+  await expect(page.getByTestId('first-run-tutorial')).toHaveCount(0);
 });

@@ -6,7 +6,7 @@ import { Portrait } from '../components/Portrait.tsx';
 import { ScreenFrame } from '../components/ScreenFrame.tsx';
 import { useAmbience } from '../hooks/useAmbience.ts';
 import { casePath, useCaseContext } from '../hooks/useCase.ts';
-import { STORY_ORDER } from '../engine/caseLoader.ts';
+import { STORY_ORDER, isTutorial } from '../engine/caseLoader.ts';
 import { markBriefingSeen } from '../store/game.ts';
 import { ambienceForBackground, sfx } from '../audio/audio.ts';
 import styles from './Briefing.module.css';
@@ -17,6 +17,7 @@ function placeName(c: CaseFile, id: string): string {
 }
 
 function fileNumber(caseKey: string): string {
+  if (isTutorial(caseKey)) return '000';
   const index = (STORY_ORDER as readonly string[]).indexOf(caseKey);
   return index >= 0 ? String(index + 1).padStart(3, '0') : caseKey.toUpperCase();
 }

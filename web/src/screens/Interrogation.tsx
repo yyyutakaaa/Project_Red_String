@@ -737,7 +737,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
             </div>
           )}
 
-          <form className={styles.composer} onSubmit={onSubmit} aria-label={t('interro.formLabel', { name: suspect.name })}>
+          <form className={styles.composer} onSubmit={onSubmit} data-tour="composer" aria-label={t('interro.formLabel', { name: suspect.name })}>
             {exhausted && (
               <p className={styles.refusal} role="status" data-testid="refusal-line">
                 {t('interro.refuses', { name: suspect.name })}

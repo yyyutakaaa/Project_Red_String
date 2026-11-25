@@ -19,6 +19,25 @@ export type SyncState = 'local' | 'syncing' | 'synced' | 'offline';
 export interface AccountUser {
   id: string;
   username: string;
+  /** What the account remembers besides saves: the language and the first-start popups. */
+  prefs: AccountPrefs;
+}
+
+export interface AccountPrefs {
+  language?: string;
+  /** The tutorial was offered (played or skipped). */
+  tutorialSeen?: boolean;
+  /** The tutorial case was played to the end. */
+  tutorialDone?: boolean;
+}
+
+function prefsFrom(meta: Record<string, unknown> | undefined): AccountPrefs {
+  const p = (meta?.prefs ?? {}) as Record<string, unknown>;
+  return {
+    language: typeof p.language === 'string' ? p.language : undefined,
+    tutorialSeen: p.tutorialSeen === true ? true : undefined,
+    tutorialDone: p.tutorialDone === true ? true : undefined,
+  };
 }
 
 interface AccountStore {
@@ -34,6 +53,8 @@ interface AccountStore {
   signUp: (username: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   syncNow: () => Promise<void>;
+  /** Remember preferences on the account (merged with what it has). Does nothing for guests. */
+  savePrefs: (patch: AccountPrefs) => Promise<void>;
 }
 
 const UPLOAD_DEBOUNCE_MS = 1500;
@@ -44,9 +65,9 @@ const storage = () => useGame.getState().storage;
 function userFromSession(session: Session | null): AccountUser | null {
   const u = session?.user;
   if (!u) return null;
-  const meta = u.user_metadata as { username?: unknown } | undefined;
+  const meta = u.user_metadata as { username?: unknown; prefs?: unknown } | undefined;
   const username = typeof meta?.username === 'string' ? meta.username : usernameFromEmail(u.email);
-  return { id: u.id, username };
+  return { id: u.id, username, prefs: prefsFrom(meta) };
 }
 
 // ---------------------------------------------------------------------------
@@ -219,7 +240,15 @@ export const useAccount = create<AccountStore>((set, get) => ({
         const { data } = await c.auth.getSession();
         const user = userFromSession(data.session);
         set({ user, sync: user ? 'syncing' : 'local' });
-        if (user) await pullAndMerge(user);
+        if (user) {
+          // The cached session may be older than what another device saved on the account.
+          void c.auth.getUser().then(({ data: fresh }) => {
+            if (fresh.user && get().user?.id === fresh.user.id) {
+              set({ user: { ...get().user!, prefs: prefsFrom(fresh.user.user_metadata as Record<string, unknown>) } });
+            }
+          }, () => undefined);
+          await pullAndMerge(user);
+        }
       } catch {
         if (get().user) set({ sync: 'offline' });
       } finally {
@@ -271,6 +300,18 @@ export const useAccount = create<AccountStore>((set, get) => ({
     useGame.setState({ slot: null, lastSavedAt: null });
     await c.auth.signOut({ scope: 'local' });
     set({ user: null, sync: 'local', lastSyncedAt: null });
+  },
+
+  savePrefs: async (patch) => {
+    const c = supabase();
+    const user = get().user;
+    if (!c || !user) return;
+    const prefs = { ...user.prefs, ...patch };
+    if (JSON.stringify(prefs) === JSON.stringify(user.prefs)) return;
+    set({ user: { ...user, prefs } });
+    // updateUser merges these keys into the account's metadata; the username stays as it is.
+    const { error } = await c.auth.updateUser({ data: { prefs } });
+    if (error) console.warn('Could not save preferences on the account', error.message);
   },
 
   syncNow: async () => {

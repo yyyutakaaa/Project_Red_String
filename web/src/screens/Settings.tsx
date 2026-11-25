@@ -20,7 +20,8 @@ import {
 import { sfx } from '../audio/audio.ts';
 import { desktop, useDesktopFullscreen } from '../desktop/bridge.ts';
 import styles from './Settings.module.css';
-import { AVAILABLE_LANGUAGES, setLanguage, t, useT, type LanguageCode, type MessageKey } from '../i18n/index.ts';
+import { AVAILABLE_LANGUAGES, t, useT, type LanguageCode, type MessageKey } from '../i18n/index.ts';
+import { chooseLanguage } from '../onboarding/onboarding.ts';
 
 const PREVIEW_PAUSE_MS = 1800;
 
@@ -321,7 +322,7 @@ export function SettingsScreen() {
               name="language"
               value={language}
               options={languageOptions}
-              onChange={(code) => void setLanguage(code)}
+              onChange={(code) => void chooseLanguage(code)}
               describedBy={languageNoteId}
               stack
             />

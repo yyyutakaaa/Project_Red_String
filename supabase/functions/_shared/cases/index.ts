@@ -11,5 +11,6 @@ export const STORY_CASE_HASHES: Record<string, string> = {
   'reading-room': 'ecdeb03223488d68217ddd532ae31e5ec97b8f5e77e6a57633c6773f93aef626',
   'studio-nine': '33159a4a337bb8a5b1cde538b2fa81193da696f7d61fa7ec720ec436d21aff07',
   'the-regent': '4b2a9f2e5e764ad769af359faedbb8aad802bdc457e3c347c9907214def98ca3',
+  'tutorial': '6fa5bf33b495d76f761a0ca4012e194ffc48b5de0f12e3634694932204e24da2',
   'vance-and-pryor': '6f8dcd1d99f337a987ed8ad91003b3f33918b6cb17d88eb618d23d0446bcbe84',
 };

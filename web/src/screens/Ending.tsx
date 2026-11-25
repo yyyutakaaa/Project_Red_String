@@ -6,7 +6,7 @@ import { Portrait } from '../components/Portrait.tsx';
 import { ScreenFrame } from '../components/ScreenFrame.tsx';
 import { useAmbience } from '../hooks/useAmbience.ts';
 import { casePath, useCaseContext } from '../hooks/useCase.ts';
-import { STORY_ORDER, getStoryCase, isStoryUnlocked } from '../engine/caseLoader.ts';
+import { STORY_ORDER, getStoryCase, isStoryUnlocked, isTutorial } from '../engine/caseLoader.ts';
 import { discoveredCount, questionsUsed, scoreProgress, totalDiscoverables, totalPatience } from '../engine/scoring.ts';
 import type { AccusationOutcome, AccusationRecord, CaseProgress, ScoreSnapshot } from '../engine/types.ts';
 import { evidenceName, useGame } from '../store/game.ts';
@@ -99,10 +99,12 @@ export function Ending() {
   const revealOpen = outcome !== 'wrong_culprit' || showSolution;
 
   const storyIndex = source === 'story' ? (STORY_ORDER as readonly string[]).indexOf(caseKey) : -1;
-  const nextId = storyIndex >= 0 ? STORY_ORDER[storyIndex + 1] : undefined;
+  // After the tutorial comes the first story case, which is always open.
+  const nextIndex = isTutorial(caseKey) ? 0 : storyIndex >= 0 ? storyIndex + 1 : -1;
+  const nextId = nextIndex >= 0 ? STORY_ORDER[nextIndex] : undefined;
   const nextEnglish = nextId ? getStoryCase(nextId) : null;
   const nextCase = nextEnglish ? localizedCase(nextEnglish) : null;
-  const nextUnlocked = nextId ? isStoryUnlocked(storyIndex + 1, (id) => Boolean(completions?.[id])) : false;
+  const nextUnlocked = nextId ? isStoryUnlocked(nextIndex, (id) => Boolean(completions?.[id])) : false;
 
   const replay = () => {
     restartCase(caseKey, source);
