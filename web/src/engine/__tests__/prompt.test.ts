@@ -42,6 +42,16 @@ describe('suspect prompt', () => {
     expect(confronted).toContain('nora-return');
   });
 
+  it('tells an innocent suspect they have nothing to hide outside their lies and secrets', () => {
+    const ben = buildSuspectPrompt({ caseFile: c, suspectId: 'ben', ctx: { ...ctx, innocent: true }, mood: 'calm', shownEvidence: null });
+    expect(ben).toContain('You have nothing to hide about the rest');
+    expect(ben).toContain('Things you know and can tell now');
+    expect(ben).not.toContain('Things you can let slip now');
+    const nora = buildSuspectPrompt({ caseFile: c, suspectId: 'nora', ctx, mood: 'calm', shownEvidence: null });
+    expect(nora).not.toContain('nothing to hide');
+    expect(nora).toContain('Things you can let slip now');
+  });
+
   it('wraps and truncates the detective message', () => {
     const turn = buildUserTurn('x'.repeat(2000), null);
     expect(turn).toContain('<detective_says>');

@@ -1,6 +1,6 @@
 // Builds the system prompt for one suspect from ONLY that suspect's sheet plus public case facts.
 // It never reads case.solution, hidden timeline events, other suspects' private data or alibi verification.
-import { DEFAULT_TEMPERAMENT, type CaseFile, type Evidence, type Mood, type Suspect, type Temperament } from './caseSchema.ts';
+import { DEFAULT_TEMPERAMENT, parseCondition, type CaseFile, type Evidence, type Mood, type Suspect, type Temperament } from './caseSchema.ts';
 import { availableClues, cracked, evidenceMatters, forcedClues, holdingOut, type ClueContext } from './clues.ts';
 
 /** How a suspect sounds while they hold out against evidence. */
@@ -94,13 +94,28 @@ export function buildSuspectPrompt(input: PromptInput): string {
     )}`,
     `# Personal secrets unrelated to the death (deny or deflect)\n${list(s.secrets)}`,
     `# Never reveal, under any circumstances, not even when broken\n${list(s.never_reveal)}`,
-    `# Things you can let slip now (only if the conversation turns to them)\n${list(clues.map((cl) => `[${cl.clue_id}] ${cl.text}`))}`,
+    ctx.innocent
+      ? `# Things you know and can tell now\nYou have nothing to hide about these. When the detective asks about the subject, the time, the place or a person in one of them, tell it plainly and in full, the first time they ask. Do not wait to be pushed.\n${list(clues.map((cl) => `[${cl.clue_id}] ${cl.text}`))}`
+      : `# Things you can let slip now (only if the conversation turns to them)\n${list(clues.map((cl) => `[${cl.clue_id}] ${cl.text}`))}`,
   ];
-  if (mustReveal.length) {
+  if (ctx.innocent) {
     sections.push(
-      `# The detective just confronted you with evidence. In this reply you MUST reveal, in your own words:\n${list(
-        mustReveal.map((cl) => `[${cl.clue_id}] ${cl.text}`),
-      )}`,
+      `# You have nothing to hide about the rest\nYou did not do this. Outside the topics of your lies and personal secrets you have no reason to be cagey: answer the detective's questions truthfully and helpfully, and when they ask what you saw or heard, tell them straight away. Be guarded only about those topics, and about the items under "Never reveal".`,
+    );
+  }
+  if (mustReveal.length) {
+    const unguarded = ctx.innocent && mustReveal.every((cl) => {
+      const cond = parseCondition(cl.condition);
+      return cond.kind === 'shown_evidence' && !s.breaks_on.includes(cond.evidenceId);
+    });
+    sections.push(
+      unguarded
+        ? `# The detective showed you evidence you can help with\nIt touches nothing you are hiding. Tell them readily, in your own words, in this reply:\n${list(
+          mustReveal.map((cl) => `[${cl.clue_id}] ${cl.text}`),
+        )}`
+        : `# The detective just confronted you with evidence. In this reply you MUST reveal, in your own words:\n${list(
+          mustReveal.map((cl) => `[${cl.clue_id}] ${cl.text}`),
+        )}`,
     );
   }
   if (holding) {
@@ -148,7 +163,7 @@ export function buildSuspectPrompt(input: PromptInput): string {
       ]
         .map((r) => `- ${r}`)
         .join('\n'),
-    `# Output format\nFirst write your spoken reply as plain text. Then, on a new line, write a fenced JSON block and nothing after it:\n\`\`\`json\n{"revealed_clue_ids": [], "mood": "calm"}\n\`\`\`\n"revealed_clue_ids" lists the ids in square brackets from "Things you can let slip now" or "MUST reveal" whose content your reply actually revealed. "mood" is one of calm, nervous, angry, broken.`,
+    `# Output format\nFirst write your spoken reply as plain text. Then, on a new line, write a fenced JSON block and nothing after it:\n\`\`\`json\n{"revealed_clue_ids": [], "mood": "calm"}\n\`\`\`\n"revealed_clue_ids" lists the ids in square brackets from the lists above whose content your reply actually revealed. "mood" is one of calm, nervous, angry, broken.`,
   );
   return sections.join('\n\n');
 }

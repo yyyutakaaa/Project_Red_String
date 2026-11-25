@@ -103,6 +103,8 @@ Only interrogations go to the server. The `interrogate` function loads the case 
 
 The server also checks which clues a suspect may reveal at that moment. Patience per suspect, rate limits and a daily spend limit are kept in Postgres.
 
+Only what a suspect really has to hide is hard to get out of them. Someone who did not do it answers straight about everything outside their own lies and secrets: what they saw and heard comes out when the player asks (clues that need pressing are open to them from the first question), and evidence that only jogs their memory gets an answer the first time it is shown. They hold out only against evidence that disproves one of their own lies. The one who did it holds out against every piece of evidence that touches them.
+
 Evidence does not make a suspect confess on sight. Each suspect has a temperament: how many confrontations with a piece of evidence they get through (showing it, and each question that keeps pressing after it) and how they sound meanwhile (angry, frightened, cold or charming). The player can also catch a lie: pin something the suspect said, put evidence beside it and call it. The evidence has to matter to that suspect, and a small model call checks that the statement is one of the lies on their sheet that this evidence disproves. A caught lie breaks them at once; a wrong call costs the question. Every reply also tells the player what the evidence did: nothing, holding out, or gave way.
 
 On the board, "Check theory" gives totals only (how many strings hold) and can be used three times per case. Having each string marked is the answer key and costs as much as a hint.

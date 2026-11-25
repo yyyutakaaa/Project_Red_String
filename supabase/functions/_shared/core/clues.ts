@@ -20,6 +20,31 @@ export interface ClueContext {
   pressing?: string | null;
   /** Confrontations this suspect gets through before a piece of evidence breaks them (temperament). */
   holdsOut?: number;
+  /**
+   * Evidence this suspect holds out against (see guardedEvidence). Other evidence they talk about the
+   * first time it is shown. Unset: they hold out against all of it.
+   */
+  guarded?: readonly string[];
+  /**
+   * The suspect did not do it. Outside their own lies and secrets they have nothing to hide: they tell
+   * what they saw and heard when asked, without first being worn down.
+   */
+  innocent?: boolean;
+}
+
+/**
+ * The evidence a suspect holds out against: what disproves one of their own lies (breaks_on). The one
+ * who did it also holds out against every other piece of evidence that touches them; an innocent
+ * suspect has nothing to hide about evidence that only jogs their memory.
+ */
+export function guardedEvidence(suspect: Suspect, innocent: boolean): string[] {
+  const ids = [...suspect.breaks_on];
+  if (innocent) return ids;
+  for (const c of suspect.revealable_clues) {
+    const cond = parseCondition(c.condition);
+    if (cond.kind === 'shown_evidence' && !ids.includes(cond.evidenceId)) ids.push(cond.evidenceId);
+  }
+  return ids;
 }
 
 /** Pressure a caught lie adds: more than any temperament holds out against. */
@@ -46,8 +71,12 @@ export function evidencePressure(
   return { pressure, pressing };
 }
 
-/** Has this evidence been pushed hard enough to break the suspect? Without pressure data, showing it is enough. */
+/**
+ * Has this evidence been pushed hard enough to break the suspect? Evidence they have nothing to hide
+ * about gives way at once, and so does any evidence without pressure data.
+ */
 export function cracked(evidenceId: string, ctx: ClueContext): boolean {
+  if (ctx.guarded && !ctx.guarded.includes(evidenceId)) return true;
   return (ctx.pressure?.[evidenceId] ?? 1) > (ctx.holdsOut ?? 0);
 }
 
@@ -89,7 +118,9 @@ export function isConditionMet(condition: string, ctx: ClueContext): boolean {
     case 'free':
       return true;
     case 'pressed':
+      // An innocent suspect does not need to be pushed for what they saw: they tell it when asked.
       return (
+        ctx.innocent === true ||
         ctx.patienceUsedBefore >= PRESS_THRESHOLD || ctx.shownEvidenceNow !== null || ctx.shownEvidenceBefore.length > 0
       );
     case 'shown_evidence':

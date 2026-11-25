@@ -11,7 +11,7 @@
 // so the client's "conversation" is accepted for compatibility but never trusted for the prompt.
 import { z } from 'zod';
 import { buildSuspectPrompt, buildUserTurn, MAX_PLAYER_MESSAGE_CHARS } from '../_shared/core/suspectPrompt.ts';
-import { evidenceEffect, evidencePressure, resolveMood, resolveRevealedClues, normalizeMood, type ClueContext } from '../_shared/core/clues.ts';
+import { evidenceEffect, evidencePressure, guardedEvidence, resolveMood, resolveRevealedClues, normalizeMood, type ClueContext } from '../_shared/core/clues.ts';
 import { limitWords, parseReplyMeta, sanitizeReply, spokenPart, streamableText, visibleLength } from '../_shared/core/replyParsing.ts';
 import { DEFAULT_TEMPERAMENT, type Mood } from '../_shared/core/caseSchema.ts';
 import { SseStream, clientIp, errorResponse, isUuid, json, originRejected, preflight, sha256Hex } from '../_shared/http.ts';
@@ -156,10 +156,11 @@ Deno.serve(async (req: Request): Promise<Response> => {
   // Reserve the worst case (the reply plus one metadata retry, and the lie check when one is asked for)
   // against the daily ceiling before calling a model, atomically, so concurrent requests cannot overshoot it.
   const historyTurns = claim.messages.slice(-HISTORY_TURNS * 2);
+  const innocent = caseFile.solution.culprit_id !== suspect.id;
   const sheetChars = buildSuspectPrompt({
     caseFile,
     suspectId: suspect.id,
-    ctx: { patienceUsedBefore: claim.patienceUsedBefore, shownEvidenceNow: shown?.id ?? null, shownEvidenceBefore: claim.shownEvidence, alreadyRevealed: claim.revealedClues },
+    ctx: { patienceUsedBefore: claim.patienceUsedBefore, shownEvidenceNow: shown?.id ?? null, shownEvidenceBefore: claim.shownEvidence, alreadyRevealed: claim.revealedClues, innocent },
     mood: 'calm',
     shownEvidence: shown,
   }).length;
@@ -197,6 +198,10 @@ Deno.serve(async (req: Request): Promise<Response> => {
     pressure,
     pressing,
     holdsOut: (suspect.temperament ?? DEFAULT_TEMPERAMENT).holds_out,
+    // Only what they really have to hide is hard to get out of them: an innocent suspect holds out
+    // against evidence that disproves their own lies, the one who did it against all of it.
+    guarded: guardedEvidence(suspect, innocent),
+    innocent,
   };
   const prevMood: Mood = normalizeMood(claim.mood);
   const system = buildSuspectPrompt({
