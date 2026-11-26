@@ -1,5 +1,5 @@
-// partner: one short remark from Sergeant Doyle, the detective's partner, about something the player
-// just found out. The browser decides when he speaks and what about (web/src/engine/partner.ts); this
+// partner: one short remark from Luna, the detective's assistant, about something the player
+// just found out. The browser decides when she speaks and what about (web/src/engine/partner.ts); this
 // function only puts it into words, in the player's language.
 //
 // Request (POST JSON): { case_id, device_id, language, kind, suspect_id?, speaker_id?, evidence_id?, clue_id?, said? }

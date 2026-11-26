@@ -12,7 +12,7 @@ import {
 import { useSearchParams } from 'react-router-dom';
 import type { CaseFile, Evidence, RevealableClue, Suspect, TimelineEvent } from '@shared/caseSchema.ts';
 import type { CaseProgress, PartnerLogEntry } from '../engine/types.ts';
-import doyleAvatar from '../assets/art/partner/doyle.webp';
+import partnerAvatar from '../assets/art/partner/luna.webp';
 import { ScreenFrame } from '../components/ScreenFrame.tsx';
 import { ButtonLink } from '../components/Button.tsx';
 import { EvidenceCard } from '../components/EvidenceCard.tsx';
@@ -359,7 +359,7 @@ function NotesPanel({ caseKey, initial }: { caseKey: string; initial: string }) 
   );
 }
 
-/** What Sergeant Doyle said in this run, so it can be read again after his bubble is gone. */
+/** What Luna said in this run, so it can be read again after her bubble is gone. */
 function PartnerPanel({ log }: { log: readonly PartnerLogEntry[] }) {
   return (
     <>
@@ -372,7 +372,7 @@ function PartnerPanel({ log }: { log: readonly PartnerLogEntry[] }) {
         <ol className={styles.partnerList}>
           {log.map((l, i) => (
             <li key={i}>
-              <img src={doyleAvatar} alt="" className={styles.partnerAvatar} />
+              <img src={partnerAvatar} alt="" className={styles.partnerAvatar} />
               <p>{l.text}</p>
             </li>
           ))}

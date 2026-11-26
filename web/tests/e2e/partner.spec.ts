@@ -36,7 +36,7 @@ async function questionPike(page: Page) {
   await expect(page.getByTestId('waiting-indicator')).toHaveCount(0, { timeout: 15_000 });
 }
 
-test('Doyle remarks on a find that does not fit what a suspect said, in the player\'s language', async ({ page }) => {
+test('Luna remarks on a find that does not fit what a suspect said, in the player\'s language', async ({ page }) => {
   const calls: Array<Record<string, unknown>> = [];
   const partnerCalls: Array<Record<string, unknown>> = [];
   await setUp(page);
@@ -70,7 +70,7 @@ test('Doyle remarks on a find that does not fit what a suspect said, in the play
   await expect(page.getByRole('tabpanel')).toContainText('Volgens Pike stond hij de hele tijd aan de balie.');
 });
 
-test('without the partner function Doyle uses the game\'s own line, and the board ties strings by itself', async ({ page }) => {
+test('without the partner function Luna uses the game\'s own line, and the board ties strings by itself', async ({ page }) => {
   await setUp(page);
   await mockInterrogate(page, []);
   await page.route('**/functions/v1/partner', (route) => route.fulfill({ status: 404, headers: cors, body: '' }));

@@ -806,10 +806,10 @@
   "partner.changedStory": "Hum. Tout à l'heure, {name} racontait ça tout autrement.",
   "partner.holdingOut": "{name} ne lâche rien. Insistez, ou revenez avec autre chose.",
   "partner.dismiss": "Fermer",
-  "settings.partnerLegend": "Sergent Doyle",
+  "settings.partnerLegend": "Luna",
   "settings.partnerOn": "Réfléchit avec vous",
   "settings.partnerOff": "Silencieux",
-  "notebook.tabPartner": "Doyle",
-  "notebook.partnerTitle": "Ce que Doyle a dit",
-  "notebook.noPartner": "Doyle n'a encore rien dit."
+  "notebook.tabPartner": "Luna",
+  "notebook.partnerTitle": "Ce que Luna a dit",
+  "notebook.noPartner": "Luna n'a encore rien dit."
 }

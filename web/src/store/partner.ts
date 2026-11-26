@@ -1,4 +1,4 @@
-// Sergeant Doyle, the partner, out loud. engine/partner.ts decides what he could remark on; this store
+// Luna, the assistant, out loud. engine/partner.ts decides what she could remark on; this store
 // picks one remark when several come at once, asks the `partner` function to put it into words in the
 // player's language, falls back on the game's own line when that does not come in time, and holds the
 // line the bubble (components/PartnerBubble.tsx) shows.
@@ -85,7 +85,7 @@ async function speak(p: Pending): Promise<void> {
     clue_id: r.clueId ?? null,
     said: p.said ?? null,
   });
-  // The player may have switched him off or left the case while he was thinking.
+  // The player may have switched her off or left the case while she was thinking.
   if (!useSettings.getState().partner || progressOf(p.caseKey)?.runId !== progress.runId) return;
   const text = words ?? fallbackLine(p.c, r);
   usePartner.setState({ line: { id: nextId++, caseKey: p.caseKey, text, kind: r.kind } });
@@ -99,7 +99,7 @@ function flush(): void {
   if (best) void speak(best);
 }
 
-/** Offer a remark. Nothing happens when he is switched off, already said it, or has nothing to say. */
+/** Offer a remark. Nothing happens when she is switched off, already said it, or has nothing to say. */
 export function offerRemark(c: CaseFile, caseKey: string, remark: Remark | null, said?: string): void {
   if (!remark || !useSettings.getState().partner) return;
   pending.push({ c, caseKey, remark, said });

@@ -111,7 +111,7 @@ On the board, "Check theory" gives totals only (how many strings hold) and can b
 
 The board ties some strings by itself, for links the player has found out rather than worked out: a piece of evidence that names a suspect (by a first name or a surname nobody else in the case carries), evidence a suspect handed over, evidence a suspect gave way to, and evidence that led to more evidence ([`autoLinks()`](web/src/engine/board.ts)). About half of them hold, so they are no answer key. A string the player cuts stays cut.
 
-Sergeant Doyle, the partner, thinks along out loud. When the player finds something out he may say one short thing about it: that a clue explains a piece of evidence ("Ah, so that explains the note"), that a find does not fit the story of someone the player has already heard, that someone named in it has not been asked yet ("Maybe we should ask her about that"), or that a suspect who just gave way told it differently a minute ago. The browser decides when he speaks and what about ([`engine/partner.ts`](web/src/engine/partner.ts)), and the [`partner`](supabase/functions/partner/index.ts) function puts it into words in the player's language. Its prompt holds only that one observation and facts the player has already seen, never the solution or anyone's secrets, so he cannot give the case away. Without the function he says the game's own line. Settings → Searching → Sergeant Doyle switches him off.
+Luna, the detective's assistant (twenty, quick and warm), thinks along out loud. When the player finds something out she may say one short thing about it: that a clue explains a piece of evidence ("Ah, so that explains the note"), that a find does not fit the story of someone the player has already heard, that someone named in it has not been asked yet ("Maybe we should ask her about that"), or that a suspect who just gave way told it differently a minute ago. The browser decides when she speaks and what about ([`engine/partner.ts`](web/src/engine/partner.ts)), and the [`partner`](supabase/functions/partner/index.ts) function puts it into words in the player's language. Its prompt holds only that one observation and facts the player has already seen, never the solution or anyone's secrets, so she cannot give the case away. Without the function she says the game's own line, and the notebook keeps everything she said. Settings → Searching → Luna switches her off.
 
 API keys only exist as Supabase secrets. The frontend knows the Supabase URL and the publishable key and nothing else. `npm run check-secrets` scans the build to make sure.
 
@@ -134,7 +134,7 @@ supabase/
   functions/_shared/core/     schema, validator, clue rules, prompt, reply parsing
   functions/_shared/          model client, limits, CORS, eval mode
   functions/interrogate/      the interrogation
-  functions/partner/          Sergeant Doyle's remarks
+  functions/partner/          Luna's remarks
   functions/generate-case/    retired, answers 410
   migrations/                 tables, RLS and functions in Postgres
   seed/story_cases.sql        the cases as server data

@@ -1,4 +1,4 @@
-/* Doyle's remark: a comic caption box in the bottom-left corner, clear of the toasts on the right. */
+/* Luna's remark: a comic caption box in the bottom-left corner, clear of the toasts on the right. */
 .host {
   position: fixed;
   left: var(--space-4);

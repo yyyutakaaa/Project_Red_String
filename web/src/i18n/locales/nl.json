@@ -806,10 +806,10 @@
   "partner.changedStory": "Hm. Daarnet vertelde {name} het nog heel anders.",
   "partner.holdingOut": "{name} houdt voet bij stuk. Blijf aandringen, of kom terug met meer.",
   "partner.dismiss": "Sluiten",
-  "settings.partnerLegend": "Sergeant Doyle",
+  "settings.partnerLegend": "Luna",
   "settings.partnerOn": "Denkt mee",
   "settings.partnerOff": "Stil",
-  "notebook.tabPartner": "Doyle",
-  "notebook.partnerTitle": "Wat Doyle zei",
-  "notebook.noPartner": "Doyle heeft nog niets gezegd."
+  "notebook.tabPartner": "Luna",
+  "notebook.partnerTitle": "Wat Luna zei",
+  "notebook.noPartner": "Luna heeft nog niets gezegd."
 }

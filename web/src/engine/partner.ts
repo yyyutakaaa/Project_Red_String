@@ -1,16 +1,16 @@
-// The partner: Sergeant Doyle walks the case with the detective and now and then says what strikes
-// him. He thinks along, he never solves: every remark is about something the player has just found
+// The partner: Luna, the detective's young assistant, walks the case along and now and then says what
+// strikes her. She thinks along, she never solves: every remark is about something the player has just found
 // out (a clue that explains a piece of evidence, a statement that does not fit someone's story,
 // a name worth asking about, a suspect who changed their story), never about who did it.
 //
-// This file decides when he speaks and what about. Pure: no React, no store, so it can be tested.
+// This file decides when she speaks and what about. Pure: no React, no store, so it can be tested.
 // The words come from the `partner` edge function, or from the lines in i18n when it cannot be reached.
 import { parseCondition, type CaseFile, type Suspect } from '@shared/caseSchema.ts';
 import type { EvidenceEffect } from '@shared/clues.ts';
 import { suspectsNamedIn } from './board.ts';
 import type { CaseProgress } from './types.ts';
 
-export const PARTNER_NAME = 'Doyle';
+export const PARTNER_NAME = 'Luna';
 
 export type RemarkKind =
   /** What a suspect just told explains a piece of evidence. */
@@ -27,7 +27,7 @@ export type RemarkKind =
   | 'holdingOut';
 
 export interface Remark {
-  /** One remark per key per run: he does not say the same thing twice. */
+  /** One remark per key per run: she does not say the same thing twice. */
   key: string;
   kind: RemarkKind;
   /** The suspect the remark is about (whose story, who changed it, who to ask). */
@@ -57,7 +57,7 @@ function suspectsNamedInText(c: CaseFile, text: string, except: string): string[
   return suspectsNamedIn(c, { id: 'x', name: '', description: text, found_in: 'x', points_to: [], is_red_herring: false }).filter((id) => id !== except);
 }
 
-/** The first remark worth making from a list, skipping what he already said. */
+/** The first remark worth making from a list, skipping what she already said. */
 function first(p: Progress, candidates: Remark[]): Remark | null {
   return candidates.find((r) => !said(p, r.key)) ?? null;
 }

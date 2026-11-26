@@ -352,7 +352,7 @@
   line-height: 1.55;
 }
 
-/* What Doyle said: his face beside each line, like the bubble it came from. */
+/* What Luna said: her face beside each line, like the bubble it came from. */
 .partnerList {
   display: grid;
   gap: var(--space-3);

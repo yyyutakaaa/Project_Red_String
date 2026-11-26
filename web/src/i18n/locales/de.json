@@ -806,10 +806,10 @@
   "partner.changedStory": "Hm. Vorhin hat {name} das noch ganz anders erzählt.",
   "partner.holdingOut": "{name} bleibt stur. Bleib dran, oder komm mit mehr zurück.",
   "partner.dismiss": "Schließen",
-  "settings.partnerLegend": "Sergeant Doyle",
+  "settings.partnerLegend": "Luna",
   "settings.partnerOn": "Denkt mit",
   "settings.partnerOff": "Still",
-  "notebook.tabPartner": "Doyle",
-  "notebook.partnerTitle": "Was Doyle gesagt hat",
-  "notebook.noPartner": "Doyle hat noch nichts gesagt."
+  "notebook.tabPartner": "Luna",
+  "notebook.partnerTitle": "Was Luna gesagt hat",
+  "notebook.noPartner": "Luna hat noch nichts gesagt."
 }

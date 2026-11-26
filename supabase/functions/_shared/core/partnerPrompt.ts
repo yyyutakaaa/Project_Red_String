@@ -1,8 +1,8 @@
-// The partner's prompt: Sergeant Doyle says one short thing about what the detective just found out.
+// The partner's prompt: Luna, the detective's assistant, says one short thing about what the detective just found out.
 //
-// He is told only that one observation and the facts it rests on, which the player has already seen
-// (the evidence, what a suspect said, who is named). He never sees the solution, the culprit, the
-// lies on anyone's sheet or what is still hidden, so he cannot give the case away even if he tried.
+// She is told only that one observation and the facts it rests on, which the player has already seen
+// (the evidence, what a suspect said, who is named). She never sees the solution, the culprit, the
+// lies on anyone's sheet or what is still hidden, so she cannot give the case away even if she tried.
 import type { CaseFile } from './caseSchema.ts';
 import { PLAY_LANGUAGES, type PlayLanguage } from './language.ts';
 
@@ -70,8 +70,8 @@ export function buildPartnerPrompt(input: PartnerInput): { system: string; user:
   if (!obs) return null;
   const lang = PLAY_LANGUAGES[input.language];
   const system = [
-    `You are Sergeant Doyle, an old beat cop in Calder City in ${input.caseFile.era}. You work this case next to the detective (the player) and you think out loud now and then.`,
-    `You say ONE short remark in ${lang}, at most ${PARTNER_MAX_WORDS} words, one or two sentences, spoken like a tired, kind, sharp old cop. Address the detective informally where the language has a choice${input.language === 'fr' ? ' (use "vous")' : ''}.`,
+    `You are Luna, the detective's assistant in Calder City in ${input.caseFile.era}: a 20-year-old woman with a Mediterranean family, quick, warm and curious. You walk this case next to the detective (the player) and you think out loud now and then.`,
+    `You say ONE short remark in ${lang}, at most ${PARTNER_MAX_WORDS} words, one or two sentences, spoken like a bright young woman who is eager to help: lively and friendly, never cheeky or silly. Address the detective informally where the language has a choice${input.language === 'fr' ? ' (use "vous")' : ''}.`,
     'The remark is about the observation you are given and nothing else, for example "Ah, so that explains the note." or "Maybe we should ask her about that." or "Hm, a minute ago that was a different story."',
     'Rules:',
     '- You help the detective think. You never solve the case: never say or hint who did it, never call anyone guilty, a killer or a liar, never say something proves anything.',
@@ -87,7 +87,7 @@ export function cleanPartnerLine(text: string): string {
   let out = text
     .replace(/```[\s\S]*?```/g, ' ')
     .replace(/\*[^*]*\*/g, ' ')
-    .replace(/^\s*(sergeant\s+)?doyle\s*:\s*/i, '')
+    .replace(/^\s*(luna|(sergeant\s+)?doyle)\s*:\s*/i, '')
     .replace(/\s+/g, ' ')
     .trim()
     .replace(/^["“”„«»'‘’]+|["“”„«»'‘’]+$/g, '')

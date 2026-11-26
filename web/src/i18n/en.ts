@@ -866,12 +866,12 @@ export const en = {
   'partner.changedStory': "Hm. A minute ago {name} told it quite differently.",
   'partner.holdingOut': "{name} is digging in. Keep at it, or come back with more.",
   'partner.dismiss': "Close",
-  'settings.partnerLegend': "Sergeant Doyle",
+  'settings.partnerLegend': "Luna",
   'settings.partnerOn': "Thinks along",
   'settings.partnerOff': "Quiet",
-  'notebook.tabPartner': "Doyle",
-  'notebook.partnerTitle': "What Doyle said",
-  'notebook.noPartner': "Doyle hasn't said anything yet.",
+  'notebook.tabPartner': "Luna",
+  'notebook.partnerTitle': "What Luna said",
+  'notebook.noPartner': "Luna hasn't said anything yet.",
 };
 
 export type MessageKey = keyof typeof en;

@@ -119,7 +119,7 @@ describe('the partner', () => {
   });
 
   it('cleans what the model sends back into one spoken line', () => {
-    expect(cleanPartnerLine('Doyle: "Ah, dat verklaart het briefje."')).toBe('Ah, dat verklaart het briefje.');
+    expect(cleanPartnerLine('Luna: "Ah, dat verklaart het briefje."')).toBe('Ah, dat verklaart het briefje.');
     expect(cleanPartnerLine('*strokes his moustache* Hm — interesting.')).toBe('Hm, interesting.');
   });
 });

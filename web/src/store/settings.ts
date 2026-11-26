@@ -22,7 +22,7 @@ export interface Settings {
   shareStats: boolean;
   /** Mark the places worth searching in a room. Off: the room is only a drawing and every click is answered. */
   searchAid: boolean;
-  /** Sergeant Doyle thinks along out loud (store/partner.ts). */
+  /** Luna, the assistant, thinks along out loud (store/partner.ts). */
   partner: boolean;
 }
 
