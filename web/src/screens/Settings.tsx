@@ -7,14 +7,12 @@ import { ScreenFrame } from '../components/ScreenFrame.tsx';
 import { useAmbience } from '../hooks/useAmbience.ts';
 import {
   TEXT_SPEED_CPS,
-  systemPrefersReducedMotion,
   useReducedMotion,
   useSettings,
   type FontSize,
   type MotionPref,
   type ThemePref,
   type DiscordPref,
-  systemPrefersLight,
   type Settings,
   type TextSpeed,
 } from '../store/settings.ts';
@@ -44,10 +42,10 @@ const FONT_SIZES: Array<{ value: FontSize; label: MessageKey; scale: number }> =
 
 type VolumeKey = 'masterVolume' | 'musicVolume' | 'sfxVolume';
 
-const VOLUMES: Array<{ key: VolumeKey; label: MessageKey; note: MessageKey }> = [
-  { key: 'masterVolume', label: 'settings.volMaster', note: 'settings.volMasterNote' },
-  { key: 'musicVolume', label: 'settings.volMusic', note: 'settings.volMusicNote' },
-  { key: 'sfxVolume', label: 'settings.volSfx', note: 'settings.volSfxNote' },
+const VOLUMES: Array<{ key: VolumeKey; label: MessageKey }> = [
+  { key: 'masterVolume', label: 'settings.volMaster' },
+  { key: 'musicVolume', label: 'settings.volMusic' },
+  { key: 'sfxVolume', label: 'settings.volSfx' },
 ];
 
 /**
@@ -90,12 +88,14 @@ interface RadioGroupProps<T extends string> {
   onChange: (value: T) => void;
   describedBy?: string;
   stack?: boolean;
+  /** The panel's title already says what the group is: keep the legend for screen readers only. */
+  hideLegend?: boolean;
 }
 
-function RadioCards<T extends string>({ legend, name, value, options, onChange, describedBy, stack = false }: RadioGroupProps<T>) {
+function RadioCards<T extends string>({ legend, name, value, options, onChange, describedBy, stack = false, hideLegend = false }: RadioGroupProps<T>) {
   return (
     <fieldset className={styles.radioGroup} aria-describedby={describedBy}>
-      <legend className={styles.legend}>{legend}</legend>
+      <legend className={hideLegend ? 'visually-hidden' : styles.legend}>{legend}</legend>
       <div className={stack ? styles.radioStack : styles.radioRow}>
         {options.map((o) => (
           <label key={o.value} className={`${styles.radio} ${value === o.value ? styles.radioOn : ''}`}>
@@ -125,7 +125,7 @@ function RadioCards<T extends string>({ legend, name, value, options, onChange, 
   );
 }
 
-function VolumeSlider({ id, label, note, value, onChange }: { id: string; label: string; note: string; value: number; onChange: (v: number) => void }) {
+function VolumeSlider({ id, label, value, onChange }: { id: string; label: string; value: number; onChange: (v: number) => void }) {
   const percent = Math.round(value * 100);
   return (
     <div className={styles.slider}>
@@ -147,13 +147,9 @@ function VolumeSlider({ id, label, note, value, onChange }: { id: string; label:
         className={styles.range}
         style={{ ['--fill' as string]: `${percent}%` }}
         aria-valuetext={t('settings.percent', { n: percent })}
-        aria-describedby={`${id}-note`}
         onChange={(e) => onChange(Number(e.target.value) / 100)}
         data-testid={id}
       />
-      <p id={`${id}-note`} className={styles.sliderNote}>
-        {note}
-      </p>
     </div>
   );
 }
@@ -166,25 +162,17 @@ export function SettingsScreen() {
   const set = useSettings((s) => s.set);
   const reset = useSettings((s) => s.reset);
   const [announcement, setAnnouncement] = useState('');
-  const motionNoteId = useId();
   const previewNoteId = useId();
   const reduced = useReducedMotion();
   const { language } = useT();
   const PREVIEW_LINE = t('settings.preview');
   const typed = usePreviewTyping(PREVIEW_LINE, TEXT_SPEED_CPS[settings.textSpeed], reduced);
-  const [systemReduced] = useState(() => systemPrefersReducedMotion());
-  const [systemLight] = useState(() => systemPrefersLight());
-  const themeNoteId = useId();
-  const discordNoteId = useId();
   const statsNoteId = useId();
-  const languageNoteId = useId();
-  const searchNoteId = useId();
   // Only desktop shells with presence support (v1.0.5 and later) can talk to Discord.
   const [hasDiscord] = useState(() => Boolean(desktop()?.setPresence));
   // Desktop shells with a fixed window size let the player pick a window or full screen.
   const [hasDisplay] = useState(() => Boolean(desktop()?.setFullscreen));
   const fullscreen = useDesktopFullscreen((s) => s.on);
-  const displayNoteId = useId();
   // One panel at a time, picked from the index on the left, so the whole screen fits the window.
   const tabs: Array<{ id: SectionId; label: string }> = [
     { id: 'language', label: t('settings.language') },
@@ -229,48 +217,47 @@ export function SettingsScreen() {
 
   const patch = (p: Partial<Settings>) => set(p);
 
-  const themeOptions: Array<{ value: ThemePref; label: string; note: string }> = [
-    { value: 'dark', label: t('settings.night'), note: t('settings.nightNote') },
-    { value: 'light', label: t('settings.day'), note: t('settings.dayNote') },
-    { value: 'system', label: t('settings.followSystem'), note: t(systemLight ? 'settings.systemLight' : 'settings.systemDark') },
+  const themeOptions: Array<{ value: ThemePref; label: string }> = [
+    { value: 'dark', label: t('settings.night') },
+    { value: 'light', label: t('settings.day') },
+    { value: 'system', label: t('settings.followSystem') },
   ];
 
-  const discordOptions: Array<{ value: DiscordPref; label: string; note: string }> = [
-    { value: 'full', label: t('settings.discordFull'), note: t('settings.discordFullNote') },
-    { value: 'minimal', label: t('settings.discordMinimal'), note: t('settings.discordMinimalNote') },
-    { value: 'off', label: t('settings.discordOff'), note: t('settings.discordOffNote') },
+  const discordOptions: Array<{ value: DiscordPref; label: string }> = [
+    { value: 'full', label: t('settings.discordFull') },
+    { value: 'minimal', label: t('settings.discordMinimal') },
+    { value: 'off', label: t('settings.discordOff') },
   ];
 
-  const displayOptions: Array<{ value: 'window' | 'fullscreen'; label: string; note: string }> = [
-    { value: 'window', label: t('settings.displayWindow'), note: t('settings.displayWindowNote') },
-    { value: 'fullscreen', label: t('settings.displayFull'), note: t('settings.displayFullNote') },
+  const displayOptions: Array<{ value: 'window' | 'fullscreen'; label: string }> = [
+    { value: 'window', label: t('settings.displayWindow') },
+    { value: 'fullscreen', label: t('settings.displayFull') },
   ];
 
-  const searchOptions: Array<{ value: 'hidden' | 'shown'; label: string; note: string }> = [
-    { value: 'hidden', label: t('settings.searchHidden'), note: t('settings.searchHiddenNote') },
-    { value: 'shown', label: t('settings.searchShown'), note: t('settings.searchShownNote') },
+  const searchOptions: Array<{ value: 'hidden' | 'shown'; label: string }> = [
+    { value: 'hidden', label: t('settings.searchHidden') },
+    { value: 'shown', label: t('settings.searchShown') },
   ];
 
-  const partnerOptions: Array<{ value: 'on' | 'off'; label: string; note: string }> = [
-    { value: 'on', label: t('settings.partnerOn'), note: t('settings.partnerOnNote') },
-    { value: 'off', label: t('settings.partnerOff'), note: t('settings.partnerOffNote') },
+  const partnerOptions: Array<{ value: 'on' | 'off'; label: string }> = [
+    { value: 'on', label: t('settings.partnerOn') },
+    { value: 'off', label: t('settings.partnerOff') },
   ];
 
-  const statsOptions: Array<{ value: 'on' | 'off'; label: string; note: string }> = [
-    { value: 'on', label: t('settings.statsOn'), note: t('settings.statsOnNote') },
-    { value: 'off', label: t('settings.statsOff'), note: t('settings.statsOffNote') },
+  const statsOptions: Array<{ value: 'on' | 'off'; label: string }> = [
+    { value: 'on', label: t('settings.statsOn') },
+    { value: 'off', label: t('settings.statsOff') },
   ];
 
-  const motionOptions: Array<{ value: MotionPref; label: string; note: string }> = [
-    { value: 'system', label: t('settings.followSystem'), note: t(systemReduced ? 'settings.motionSystemReduce' : 'settings.motionSystemFull') },
-    { value: 'reduced', label: t('settings.motionReduce'), note: t('settings.motionReduceNote') },
-    { value: 'full', label: t('settings.motionFull'), note: t('settings.motionFullNote') },
+  const motionOptions: Array<{ value: MotionPref; label: string }> = [
+    { value: 'system', label: t('settings.followSystem') },
+    { value: 'reduced', label: t('settings.motionReduce') },
+    { value: 'full', label: t('settings.motionFull') },
   ];
 
-  const languageOptions: Array<{ value: LanguageCode; label: string; note: string }> = AVAILABLE_LANGUAGES.map((l) => ({
+  const languageOptions: Array<{ value: LanguageCode; label: string }> = AVAILABLE_LANGUAGES.map((l) => ({
     value: l.code,
     label: l.name,
-    note: l.code === 'en' ? t('settings.languageOriginal') : t('settings.languageTranslated'),
   }));
 
   return (
@@ -319,16 +306,13 @@ export function SettingsScreen() {
                 </span>
               )}
             </h2>
-            <p id={languageNoteId} className={styles.panelNote}>
-              {t('settings.languageNote')}
-            </p>
             <RadioCards
               legend={t('settings.languageLegend')}
+              hideLegend
               name="language"
               value={language}
               options={languageOptions}
               onChange={(code) => void chooseLanguage(code)}
-              describedBy={languageNoteId}
               stack
             />
           </section>
@@ -336,16 +320,13 @@ export function SettingsScreen() {
           {hasDisplay && (
             <section {...panelProps('display')}>
               <h2 className={styles.panelTitle}>{t('settings.display')}</h2>
-              <p id={displayNoteId} className={styles.panelNote}>
-                {t('settings.displayNote')}
-              </p>
               <RadioCards
                 legend={t('settings.display')}
+              hideLegend
                 name="display"
                 value={fullscreen ? 'fullscreen' : 'window'}
                 options={displayOptions}
                 onChange={(v) => desktop()?.setFullscreen?.(v === 'fullscreen')}
-                describedBy={displayNoteId}
                 stack
               />
             </section>
@@ -360,7 +341,6 @@ export function SettingsScreen() {
                 key={v.key}
                 id={`volume-${v.key.replace('Volume', '')}`}
                 label={t(v.label)}
-                note={t(v.note)}
                 value={settings[v.key]}
                 onChange={(value) => patch({ [v.key]: value })}
               />
@@ -411,16 +391,13 @@ export function SettingsScreen() {
             <h2 className={styles.panelTitle}>
               {t('settings.lighting')}
             </h2>
-            <p id={themeNoteId} className={styles.panelNote}>
-              {t('settings.lightingNote')}
-            </p>
             <RadioCards
               legend={t('settings.theme')}
+              hideLegend
               name="theme"
               value={settings.theme}
               options={themeOptions}
               onChange={(theme) => patch({ theme })}
-              describedBy={themeNoteId}
               stack
             />
           </section>
@@ -430,16 +407,13 @@ export function SettingsScreen() {
               <h2 className={styles.panelTitle}>
                 Discord
               </h2>
-              <p id={discordNoteId} className={styles.panelNote}>
-                {t('settings.discordNote')}
-              </p>
               <RadioCards
                 legend={t('settings.discordStatus')}
+              hideLegend
                 name="discord"
                 value={settings.discordPresence}
                 options={discordOptions}
                 onChange={(discordPresence) => patch({ discordPresence })}
-                describedBy={discordNoteId}
                 stack
               />
             </section>
@@ -449,16 +423,13 @@ export function SettingsScreen() {
             <h2 className={styles.panelTitle}>
               {t('settings.motion')}
             </h2>
-            <p id={motionNoteId} className={styles.panelNote}>
-              {t('settings.motionNote')}
-            </p>
             <RadioCards
               legend={t('settings.reducedMotion')}
+              hideLegend
               name="motion"
               value={settings.reducedMotion}
               options={motionOptions}
               onChange={(reducedMotion) => patch({ reducedMotion })}
-              describedBy={motionNoteId}
               stack
             />
           </section>
@@ -467,16 +438,12 @@ export function SettingsScreen() {
             <h2 className={styles.panelTitle}>
               {t('settings.search')}
             </h2>
-            <p id={searchNoteId} className={styles.panelNote}>
-              {t('settings.searchNote')}
-            </p>
             <RadioCards
               legend={t('settings.searchLegend')}
               name="search"
               value={settings.searchAid ? 'shown' : 'hidden'}
               options={searchOptions}
               onChange={(v) => patch({ searchAid: v === 'shown' })}
-              describedBy={searchNoteId}
               stack
             />
             <RadioCards
@@ -498,6 +465,7 @@ export function SettingsScreen() {
             </p>
             <RadioCards
               legend={t('settings.stats')}
+              hideLegend
               name="stats"
               value={settings.shareStats ? 'on' : 'off'}
               options={statsOptions}

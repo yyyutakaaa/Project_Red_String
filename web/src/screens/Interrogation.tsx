@@ -794,7 +794,6 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
             )}
             {!hasAsked && !exhausted && !inFlight && (
               <div className={styles.suggestions} data-testid="suggested-questions">
-                <p className={styles.suggestLabel}>{t('interro.suggestLabel', { name: short, max: conv.patienceMax })}</p>
                 <ul className={styles.suggestList}>
                   {suggestions.map((q) => (
                     <li key={q}>

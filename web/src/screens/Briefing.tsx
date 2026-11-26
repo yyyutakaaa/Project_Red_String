@@ -135,7 +135,6 @@ export function Briefing() {
 
 
         <footer className={styles.foot}>
-          <p className={styles.signoff}>{t('briefing.signoff')}</p>
           <Button variant="primary" size="large" onClick={begin} data-testid="begin-investigation">
             {seen ? t('briefing.return') : t('briefing.begin')}
           </Button>

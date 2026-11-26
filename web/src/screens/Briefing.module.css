@@ -237,12 +237,6 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: var(--space-4);
-}
-.signoff {
-  margin: 0;
-  font-family: var(--font-type);
-  font-style: italic;
-  color: var(--paper-ink-muted);
 }
