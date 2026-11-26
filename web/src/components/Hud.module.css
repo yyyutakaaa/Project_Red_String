@@ -12,7 +12,7 @@
   /* The strip's top tier: solid ink, a heavy line and a thin paper rule under it. */
   background: var(--comic-dots), var(--comic-fill);
   border-bottom: var(--comic-line);
-  box-shadow: 0 2px 0 var(--paper-rim), 0 7px 0 rgba(0, 0, 0, 0.55);
+  box-shadow: 0 2px 0 var(--paper-rim), 0 6px 0 var(--hud-drop);
   flex-wrap: wrap;
 }
 .title {

@@ -117,11 +117,13 @@
   --comic-fill: #10141c;
   --comic-fill-2: #161b26;
   --comic-line: 3px solid var(--ink-line);
-  --comic-drop: 6px 7px 0 rgba(0, 0, 0, 0.72);
+  --drop: rgba(0, 0, 0, 0.72);
+  --comic-drop: 6px 7px 0 var(--drop);
   --comic-panel: 0 0 0 2px var(--paper-rim), var(--comic-drop);
   --comic-dots: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.035) 0.9px, transparent 1.3px) 0 0 / 5px 5px;
   --caption-bg: #f3dc9a;
   --caption-ink: #1b150b;
+  --hud-drop: rgba(0, 0, 0, 0.55);
 
   color-scheme: dark;
 }
@@ -188,7 +190,9 @@
   --paper-rim: rgba(255, 252, 244, 0.95);
   --comic-fill: #faf6ee;
   --comic-fill-2: #f1ebdf;
-  --comic-drop: 6px 7px 0 rgba(42, 34, 24, 0.55);
+  --drop: rgba(42, 34, 24, 0.45);
+  --comic-drop: 6px 7px 0 var(--drop);
+  --hud-drop: rgba(42, 34, 24, 0.14);
   --comic-dots: radial-gradient(circle at 1px 1px, rgba(42, 34, 24, 0.05) 0.9px, transparent 1.3px) 0 0 / 5px 5px;
 
   color-scheme: light;
@@ -357,7 +361,7 @@ textarea {
   color: var(--paper-ink);
   border-radius: 2px;
   /* Inked round its edge like a panel, with the same hard shadow. */
-  box-shadow: 0 0 0 3px var(--ink-line), 8px 9px 0 3px rgba(0, 0, 0, 0.72);
+  box-shadow: 0 0 0 3px var(--ink-line), 8px 9px 0 3px var(--drop);
 }
 .paper a { color: var(--red-700); }
 

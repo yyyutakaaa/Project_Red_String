@@ -6,7 +6,7 @@
   overflow: hidden;
   border-radius: 2px;
   background: var(--ink-950);
-  box-shadow: 0 0 0 3px var(--ink-line), 0 0 0 5px var(--paper-rim), 9px 10px 0 3px rgba(0, 0, 0, 0.72);
+  box-shadow: 0 0 0 3px var(--ink-line), 0 0 0 5px var(--paper-rim), 9px 10px 0 3px var(--drop);
   isolation: isolate;
   user-select: none;
   -webkit-user-select: none;

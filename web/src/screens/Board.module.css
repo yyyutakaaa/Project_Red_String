@@ -156,7 +156,7 @@
     inset 0 -3px 6px rgba(0, 0, 0, 0.5),
     0 0 0 3px var(--ink-line),
     0 0 0 5px var(--paper-rim),
-    9px 10px 0 3px rgba(0, 0, 0, 0.72);
+    9px 10px 0 3px var(--drop);
 }
 
 .cork {

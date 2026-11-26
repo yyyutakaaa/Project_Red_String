@@ -275,7 +275,7 @@
     linear-gradient(90deg, rgba(243, 238, 228, 0.9) 0%, rgba(243, 238, 228, 0.7) 32%, rgba(243, 238, 228, 0.2) 58%, rgba(243, 238, 228, 0.1) 100%);
 }
 :global([data-theme='light']) .backdrop[data-dim='page'] .scrim {
-  background: rgba(243, 238, 228, 0.8);
+  background: rgba(243, 238, 228, 0.62);
 }
 
 /* Reduced motion: one still frame. */

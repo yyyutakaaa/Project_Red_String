@@ -31,7 +31,7 @@
   background: var(--comic-dots), linear-gradient(180deg, var(--comic-fill-2), var(--comic-fill));
   border: var(--comic-line);
   border-radius: 2px;
-  box-shadow: 0 0 0 2px var(--paper-rim), 8px 9px 0 2px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 0 0 2px var(--paper-rim), 8px 9px 0 2px var(--drop);
   color: var(--text);
 }
 /* The title is a narration caption from the strips: a yellow box with an ink line, a little askew,

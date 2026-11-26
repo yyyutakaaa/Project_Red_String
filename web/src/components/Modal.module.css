@@ -6,7 +6,7 @@
   padding: 0;
   width: min(560px, calc(100vw - 2rem));
   max-height: calc(var(--app-h) - 2rem);
-  box-shadow: 0 0 0 2px var(--paper-rim), 8px 9px 0 2px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 0 0 2px var(--paper-rim), 8px 9px 0 2px var(--drop);
 }
 .dialog::backdrop {
   background: var(--scrim);

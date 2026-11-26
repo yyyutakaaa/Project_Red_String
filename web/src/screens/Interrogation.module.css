@@ -36,8 +36,11 @@
   font-size: var(--fs-xs);
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: var(--text-muted);
-  text-shadow: 0 1px 3px #000, 0 0 8px #000;
+  display: inline-block;
+  padding: 0.15em 0.6em;
+  background: var(--ink-line);
+  color: var(--caption-bg);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
 }
 
 .othersList {
@@ -56,7 +59,7 @@
   min-height: 44px;
   padding: 0.25rem 0.85rem 0.25rem 0.4rem;
   border: 2px solid var(--ink-line);
-  border-radius: 999px;
+  border-radius: 2px;
   background: var(--comic-fill-2);
   box-shadow: 3px 3px 0 var(--ink-line);
   color: var(--text);
@@ -68,11 +71,10 @@
 }
 .otherLink:hover {
   color: var(--text-strong);
-  border-color: var(--lamp-400);
-  box-shadow: 0 0 14px var(--lamp-glow);
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--ink-line);
 }
-.otherLink:focus-visible { border-radius: 999px; }
-.otherLink .otherThumb { border-radius: 50%; }
+.otherLink .otherThumb { border-radius: 2px; }
 
 /* ---------------------------------------------------------------- Banners */
 .banner {

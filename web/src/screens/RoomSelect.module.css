@@ -125,7 +125,7 @@
 
 .card:hover {
   transform: translate(-2px, -3px);
-  box-shadow: 0 0 0 2px var(--caption-bg), 8px 10px 0 rgba(0, 0, 0, 0.72);
+  box-shadow: 0 0 0 2px var(--caption-bg), 8px 10px 0 var(--drop);
 }
 
 .thumb {

@@ -48,9 +48,14 @@
   text-transform: uppercase;
   letter-spacing: 0.18em;
   font-size: var(--fs-xs);
-  color: var(--lamp-300);
   margin: 0 0 var(--space-2);
-  text-shadow: 0 1px 3px #000, 0 0 10px #000;
+  /* A small ink tag above the caption, readable on any picture and in both themes. */
+  display: block;
+  width: fit-content;
+  padding: 0.15em 0.6em;
+  background: var(--ink-line);
+  color: var(--caption-bg);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
 }
 .actions { display: flex; gap: var(--space-2); flex-wrap: wrap; padding: 2px 8px 8px 2px; }
 
