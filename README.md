@@ -5,48 +5,110 @@
 **A noir detective game in the browser.**
 You question suspects in your own words. They can lie. You have to prove it.
 
-[**Play it now**](https://project-red-string.vercel.app)
+[**Play it now**](https://project-red-string.vercel.app) · [Watch the trailer](docs/media/trailer.mp4)
 
-![React](https://img.shields.io/badge/React-19-20232a?style=flat-square&logo=react)
-![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?style=flat-square&logo=typescript&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-8-646cff?style=flat-square&logo=vite&logoColor=white)
-![Supabase](https://img.shields.io/badge/Supabase-Edge_Functions-3ecf8e?style=flat-square&logo=supabase&logoColor=white)
-![Vercel](https://img.shields.io/badge/Vercel-live-000000?style=flat-square&logo=vercel)
+<img src="docs/media/clip-menu.webp" width="820" alt="The main menu: a detective in a trench coat under a street lamp, in the rain, outside a neon hotel sign">
+
 ![Cases](https://img.shields.io/badge/story_cases-10-8c1c1c?style=flat-square)
+![More cases](https://img.shields.io/badge/more_cases-in_the_works-c9a227?style=flat-square)
+![Languages](https://img.shields.io/badge/languages-EN_·_NL_·_FR_·_DE-20232a?style=flat-square)
+![Desktop](https://img.shields.io/badge/desktop-macOS_·_Windows-20232a?style=flat-square)
 
 </div>
 
 ---
 
-<table>
-<tr>
-<td width="50%" valign="top">
+## Calder City, 1948
 
-### How you play
+October 1948. You are the new detective on the night shift at Central Station, and the Captain would like your cases closed quickly.
 
-1. Read the briefing.
+A shipowner dies on his sixty-fifth birthday with his own heart drops in his brandy. Four months later a club owner is shot during a drum solo and nobody hears the shot. Then a harbor clerk is found at the foot of the archive stairs. Every case has its own killer and its own reason, and you can solve each one on its own. Follow the red string from one to the next, though, and the same names turn up again, along with the same money, and it all leads down to the harbor.
+
+The first ten cases run from October 1948 to June 1950 and tell one story. Who is really behind the harbor money is still an open question, and the cases that answer it are being written now.
+
+## Every case is written by hand
+
+Nothing in a case is randomly generated. Each one was planned and written out: the victim, the suspects, what each of them saw, what they hide and where they lie, every room and what is in it, the alibi that cracks and the piece of evidence that cracks it. The clues fit because they were made to fit, so when you name the killer, the solution holds up against what you found. The story that ties the cases together is written the same way.
+
+Two things in the game do come from AI. The suspects speak through an AI model that answers from the sheet written for them, and the pictures are painted with an AI image model.
+
+## How you play
+
+1. Every case opens with a short comic strip, then the briefing.
 2. Search the rooms. Nothing is marked: click wherever you want to look closer, and the field notes say whether it was worth it.
-3. Question the suspects by typing. An AI plays them.
+3. Question the suspects by typing whatever you want to ask.
 4. Put evidence on the table and watch them react.
 5. Pin it all on the red-string board.
 6. Accuse one person with two to four pieces of proof.
 
 You get one try. Stuck? The case menu lets you give up and read the solution, or start the case over.
 
-</td>
-<td width="50%" valign="top">
+### A comic strip before every case
 
-### What makes it different
+<img src="docs/media/clip-cutscene.webp" width="820" alt="The opening comic page of Ashgrove House: a car on a coast road in the storm, a man in a phone booth, a half-eaten birthday cake">
 
-There are no dialogue trees. You type whatever you want to ask.
+Each case opens with a painted comic page that shows what happened since your last case. The panels come in one at a time and the rain keeps falling while you read.
 
-Suspects stick to their story and lie where the case says they lie. Show one the right evidence and they have to answer to it. Sometimes they hand you something new.
+<img src="docs/media/ten-cases.jpg" width="820" alt="The title pages of the ten cases">
 
-The server decides what a suspect is allowed to reveal, so you can't talk the answer out of them.
+### Ask them anything
 
-</td>
+<img src="docs/media/clip-interrogation.webp" width="820" alt="An interrogation: the detective shows Simon Whitlock the hall telephone pad and types a question, and he answers">
+
+There are no dialogue trees. You type your question and the suspect answers in their own voice, sticking to their story and lying where the case says they lie. Put the right evidence in front of them and they have to answer to it. Sometimes they hand you something new.
+
+People with nothing to hide talk freely. The one who did it holds out, and the server decides what a suspect may reveal, so you can't talk the answer out of anyone.
+
+*Above: Simon says he spent twenty minutes on the hall telephone after nine. The pad by the phone says the line was dead from half past eight. These are real answers from the game.*
+
+### Luna thinks along
+
+<img src="docs/media/search.jpg" width="820" alt="The front hallway of Ashgrove House, with Luna's note in the corner">
+
+Luna is your assistant, twenty and quick. When you find something she may say one short thing about it, like a find that doesn't fit someone's story or a name nobody has asked about yet. She never solves it for you, and your notebook keeps everything she said.
+
+### Search, then string it up
+
+<table>
+<tr>
+<td width="50%"><img src="docs/media/clip-search.webp" alt="Searching the front hallway: the telephone, the coat stand, the hall clock"></td>
+<td width="50%"><img src="docs/media/clip-board.webp" alt="Tying red string from Simon Whitlock to three pieces of evidence on the cork board"></td>
 </tr>
 </table>
+
+Search each room and bag what you find. On the cork board you tie red string between people and evidence. The board ties a few strings for you, but only about half of those hold, and you can check your theory just three times per case.
+
+### Painted in layers
+
+<table>
+<tr>
+<td width="50%"><img src="docs/media/suspects.jpg" alt="The lineup: Clara Ashgrove, Simon Whitlock and Leonard Vance"></td>
+<td width="50%"><img src="docs/media/case-files.jpg" alt="The case files on a desk in the station"></td>
+</tr>
+<tr>
+<td width="50%"><img src="docs/media/comic-blue-lantern.jpg" alt="Comic page from The Blue Lantern: a saxophonist, a drummer, an envelope passed in booth 9"></td>
+<td width="50%"><img src="docs/media/board.jpg" alt="The red-string board"></td>
+</tr>
+</table>
+
+Every screen sits on a painted scene built from layers, with rain, fog and lightning moving between them. Every suspect has a portrait.
+
+Play it in the browser or in the desktop app for macOS and Windows, in English, Dutch, French or German. With an account, your saves follow you to another device.
+
+[**Play it now**](https://project-red-string.vercel.app)
+
+<details>
+<summary><b>Built with</b></summary>
+
+![React](https://img.shields.io/badge/React-19-20232a?style=flat-square&logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?style=flat-square&logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-8-646cff?style=flat-square&logo=vite&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-Edge_Functions-3ecf8e?style=flat-square&logo=supabase&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-live-000000?style=flat-square&logo=vercel)
+
+</details>
+
+---
 
 ## Contents
 
@@ -71,7 +133,7 @@ The server decides what a suspect is allowed to reveal, so you can't talk the an
 
 ## The cases
 
-Ten hand-written cases tell one story in Calder City, from October 1948 to June 1950. A case opens when you close the one before it.
+Ten hand-written cases tell one story in Calder City, from October 1948 to June 1950. A case opens when you close the one before it. More cases are being written.
 
 | # | Case | When | What happened |
 |:-:|---|---|---|
