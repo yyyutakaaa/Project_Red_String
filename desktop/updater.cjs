@@ -2,10 +2,11 @@
 //
 // The app (the Electron shell) stays installed; only the game files change. Every deploy of the web
 // game publishes version.json: the commit, the build time, and each file with its sha256. When the
-// live build is newer than the one this app runs, the player gets a prompt: the game's own update
-// popup when the page can show it, a system dialog otherwise. On "Update now" the app
-// downloads those files from the live site into its own data folder, checks every hash, and only
-// then switches to the new build and reloads. Nothing needs a GitHub token or a new installer.
+// live build is newer than the one this app runs, the player gets a prompt in the game's own update
+// popup. Only a manual check from the menu falls back to a system dialog, when the page never shows
+// it. On "Update now" the app downloads those files from the live site into its own data folder,
+// checks every hash, and only then switches to the new build and reloads. Nothing needs a GitHub
+// token or a new installer.
 //
 // A new installer is only needed when this shell itself (main.cjs, preload.cjs, Electron) changes.
 const { app, dialog, net } = require('electron');
@@ -19,6 +20,9 @@ const BASE_URL = DEV_BASE_URL || 'https://project-red-string.vercel.app';
 const CHECK_DELAY_MS = 5_000;
 const CHECK_INTERVAL_MS = 30 * 60 * 1000;
 const DOWNLOAD_CONCURRENCY = 6;
+const POPUP_POLL_MS = 500;
+const AUTO_POPUP_WAIT_MS = 60_000;
+const MANUAL_POPUP_WAIT_MS = 5_000;
 
 const COMMIT_RE = /^[0-9a-f]{7,40}$/i;
 const HASH_RE = /^[0-9a-f]{64}$/;
@@ -159,6 +163,14 @@ function startUpdates({ getWindow, getCurrent, applyBuild, getPopup = () => null
     if (popup) popup.send({ state, ...extra });
     else if (options) await show(options);
   };
+  /** The game's popup, once the page has it up (it may be loading or reloading); null after the wait. */
+  const waitForPopup = async (ms) => {
+    for (let waited = 0; ; waited += POPUP_POLL_MS) {
+      const popup = getPopup();
+      if (popup || waited >= ms) return popup;
+      await new Promise((resolve) => setTimeout(resolve, POPUP_POLL_MS));
+    }
+  };
 
   async function checkNow(manual = false) {
     if (busy) return;
@@ -183,7 +195,10 @@ function startUpdates({ getWindow, getCurrent, applyBuild, getPopup = () => null
       }
       if (!manual && dismissed.has(live.commit)) return;
 
-      const popup = getPopup();
+      // The game's own popup, always: a background check without it waits for the next round
+      // instead of showing a system dialog.
+      const popup = await waitForPopup(manual ? MANUAL_POPUP_WAIT_MS : AUTO_POPUP_WAIT_MS);
+      if (!popup && !manual) return;
       const accepted = popup
         ? await popup.ask()
         : (

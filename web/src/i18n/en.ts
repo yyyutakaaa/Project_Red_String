@@ -714,8 +714,6 @@ export const en = {
   'shell.manualText': "Download the new version from the download page and install it over this one. Your saves stay.",
   'shell.openPage': "Open download page",
   'shell.tryAgain': "Try again",
-  'update.kicker': "Telegram",
-  'update.stamp': "Urgent",
   'update.availableTitle': "A new version is ready",
   'update.availableText': "The update takes a few seconds and then the game reloads. Your saves and your case stay where they are.",
   'update.now': "Update now",

@@ -31,11 +31,14 @@ async function asDesktop(page: Page, bridge: Record<string, unknown>) {
       // The updater's side of the popup: the test sends messages, the page answers.
       const answers: string[] = [];
       let send: ((m: unknown) => void) | null = null;
-      const w = window as unknown as { __updateAnswers: string[]; __sendUpdate: (m: unknown) => void };
+      const w = window as unknown as { __updateAnswers: string[]; __sendUpdate: (m: unknown) => void; __updateReady: number };
       w.__updateAnswers = answers;
       w.__sendUpdate = (m) => send?.(m);
+      w.__updateReady = 0;
+      // Each subscription is the page saying "the popup is up" to the shell.
       full.onUpdate = (cb: (m: unknown) => void) => {
         send = cb;
+        w.__updateReady += 1;
         return () => undefined;
       };
       full.answerUpdate = (choice: string) => answers.push(choice);
@@ -141,6 +144,28 @@ test('the updater speaks through the game popup: ready, update now, downloading,
   await expect(popup).toContainText('hash mismatch');
   await popup.getByRole('button', { name: 'Keep playing' }).click();
   await expect(popup).toHaveCount(0);
+});
+
+test('the popup says it is up again after every screen change, and speaks the game language', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('redstring.language', 'nl'));
+  await asDesktop(page, { platform: 'darwin', withUpdates: true, shell: { fingerprint: currentShellFingerprint(), version: '1.0.7' } });
+  await page.goto('/');
+  await expect(page.getByTestId('menu-story-cases')).toBeVisible();
+  const ready = () => page.evaluate(() => (window as unknown as { __updateReady: number }).__updateReady);
+  const before = await ready();
+  expect(before).toBeGreaterThan(0);
+
+  // An in-game navigation: older shells forget the popup here, so it has to announce itself again.
+  await page.evaluate(() => {
+    history.pushState({}, '', '/settings');
+    dispatchEvent(new PopStateEvent('popstate'));
+  });
+  await expect.poll(ready, { timeout: 2_000 }).toBeGreaterThan(before);
+
+  await page.evaluate(() => (window as unknown as { __sendUpdate: (x: unknown) => void }).__sendUpdate({ state: 'available' }));
+  const popup = page.getByTestId('update-popup');
+  await expect(popup).toContainText('Er ligt een nieuwe versie klaar');
+  await expect(popup.getByTestId('update-now')).toHaveText('Nu bijwerken');
 });
 
 test('an app that can install itself downloads the new one in the game, with a progress bar', async ({ page }) => {

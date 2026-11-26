@@ -656,8 +656,6 @@
   "shell.manualText": "Lade die neue Version über die Download-Seite herunter und installiere sie über diese. Deine Spielstände bleiben.",
   "shell.openPage": "Download-Seite öffnen",
   "shell.tryAgain": "Erneut versuchen",
-  "update.kicker": "Telegramm",
-  "update.stamp": "Dringend",
   "update.availableTitle": "Eine neue Version liegt bereit",
   "update.availableText": "Das Update dauert ein paar Sekunden, dann lädt das Spiel neu. Deine Spielstände und dein Fall bleiben, wo sie sind.",
   "update.now": "Jetzt aktualisieren",

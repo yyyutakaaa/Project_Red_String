@@ -656,8 +656,6 @@
   "shell.manualText": "Téléchargez la nouvelle version depuis la page de téléchargement et installez-la par-dessus celle-ci. Vos sauvegardes restent.",
   "shell.openPage": "Ouvrir la page de téléchargement",
   "shell.tryAgain": "Réessayer",
-  "update.kicker": "Télégramme",
-  "update.stamp": "Urgent",
   "update.availableTitle": "Une nouvelle version est prête",
   "update.availableText": "La mise à jour prend quelques secondes, puis le jeu se recharge. Vos sauvegardes et votre affaire restent où elles sont.",
   "update.now": "Mettre à jour",

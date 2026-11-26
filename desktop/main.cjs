@@ -246,7 +246,12 @@ function createWindow(origin) {
 
   mainWindow.once('ready-to-show', () => mainWindow.show());
   // A reload takes the popup with it: the page has to say it is ready again, and an open question is "later".
-  mainWindow.webContents.on('did-start-loading', () => {
+  // Only a new document counts: the game's own screen changes (history.pushState) also fire
+  // did-start-loading, and must not send the next update to a system dialog.
+  mainWindow.webContents.on('did-start-navigation', (details, legacyUrl, legacyInPlace, legacyMainFrame) => {
+    const sameDocument = typeof details?.isSameDocument === 'boolean' ? details.isSameDocument : Boolean(legacyInPlace);
+    const mainFrame = typeof details?.isMainFrame === 'boolean' ? details.isMainFrame : Boolean(legacyMainFrame);
+    if (sameDocument || !mainFrame) return;
     popupReady = false;
     answerUpdate(false);
   });
@@ -341,8 +346,8 @@ function buildMenu(checkForUpdates) {
 ipcMain.on('red-string:theme', (_event, theme) => applyTheme(theme));
 
 // ---------------------------------------------------------------------------
-// The game's own update popup. A game build that has it says so once its page is up; until then (or
-// with an older build) the updater uses system dialogs.
+// The game's own update popup. A game build that has it says so once its page is up; the updater
+// waits for it, and only a manual check with a page that never answers falls back to a system dialog.
 let popupReady = false;
 let pendingAnswer = null;
 function answerUpdate(accepted) {

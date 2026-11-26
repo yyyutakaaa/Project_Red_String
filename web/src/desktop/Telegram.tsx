@@ -1,8 +1,8 @@
 // The game's own popup for news about the game itself: an update ready, downloading, done or failed,
-// or a new app to install. It looks like a telegram slid onto the desk, not like a system dialog.
+// or a new app to install. A panel from the strips, like every other dialog in the game: ink line,
+// paper rim, hard shadow, the title in a yellow narration caption. Never a system dialog.
 import { useEffect, useId, useRef, type ReactNode } from 'react';
 import styles from './Telegram.module.css';
-import { t } from '../i18n/index.ts';
 
 interface TelegramProps {
   title: string;
@@ -42,11 +42,7 @@ export function Telegram({ title, children, actions, progress = null, onClose, t
         onClose?.();
       }}
     >
-      <div className={`paper ${styles.slip}`}>
-        <p className={styles.kicker} aria-hidden="true">
-          <span>{t('update.kicker')}</span>
-          <span>RED STRING</span>
-        </p>
+      <div className={styles.panel}>
         <h2 id={titleId} className={styles.title}>
           {title}
         </h2>
@@ -59,9 +55,6 @@ export function Telegram({ title, children, actions, progress = null, onClose, t
           </div>
         )}
         {actions && <div className={styles.actions}>{actions}</div>}
-        <span className={`stamp ${styles.stamp}`} aria-hidden="true">
-          {t('update.stamp')}
-        </span>
       </div>
     </dialog>
   );

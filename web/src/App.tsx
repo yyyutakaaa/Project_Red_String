@@ -105,6 +105,8 @@ const router = createBrowserRouter([
   },
 ]);
 
+const subscribeNavigation = (callback: () => void) => router.subscribe(() => callback());
+
 export function App() {
   return (
     <>
@@ -113,7 +115,7 @@ export function App() {
         <RouterProvider router={router} />
       </Boot>
       <TooSmall />
-      <UpdatePopup />
+      <UpdatePopup subscribeNavigation={subscribeNavigation} />
     </>
   );
 }

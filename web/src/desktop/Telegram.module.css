@@ -10,59 +10,58 @@
   background: var(--scrim);
   backdrop-filter: blur(3px);
 }
-.dialog[open] .slip {
-  animation: slide-in 520ms var(--ease-out) both;
+.dialog[open] .panel {
+  animation: drop-in 420ms var(--ease-out) both;
 }
-@keyframes slide-in {
+@keyframes drop-in {
   from {
     opacity: 0;
-    transform: translateY(28px) rotate(-3deg);
+    transform: translateY(22px);
   }
   to {
     opacity: 1;
-    transform: rotate(-0.8deg);
+    transform: none;
   }
 }
 
-/* The telegram: a paper slip with a ruled header and a stamp. */
-.slip {
+/* A comic panel: solid fill, ink line, paper rim, hard offset shadow, square corners. */
+.panel {
   position: relative;
   padding: var(--space-5) var(--space-5) var(--space-4);
-  transform: rotate(-0.8deg);
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(42, 34, 24, 0.25);
+  background: var(--comic-dots), linear-gradient(180deg, var(--comic-fill-2), var(--comic-fill));
+  border: var(--comic-line);
+  border-radius: 2px;
+  box-shadow: 0 0 0 2px var(--paper-rim), 8px 9px 0 2px rgba(0, 0, 0, 0.75);
+  color: var(--text);
 }
-.kicker {
-  display: flex;
-  justify-content: space-between;
-  margin: 0 0 var(--space-3);
-  padding-bottom: var(--space-2);
-  border-bottom: 3px double rgba(42, 34, 24, 0.45);
-  font-family: var(--font-type);
-  font-weight: 700;
-  font-size: var(--fs-xs);
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--paper-ink-muted);
-}
+/* The title is a narration caption from the strips: a yellow box with an ink line, a little askew,
+   pinned over the panel's top edge. */
 .title {
-  margin: 0 0 var(--space-3);
-  padding-right: 5.5rem;
-  font-size: var(--fs-xl);
-  line-height: 1.2;
-  color: var(--paper-ink);
+  display: inline-block;
+  max-width: 100%;
+  margin: calc(-1 * var(--space-5) - 1.1rem) 0 var(--space-4) calc(-1 * var(--space-2));
+  padding: 0.25em 0.65em 0.18em;
+  background: var(--caption-bg);
+  color: var(--caption-ink);
+  border: var(--comic-line);
+  border-radius: 2px;
+  box-shadow: var(--comic-drop);
+  rotate: -1.2deg;
+  font-size: var(--fs-lg);
+  line-height: 1.25;
 }
 .body {
   font-family: var(--font-type);
   font-size: var(--fs-sm);
   line-height: 1.6;
-  color: var(--paper-ink);
+  color: var(--text);
 }
 .body p {
   margin: 0 0 var(--space-2);
 }
 .detail {
   font-size: var(--fs-xs);
-  color: var(--paper-ink-muted);
+  color: var(--text-muted);
   overflow-wrap: anywhere;
 }
 
@@ -93,8 +92,8 @@
   height: 1.1rem;
   margin-top: -0.55rem;
   border-radius: 50%;
+  border: 2px solid var(--ink-line);
   background: radial-gradient(circle at 35% 35%, #f6a3a3, var(--red-500) 55%, var(--red-700));
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.35);
 }
 .pinEnd {
   left: auto;
@@ -109,20 +108,6 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: var(--space-2);
+  gap: var(--space-3);
   margin-top: var(--space-4);
-  padding-top: var(--space-3);
-  border-top: 1px dashed rgba(42, 34, 24, 0.35);
-}
-
-.stamp {
-  position: absolute;
-  top: 3.6rem;
-  right: var(--space-4);
-  font-size: var(--fs-sm);
-  color: var(--red-600);
-  opacity: 0.75;
-  transform: rotate(8deg);
-  mix-blend-mode: multiply;
-  pointer-events: none;
 }
