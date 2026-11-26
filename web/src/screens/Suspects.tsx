@@ -1,8 +1,7 @@
 import type { CSSProperties } from 'react';
-import { Link } from 'react-router-dom';
 import { ScreenFrame } from '../components/ScreenFrame.tsx';
 import { ButtonLink } from '../components/Button.tsx';
-import { Figure, Portrait } from '../components/Portrait.tsx';
+import { Portrait } from '../components/Portrait.tsx';
 import { casePath, useCaseContext } from '../hooks/useCase.ts';
 import { useAmbience } from '../hooks/useAmbience.ts';
 import { ambienceForBackground } from '../audio/audio.ts';
@@ -10,9 +9,6 @@ import { getConversation } from '../store/game.ts';
 import styles from './Suspects.module.css';
 import { useT } from '../i18n/index.ts';
 import { rich } from '../i18n/rich.tsx';
-
-/** Height marks painted on the lineup wall behind each portrait. */
-const HEIGHT_MARKS = ['6′6″', '6′', '5′6″', '5′', '4′6″'];
 
 export function Suspects() {
   const { caseFile, caseKey, progress } = useCaseContext();
@@ -33,56 +29,6 @@ export function Suspects() {
         </>
       }
     >
-      <p className={styles.lede}>
-        {t('lineup.lede', { count: caseFile.suspects.length })}
-      </p>
-
-      {/* The lineup room, seen through the one-way glass. A picture of the list below; wide screens only. */}
-      <div className={styles.room} aria-hidden="true">
-        <div className={styles.roomMarks}>
-          {HEIGHT_MARKS.map((m) => (
-            <span key={m}>{m}</span>
-          ))}
-        </div>
-        <div className={`${styles.roomMarks} ${styles.roomMarksRight}`}>
-          {HEIGHT_MARKS.map((m) => (
-            <span key={m}>{m}</span>
-          ))}
-        </div>
-        <ul className={styles.row}>
-          {caseFile.suspects.map((s, i) => {
-            const conv = getConversation(progress, caseFile, s.id);
-            // People are not all the same height. Stable per suspect.
-            const tall = 0.9 + ((s.id.length * 7 + s.age) % 12) / 100;
-            return (
-              <li key={s.id} className={styles.stand} data-mood={conv.mood} style={{ '--tall': tall, '--tint': s.color } as CSSProperties}>
-                <span className={styles.roomBeam} />
-                <span className={styles.roomShade} />
-                <Link to={casePath(caseKey, `interrogate/${s.id}`)} tabIndex={-1} className={styles.figureLink}>
-                  <svg viewBox="0 0 200 240" className={styles.figure} focusable="false">
-                    <defs>
-                      <linearGradient id={`lineup-${s.id}`} x1="0" y1="0" x2="1" y2="0.2">
-                        <stop offset="0%" stopColor="#04060a" />
-                        <stop offset="70%" stopColor="#0b0f18" />
-                        <stop offset="100%" stopColor="#1d2638" />
-                      </linearGradient>
-                    </defs>
-                    <Figure kind={s.portrait} fill={`url(#lineup-${s.id})`} rim="#f2cd7a" />
-                  </svg>
-                  <span className={styles.slate}>
-                    <span className={styles.slateNo}>{t('lineup.no', { n: i + 1 })}</span>
-                    <span className={styles.slateName}>{s.name}</span>
-                  </span>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-        <div className={styles.floor} />
-        <div className={styles.glass} />
-        <p className={styles.roomLabel}>{t('lineup.glass')}</p>
-      </div>
-
       <ol className={styles.lineup}>
         {caseFile.suspects.map((s, i) => {
           const conv = getConversation(progress, caseFile, s.id);
@@ -95,20 +41,12 @@ export function Suspects() {
           const pct = max > 0 ? (left / max) * 100 : 0;
           return (
             <li key={s.id} className={styles.card} data-mood={conv.mood} data-spent={left === 0 || undefined} style={{ '--delay': `${i * 70}ms` } as CSSProperties}>
-              <div className={styles.wall}>
-                <div className={styles.marks} aria-hidden="true">
-                  {HEIGHT_MARKS.map((m) => (
-                    <span key={m}>{m}</span>
-                  ))}
-                </div>
-                <div className={styles.lamp} aria-hidden="true" />
-                <Portrait suspect={s} mood={conv.mood} size={168} showInitials={false} className={styles.portrait} />
-                <span className={styles.placard} aria-hidden="true">
+              {/* A comic panel: the painted portrait, with the number and the name in caption boxes. */}
+              <div className={styles.panel}>
+                <Portrait suspect={s} mood={conv.mood} size={320} showInitials={false} decorative className={styles.portrait} />
+                <span className={styles.number} aria-hidden="true">
                   {t('lineup.no', { n: i + 1 })}
                 </span>
-              </div>
-
-              <div className={styles.body}>
                 <header className={styles.head}>
                   <h2 className={styles.name}>{s.name}</h2>
                   <p className={styles.role}>
@@ -116,7 +54,9 @@ export function Suspects() {
                     <span className={styles.age}>{t('lineup.age', { age: s.age })}</span>
                   </p>
                 </header>
+              </div>
 
+              <div className={styles.body}>
                 <dl className={styles.stats}>
                   <div className={styles.stat}>
                     <dt>{t('lineup.mood')}</dt>

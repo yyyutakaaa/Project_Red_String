@@ -151,141 +151,74 @@
 }
 .dossier > * { flex-shrink: 0; }
 
-/* The hanging lamp over the table. Decorative; flicker is neutralised under reduced motion. */
-.lamp {
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 16rem;
-  background: radial-gradient(ellipse 70% 100% at 50% -10%, var(--lamp-glow-strong), transparent 70%);
-  pointer-events: none;
-  animation: lamp-flicker 9s linear infinite;
-}
-
+/* The suspect as a comic panel: the painted portrait in an ink border on a paper margin, the name
+   in a caption box like the strips. The mood shows as a glow at the panel's edge. */
 .portraitSlot {
-  --beam: 242, 205, 122;
-  --swing: 6.5s;
+  --glow: transparent;
   position: relative;
-  display: flex;
-  justify-content: center;
-  padding-top: 3.4rem;
+  height: clamp(15rem, 44vh, 34rem);
+  border: 2px solid var(--ink-950);
+  outline: 5px solid var(--paper-100);
+  outline-offset: 0;
+  margin: 5px 5px var(--space-2);
+  overflow: hidden;
+  background: var(--ink-950);
+  box-shadow: 0 0 0 7px var(--ink-950), 0 14px 32px rgba(0, 0, 0, 0.5);
 }
-.portraitSlot[data-mood='nervous'] { --beam: 255, 196, 92; --swing: 4.2s; }
-.portraitSlot[data-mood='angry'] { --beam: 255, 96, 84; --swing: 2.8s; }
-.portraitSlot[data-mood='broken'] { --beam: 176, 158, 226; --swing: 9s; }
-.lamp[data-mood='angry'] { background: radial-gradient(ellipse 70% 100% at 50% -10%, rgba(224, 74, 83, 0.4), transparent 70%); }
-.lamp[data-mood='broken'] { background: radial-gradient(ellipse 70% 100% at 50% -10%, rgba(150, 130, 210, 0.28), transparent 70%); }
-
-/* The hanging lamp. It pivots where the cord meets the ceiling. */
-.hanging {
+.portraitSlot[data-mood='nervous'] { --glow: rgba(255, 196, 92, 0.5); }
+.portraitSlot[data-mood='angry'] { --glow: rgba(255, 80, 70, 0.6); }
+.portraitSlot[data-mood='broken'] { --glow: rgba(176, 158, 226, 0.55); }
+.portraitSlot::after {
+  content: '';
   position: absolute;
-  left: 50%;
-  top: calc(var(--space-5) * -1);
-  width: 0;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 34px var(--glow);
+  transition: box-shadow 600ms;
+}
+.portrait {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  border-radius: 0;
+  box-shadow: none;
+}
+.portrait img,
+.portrait svg {
+  width: 100%;
   height: 100%;
-  transform-origin: 50% 0;
-  animation: lamp-swing var(--swing) ease-in-out infinite alternate;
-  pointer-events: none;
-  z-index: 2;
+  aspect-ratio: auto;
+  object-fit: cover;
+  object-position: 50% 12%;
 }
-.cord {
-  position: absolute;
-  left: -1px;
-  top: 0;
-  width: 2px;
-  height: 3.3rem;
-  background: #05070c;
-}
-.shade {
-  position: absolute;
-  left: -2.1rem;
-  top: 3.2rem;
-  width: 4.2rem;
-  height: 1.5rem;
-  clip-path: polygon(34% 0, 66% 0, 100% 100%, 0 100%);
-  background: linear-gradient(180deg, #1c222e 0%, #0a0d14 70%, rgb(var(--beam)) 71%, rgb(var(--beam)) 100%);
-  filter: drop-shadow(0 6px 14px rgba(var(--beam), 0.55));
-  transition: background 600ms;
-}
-.beam {
-  position: absolute;
-  left: -14rem;
-  top: 4.55rem;
-  width: 28rem;
-  height: calc(100% + 1rem);
-  clip-path: polygon(44% 0, 56% 0, 100% 100%, 0 100%);
-  background: linear-gradient(180deg, rgba(var(--beam), 0.5) 0%, rgba(var(--beam), 0.16) 45%, rgba(var(--beam), 0.03) 100%);
-  mix-blend-mode: screen;
-  transition: background 600ms;
-}
-.portraitSlot[data-mood='nervous'] .beam { animation: beam-nervous 1.7s linear infinite; }
-.portraitSlot[data-mood='broken'] .beam { opacity: 0.6; }
-@keyframes lamp-swing {
-  from { transform: rotate(-5deg); }
-  to { transform: rotate(5deg); }
-}
-@keyframes beam-nervous {
-  0%, 100% { opacity: 1; }
-  18% { opacity: 0.7; }
-  22% { opacity: 1; }
-  61% { opacity: 0.78; }
-  66% { opacity: 0.95; }
-}
-
-/* Cigarette smoke crossing the light. */
-.wisps {
-  position: absolute;
-  left: 18%;
-  bottom: 12%;
-  pointer-events: none;
-  z-index: 3;
-}
-.wisps span {
-  position: absolute;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: rgba(220, 226, 240, 0.2);
-  filter: blur(9px);
-  opacity: 0;
-  animation: wisp 9s ease-out infinite;
-}
-.wisps span:nth-child(2) { animation-delay: 3s; }
-.wisps span:nth-child(3) { animation-delay: 6s; }
-@keyframes wisp {
-  0% { transform: translate(0, 0) scale(0.5); opacity: 0; }
-  15% { opacity: 0.8; }
-  100% { transform: translate(70px, -250px) scale(4.5); opacity: 0; }
-}
-@media (max-width: 899px) {
-  .portraitSlot { padding-top: 2.2rem; }
-  .hanging { transform: scale(0.62); animation: none; }
-  .wisps { display: none; }
-}
+.portraitSlot[data-mood='broken'] .portrait { filter: saturate(0.6); }
 
 .identity {
-  position: relative;
-  text-align: center;
-}
-
-.kicker {
-  margin: 0 0 var(--space-1);
-  font-family: var(--font-type);
-  font-size: var(--fs-xs);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--lamp-300);
+  position: absolute;
+  z-index: 1;
+  left: var(--space-2);
+  right: var(--space-2);
+  bottom: var(--space-2);
+  padding: 0.35rem 0.6rem 0.45rem;
+  border: 2px solid var(--ink-950);
+  background: #f3dc9a;
+  color: #15110a;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.55);
 }
 
 .name {
-  margin: 0 0 var(--space-1);
-  font-size: var(--fs-xl);
+  margin: 0 0 0.15rem;
+  font-size: var(--fs-lg);
+  line-height: 1.1;
+  color: #15110a;
 }
 
 .role {
   margin: 0;
-  font-size: var(--fs-sm);
-  line-height: 1.45;
-  color: var(--text-muted);
+  font-family: var(--font-type);
+  font-size: var(--fs-xs);
+  line-height: 1.4;
+  color: rgba(21, 17, 10, 0.82);
 }
 
 .gauges {
@@ -711,8 +644,9 @@
     max-height: none;
     overflow: hidden;
   }
-  .portraitSlot { grid-row: span 2; }
-  .identity { text-align: left; }
+  .portraitSlot { grid-row: span 2; width: 9rem; height: 11rem; }
+  .identity { padding: 0.2rem 0.4rem; }
+  .identity .role { display: none; }
   .gauges {
     grid-column: 2;
     display: grid;
@@ -732,8 +666,7 @@
 
 @media (max-width: 560px) {
   .dossier { grid-template-columns: minmax(0, 1fr); }
-  .portraitSlot { grid-row: auto; }
-  .identity { text-align: center; }
+  .portraitSlot { grid-row: auto; width: auto; }
   .gauges { grid-column: auto; }
   .msg { max-width: 94%; }
   .actions { margin-left: 0; width: 100%; }

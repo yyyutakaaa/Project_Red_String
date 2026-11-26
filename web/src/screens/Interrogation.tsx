@@ -615,27 +615,15 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
           // On wide screens the dossier scrolls on its own; make it reachable from the keyboard.
           tabIndex={narrow ? undefined : 0}
         >
-          <div className={styles.lamp} data-mood={conv.mood} aria-hidden="true" />
+          {/* The suspect as a comic panel: the painted portrait, the name in a caption box. */}
           <div className={styles.portraitSlot} data-mood={conv.mood}>
-            <Portrait suspect={suspect} size={narrow ? 128 : shortWindow ? 190 : 300} mood={conv.mood} />
-            {/* The lamp over the table: it swings, and its light takes the colour of the mood. */}
-            <div className={styles.hanging} aria-hidden="true">
-              <span className={styles.cord} />
-              <span className={styles.shade} />
-              <span className={styles.beam} />
+            <Portrait suspect={suspect} size={narrow ? 128 : 300} mood={conv.mood} className={styles.portrait} />
+            <div className={styles.identity}>
+              <h1 id={nameId} ref={headingRef} tabIndex={-1} className={styles.name}>
+                {suspect.name}
+              </h1>
+              <p className={styles.role}>{suspect.role}</p>
             </div>
-            <div className={styles.wisps} aria-hidden="true">
-              <span />
-              <span />
-              <span />
-            </div>
-          </div>
-          <div className={styles.identity}>
-            <p className={styles.kicker}>{t('interro.room')}</p>
-            <h1 id={nameId} ref={headingRef} tabIndex={-1} className={styles.name}>
-              {suspect.name}
-            </h1>
-            <p className={styles.role}>{suspect.role}</p>
           </div>
           <div className={styles.gauges}>
             <MoodIndicator mood={conv.mood} />
