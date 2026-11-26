@@ -9,7 +9,8 @@
 //   art/backdrops/<scene>/<layer>.(webp|png|jpg)    painted layers behind the screens, see src/backdrop/scenes.ts
 // The registry picks them up at build time; nothing else needs to change. See README "Replacing placeholder art".
 
-const files = import.meta.glob<string>('./art/**/*.{webp,png,jpg,jpeg,svg,ogg,mp3}', {
+// Folders named _oud hold retired art kept for going back; they are not built into the game.
+const files = import.meta.glob<string>(['./art/**/*.{webp,png,jpg,jpeg,svg,ogg,mp3}', '!./art/**/_oud/**'], {
   eager: true,
   query: '?url',
   import: 'default',
