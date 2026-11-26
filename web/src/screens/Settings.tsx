@@ -251,6 +251,11 @@ export function SettingsScreen() {
     { value: 'shown', label: t('settings.searchShown'), note: t('settings.searchShownNote') },
   ];
 
+  const partnerOptions: Array<{ value: 'on' | 'off'; label: string; note: string }> = [
+    { value: 'on', label: t('settings.partnerOn'), note: t('settings.partnerOnNote') },
+    { value: 'off', label: t('settings.partnerOff'), note: t('settings.partnerOffNote') },
+  ];
+
   const statsOptions: Array<{ value: 'on' | 'off'; label: string; note: string }> = [
     { value: 'on', label: t('settings.statsOn'), note: t('settings.statsOnNote') },
     { value: 'off', label: t('settings.statsOff'), note: t('settings.statsOffNote') },
@@ -472,6 +477,14 @@ export function SettingsScreen() {
               options={searchOptions}
               onChange={(v) => patch({ searchAid: v === 'shown' })}
               describedBy={searchNoteId}
+              stack
+            />
+            <RadioCards
+              legend={t('settings.partnerLegend')}
+              name="partner"
+              value={settings.partner ? 'on' : 'off'}
+              options={partnerOptions}
+              onChange={(v) => patch({ partner: v === 'on' })}
               stack
             />
           </section>

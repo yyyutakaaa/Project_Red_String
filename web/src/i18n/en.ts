@@ -872,7 +872,7 @@ export const en = {
   'tour.toBoardTitle': "Put it on the board",
   'tour.toBoardText': "You heard them both. Open the Board to put your theory together before you accuse anyone.",
   'tour.boardTitle': "Tie the red string",
-  'tour.boardText': "Drag a string from the pin of a suspect to a piece of evidence that points at them. Try Leonard Pike and the diary.",
+  'tour.boardText': "The board ties a string by itself for every link you found out. Now tie one yourself: drag from Margaret Finch to the switchboard log.",
   'tour.boardTip': "A string that holds needs evidence on one end and the right person on the other.",
   'tour.checkTitle': "Check your theory",
   'tour.checkText': "Press Check theory. It tells you how many of your strings hold up, but not which ones.",
@@ -889,6 +889,18 @@ export const en = {
   'tour.needEvidenceText': "You have not found everything yet. Go back to the Scenes and search the lobby and the office.",
   'tour.otherTitle': "The tutorial",
   'tour.otherText': "Use the buttons at the top to move between the scenes, the suspects, the board and your notebook.",
+  'partner.explains': "Ah. So that's the story behind “{evidence}”.",
+  'partner.contradicts': "Hold on. That's not the story {name} gave us.",
+  'partner.confirms': "That fits with what {name} told us.",
+  'partner.askAbout': "Maybe we should ask {name} about that.",
+  'partner.changedStory': "Hm. A minute ago {name} told it quite differently.",
+  'partner.holdingOut': "{name} is digging in. Keep at it, or come back with more.",
+  'partner.dismiss': "Close",
+  'settings.partnerLegend': "Sergeant Doyle",
+  'settings.partnerOn': "Thinks along",
+  'settings.partnerOnNote': "Now and then he says what strikes him. He never names the culprit.",
+  'settings.partnerOff': "Quiet",
+  'settings.partnerOffNote': "No remarks.",
 };
 
 export type MessageKey = keyof typeof en;

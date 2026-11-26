@@ -812,7 +812,7 @@
   "tour.toBoardTitle": "Ab an die Pinnwand",
   "tour.toBoardText": "Du hast beide gehört. Öffne die Pinnwand und setz deine Theorie zusammen, bevor du jemanden anklagst.",
   "tour.boardTitle": "Spann den roten Faden",
-  "tour.boardText": "Zieh einen Faden von der Nadel eines Verdächtigen zu einem Beweisstück, das auf ihn zeigt. Versuch es mit Leonard Pike und dem Tagebuch.",
+  "tour.boardText": "Die Tafel spannt von selbst einen Faden für jede Verbindung, die du herausgefunden hast. Spann jetzt selbst einen: zieh von Margaret Finch zum Buch der Telefonzentrale.",
   "tour.boardTip": "Ein Faden, der hält, hat an einem Ende einen Beweis und am anderen die richtige Person.",
   "tour.checkTitle": "Prüf deine Theorie",
   "tour.checkText": "Drück auf Theorie prüfen. Du erfährst, wie viele deiner Fäden halten, aber nicht welche.",
@@ -828,5 +828,17 @@
   "tour.needEvidenceTitle": "Erst die Beweise finden",
   "tour.needEvidenceText": "Du hast noch nicht alles gefunden. Geh zurück zu den Schauplätzen und durchsuche die Lobby und das Büro.",
   "tour.otherTitle": "Das Tutorial",
-  "tour.otherText": "Mit den Knöpfen oben kommst du zu den Schauplätzen, den Verdächtigen, der Pinnwand und deinem Notizbuch."
+  "tour.otherText": "Mit den Knöpfen oben kommst du zu den Schauplätzen, den Verdächtigen, der Pinnwand und deinem Notizbuch.",
+  "partner.explains": "Ah. Das steckt also hinter „{evidence}“.",
+  "partner.contradicts": "Moment mal. Das ist nicht die Geschichte, die {name} uns erzählt hat.",
+  "partner.confirms": "Das passt zu dem, was {name} uns erzählt hat.",
+  "partner.askAbout": "Vielleicht sollten wir {name} danach fragen.",
+  "partner.changedStory": "Hm. Vorhin hat {name} das noch ganz anders erzählt.",
+  "partner.holdingOut": "{name} bleibt stur. Bleib dran, oder komm mit mehr zurück.",
+  "partner.dismiss": "Schließen",
+  "settings.partnerLegend": "Sergeant Doyle",
+  "settings.partnerOn": "Denkt mit",
+  "settings.partnerOnNote": "Ab und zu sagt er, was ihm auffällt. Den Täter nennt er nie.",
+  "settings.partnerOff": "Still",
+  "settings.partnerOffNote": "Keine Bemerkungen."
 }

@@ -812,7 +812,7 @@
   "tour.toBoardTitle": "Mettez-le au tableau",
   "tour.toBoardText": "Vous les avez entendus tous les deux. Ouvrez le Tableau pour bâtir votre théorie avant d'accuser qui que ce soit.",
   "tour.boardTitle": "Tendez le fil rouge",
-  "tour.boardText": "Faites glisser un fil de l'épingle d'un suspect vers une preuve qui le désigne. Essayez Leonard Pike et le journal.",
+  "tour.boardText": "Le tableau tend tout seul un fil pour chaque lien que vous avez découvert. Tendez-en un vous-même : faites glisser de Margaret Finch vers le registre du standard.",
   "tour.boardTip": "Un fil qui tient a une preuve d'un côté et la bonne personne de l'autre.",
   "tour.checkTitle": "Vérifiez votre théorie",
   "tour.checkText": "Appuyez sur Vérifier la théorie. On vous dit combien de vos fils tiennent, mais pas lesquels.",
@@ -828,5 +828,17 @@
   "tour.needEvidenceTitle": "Trouvez d'abord les preuves",
   "tour.needEvidenceText": "Vous n'avez pas encore tout trouvé. Retournez aux Lieux et fouillez le hall et le bureau.",
   "tour.otherTitle": "Le tutoriel",
-  "tour.otherText": "Les boutons en haut vous mènent aux lieux, aux suspects, au tableau et à votre carnet."
+  "tour.otherText": "Les boutons en haut vous mènent aux lieux, aux suspects, au tableau et à votre carnet.",
+  "partner.explains": "Ah. Voilà donc ce qui se cache derrière « {evidence} ».",
+  "partner.contradicts": "Attendez. Ce n'est pas ce que {name} nous a raconté.",
+  "partner.confirms": "Ça colle avec ce que {name} nous a dit.",
+  "partner.askAbout": "On devrait peut-être en parler à {name}.",
+  "partner.changedStory": "Hum. Tout à l'heure, {name} racontait ça tout autrement.",
+  "partner.holdingOut": "{name} ne lâche rien. Insistez, ou revenez avec autre chose.",
+  "partner.dismiss": "Fermer",
+  "settings.partnerLegend": "Sergent Doyle",
+  "settings.partnerOn": "Réfléchit avec vous",
+  "settings.partnerOnNote": "De temps en temps, il dit ce qui le frappe. Il ne nomme jamais le coupable.",
+  "settings.partnerOff": "Silencieux",
+  "settings.partnerOffNote": "Aucune remarque."
 }

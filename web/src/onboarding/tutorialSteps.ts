@@ -99,7 +99,8 @@ export function tutorialStep(screen: CaseScreen, target: string | null, p: CaseP
       return toSuspects;
 
     case 'board':
-      if (p.board.links.length === 0) return { id: 'board', target: tid('pin-pike'), title: 'tour.boardTitle', text: 'tour.boardText', tip: 'tour.boardTip' };
+      // The board ties strings by itself for what was found out; the player still ties one of their own.
+      if (!p.board.links.some((l) => !l.auto)) return { id: 'board', target: tid('pin-margaret'), title: 'tour.boardTitle', text: 'tour.boardText', tip: 'tour.boardTip' };
       if (!p.board.lastCheck) return { id: 'check', target: tid('check-theory'), title: 'tour.checkTitle', text: 'tour.checkText' };
       return { id: 'to-accuse', target: nav('accuse'), title: 'tour.toAccuseTitle', text: 'tour.toAccuseText' };
 

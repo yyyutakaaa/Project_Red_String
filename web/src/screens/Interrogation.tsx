@@ -27,6 +27,7 @@ import { useAmbience } from '../hooks/useAmbience.ts';
 import { casePath, useCaseContext } from '../hooks/useCase.ts';
 import { ApiError, checkBackend, describeApiError, interrogate, type ConversationTurn } from '../lib/api.ts';
 import { track } from '../lib/telemetry.ts';
+import { remarkAfterReply } from '../store/partner.ts';
 import {
   addChatMessage,
   applyRevealedClues,
@@ -493,6 +494,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
           : {}),
       });
       if (final.challenge === 'caught') sfx('stamp');
+      if (!final.silent) remarkAfterReply(caseFile, caseKey, suspect.id, pressingId, effect, final.challenge, reply);
 
       if (final.silent) setSilentNotice(true);
       confirmedOnline.current = true;

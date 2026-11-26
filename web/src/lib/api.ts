@@ -50,6 +50,8 @@ export interface InterrogateRequest {
   parent_save_id?: string | null;
   /** "Catch a lie": something this suspect said, word for word, that the shown evidence is said to disprove. */
   challenge_statement?: string | null;
+  /** The language the player plays in; filled in by interrogate() when left out. */
+  language?: string;
 }
 
 export interface InterrogateFinal {
@@ -150,7 +152,8 @@ export async function interrogate(req: InterrogateRequest, handlers: StreamHandl
     res = await fetch(`${FUNCTIONS_URL}/interrogate`, {
       method: 'POST',
       headers: { ...headers(), Accept: 'text/event-stream' },
-      body: JSON.stringify(req),
+      // The suspect answers in the player's language (their sheet is English, which the model drifted into).
+      body: JSON.stringify({ language: useLanguage.getState().language, ...req }),
       signal: controller.signal,
     });
   } catch {
@@ -183,6 +186,43 @@ export async function interrogate(req: InterrogateRequest, handlers: StreamHandl
     if (err instanceof ApiError) throw err;
     if (controller.signal.aborted) throw new ApiError('timeout', 'The interrogation timed out.');
     throw new ApiError('offline', 'The connection to the interrogation room was lost.');
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+export interface PartnerRequest {
+  case_id: string;
+  device_id: string;
+  kind: string;
+  suspect_id?: string | null;
+  speaker_id?: string | null;
+  evidence_id?: string | null;
+  clue_id?: string | null;
+  said?: string | null;
+}
+
+/**
+ * One remark from the partner, in the player's language, or null when none came in time (no backend,
+ * offline, limits). The caller then uses the game's own line, so this never throws.
+ */
+export async function askPartner(req: PartnerRequest, timeoutMs = 7000): Promise<string | null> {
+  if (!BACKEND_CONFIGURED) return null;
+  if (typeof navigator !== 'undefined' && navigator.onLine === false) return null;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(`${FUNCTIONS_URL}/partner`, {
+      method: 'POST',
+      headers: headers(),
+      body: JSON.stringify({ ...req, language: useLanguage.getState().language }),
+      signal: controller.signal,
+    });
+    if (!res.ok) return null;
+    const body = (await res.json()) as { line?: unknown };
+    return typeof body.line === 'string' && body.line.trim() ? body.line.trim() : null;
+  } catch {
+    return null;
   } finally {
     clearTimeout(timer);
   }

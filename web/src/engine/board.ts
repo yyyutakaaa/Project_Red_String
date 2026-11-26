@@ -1,5 +1,5 @@
-import type { CaseFile } from '@shared/caseSchema.ts';
-import type { BoardLink, BoardPin, BoardState, LinkStatus, PinKind, TheoryCount } from './types.ts';
+import { parseCondition, type CaseFile, type Evidence } from '@shared/caseSchema.ts';
+import type { AutoReason, BoardLink, BoardPin, BoardState, CaseProgress, LinkStatus, PinKind, TheoryCount } from './types.ts';
 
 export const BOARD_WIDTH = 1200;
 export const BOARD_HEIGHT = 760;
@@ -74,8 +74,102 @@ export function addLink(board: BoardState, from: string, to: string): BoardState
   return { ...board, links: [...board.links, link] };
 }
 
+/** Cut a string. One the board tied by itself is remembered, so it is not tied again. */
 export function removeLink(board: BoardState, id: string): BoardState {
-  return { ...board, links: board.links.filter((l) => l.id !== id) };
+  const link = board.links.find((l) => l.id === id);
+  const links = board.links.filter((l) => l.id !== id);
+  if (!link?.auto) return { ...board, links };
+  const cutAuto = board.cutAuto?.includes(id) ? board.cutAuto : [...(board.cutAuto ?? []), id];
+  return { ...board, links, cutAuto };
+}
+
+// ---------------------------------------------------------------------------
+// Strings the board ties by itself. They record what the player found out, never the answer:
+// a piece of evidence that names someone, evidence a suspect handed over, evidence a suspect gave way
+// to, and evidence that led to more evidence. Whether a string holds is still for the player to test.
+
+const TITLES = new Set(['mr', 'mrs', 'miss', 'ms', 'dr', 'judge', 'doctor', 'sir', 'lady', 'lord']);
+
+/** Words that name one suspect and nobody or nothing else in the case (first names, unshared surnames). */
+function nameWords(c: CaseFile): Map<string, string> {
+  const taken = new Set<string>();
+  const words = (text: string) => text.toLowerCase().split(/[^a-z\u00c0-\u024f']+/).filter(Boolean);
+  for (const w of [...words(c.victim.name), ...words(c.title), ...c.rooms.flatMap((r) => words(r.name))]) taken.add(w);
+  const owners = new Map<string, Set<string>>();
+  for (const s of c.suspects) {
+    for (const w of words(s.name)) {
+      if (w.length < 3 || TITLES.has(w) || taken.has(w)) continue;
+      owners.set(w, (owners.get(w) ?? new Set()).add(s.id));
+    }
+  }
+  const out = new Map<string, string>();
+  for (const [w, ids] of owners) if (ids.size === 1) out.set(w, [...ids][0]!);
+  return out;
+}
+
+/**
+ * The suspects a piece of evidence names, by a first name or a surname only they carry. Evidence that
+ * names more than two of them (a guest list, a programme) is about everyone and ties nobody.
+ */
+export function suspectsNamedIn(c: CaseFile, e: Evidence): string[] {
+  const words = nameWords(c);
+  const text = ` ${e.name} ${e.description} `.toLowerCase();
+  const ids = new Set<string>();
+  for (const [w, id] of words) {
+    if (new RegExp(`(^|[^a-z\u00c0-\u024f])${w}('s)?([^a-z\u00c0-\u024f]|$)`).test(text)) ids.add(id);
+  }
+  return ids.size > 2 ? [] : [...ids];
+}
+
+export interface AutoLink {
+  from: string;
+  to: string;
+  reason: AutoReason;
+}
+
+/** Every string the board ties by itself for this run so far. Pass the English case. */
+export function autoLinks(c: CaseFile, p: Pick<CaseProgress, 'foundEvidence' | 'revealedClues' | 'conversations'>): AutoLink[] {
+  const found = new Set(p.foundEvidence);
+  const out = new Map<string, AutoLink>();
+  const add = (from: string, to: string, reason: AutoReason) => {
+    const id = linkId(from, to);
+    if (from !== to && !out.has(id)) out.set(id, { from, to, reason });
+  };
+  for (const s of c.suspects) {
+    for (const clue of s.revealable_clues) {
+      if (!p.revealedClues.includes(clue.clue_id)) continue;
+      const cond = parseCondition(clue.condition);
+      const gave = clue.evidence_id && found.has(clue.evidence_id) ? clue.evidence_id : null;
+      if (gave) add(s.id, gave, 'handed');
+      if (cond.kind === 'shown_evidence' && found.has(cond.evidenceId)) {
+        add(s.id, cond.evidenceId, 'reacted');
+        if (gave) add(cond.evidenceId, gave, 'led');
+      }
+    }
+    const conv = p.conversations[s.id];
+    for (const [e, effect] of Object.entries(conv?.evidenceEffects ?? {})) if (effect === 'gave' && found.has(e)) add(s.id, e, 'reacted');
+    for (const lie of conv?.caughtLies ?? []) if (found.has(lie.evidenceId)) add(s.id, lie.evidenceId, 'reacted');
+  }
+  for (const e of c.evidence) {
+    if (!found.has(e.id)) continue;
+    for (const s of suspectsNamedIn(c, e)) add(s, e.id, 'named');
+  }
+  return [...out.values()];
+}
+
+/** Tie the strings the board knows about that are not on it yet, unless the player cut them before. */
+export function syncAutoLinks(board: BoardState, links: readonly AutoLink[]): BoardState {
+  const pinIds = new Set(board.pins.map((p) => p.id));
+  const have = new Set(board.links.map((l) => l.id));
+  const cut = new Set(board.cutAuto ?? []);
+  const added: BoardLink[] = [];
+  for (const a of links) {
+    const id = linkId(a.from, a.to);
+    if (have.has(id) || cut.has(id) || !pinIds.has(a.from) || !pinIds.has(a.to)) continue;
+    have.add(id);
+    added.push({ id, from: a.from, to: a.to, status: null, auto: a.reason });
+  }
+  return added.length ? { ...board, links: [...board.links, ...added] } : board;
 }
 
 /**

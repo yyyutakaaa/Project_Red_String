@@ -17,7 +17,7 @@
     "check-secrets": "node scripts/check-secrets.mjs",
     "seed:cases": "node scripts/seed-cases.mjs",
     "translate": "node scripts/translate.ts",
-    "check:functions": "cd ../supabase/functions && npx -y deno@2 check --no-lock --config interrogate/deno.json interrogate/index.ts generate-case/index.ts account/index.ts events/index.ts translate/index.ts",
+    "check:functions": "cd ../supabase/functions && npx -y deno@2 check --no-lock --config interrogate/deno.json interrogate/index.ts generate-case/index.ts account/index.ts events/index.ts translate/index.ts partner/index.ts",
     "test:functions": "cd ../supabase/functions && npx -y deno@2 test --no-lock --config interrogate/deno.json --allow-env _shared/"
   },
   "dependencies": {

@@ -1,0 +1,64 @@
+/* Doyle's remark: a comic caption box in the bottom-left corner, clear of the toasts on the right. */
+.host {
+  position: fixed;
+  left: var(--space-4);
+  bottom: var(--space-4);
+  z-index: 880;
+  width: min(380px, calc(100vw - 2rem));
+  pointer-events: none;
+}
+.bubble {
+  pointer-events: auto;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-6) var(--space-3) var(--space-3);
+  background: var(--paper-100);
+  color: var(--paper-ink);
+  border: 2px solid var(--paper-ink);
+  border-radius: 4px;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.55);
+  font-family: var(--font-type);
+  font-size: var(--fs-sm);
+  line-height: 1.4;
+  animation: global(fade-up) var(--dur-med) var(--ease-out);
+}
+.face {
+  flex: none;
+  width: 52px;
+  height: 52px;
+  border: 2px solid var(--paper-ink);
+  border-radius: 50%;
+  object-fit: cover;
+}
+.text {
+  margin: 0;
+  flex: 1;
+}
+.name {
+  display: block;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: var(--fs-xs);
+  color: #8c1c1c;
+}
+.close {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.7;
+}
+.close:hover,
+.close:focus-visible {
+  opacity: 1;
+}

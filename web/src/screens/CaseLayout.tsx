@@ -9,6 +9,7 @@ import { casePath, resolveCase, type CaseContextValue } from '../hooks/useCase.t
 import { startCaseClock, stopCaseClock, useGame, useProgress } from '../store/game.ts';
 import { STORY_ORDER, isStoryUnlocked, isTutorial, type StoryCaseId } from '../engine/caseLoader.ts';
 import { TutorialGuide } from '../onboarding/TutorialGuide.tsx';
+import { PartnerBubble } from '../components/PartnerBubble.tsx';
 import { continueSlot } from '../engine/save.ts';
 import { track } from '../lib/telemetry.ts';
 import { useLanguage, useT } from '../i18n/index.ts';
@@ -89,6 +90,7 @@ export function CaseLayout() {
       <Hud caseFile={resolved.caseFile} caseKey={caseKey} source={resolved.source} progress={progress} />
       <Outlet context={ctx} />
       {isTutorial(caseKey) && <TutorialGuide caseKey={caseKey} progress={progress} />}
+      <PartnerBubble caseKey={caseKey} />
     </>
   );
 }

@@ -22,6 +22,8 @@ export interface Settings {
   shareStats: boolean;
   /** Mark the places worth searching in a room. Off: the room is only a drawing and every click is answered. */
   searchAid: boolean;
+  /** Sergeant Doyle thinks along out loud (store/partner.ts). */
+  partner: boolean;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -35,6 +37,7 @@ export const DEFAULT_SETTINGS: Settings = {
   discordPresence: 'full',
   shareStats: true,
   searchAid: false,
+  partner: true,
 };
 
 const KEY = 'redstring.settings';
@@ -69,6 +72,7 @@ export function parseSettings(raw: string | null): Settings {
         : DEFAULT_SETTINGS.discordPresence,
       shareStats: typeof d.shareStats === 'boolean' ? d.shareStats : DEFAULT_SETTINGS.shareStats,
       searchAid: typeof d.searchAid === 'boolean' ? d.searchAid : DEFAULT_SETTINGS.searchAid,
+      partner: typeof d.partner === 'boolean' ? d.partner : DEFAULT_SETTINGS.partner,
     };
   } catch {
     return { ...DEFAULT_SETTINGS };
@@ -112,6 +116,7 @@ function persist(s: Settings): void {
     discordPresence: s.discordPresence,
     shareStats: s.shareStats,
     searchAid: s.searchAid,
+    partner: s.partner,
   };
   try {
     globalThis.localStorage?.setItem(KEY, JSON.stringify(data));

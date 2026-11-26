@@ -109,6 +109,10 @@ Evidence does not make a suspect confess on sight. Each suspect has a temperamen
 
 On the board, "Check theory" gives totals only (how many strings hold) and can be used three times per case. Having each string marked is the answer key and costs as much as a hint.
 
+The board ties some strings by itself, for links the player has found out rather than worked out: a piece of evidence that names a suspect (by a first name or a surname nobody else in the case carries), evidence a suspect handed over, evidence a suspect gave way to, and evidence that led to more evidence ([`autoLinks()`](web/src/engine/board.ts)). About half of them hold, so they are no answer key. A string the player cuts stays cut.
+
+Sergeant Doyle, the partner, thinks along out loud. When the player finds something out he may say one short thing about it: that a clue explains a piece of evidence ("Ah, so that explains the note"), that a find does not fit the story of someone the player has already heard, that someone named in it has not been asked yet ("Maybe we should ask her about that"), or that a suspect who just gave way told it differently a minute ago. The browser decides when he speaks and what about ([`engine/partner.ts`](web/src/engine/partner.ts)), and the [`partner`](supabase/functions/partner/index.ts) function puts it into words in the player's language. Its prompt holds only that one observation and facts the player has already seen, never the solution or anyone's secrets, so he cannot give the case away. Without the function he says the game's own line. Settings → Searching → Sergeant Doyle switches him off.
+
 API keys only exist as Supabase secrets. The frontend knows the Supabase URL and the publishable key and nothing else. `npm run check-secrets` scans the build to make sure.
 
 > The game used to have a "New Case" mode where an AI wrote a fresh case. That is gone. Every case is written by hand now, and `generate-case` only answers 410.
@@ -130,6 +134,7 @@ supabase/
   functions/_shared/core/     schema, validator, clue rules, prompt, reply parsing
   functions/_shared/          model client, limits, CORS, eval mode
   functions/interrogate/      the interrogation
+  functions/partner/          Sergeant Doyle's remarks
   functions/generate-case/    retired, answers 410
   migrations/                 tables, RLS and functions in Postgres
   seed/story_cases.sql        the cases as server data
@@ -249,7 +254,7 @@ It needs `RS_EVAL_TOKEN` in `tools/eval/.env.local`. That file is not in git. Th
 **Edge functions**, with the Supabase CLI after `npx supabase login`:
 
 ```powershell
-npx supabase functions deploy interrogate generate-case --project-ref hbwvybkpdqliusxheiyg --no-verify-jwt --use-api
+npx supabase functions deploy interrogate partner generate-case --project-ref hbwvybkpdqliusxheiyg --no-verify-jwt --use-api
 ```
 
 **Web app**, from the project folder:
@@ -358,7 +363,7 @@ Your own devices count too; leave them out with `where device_id <> '<your id>'`
 
 ## Languages
 
-The game plays in English, Dutch, French and German. Settings → Language switches it; on the first start the game picks the browser's language when it has it. The menus, the case files (briefings, rooms, evidence, clues, hints, endings) and the Discord status are translated. The suspects' sheets stay English: the model reads them in English and answers in the language the player types in, and showing evidence without typing sends the default line in the player's language.
+The game plays in English, Dutch, French and German. Settings → Language switches it; on the first start the game picks the browser's language when it has it. The menus, the case files (briefings, rooms, evidence, clues, hints, endings) and the Discord status are translated. The suspects' sheets stay English: the model reads them in English and answers in the player's language. Every question carries the language the game is played in, and the prompt says it twice (in the rules and right before the reply), because the model used to slip into the English of its sheet when evidence went on the table. Only a question plainly written in another language gets its answer in that language. Showing evidence without typing sends the default line in the player's language.
 
 - [`web/src/i18n/en.ts`](web/src/i18n/en.ts) holds every interface string, by key. Components read them with `t('key', { vars })`, counts with `tn('key', n)` (`key.one` / `key.other`), and sentences with an element inside with `rich()`.
 - Translations live in `web/src/i18n/locales/<lang>.json` and, per case, `web/src/cases/i18n/<lang>/<case>.json` ([`caseText.ts`](web/src/i18n/caseText.ts) lists which fields count). A missing string falls back to English. Each language is its own chunk, so a player downloads only theirs.

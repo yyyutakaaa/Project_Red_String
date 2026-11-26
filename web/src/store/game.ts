@@ -67,6 +67,12 @@ export const saveEvents = {
 };
 const emitWritten = (slot: SaveSlotData) => saveEvents.written.forEach((fn) => fn(slot));
 
+/** Listeners for what the player finds out. The partner (store/partner.ts) uses them to think along. */
+export const discoveryEvents = {
+  evidence: new Set<(c: CaseFile, caseKey: string, evidenceId: string) => void>(),
+  clues: new Set<(c: CaseFile, caseKey: string, clueIds: readonly string[], newEvidence: readonly string[]) => void>(),
+};
+
 export const useGame = create<GameStore>((set, get) => {
   const write = (slot: SaveSlotData) => {
     try {
@@ -248,6 +254,8 @@ export function examineHotspot(c: CaseFile, caseKey: string, roomId: string, hot
     G().pushToast(t('toast.evidence', { name: evidenceName(c, found) }), 'evidence');
     sfx('pickup');
     track('evidence_found', caseKey, { evidence: found, via: 'search', room: roomId });
+    const id = found;
+    discoveryEvents.evidence.forEach((fn) => fn(c, caseKey, id));
   }
   return found;
 }
@@ -280,6 +288,7 @@ export function applyRevealedClues(c: CaseFile, caseKey: string, clueIds: readon
   for (const ev of newEvidence) G().pushToast(t('toast.evidence', { name: evidenceName(c, ev) }), 'evidence');
   for (const id of added) track('clue_revealed', caseKey, { clue: id, suspect: clueById(c, id)?.suspect.id ?? null });
   for (const ev of newEvidence) track('evidence_found', caseKey, { evidence: ev, via: 'clue' });
+  if (added.length) discoveryEvents.clues.forEach((fn) => fn(c, caseKey, added, newEvidence));
   return added;
 }
 
@@ -337,6 +346,11 @@ export function setConversationState(
 
 export function setBoard(caseKey: string, board: BoardState, save = true): void {
   G().update(caseKey, (p) => ({ ...p, board }), save);
+}
+
+/** Remember that the partner remarked on this, so he does not say it twice in this run. */
+export function markPartnerSaid(caseKey: string, key: string): void {
+  G().update(caseKey, (p) => (p.partnerSaid?.includes(key) ? p : { ...p, partnerSaid: [...(p.partnerSaid ?? []), key] }));
 }
 
 /** Having the strings on the board marked costs as much as a hint. */

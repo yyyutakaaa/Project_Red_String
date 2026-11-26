@@ -78,3 +78,24 @@ describe('suspect prompt', () => {
     expect(failed).not.toContain('You have been caught in a lie');
   });
 });
+
+describe('the language the suspect answers in', () => {
+  it('tells the suspect the player\'s language, in the sheet and right before the reply', () => {
+    const prompt = buildSuspectPrompt({ caseFile: c, suspectId: 'nora', ctx, mood: 'calm', shownEvidence: null, language: 'nl' });
+    expect(prompt).toContain('Speak Dutch');
+    expect(buildUserTurn('Kijk hier eens naar.', null, 'nl')).toMatch(/\[Reply in Dutch, unless/);
+    // Earlier turns in the history carry no reminder.
+    expect(buildUserTurn('Kijk hier eens naar.', null)).not.toContain('Reply in');
+  });
+
+  it('falls back on the language of the question when the game does not say', () => {
+    const prompt = buildSuspectPrompt({ caseFile: c, suspectId: 'nora', ctx, mood: 'calm', shownEvidence: null });
+    expect(prompt).toContain('Answer in the same language the detective writes in');
+  });
+
+  it('keeps the training case strictly to the sheet', () => {
+    const tutorial = { ...c, id: 'tutorial' };
+    expect(buildSuspectPrompt({ caseFile: tutorial, suspectId: 'nora', ctx, mood: 'calm', shownEvidence: null })).toContain('# This is the training case');
+    expect(buildSuspectPrompt({ caseFile: c, suspectId: 'nora', ctx, mood: 'calm', shownEvidence: null })).not.toContain('training case');
+  });
+});

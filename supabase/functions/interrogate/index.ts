@@ -1,7 +1,7 @@
 // interrogate: one question to one suspect, answered in character and streamed over SSE.
 //
 // Request (POST JSON): { case_id, suspect_id, save_id, conversation, message,
-//                        shown_evidence_id?, device_id, challenge_statement? }
+//                        shown_evidence_id?, device_id, challenge_statement?, language? }
 // Response: text/event-stream with "delta" events ({ text }) and one "final" event:
 //   { reply, revealed_clue_ids, mood, patience_used, patience_max, silent, evidence_effect, challenge }
 // Errors before streaming starts are JSON: { error: { code, message } }.
@@ -10,7 +10,8 @@
 // _shared/core/suspectPrompt.ts). The server keeps the transcript, patience and shown evidence per save,
 // so the client's "conversation" is accepted for compatibility but never trusted for the prompt.
 import { z } from 'zod';
-import { buildSuspectPrompt, buildUserTurn, MAX_PLAYER_MESSAGE_CHARS } from '../_shared/core/suspectPrompt.ts';
+import { buildSuspectPrompt, buildUserTurn, MAX_PLAYER_MESSAGE_CHARS, TUTORIAL_CASE_ID } from '../_shared/core/suspectPrompt.ts';
+import { playLanguage } from '../_shared/core/language.ts';
 import { evidenceEffect, evidencePressure, guardedEvidence, resolveMood, resolveRevealedClues, normalizeMood, type ClueContext } from '../_shared/core/clues.ts';
 import { limitWords, parseReplyMeta, sanitizeReply, spokenPart, streamableText, visibleLength } from '../_shared/core/replyParsing.ts';
 import { DEFAULT_TEMPERAMENT, type Mood } from '../_shared/core/caseSchema.ts';
@@ -45,6 +46,8 @@ const Body = z.object({
   parent_save_id: z.string().refine(isUuid, 'parent_save_id must be a uuid').nullable().optional(),
   /** "Catch a lie": something this suspect said earlier, word for word, that the shown evidence is said to disprove. */
   challenge_statement: z.string().max(4000).nullable().optional(),
+  /** The language the player plays in (en, nl, fr, de); the suspect answers in it. */
+  language: z.string().max(8).nullable().optional(),
 });
 
 function pick<T>(items: readonly T[]): T {
@@ -79,6 +82,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   }
 
   const message = body.message.trim().slice(0, MAX_PLAYER_MESSAGE_CHARS);
+  const language = playLanguage(body.language);
   const shownId = body.shown_evidence_id ?? null;
   if (!message && !shownId) return errorResponse(req, 400, 'bad_request', 'Ask a question or show evidence.');
 
@@ -211,13 +215,14 @@ Deno.serve(async (req: Request): Promise<Response> => {
     mood: prevMood,
     shownEvidence: shown,
     challenge: challenging ? { statement, caught, truth: caughtLie !== null ? suspect.lies[caughtLie]?.truth : undefined } : null,
+    language,
   });
   const history: ChatMessage[] = historyTurns.map((t: StoredTurn) =>
     t.role === 'detective'
       ? { role: 'user', content: buildUserTurn(t.text, t.shown_evidence_id ? caseFile.evidence.find((e) => e.id === t.shown_evidence_id) ?? null : null) }
       : { role: 'assistant', content: t.text },
   );
-  const messages: ChatMessage[] = [{ role: 'system', content: system }, ...history, { role: 'user', content: buildUserTurn(spokenQuestion, shown) }];
+  const messages: ChatMessage[] = [{ role: 'system', content: system }, ...history, { role: 'user', content: buildUserTurn(spokenQuestion, shown, language) }];
   const clueIds = suspect.revealable_clues.map((c) => c.clue_id);
   const effect = evidenceEffect(suspect, ctx);
   const challengeResult = challenging ? (caught ? 'caught' : 'failed') : null;
@@ -235,7 +240,8 @@ Deno.serve(async (req: Request): Promise<Response> => {
     const started = performance.now();
     try {
       const result = await streamChat(
-        { model, messages, maxTokens, thinking, temperature: 0.8, reasoningEffort: config.suspectReasoningEffort(), timeoutMs: thinking ? THINKING_TIMEOUT_MS : PROVIDER_TIMEOUT_MS },
+        // The training case runs cooler, so its suspects keep to the script the guide is built on.
+        { model, messages, maxTokens, thinking, temperature: caseFile.id === TUTORIAL_CASE_ID ? 0.4 : 0.75, reasoningEffort: config.suspectReasoningEffort(), timeoutMs: thinking ? THINKING_TIMEOUT_MS : PROVIDER_TIMEOUT_MS },
         (piece) => {
           if (firstTokenMs === null) firstTokenMs = performance.now() - started;
           full += piece;

@@ -9,6 +9,7 @@ import {
   BOARD_HEIGHT,
   BOARD_WIDTH,
   addLink,
+  autoLinks,
   checkTheory,
   checksLeft,
   markTheory,
@@ -16,6 +17,7 @@ import {
   linkId,
   movePin,
   removeLink,
+  syncAutoLinks,
   syncPins,
 } from '../engine/board.ts';
 import { HINT_COST } from '../engine/scoring.ts';
@@ -447,14 +449,22 @@ export function Board() {
   const [confirmMark, setConfirmMark] = useState(false);
   const [announcement, setAnnouncement] = useState({ text: '', n: 0 });
 
-  // Every suspect and every found item gets a pin. Saved back when that changed anything.
+  // Every suspect and every found item gets a pin, and the strings the board ties by itself from what
+  // was found out are tied. Saved back when that changed anything.
+  const english = englishOf(caseFile);
   const board = useMemo(
-    () => syncPins(progress.board, caseFile, progress.foundEvidence),
-    [progress.board, caseFile, progress.foundEvidence],
+    () => syncAutoLinks(syncPins(progress.board, caseFile, progress.foundEvidence), autoLinks(english, progress)),
+    [progress, caseFile, english],
   );
   useEffect(() => {
-    if (board !== progress.board) setBoard(caseKey, board);
-  }, [board, progress.board, caseKey]);
+    if (board === progress.board) return;
+    // A string the board just tied by itself is drawn in like one the player ties.
+    const before = new Set(progress.board.links.map((l) => l.id));
+    const tiedNow = board.links.filter((l) => l.auto && !before.has(l.id));
+    setBoard(caseKey, board);
+    const last = tiedNow[tiedNow.length - 1];
+    if (last && !reducedMotion) setFresh(last.id);
+  }, [board, progress.board, caseKey, reducedMotion]);
 
   const shapes = useMemo(() => {
     const m = new Map<string, PinShape>();
@@ -478,7 +488,7 @@ export function Board() {
   /** The freshest board from the store (handlers may run between renders). */
   const latestBoard = (): BoardState => {
     const p = useGame.getState().slot?.progress[caseKey];
-    return p ? syncPins(p.board, caseFile, p.foundEvidence) : board;
+    return p ? syncAutoLinks(syncPins(p.board, caseFile, p.foundEvidence), autoLinks(english, p)) : board;
   };
 
   useEffect(() => {
@@ -781,7 +791,10 @@ export function Board() {
   };
 
   const onClear = () => {
-    setBoard(caseKey, { ...latestBoard(), links: [], lastCheckedAt: null, lastCheck: null });
+    const current = latestBoard();
+    // Strings the board tied itself stay down too, until something new turns up.
+    const cutAuto = [...new Set([...(current.cutAuto ?? []), ...current.links.filter((l) => l.auto).map((l) => l.id)])];
+    setBoard(caseKey, { ...current, links: [], cutAuto, lastCheckedAt: null, lastCheck: null });
     setConfirmClear(false);
     clearConnect();
     setFresh(null);

@@ -51,11 +51,19 @@ export interface BoardPin {
 
 export type LinkStatus = 'supported' | 'unsupported' | 'neutral' | null;
 
+/**
+ * Why the board tied a string by itself: the evidence names the suspect, the suspect handed it over,
+ * the suspect gave way when it was put on the table, or one piece of evidence led to the other.
+ */
+export type AutoReason = 'named' | 'handed' | 'reacted' | 'led';
+
 export interface BoardLink {
   id: string;
   from: string;
   to: string;
   status: LinkStatus;
+  /** Set on strings the board tied by itself from what the player found out. */
+  auto?: AutoReason;
 }
 
 export interface BoardState {
@@ -66,6 +74,8 @@ export interface BoardState {
   checksUsed?: number;
   /** The totals of the last check. */
   lastCheck?: TheoryCount | null;
+  /** Strings the board tied by itself that the player cut again: they stay cut. */
+  cutAuto?: string[];
 }
 
 export interface TheoryCount {
@@ -131,6 +141,8 @@ export interface CaseProgress {
   accusation: AccusationRecord | null;
   /** Time actually spent on this run, in ms: a case screen open, the window in view, the player not idle. */
   playMs?: number;
+  /** What the partner already remarked on in this run (keys from engine/partner.ts). */
+  partnerSaid?: string[];
 }
 
 export interface CompletionRecord {
