@@ -31,8 +31,14 @@ test('a new player picks a language, plays as a guest and starts the tutorial wi
   await expect(tutorial).toBeVisible();
   await page.getByTestId('first-run-play-tutorial').click();
 
-  // The tutorial case opens at its briefing, with the guide pointing at the button.
+  // The tutorial case opens with its comic strip; the guide waits until it is over.
   await expect(page).toHaveURL(/\/case\/tutorial\/briefing$/);
+  await expect(page.getByTestId('cutscene')).toBeVisible();
+  await expect(page.getByTestId('tour')).toHaveCount(0);
+  await page.getByTestId('cutscene-skip').click();
+  await expect(page.getByTestId('cutscene')).toHaveCount(0);
+
+  // Then the briefing, with the guide pointing at the button.
   const tour = page.getByTestId('tour');
   await expect(tour).toHaveAttribute('data-step', 'briefing');
   await expect(page.getByTestId('tour-title')).toHaveText('Dit is je dossier');

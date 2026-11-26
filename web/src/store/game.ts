@@ -214,6 +214,10 @@ export function clueById(c: CaseFile, clueId: string) {
 
 const G = () => useGame.getState();
 
+export function markCutsceneSeen(caseKey: string): void {
+  G().update(caseKey, (p) => (p.cutsceneSeen ? p : { ...p, cutsceneSeen: true }));
+}
+
 export function markBriefingSeen(caseKey: string): void {
   const before = G().slot?.progress[caseKey];
   G().update(caseKey, (p) => (p.briefingSeen ? p : { ...p, briefingSeen: true }));
