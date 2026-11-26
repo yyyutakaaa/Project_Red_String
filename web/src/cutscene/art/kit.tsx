@@ -2,7 +2,8 @@
 // Shared pieces for the comic art: the colours, the halftone and hatching patterns, and the frame
 // every layer is drawn in. Each layer is a 1600 x 900 drawing that covers the whole panel, so the
 // layers line up with each other wherever they are drawn.
-import type { ReactNode } from 'react';
+import { createContext, useContext, type ReactNode } from 'react';
+import type { Focus } from '../types.ts';
 
 export const W = 1600;
 export const H = 900;
@@ -31,10 +32,14 @@ export const C = {
 /** Ink outline, as in a comic: thick, round-jointed. */
 export const line = (w = 5) => ({ stroke: C.ink, strokeWidth: w, strokeLinejoin: 'round' as const, strokeLinecap: 'round' as const });
 
+/** Which part of the drawing a panel keeps in view (see Panel.focus). */
+export const FocusContext = createContext<Focus>('xMidYMid');
+
 /** One layer's drawing surface. */
 export function Art({ children, className }: { children: ReactNode; className?: string }) {
+  const focus = useContext(FocusContext);
   return (
-    <svg className={className} viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid slice" focusable="false" aria-hidden="true">
+    <svg className={className} viewBox={`0 0 ${W} ${H}`} preserveAspectRatio={`${focus} slice`} focusable="false" aria-hidden="true">
       {children}
     </svg>
   );

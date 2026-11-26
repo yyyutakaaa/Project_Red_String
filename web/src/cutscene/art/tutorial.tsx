@@ -125,24 +125,26 @@ function StreetHotel() {
       <ellipse cx="1260" cy="900" rx="150" ry="40" fill="url(#cs-lamp-pool)" />
 
       {/* The neon sign, standing out from the wall. */}
-      <ellipse cx="1205" cy="330" rx="150" ry="260" fill="url(#cs-neon-glow)" />
-      <path d="M1236 180h40M1236 480h40" stroke={C.ink} strokeWidth="8" />
-      <rect x="1160" y="130" width="78" height="400" rx="6" fill={C.ink} />
-      <rect x="1170" y="140" width="58" height="380" rx="4" fill="#24080b" />
-      {letters.map((l, i) => (
-        <text
-          key={i}
-          x="1199"
-          y={206 + i * 74}
-          textAnchor="middle"
-          className={i === 3 ? 'cs-neon cs-flicker' : 'cs-neon'}
-          fill={C.neon}
-          fontSize="62"
-          filter="url(#cs-glow)"
-        >
-          {l}
-        </text>
-      ))}
+      <g transform="translate(-90 0)">
+        <ellipse cx="1205" cy="330" rx="150" ry="260" fill="url(#cs-neon-glow)" />
+        <path d="M1236 180h40M1236 480h40" stroke={C.ink} strokeWidth="8" />
+        <rect x="1160" y="130" width="78" height="400" rx="6" fill={C.ink} />
+        <rect x="1170" y="140" width="58" height="380" rx="4" fill="#24080b" />
+        {letters.map((l, i) => (
+          <text
+            key={i}
+            x="1199"
+            y={206 + i * 74}
+            textAnchor="middle"
+            className={i === 3 ? 'cs-neon cs-flicker' : 'cs-neon'}
+            fill={C.neon}
+            fontSize="62"
+            filter="url(#cs-glow)"
+          >
+            {l}
+          </text>
+        ))}
+      </g>
     </Art>
   );
 }
@@ -150,24 +152,26 @@ function StreetHotel() {
 function StreetDetective() {
   return (
     <Art>
-      {/* The reflection in the wet street. */}
-      <g transform="translate(0 1760) scale(1 -1)" opacity="0.22">
-        <path d="M590 880l10-120h80l12 120z" fill={C.ink} />
-      </g>
-      <g>
-        <path d="M594 884l6-120h28l-2 120zM646 884l2-120h28l8 120z" fill={C.ink} />
-        <path d="M584 884h44v10h-48zM648 884h46l4 10h-50z" fill={C.ink} />
-        {/* The trench coat, belted, collar up. */}
-        <path d="M574 560c18-14 42-20 66-20s48 6 66 20l18 220c-28 18-56 24-84 24s-60-6-84-24z" fill={C.ink} />
-        <path d="M584 640h112" stroke={C.night3} strokeWidth="6" />
-        <path d="M600 548l40 26 40-26" fill="none" stroke={C.night3} strokeWidth="4" />
-        <path d="M708 566c8 60 12 140 16 214" fill="none" stroke={C.lamp} strokeWidth="4" opacity="0.85" />
-        {/* Head and hat, from behind. */}
-        <ellipse cx="640" cy="520" rx="30" ry="34" fill={C.ink} />
-        <path d="M578 504c10-10 34-14 62-14s52 4 62 14c-14 8-36 10-62 10s-48-2-62-10z" fill={C.ink} />
-        <path d="M608 494c0-26 12-40 32-40s32 14 32 40z" fill={C.ink} />
-        <path d="M610 486h60" stroke={C.night3} strokeWidth="5" />
-        <path d="M668 462c4 8 5 18 4 28M702 504c-10 5-24 8-40 9" fill="none" stroke={C.lamp} strokeWidth="3.5" opacity="0.9" />
+      <g transform="translate(110 0)">
+        {/* The reflection in the wet street. */}
+        <g transform="translate(0 1760) scale(1 -1)" opacity="0.22">
+          <path d="M590 880l10-120h80l12 120z" fill={C.ink} />
+        </g>
+        <g>
+          <path d="M594 884l6-120h28l-2 120zM646 884l2-120h28l8 120z" fill={C.ink} />
+          <path d="M584 884h44v10h-48zM648 884h46l4 10h-50z" fill={C.ink} />
+          {/* The trench coat, belted, collar up. */}
+          <path d="M574 560c18-14 42-20 66-20s48 6 66 20l18 220c-28 18-56 24-84 24s-60-6-84-24z" fill={C.ink} />
+          <path d="M584 640h112" stroke={C.night3} strokeWidth="6" />
+          <path d="M600 548l40 26 40-26" fill="none" stroke={C.night3} strokeWidth="4" />
+          <path d="M708 566c8 60 12 140 16 214" fill="none" stroke={C.lamp} strokeWidth="4" opacity="0.85" />
+          {/* Head and hat, from behind. */}
+          <ellipse cx="640" cy="520" rx="30" ry="34" fill={C.ink} />
+          <path d="M578 504c10-10 34-14 62-14s52 4 62 14c-14 8-36 10-62 10s-48-2-62-10z" fill={C.ink} />
+          <path d="M608 494c0-26 12-40 32-40s32 14 32 40z" fill={C.ink} />
+          <path d="M610 486h60" stroke={C.night3} strokeWidth="5" />
+          <path d="M668 462c4 8 5 18 4 28M702 504c-10 5-24 8-40 9" fill="none" stroke={C.lamp} strokeWidth="3.5" opacity="0.9" />
+        </g>
       </g>
     </Art>
   );

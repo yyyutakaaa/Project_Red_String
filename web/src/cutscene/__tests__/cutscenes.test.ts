@@ -11,8 +11,15 @@ describe('cutscenes', () => {
     expect(getStoryCase(entry!.cutscene.id)).not.toBeNull();
   });
 
+  it('every panel has its place in its page', () => {
+    for (const page of entry!.cutscene.pages) {
+      const names = new Set(page.areas.join(' ').split(/\s+/));
+      expect([...names].sort(), page.id).toEqual(page.panels.map((p) => p.id).sort());
+    }
+  });
+
   it('every layer has a drawing', () => {
-    for (const panel of entry!.cutscene.panels) {
+    for (const panel of entry!.cutscene.pages.flatMap((p) => p.panels)) {
       for (const layer of panel.layers) {
         if (layer.art === 'rain') continue;
         expect(entry!.art[layer.art], `${panel.id}/${layer.art}`).toBeTypeOf('function');
@@ -21,7 +28,7 @@ describe('cutscenes', () => {
   });
 
   it('every caption and balloon is written in every language and sits inside the panel', () => {
-    for (const panel of entry!.cutscene.panels) {
+    for (const panel of entry!.cutscene.pages.flatMap((p) => p.panels)) {
       for (const beat of panel.beats) {
         for (const l of AVAILABLE_LANGUAGES) expect(beat.text[l.code], `${panel.id}: ${beat.text.en} (${l.code})`).toBeTruthy();
         expect(beat.x).toBeGreaterThanOrEqual(0);
