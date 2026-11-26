@@ -165,7 +165,6 @@ export const en = {
   'briefing.found': "Found",
   'briefing.scene': "The scene",
   'briefing.persons': "Persons present",
-  'cutscene.skip': 'Skip',
   'briefing.signoff': "Walk the rooms, question the people in them, and bring back proof.",
   'briefing.return': "Return to the investigation",
   'briefing.begin': "Begin investigation",

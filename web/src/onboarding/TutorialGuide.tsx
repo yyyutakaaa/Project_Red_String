@@ -9,7 +9,6 @@ import { useReducedMotion } from '../store/settings.ts';
 import { useT } from '../i18n/index.ts';
 import { completeTutorial } from './onboarding.ts';
 import { tutorialStep } from './tutorialSteps.ts';
-import { useCutscenePlaying } from '../cutscene/index.ts';
 import styles from './TutorialGuide.module.css';
 
 const COLLAPSE_KEY = 'redstring.tour.collapsed';
@@ -94,13 +93,7 @@ function arrowPath(from: { x: number; y: number }, to: { x: number; y: number })
   return `M ${from.x} ${from.y} Q ${mx - (dy / len) * bend} ${my + (dx / len) * bend} ${to.x} ${to.y}`;
 }
 
-/** The guide waits while the case's cutscene plays. */
-export function TutorialGuide(props: { caseKey: string; progress: CaseProgress }) {
-  const playing = useCutscenePlaying((s) => s.playing);
-  return playing ? null : <Guide {...props} />;
-}
-
-function Guide({ caseKey, progress }: { caseKey: string; progress: CaseProgress }) {
+export function TutorialGuide({ caseKey, progress }: { caseKey: string; progress: CaseProgress }) {
   const { t } = useT();
   const location = useLocation();
   const reduced = useReducedMotion();

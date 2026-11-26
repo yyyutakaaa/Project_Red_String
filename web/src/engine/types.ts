@@ -116,8 +116,6 @@ export interface CaseProgress {
   startedAt: number;
   updatedAt: number;
   briefingSeen: boolean;
-  /** The comic strip before the briefing was played (or skipped) in this run. */
-  cutsceneSeen?: boolean;
   visitedRooms: string[];
   examinedHotspots: string[];
   foundEvidence: string[];
