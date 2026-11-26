@@ -120,6 +120,24 @@ test('a shell with a fixed window offers a window or full screen', async ({ page
   await expect(group.getByRole('radio', { name: /Window/ })).toBeChecked();
 });
 
+test('the full screen tile in the corner switches full screen on and off, and Settings follows it', async ({ page }) => {
+  await asDesktop(page, { platform: 'win32', withDisplay: true, shell: { fingerprint: currentShellFingerprint(), version: '1.0.7' } });
+  await page.goto('/');
+  await expect(page.getByTestId('menu-story-cases')).toBeVisible();
+  const tile = page.getByTestId('fullscreen-toggle');
+  await expect(tile).toHaveAccessibleName('Full screen (F11)');
+  await tile.click();
+  await expect(page.locator('html')).toHaveAttribute('data-fullscreen', '');
+  await expect(tile).toHaveAttribute('aria-pressed', 'true');
+  // Inside the game, not a reload: the shell only reports full screen when a page loads.
+  await page.getByRole('button', { name: /^settings$/i }).or(page.getByRole('link', { name: /^settings$/i })).first().click();
+  await page.getByTestId('settings-tab-display').click();
+  await expect(page.getByRole('group', { name: 'Display' }).getByRole('radio', { name: /Full screen/ })).toBeChecked();
+  await page.getByTestId('fullscreen-toggle').click();
+  await expect(page.getByRole('group', { name: 'Display' }).getByRole('radio', { name: /Window/ })).toBeChecked();
+  await expect(page.locator('html')).not.toHaveAttribute('data-fullscreen', '');
+});
+
 test('the updater speaks through the game popup: ready, update now, downloading, failed', async ({ page }) => {
   await asDesktop(page, { platform: 'darwin', withUpdates: true, shell: { fingerprint: currentShellFingerprint(), version: '1.0.7' } });
   await page.goto('/');

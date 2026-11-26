@@ -642,6 +642,8 @@
   "toastLabel.error": "Problem",
   "toastLabel.save": "Gespeichert",
   "toast.dismiss": "Meldung schließen",
+  "fullscreen.on": "Vollbild ({key})",
+  "fullscreen.off": "Vollbild beenden ({key})",
   "modal.close": "Dialog schließen",
   "notFound.title": "Falsche Adresse",
   "notFound.kicker": "Sackgasse",

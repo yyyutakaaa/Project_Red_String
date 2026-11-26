@@ -1,7 +1,7 @@
 .host {
   position: fixed;
   right: var(--space-4);
-  bottom: var(--space-4);
+  bottom: calc(var(--space-4) + var(--corner-tile, 0px));
   z-index: 900;
   display: flex;
   flex-direction: column;

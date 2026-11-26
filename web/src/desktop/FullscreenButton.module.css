@@ -1,0 +1,44 @@
+/* A lettered block from the strips, shrunk to a tile: ink line, square corners, a hard shadow it
+   sinks into when pressed. */
+.tile {
+  position: fixed;
+  right: 6px;
+  bottom: 6px;
+  z-index: 1600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 2px solid var(--ink-line);
+  border-radius: 2px;
+  background: var(--comic-fill-2);
+  color: var(--lamp-300);
+  box-shadow: 0 0 0 1px var(--paper-rim), 2px 2px 0 var(--ink-line);
+  cursor: pointer;
+  opacity: 0.82;
+  transition: opacity var(--dur-fast), transform var(--dur-fast), box-shadow var(--dur-fast), background var(--dur-fast), color var(--dur-fast);
+}
+.tile svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: square;
+}
+.tile:hover {
+  opacity: 1;
+  transform: translate(-1px, -1px);
+  background: var(--caption-bg);
+  color: var(--caption-ink);
+  box-shadow: 0 0 0 1px var(--paper-rim), 3px 3px 0 var(--ink-line);
+}
+.tile:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 1px var(--paper-rim), 1px 1px 0 var(--ink-line);
+}
+.tile:focus-visible {
+  opacity: 1;
+  outline: none;
+  box-shadow: var(--focus-ring);
+}

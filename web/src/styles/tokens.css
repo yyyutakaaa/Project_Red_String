@@ -471,6 +471,11 @@ textarea {
 :root[data-desktop] body {
   padding-top: var(--titlebar-h);
 }
+/* The full screen tile in the bottom-right corner (FullscreenButton.tsx): what sits in that corner
+   stands on top of it. */
+:root[data-fullscreen-button] {
+  --corner-tile: 28px;
+}
 :root[data-app='desktop'] {
   overscroll-behavior: none;
 }

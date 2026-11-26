@@ -698,6 +698,8 @@ export const en = {
   'toastLabel.error': "Problem",
   'toastLabel.save': "Saved",
   'toast.dismiss': "Dismiss notification",
+  'fullscreen.on': "Full screen ({key})",
+  'fullscreen.off': "Leave full screen ({key})",
   'modal.close': "Close dialog",
   'notFound.title': "Wrong address",
   'notFound.kicker': "Dead end",

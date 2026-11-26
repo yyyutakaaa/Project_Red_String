@@ -642,6 +642,8 @@
   "toastLabel.error": "Problème",
   "toastLabel.save": "Sauvegardé",
   "toast.dismiss": "Fermer la notification",
+  "fullscreen.on": "Plein écran ({key})",
+  "fullscreen.off": "Quitter le plein écran ({key})",
   "modal.close": "Fermer la fenêtre",
   "notFound.title": "Mauvaise adresse",
   "notFound.kicker": "Impasse",

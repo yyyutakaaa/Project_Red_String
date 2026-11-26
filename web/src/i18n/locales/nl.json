@@ -642,6 +642,8 @@
   "toastLabel.error": "Probleem",
   "toastLabel.save": "Opgeslagen",
   "toast.dismiss": "Melding sluiten",
+  "fullscreen.on": "Volledig scherm ({key})",
+  "fullscreen.off": "Volledig scherm uit ({key})",
   "modal.close": "Venster sluiten",
   "notFound.title": "Verkeerd adres",
   "notFound.kicker": "Doodlopend spoor",

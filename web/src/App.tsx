@@ -8,6 +8,7 @@ import { LaunchOverlay } from './boot/LaunchOverlay.tsx';
 import { Cinema } from './cinema/Cinema.tsx';
 import { desktop } from './desktop/bridge.ts';
 import { TitleBar } from './desktop/TitleBar.tsx';
+import { FullscreenButton } from './desktop/FullscreenButton.tsx';
 import { usePresence } from './desktop/usePresence.ts';
 import { audio } from './audio/audio.ts';
 import { applySettingsToDocument, useSettings } from './store/settings.ts';
@@ -114,6 +115,7 @@ export function App() {
       <Boot>
         <RouterProvider router={router} />
       </Boot>
+      <FullscreenButton />
       <TooSmall />
       <UpdatePopup subscribeNavigation={subscribeNavigation} />
     </>

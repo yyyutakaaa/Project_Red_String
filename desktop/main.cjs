@@ -170,6 +170,43 @@ function saveWindowState() {
   }
 }
 
+// Full screen. macOS handles it on its own. On Windows a window that cannot be resized does not grow
+// when it goes full screen: it jumps to the corner at its fixed size and the desktop shows around it.
+// So the window may be resized for as long as it is full screen, and if it still does not cover the
+// screen it is stretched over it by hand. Leaving full screen puts back the fixed size.
+function setFullscreen(on) {
+  if (!mainWindow || mainWindow.isDestroyed()) return;
+  const want = Boolean(on);
+  if (want === mainWindow.isFullScreen()) return;
+  if (process.platform !== 'darwin' && want) {
+    mainWindow.setResizable(true);
+    mainWindow.setMaximizable(true);
+  }
+  mainWindow.setFullScreen(want);
+}
+
+function coverScreen() {
+  if (!mainWindow || mainWindow.isDestroyed() || process.platform === 'darwin' || !mainWindow.isFullScreen()) return;
+  const { bounds } = screen.getDisplayMatching(mainWindow.getBounds());
+  const now = mainWindow.getBounds();
+  if (now.x !== bounds.x || now.y !== bounds.y || now.width !== bounds.width || now.height !== bounds.height) {
+    mainWindow.setBounds(bounds);
+  }
+}
+
+function restoreWindowSize() {
+  if (!mainWindow || mainWindow.isDestroyed() || process.platform === 'darwin' || mainWindow.isFullScreen()) return;
+  const area = screen.getDisplayMatching(mainWindow.getBounds()).workArea;
+  const size = windowSize(area);
+  mainWindow.setResizable(true);
+  mainWindow.setContentSize(size.width, size.height);
+  if (typeof windowState.x === 'number' && typeof windowState.y === 'number') {
+    mainWindow.setPosition(windowState.x, windowState.y);
+  }
+  mainWindow.setResizable(false);
+  mainWindow.setMaximizable(false);
+}
+
 function applyTheme(theme) {
   const t = theme === 'light' ? 'light' : 'dark';
   windowState = { ...windowState, theme: t };
@@ -242,7 +279,7 @@ function createWindow(origin) {
       sandbox: true,
     },
   });
-  if (windowState.fullscreen) mainWindow.setFullScreen(true);
+  if (windowState.fullscreen) setFullscreen(true);
 
   mainWindow.once('ready-to-show', () => mainWindow.show());
   // A reload takes the popup with it: the page has to say it is ready again, and an open question is "later".
@@ -265,8 +302,17 @@ function createWindow(origin) {
   mainWindow.on('close', saveWindowState);
 
   const sendFullscreen = (on) => mainWindow.webContents.send('red-string:fullscreen', on);
-  mainWindow.on('enter-full-screen', () => sendFullscreen(true));
-  mainWindow.on('leave-full-screen', () => sendFullscreen(false));
+  mainWindow.on('enter-full-screen', () => {
+    sendFullscreen(true);
+    // Windows may report full screen before the window has its new size.
+    coverScreen();
+    setTimeout(coverScreen, 150);
+  });
+  mainWindow.on('leave-full-screen', () => {
+    sendFullscreen(false);
+    restoreWindowSize();
+    setTimeout(restoreWindowSize, 150);
+  });
   mainWindow.webContents.on('did-finish-load', () => sendFullscreen(mainWindow.isFullScreen()));
 
   const contents = mainWindow.webContents;
@@ -275,6 +321,11 @@ function createWindow(origin) {
   contents.on('before-input-event', (event, input) => {
     const mod = process.platform === 'darwin' ? input.meta : input.control;
     if (input.type === 'keyDown' && mod && ['=', '+', '-', '_', '0'].includes(input.key)) event.preventDefault();
+    // F11 switches full screen on Windows and Linux (the menu's Ctrl+Cmd+F does it on macOS).
+    if (input.type === 'keyDown' && input.key === 'F11' && process.platform !== 'darwin') {
+      event.preventDefault();
+      if (!input.isAutoRepeat) setFullscreen(!mainWindow.isFullScreen());
+    }
   });
   contents.on('context-menu', (_event, params) => contextMenu(params)?.popup({ window: mainWindow }));
 
@@ -334,7 +385,11 @@ function buildMenu(checkForUpdates) {
     {
       label: 'View',
       submenu: [
-        { role: 'togglefullscreen', accelerator: isMac ? 'Ctrl+Cmd+F' : 'F11' },
+        {
+          label: 'Toggle Full Screen',
+          accelerator: isMac ? 'Ctrl+Cmd+F' : 'F11',
+          click: () => setFullscreen(!mainWindow?.isFullScreen()),
+        },
         ...(app.isPackaged ? [] : [{ type: 'separator' }, { role: 'reload' }, { role: 'toggleDevTools' }]),
       ],
     },
@@ -375,7 +430,7 @@ function updatePopup() {
 }
 // Settings → Display: a window of the fixed size, or full screen.
 ipcMain.on('red-string:fullscreen', (_event, on) => {
-  if (mainWindow && !mainWindow.isDestroyed()) mainWindow.setFullScreen(Boolean(on));
+  setFullscreen(on);
 });
 // A new app, installed from the game: download with progress in the game's popup, then restart.
 const installShell = createInstaller();
