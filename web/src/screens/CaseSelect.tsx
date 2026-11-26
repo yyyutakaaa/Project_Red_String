@@ -10,7 +10,7 @@ import { RoomScene } from '../components/RoomScene.tsx';
 import type { CaseFile } from '@shared/caseSchema.ts';
 import { useLaunch } from '../boot/launch.ts';
 import { formatDuration } from '../lib/format.ts';
-import { STORY_ORDER, getStoryCase, isStoryUnlocked } from '../engine/caseLoader.ts';
+import { STORY_ORDER, TUTORIAL_ID, getStoryCase, isStoryUnlocked } from '../engine/caseLoader.ts';
 import type { CaseProgress, CaseSource, CompletionRecord } from '../engine/types.ts';
 import { useGame } from '../store/game.ts';
 import styles from './CaseSelect.module.css';
@@ -185,11 +185,14 @@ export function CaseSelect() {
             {t('cases.storyHeading')}
           </h2>
           <ol className={styles.storyGrid}>
-            {STORY_ORDER.map((id, index) => {
+            {[TUTORIAL_ID, ...STORY_ORDER].map((id, position) => {
+              // The tutorial comes first, always open and marked as practice; the story is numbered after it.
+              const tutorial = id === TUTORIAL_ID;
+              const index = position - 1;
               const english = getStoryCase(id);
               const c = english ? localizedCase(english) : null;
-              const number = t('cases.number', { n: index + 1 });
-              const unlocked = isStoryUnlocked(index, completed);
+              const number = tutorial ? t('cases.tutorialMark') : t('cases.number', { n: index + 1 });
+              const unlocked = tutorial || isStoryUnlocked(index, completed);
               const progress = slot.progress[id];
               const status = statusOf(progress);
               const completion = slot.completions[id];
@@ -232,10 +235,20 @@ export function CaseSelect() {
               }
               return (
                 <li key={id} className={styles.storyCell}>
-                  <article className={`paper ${styles.file} ${styles.unlocked}`} aria-labelledby={headingId} data-testid={`case-card-${id}`}>
+                  <article
+                    className={`paper ${styles.file} ${styles.unlocked} ${tutorial ? styles.tutorial : ''}`}
+                    aria-labelledby={headingId}
+                    data-testid={`case-card-${id}`}
+                  >
                     <ScenePhoto caseFile={c} />
                     <div className={styles.fileHead}>
-                      <p className={styles.number}>{number}</p>
+                      {tutorial ? (
+                        <p className={styles.tutorialMark} title={t('cases.tutorialNote')} data-testid="tutorial-mark">
+                          {number}
+                        </p>
+                      ) : (
+                        <p className={styles.number}>{number}</p>
+                      )}
                       <p className={`${styles.status} ${styles[`status-${status}`] ?? ''}`}>{t(STATUS_LABEL[status])}</p>
                     </div>
                     <h3 id={headingId} className={styles.fileTitle}>

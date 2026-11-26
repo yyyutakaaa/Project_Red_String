@@ -175,7 +175,8 @@ test('guest save moves into a new account, leaves on sign-out and returns on sig
   await page.getByTestId('account-password').fill('test-password-1');
   await page.getByTestId('account-submit').click();
   await expect(page.getByRole('heading', { name: 'sam_spade' })).toBeVisible();
-  expect(await slotKeys(page)).toEqual(['redstring.save.1']);
+  // The save comes down from the cloud after the sign-in screen has gone, so wait for it.
+  await expect.poll(() => slotKeys(page)).toEqual(['redstring.save.1']);
 
   await page.goto('/');
   await expect(page.getByTestId('account-chip')).toContainText('sam_spade');

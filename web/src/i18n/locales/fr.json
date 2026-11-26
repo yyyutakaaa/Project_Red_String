@@ -65,6 +65,8 @@
   "cases.startingOver": "On recommence",
   "cases.storyHeading": "Affaires",
   "cases.number": "Affaire nº {n}",
+  "cases.tutorialMark": "Tutoriel",
+  "cases.tutorialNote": "Une affaire d'entraînement qui montre comment le jeu fonctionne. Elle ne fait pas partie de l'histoire.",
   "cases.missingTitle": "Dossier absent du bureau",
   "cases.missingNote": "Ce dossier manque ou n'a pas passé le contrôle.",
   "cases.sealed": "Scellé",

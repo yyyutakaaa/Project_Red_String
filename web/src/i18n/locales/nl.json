@@ -65,6 +65,8 @@
   "cases.startingOver": "Opnieuw beginnen",
   "cases.storyHeading": "Zaken",
   "cases.number": "Zaak nr. {n}",
+  "cases.tutorialMark": "Tutorial",
+  "cases.tutorialNote": "Een oefenzaak die laat zien hoe het spel werkt. Ze hoort niet bij het verhaal.",
   "cases.missingTitle": "Dossier niet op het bureau",
   "cases.missingNote": "Dit dossier ontbreekt of is afgekeurd bij de controle.",
   "cases.sealed": "Verzegeld",

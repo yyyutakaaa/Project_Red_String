@@ -129,6 +129,22 @@
 .unlocked .number {
   color: var(--paper-ink-muted);
 }
+/* The tutorial file: a red practice stamp where the case number would be, and a red tab on the file. */
+.tutorialMark {
+  margin: 0;
+  font-family: var(--font-type);
+  font-weight: 700;
+  font-size: var(--fs-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--red-600);
+  border: 2px solid var(--red-600);
+  padding: 0.05rem 0.45rem;
+  transform: rotate(-3deg);
+}
+.tutorial {
+  border-top: 4px solid var(--red-600);
+}
 .locked .number,
 .missing .number {
   color: var(--text-faint);
@@ -335,17 +351,18 @@
   gap: var(--space-2);
 }
 
-/* Wide screens: all ten files on the desk at once, in two rows of five. The place and time are in
-   the briefing; here each file shows its photograph, title, line and record. */
+/* Wide screens: the tutorial and all ten files on the desk at once, in two rows of six. The place and
+   time are in the briefing; here each file shows its photograph, title, line and record. */
 @media (min-width: 1200px) {
   .section {
     margin-bottom: 0;
   }
   .storyGrid {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: clamp(0.75rem, 2.5vh, 1.5rem) clamp(0.75rem, 1.5vw, 1.25rem);
   }
   .file {
+    min-width: 0;
     min-height: 0;
     gap: var(--space-2);
     padding: var(--space-3) var(--space-3) var(--space-3);
@@ -389,7 +406,32 @@
   .actions {
     padding-top: var(--space-1);
   }
+  /* Six narrow files: the head wraps instead of pushing the file wider, and "not started" is left out
+     because a file without a status is plainly new. */
+  .fileHead {
+    flex-wrap: wrap;
+    align-items: center;
+    row-gap: var(--space-1);
+  }
+  .number,
+  .status,
+  .tutorialMark {
+    white-space: nowrap;
+  }
+  .number {
+    letter-spacing: 0.12em;
+  }
+  .status-new {
+    display: none;
+  }
   .redacted {
     margin: var(--space-1) 0;
+  }
+}
+
+/* Wide but short windows (1280 x 720): a shorter crop of the photograph keeps both rows of six on screen. */
+@media (min-width: 1200px) and (max-height: 800px) {
+  .photo > :first-child {
+    height: 3.75rem;
   }
 }

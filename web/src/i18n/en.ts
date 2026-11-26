@@ -79,6 +79,8 @@ export const en = {
   'cases.startingOver': "Starting over",
   'cases.storyHeading': "Story cases",
   'cases.number': "Case No. {n}",
+  'cases.tutorialMark': "Tutorial",
+  'cases.tutorialNote': "A practice case that shows you how the game works. It is not part of the story.",
   'cases.missingTitle': "File not on the desk",
   'cases.missingNote': "This case file is missing or failed inspection.",
   'cases.sealed': "Sealed",

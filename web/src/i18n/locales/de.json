@@ -65,6 +65,8 @@
   "cases.startingOver": "Neuanfang",
   "cases.storyHeading": "Fälle",
   "cases.number": "Fall Nr. {n}",
+  "cases.tutorialMark": "Tutorial",
+  "cases.tutorialNote": "Ein Übungsfall, der zeigt, wie das Spiel funktioniert. Er gehört nicht zur Geschichte.",
   "cases.missingTitle": "Akte nicht auf dem Schreibtisch",
   "cases.missingNote": "Diese Fallakte fehlt oder hat die Prüfung nicht bestanden.",
   "cases.sealed": "Versiegelt",
