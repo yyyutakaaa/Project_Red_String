@@ -242,7 +242,6 @@ export function AccountScreen() {
       <RainBackdrop lamp="left" intensity="soft" />
       <ScreenFrame
         title={t('account.title')}
-        kicker={t('common.recordsOffice')}
         actions={
           <ButtonLink to="/" variant="ghost">
             {t('common.backToMenu')}

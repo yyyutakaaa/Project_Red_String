@@ -161,7 +161,35 @@ test('later story cases stay sealed until the previous case is closed', async ({
   await page.goto('/case/pier-seventeen/rooms');
   await expect(page.getByRole('heading', { name: 'Case sealed' })).toBeVisible();
   await page.goto('/cases');
-  await expect(page.getByText('Solve the previous case to unlock').first()).toBeVisible();
+  await expect(page.getByTitle('Solve the previous case to unlock').first()).toBeVisible();
+});
+
+test('a case can be given up to read the solution, and started over from the case menu', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('redstring.settings', JSON.stringify({ reducedMotion: 'reduced', masterVolume: 0 })));
+  await page.goto(`/case/${c.id}/rooms`);
+
+  // Give up: the case closes unsolved and the solution is open to read.
+  await page.getByTestId('case-menu').click();
+  await page.getByTestId('case-give-up').click();
+  await page.getByTestId('confirm-give-up').click();
+  await expect(page).toHaveURL(new RegExp(`/case/${c.id}/ending$`));
+  await expect(page.getByTestId('ending-outcome')).toHaveAttribute('data-outcome', 'gave_up');
+  await expect(page.getByTestId('final-score')).toHaveText('0');
+  await expect(page.locator('#solution-body')).toBeVisible();
+
+  // The story goes on: the next case opens.
+  await page.goto('/cases');
+  await expect(page.getByTestId('open-case-blue-lantern')).toBeEnabled();
+
+  // Start over: a fresh run from the briefing, and the case menu offers giving up again.
+  await page.goto(`/case/${c.id}/ending`);
+  await page.getByTestId('case-menu').click();
+  await expect(page.getByTestId('case-give-up')).toHaveCount(0);
+  await page.getByTestId('case-restart').click();
+  await page.getByTestId('confirm-restart').click();
+  await expect(page).toHaveURL(new RegExp(`/case/${c.id}/briefing$`));
+  await page.getByTestId('case-menu').click();
+  await expect(page.getByTestId('case-give-up')).toBeVisible();
 });
 
 test('interrogation shows a clear message when the backend is unreachable', async ({ page }) => {

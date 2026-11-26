@@ -27,7 +27,6 @@ export function Credits() {
       <RainBackdrop lamp="left" intensity="soft" />
       <ScreenFrame
         title={t('credits.title')}
-        kicker={t('credits.kicker')}
         actions={
           <ButtonLink to="/" variant="ghost">
             {t('common.backToMenu')}

@@ -113,3 +113,13 @@
   .tools :is(button, a) { padding-left: 0.55rem; padding-right: 0.55rem; }
   .counterShort { display: inline-flex; }
 }
+
+/* The case menu: one choice per row. */
+.menuList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.menuList > * {
+  width: 100%;
+}

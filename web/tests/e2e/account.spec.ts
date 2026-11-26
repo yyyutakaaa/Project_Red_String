@@ -179,7 +179,10 @@ test('guest save moves into a new account, leaves on sign-out and returns on sig
 
   await page.goto('/');
   await expect(page.getByTestId('account-chip')).toContainText('sam_spade');
-  await expect(page.getByTestId('menu-continue')).toContainText('Ashgrove House');
+  // Continue picks up the case that came back from the cloud.
+  await expect(page.getByTestId('menu-continue')).toBeEnabled();
+  await page.getByTestId('menu-continue').click();
+  await expect(page).toHaveURL(/\/case\/ashgrove-house\//);
 });
 
 test('the account remembers the language and the tutorial, so another computer skips the first-start popups', async ({ page }) => {

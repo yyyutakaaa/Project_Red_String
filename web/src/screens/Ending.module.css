@@ -22,6 +22,10 @@
   --verdict: var(--info-400);
   --verdict-glow: rgba(143, 179, 224, 0.28);
 }
+.gave_up {
+  --verdict: var(--text-muted);
+  --verdict-glow: rgba(160, 160, 160, 0.2);
+}
 
 /* The front page */
 .frontPage {
@@ -163,6 +167,7 @@
 }
 .correct .bigStamp { --stamp-ink: #1f6b3a; }
 .weak_proof .bigStamp { --stamp-ink: #8a5a0c; }
+.gave_up .bigStamp { --stamp-ink: #4a4a4a; }
 @keyframes stamp-in {
   from {
     opacity: 0;

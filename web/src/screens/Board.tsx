@@ -811,7 +811,6 @@ export function Board() {
     <ScreenFrame
       wide
       title={t('board.title')}
-      kicker={caseFile.title}
       actions={
         <>
           <Button id={checkId} variant="primary" data-testid="check-theory" onClick={onCheck} disabled={left === 0 || linkCount === 0}>

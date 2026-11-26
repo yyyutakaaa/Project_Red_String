@@ -20,12 +20,14 @@ const STAMP: Record<AccusationOutcome, MessageKey> = {
   correct: 'ending.stampCorrect',
   weak_proof: 'ending.stampWeak',
   wrong_culprit: 'ending.stampWrong',
+  gave_up: 'ending.stampGaveUp',
 };
 
 const HEADLINE: Record<AccusationOutcome, MessageKey> = {
   correct: 'ending.headCorrect',
   weak_proof: 'ending.headWeak',
   wrong_culprit: 'ending.headWrong',
+  gave_up: 'ending.headGaveUp',
 };
 
 /** Delay so the sound lands with the stamp rather than on top of the accusation's own thump. */
@@ -36,6 +38,7 @@ const DECK: Record<AccusationOutcome, MessageKey> = {
   correct: 'ending.deckCorrect',
   weak_proof: 'ending.deckWeak',
   wrong_culprit: 'ending.deckWrong',
+  gave_up: 'ending.deckGaveUp',
 };
 
 /**
@@ -82,7 +85,7 @@ export function Ending() {
 
   if (!accusation) {
     return (
-      <ScreenFrame title={t('ending.noVerdict')} kicker={caseFile.title}>
+      <ScreenFrame title={t('ending.noVerdict')}>
         <p className={styles.pending}>{t('ending.stillOpen')}</p>
         <ButtonLink to={casePath(caseKey, 'accuse')} variant="primary">
           {t('accuse.submit')}
@@ -96,6 +99,7 @@ export function Ending() {
   const accused = caseFile.suspects.find((s) => s.id === accusation.culpritId);
   const culprit = caseFile.suspects.find((s) => s.id === caseFile.solution.culprit_id);
   const required = caseFile.solution.required_evidence;
+  const gaveUp = outcome === 'gave_up';
   const revealOpen = outcome !== 'wrong_culprit' || showSolution;
 
   const storyIndex = source === 'story' ? (STORY_ORDER as readonly string[]).indexOf(caseKey) : -1;
@@ -133,7 +137,7 @@ export function Ending() {
   ];
 
   return (
-    <ScreenFrame title={t('ending.title')} kicker={caseFile.title}>
+    <ScreenFrame title={t('ending.title')}>
       <section className={`${styles.outcome} ${styles[outcome] ?? ''}`} data-testid="ending-outcome" data-outcome={outcome} aria-labelledby="outcome-heading">
         {/* The verdict arrives the way it does in the pictures: a front page spinning out of the dark. */}
         <article className={`paper selectable ${styles.frontPage}`}>
@@ -158,14 +162,16 @@ export function Ending() {
             )}
             <div className={styles.storyText}>
               <p className={styles.accusedLine}>
-                {accusation.evidenceIds.length > 0
+                {gaveUp
+                  ? t('ending.gaveUpLine')
+                  : accusation.evidenceIds.length > 0
                   ? rich(t('ending.namedWith'), {
                       name: <strong>{accused?.name ?? t('ending.nobody')}</strong>,
                       evidence: accusation.evidenceIds.map((id) => evidenceName(caseFile, id)).join(', '),
                     })
                   : rich(t('ending.named'), { name: <strong>{accused?.name ?? t('ending.nobody')}</strong> })}
               </p>
-              <p className={styles.endingText}>{caseFile.endings[outcome]}</p>
+              <p className={styles.endingText}>{gaveUp ? t('ending.gaveUpText') : caseFile.endings[outcome]}</p>
             </div>
           </div>
           <div className={styles.stampWrap}>
@@ -292,9 +298,9 @@ export function Ending() {
               {required.map((id) => {
                 const presented = accusation.evidenceIds.includes(id);
                 return (
-                  <li key={id} className={presented ? styles.presented : styles.missed}>
+                  <li key={id} className={gaveUp ? undefined : presented ? styles.presented : styles.missed}>
                     <span className={styles.reqName}>{evidenceName(caseFile, id)}</span>
-                    <span className={styles.reqStatus}>{presented ? t('ending.presented') : t('ending.missing')}</span>
+                    {!gaveUp && <span className={styles.reqStatus}>{presented ? t('ending.presented') : t('ending.missing')}</span>}
                   </li>
                 );
               })}

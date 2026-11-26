@@ -484,7 +484,6 @@ export function Notebook() {
   return (
     <ScreenFrame
       title={t('notebook.title')}
-      kicker={caseFile.title}
       actions={
         <ButtonLink to={casePath(caseKey, 'board')} variant="ghost">
           {t('notebook.toBoard')}

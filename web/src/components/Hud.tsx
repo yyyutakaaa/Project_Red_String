@@ -1,10 +1,10 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import type { CaseFile } from '@shared/caseSchema.ts';
-import type { CaseProgress } from '../engine/types.ts';
+import type { CaseProgress, CaseSource } from '../engine/types.ts';
 import { HINT_COST, discoveredCount, totalDiscoverables } from '../engine/scoring.ts';
 import { SLOT_COUNT } from '../engine/save.ts';
-import { hintsShown, takeHint, useCaseClock, useGame } from '../store/game.ts';
+import { giveUp, hintsShown, takeHint, useCaseClock, useGame } from '../store/game.ts';
 import { formatDuration, spokenDuration } from '../lib/format.ts';
 import { casePath } from '../hooks/useCase.ts';
 import { Button } from './Button.tsx';
@@ -16,8 +16,12 @@ import { rich } from '../i18n/rich.tsx';
 interface HudProps {
   caseFile: CaseFile;
   caseKey: string;
+  source: CaseSource;
   progress: CaseProgress;
 }
+
+/** What the case menu shows: its choices, or the question before starting over or giving up. */
+type MenuView = 'closed' | 'choices' | 'restart' | 'giveUp';
 
 /** The case clock. Only this re-renders every second. */
 function CaseTimer({ caseKey, progress }: { caseKey: string; progress: CaseProgress }) {
@@ -42,11 +46,13 @@ function CaseTimer({ caseKey, progress }: { caseKey: string; progress: CaseProgr
   );
 }
 
-export function Hud({ caseFile, caseKey, progress }: HudProps) {
+export function Hud({ caseFile, caseKey, source, progress }: HudProps) {
   const navigate = useNavigate();
   const [hintOpen, setHintOpen] = useState(false);
   const [latestHint, setLatestHint] = useState<string | null>(null);
   const [saveOpen, setSaveOpen] = useState(false);
+  const [menu, setMenu] = useState<MenuView>('closed');
+  const restartCase = useGame((s) => s.restartCase);
   const saveNow = useGame((s) => s.saveNow);
   const saveToSlot = useGame((s) => s.saveToSlot);
   const activeSlot = useGame((s) => s.slot?.slot ?? 1);
@@ -123,7 +129,7 @@ export function Hud({ caseFile, caseKey, progress }: HudProps) {
         <Button size="small" onClick={() => setSaveOpen(true)} aria-haspopup="dialog">
           {t('hud.save')}
         </Button>
-        <Button size="small" variant="ghost" onClick={() => navigate('/')}>
+        <Button size="small" variant="ghost" onClick={() => setMenu('choices')} aria-haspopup="dialog" data-testid="case-menu">
           {t('hud.menu')}
         </Button>
       </div>
@@ -201,6 +207,68 @@ export function Hud({ caseFile, caseKey, progress }: HudProps) {
               </Button>
             ))}
         </div>
+      </Modal>
+      <Modal
+        open={menu !== 'closed'}
+        title={menu === 'restart' ? t('hud.restartTitle') : menu === 'giveUp' ? t('hud.giveUpTitle') : t('hud.menuTitle')}
+        onClose={() => setMenu('closed')}
+        footer={
+          menu === 'restart' ? (
+            <>
+              <Button variant="ghost" onClick={() => setMenu('choices')}>
+                {t('common.back')}
+              </Button>
+              <Button
+                variant="primary"
+                data-testid="confirm-restart"
+                onClick={() => {
+                  setMenu('closed');
+                  restartCase(caseKey, source);
+                  navigate(casePath(caseKey, 'briefing'));
+                }}
+              >
+                {t('hud.restart')}
+              </Button>
+            </>
+          ) : menu === 'giveUp' ? (
+            <>
+              <Button variant="ghost" onClick={() => setMenu('choices')}>
+                {t('common.back')}
+              </Button>
+              <Button
+                variant="primary"
+                data-testid="confirm-give-up"
+                onClick={() => {
+                  setMenu('closed');
+                  giveUp(caseFile, caseKey);
+                  navigate(casePath(caseKey, 'ending'));
+                }}
+              >
+                {t('hud.giveUp')}
+              </Button>
+            </>
+          ) : undefined
+        }
+      >
+        {menu === 'restart' ? (
+          <p>{t('hud.restartBody')}</p>
+        ) : menu === 'giveUp' ? (
+          <p>{t('hud.giveUpBody')}</p>
+        ) : (
+          <div className={styles.menuList}>
+            <Button onClick={() => setMenu('restart')} data-testid="case-restart">
+              {t('hud.restart')}
+            </Button>
+            {!closed && (
+              <Button onClick={() => setMenu('giveUp')} data-testid="case-give-up">
+                {t('hud.giveUp')}
+              </Button>
+            )}
+            <Button variant="ghost" onClick={() => navigate('/')} data-testid="case-main-menu">
+              {t('hud.mainMenu')}
+            </Button>
+          </div>
+        )}
       </Modal>
     </header>
   );

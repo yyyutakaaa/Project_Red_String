@@ -83,7 +83,7 @@ export function CaseLayout() {
   const ctx: CaseContextValue = { ...resolved, progress };
   return (
     <>
-      <Hud caseFile={resolved.caseFile} caseKey={caseKey} progress={progress} />
+      <Hud caseFile={resolved.caseFile} caseKey={caseKey} source={resolved.source} progress={progress} />
       <Outlet context={ctx} />
       {isTutorial(caseKey) && <TutorialGuide caseKey={caseKey} progress={progress} />}
     </>

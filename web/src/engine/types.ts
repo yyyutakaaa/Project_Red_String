@@ -75,7 +75,8 @@ export interface TheoryCount {
   neutral: number;
 }
 
-export type AccusationOutcome = 'correct' | 'wrong_culprit' | 'weak_proof';
+/** gave_up: the player closed the case without naming anyone, to read the solution. */
+export type AccusationOutcome = 'correct' | 'wrong_culprit' | 'weak_proof' | 'gave_up';
 
 export interface ScoreSnapshot {
   base: number;

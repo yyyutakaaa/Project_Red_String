@@ -17,7 +17,7 @@ import {
   writeSlot,
   type KeyValueStorage,
 } from '../engine/save.ts';
-import type { AccusationRecord, BoardState, CaseProgress, CaseSource, ChatMessage, ConversationState, SaveSlotData } from '../engine/types.ts';
+import type { AccusationOutcome, AccusationRecord, BoardState, CaseProgress, CaseSource, ChatMessage, ConversationState, SaveSlotData } from '../engine/types.ts';
 import { sfx } from '../audio/audio.ts';
 import { track } from '../lib/telemetry.ts';
 import { t, tn } from '../i18n/index.ts';
@@ -360,16 +360,27 @@ export function hintsShown(c: CaseFile, p: CaseProgress): string[] {
 
 /** Close the case. Records the accusation, the score and the completion (which unlocks the next case). */
 export function accuse(c: CaseFile, caseKey: string, culpritId: string, evidenceIds: string[]): AccusationRecord | null {
+  return closeCase(c, caseKey, culpritId, evidenceIds, evaluateAccusation(c, culpritId, evidenceIds).outcome);
+}
+
+/**
+ * Give up: close the case without naming anyone, so the solution can be read. It scores nothing and
+ * never counts as solved, but it does close the file, so the story goes on to the next case.
+ */
+export function giveUp(c: CaseFile, caseKey: string): AccusationRecord | null {
+  return closeCase(c, caseKey, '', [], 'gave_up');
+}
+
+function closeCase(c: CaseFile, caseKey: string, culpritId: string, evidenceIds: string[], outcome: AccusationOutcome): AccusationRecord | null {
   // The clock stops the moment the name is said.
   stopCaseClock();
   const p = G().slot?.progress[caseKey];
-  if (!p) return null;
-  const verdict = evaluateAccusation(c, culpritId, evidenceIds);
-  const score = scoreProgress(c, p, verdict.outcome);
+  if (!p || p.accusation) return null;
+  const score = scoreProgress(c, p, outcome);
   const record: AccusationRecord = {
     culpritId,
     evidenceIds,
-    outcome: verdict.outcome,
+    outcome,
     score: score.total,
     rank: score.rank,
     at: Date.now(),
@@ -391,7 +402,7 @@ export function accuse(c: CaseFile, caseKey: string, culpritId: string, evidence
     ...slot,
     progress: { ...slot.progress, [caseKey]: { ...p, accusation: record, updatedAt: Date.now() } },
   };
-  const withCompletion = recordCompletion(withProgress, caseKey, verdict.outcome, score.total, score.rank, Date.now(), record.timeMs);
+  const withCompletion = recordCompletion(withProgress, caseKey, outcome, score.total, score.rank, Date.now(), record.timeMs);
   try {
     const stamped = writeSlot(G().storage, withCompletion);
     useGame.setState({ slot: stamped, lastSavedAt: stamped.updatedAt });
@@ -402,7 +413,7 @@ export function accuse(c: CaseFile, caseKey: string, culpritId: string, evidence
   sfx('stamp');
   track('accusation', caseKey, {
     outcome: record.outcome,
-    suspect: culpritId,
+    suspect: culpritId || null,
     proof: evidenceIds.length,
     score: record.score,
     rank: record.rank,

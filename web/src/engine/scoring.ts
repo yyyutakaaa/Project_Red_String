@@ -64,9 +64,11 @@ export interface ScoreBreakdown {
   rank: 'S' | 'A' | 'B' | 'C' | 'D';
 }
 
-const BASE: Record<AccusationOutcome, number> = { correct: 1000, weak_proof: 450, wrong_culprit: 100 };
+const BASE: Record<AccusationOutcome, number> = { correct: 1000, weak_proof: 450, wrong_culprit: 100, gave_up: 0 };
 
 export function computeScore(input: ScoreInput): ScoreBreakdown {
+  // Giving up scores nothing: the solution was read, not found.
+  if (input.outcome === 'gave_up') return { base: 0, thoroughness: 0, efficiency: 0, hintPenalty: 0, total: 0, rank: 'D' };
   const base = BASE[input.outcome];
   const ratio = input.discoverable > 0 ? Math.min(1, input.discovered / input.discoverable) : 0;
   const thoroughness = Math.round(300 * ratio);

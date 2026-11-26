@@ -107,15 +107,12 @@ export function SaveSlots() {
       <RainBackdrop lamp="left" intensity="soft" />
       <ScreenFrame
         title={t('slots.title')}
-        kicker={t('common.recordsOffice')}
         actions={
           <ButtonLink to="/" variant="ghost">
             {t('common.backToMenu')}
           </ButtonLink>
         }
       >
-        <p className={styles.lede}>{t('slots.lede')}</p>
-
         <ol className={styles.grid} aria-label={t('slots.title')}>
           {Array.from({ length: SLOT_COUNT }, (_, i) => i + 1).map((n) => {
             const data = slots[n - 1] ?? null;

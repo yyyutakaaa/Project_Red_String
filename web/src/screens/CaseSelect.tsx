@@ -146,7 +146,7 @@ export function CaseSelect() {
     return (
       <>
         <RainBackdrop lamp="right" intensity="soft" />
-        <ScreenFrame title={t('cases.title')} kicker={t('common.recordsOffice')} actions={backLink}>
+        <ScreenFrame title={t('cases.title')} actions={backLink}>
           <p className="muted">{t('cases.pulling')}</p>
         </ScreenFrame>
       </>
@@ -179,12 +179,11 @@ export function CaseSelect() {
   return (
     <>
       <RainBackdrop lamp="right" intensity="soft" />
-      <ScreenFrame wide title={t('cases.title')} kicker={t('cases.kicker', { n: slot.slot })} actions={backLink}>
+      <ScreenFrame wide title={t('cases.title')} actions={backLink}>
         <section aria-labelledby="story-heading" className={styles.section}>
-          <div className={styles.sectionHead}>
-            <h2 id="story-heading">{t('cases.storyHeading')}</h2>
-            <p className={styles.sectionNote}>{t('cases.storyNote')}</p>
-          </div>
+          <h2 id="story-heading" className="visually-hidden">
+            {t('cases.storyHeading')}
+          </h2>
           <ol className={styles.storyGrid}>
             {STORY_ORDER.map((id, index) => {
               const english = getStoryCase(id);
@@ -223,7 +222,9 @@ export function CaseSelect() {
                         <span style={{ width: '48%' }} />
                       </div>
                       <p className={styles.lockNote}>
-                        <span className={styles.sealed}>{t('cases.sealed')}</span> {t('cases.sealedNote')}
+                        <span className={styles.sealed} title={t('cases.sealedNote')}>
+                          {t('cases.sealed')}
+                        </span>
                       </p>
                     </article>
                   </li>

@@ -5,34 +5,21 @@ import { useAmbience } from '../hooks/useAmbience.ts';
 import { casePath, resolveCase } from '../hooks/useCase.ts';
 import { continueSlot, type KeyValueStorage } from '../engine/save.ts';
 import { useGame } from '../store/game.ts';
-import { resolveTheme, useSettings } from '../store/settings.ts';
 import { useAccount } from '../store/account.ts';
 import { useLaunch } from '../boot/launch.ts';
 import { SyncBadge } from './Account.tsx';
 import { ShellNotice } from '../desktop/ShellNotice.tsx';
 import { FirstRun } from '../onboarding/FirstRun.tsx';
-import { useOnboarding } from '../onboarding/onboarding.ts';
 import { useStartTutorial } from '../onboarding/useStartTutorial.ts';
 import { sfx } from '../audio/audio.ts';
 import { useT } from '../i18n/index.ts';
 import styles from './MainMenu.module.css';
 
-interface ContinueInfo {
-  slot: number;
-  caseTitle: string | null;
-}
-
-function describeContinue(storage: KeyValueStorage): ContinueInfo | null {
-  const slot = continueSlot(storage);
-  if (!slot) return null;
-  const resolved = slot.activeCaseKey ? resolveCase(slot.activeCaseKey) : null;
-  return { slot: slot.slot, caseTitle: resolved?.caseFile.title ?? null };
-}
+const hasSave = (storage: KeyValueStorage) => continueSlot(storage) !== null;
 
 interface MenuItem {
   id: string;
   label: string;
-  sub: string;
   to?: string;
   onSelect?: () => void;
   disabled?: boolean;
@@ -46,15 +33,13 @@ export function MainMenu() {
   const storage = useGame((s) => s.storage);
   const continueLast = useGame((s) => s.continueLast);
   const ensureActiveSlot = useGame((s) => s.ensureActiveSlot);
-  const [lastSave] = useState(() => describeContinue(storage));
+  const [lastSave] = useState(() => hasSave(storage));
   const user = useAccount((s) => s.user);
   const sync = useAccount((s) => s.sync);
   const launch = useLaunch();
-  const theme = resolveTheme(useSettings((s) => s.theme));
   const listRef = useRef<HTMLUListElement>(null);
   const { t } = useT();
   const startTutorial = useStartTutorial();
-  const tutorialDone = useOnboarding((s) => s.tutorialDone);
 
   useEffect(() => {
     document.title = 'Project Red String';
@@ -110,37 +95,20 @@ export function MainMenu() {
   };
 
   const items: MenuItem[] = [
-    {
-      id: 'continue',
-      label: t('menu.continue'),
-      sub: lastSave ? t('menu.continueSub', { n: lastSave.slot, case: lastSave.caseTitle ?? t('menu.noCaseOpen') }) : t('menu.noSave'),
-      onSelect: handleContinue,
-      disabled: !lastSave,
-    },
+    { id: 'continue', label: t('menu.continue'), onSelect: handleContinue, disabled: !lastSave },
     {
       id: 'story-cases',
       label: t('menu.storyCases'),
-      sub: t('menu.storyCasesSub'),
       onSelect: () => {
         ensureActiveSlot();
         navigate('/cases');
       },
     },
-    {
-      id: 'tutorial',
-      label: t('menu.tutorial'),
-      sub: tutorialDone ? t('menu.tutorialAgain') : t('menu.tutorialSub'),
-      onSelect: startTutorial,
-    },
-    { id: 'save-slots', label: t('menu.saveSlots'), sub: t('menu.saveSlotsSub'), to: '/slots' },
-    {
-      id: 'account',
-      label: t('menu.account'),
-      sub: user ? t('menu.accountSignedIn', { name: user.username }) : t('menu.accountGuest'),
-      to: '/account',
-    },
-    { id: 'settings', label: t('menu.settings'), sub: t('menu.settingsSub'), to: '/settings' },
-    { id: 'credits', label: t('menu.credits'), sub: t('menu.creditsSub'), to: '/credits' },
+    { id: 'tutorial', label: t('menu.tutorial'), onSelect: startTutorial },
+    { id: 'save-slots', label: t('menu.saveSlots'), to: '/slots' },
+    { id: 'account', label: t('menu.account'), to: '/account' },
+    { id: 'settings', label: t('menu.settings'), to: '/settings' },
+    { id: 'credits', label: t('menu.credits'), to: '/credits' },
   ];
 
   return (
@@ -155,15 +123,11 @@ export function MainMenu() {
             <SyncBadge state={sync} compact />
           </>
         ) : (
-          <>
-            <span className={styles.chipName}>{t('menu.guest')}</span>
-            <span className={styles.chipNote}>{t('menu.guestNote')}</span>
-          </>
+          <span className={styles.chipName}>{t('menu.guest')}</span>
         )}
       </Link>
       <main id="main" tabIndex={-1} className={styles.main}>
         <header className={styles.masthead}>
-          <p className={styles.kicker}>{theme === 'light' ? t('menu.kickerDay') : t('menu.kickerNight')}</p>
           <h1 className={styles.title}>
             <span className={styles.titleSmall}>Project</span>
             <span className={styles.titleBig}>Red String</span>
@@ -175,25 +139,12 @@ export function MainMenu() {
             <circle className={styles.pinHead} cx="508" cy="22" r="6" />
             <circle className={styles.pinShine} cx="506" cy="20" r="1.8" />
           </svg>
-          <p className={styles.pitch}>
-            {t('menu.pitch')} <span className={styles.pitchTail}>{t('menu.pitchTail')}</span>
-          </p>
         </header>
 
         <nav className={styles.nav} aria-label={t('menu.navLabel')}>
           <ul ref={listRef} className={styles.menu} onKeyDown={onListKeyDown}>
             {items.map((item, index) => {
-              const subId = `menu-sub-${item.id}`;
-              const inner = (
-                <>
-                  <span className={styles.itemLabel} aria-hidden="true">
-                    {item.label}
-                  </span>
-                  <span id={subId} className={styles.itemSub}>
-                    {item.sub}
-                  </span>
-                </>
-              );
+              const inner = <span className={styles.itemLabel}>{item.label}</span>;
               return (
                 <li key={item.id} style={{ ['--i' as string]: index }}>
                   {item.to ? (
@@ -202,8 +153,6 @@ export function MainMenu() {
                       className={styles.item}
                       data-menu-item=""
                       data-testid={`menu-${item.id}`}
-                      aria-label={item.label}
-                      aria-describedby={subId}
                       onClick={() => sfx('click')}
                     >
                       {inner}
@@ -214,8 +163,6 @@ export function MainMenu() {
                       className={styles.item}
                       data-menu-item=""
                       data-testid={`menu-${item.id}`}
-                      aria-label={item.label}
-                      aria-describedby={subId}
                       disabled={item.disabled}
                       onClick={() => {
                         sfx('click');
@@ -230,11 +177,6 @@ export function MainMenu() {
             })}
           </ul>
         </nav>
-
-        <footer className={styles.footer}>
-          <p>{t('menu.footerKeys')}</p>
-          <p>{t('menu.footerRain')}</p>
-        </footer>
       </main>
     </div>
   );

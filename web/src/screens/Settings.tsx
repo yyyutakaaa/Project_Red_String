@@ -272,7 +272,6 @@ export function SettingsScreen() {
       <RainBackdrop lamp="right" intensity="soft" />
       <ScreenFrame
         title={t('settings.title')}
-        kicker={t('settings.kicker')}
         actions={
           <Button variant="ghost" onClick={back}>
             {t('common.back')}
@@ -506,7 +505,6 @@ export function SettingsScreen() {
           >
             {t('settings.reset')}
           </Button>
-          <p className={styles.saved}>{t('settings.saved')}</p>
           <p className="visually-hidden" role="status" aria-live="polite">
             {announcement}
           </p>

@@ -276,9 +276,3 @@
   align-items: center;
   gap: var(--space-3) var(--space-5);
 }
-.saved {
-  margin: 0;
-  font-family: var(--font-type);
-  font-size: var(--fs-sm);
-  color: var(--text-muted);
-}

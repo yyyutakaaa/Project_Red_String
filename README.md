@@ -31,7 +31,7 @@ You question suspects in your own words. They can lie. You have to prove it.
 5. Pin it all on the red-string board.
 6. Accuse one person with two to four pieces of proof.
 
-You get one try.
+You get one try. Stuck? The case menu lets you give up and read the solution, or start the case over.
 
 </td>
 <td width="50%" valign="top">

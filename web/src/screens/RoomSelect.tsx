@@ -38,7 +38,6 @@ export function RoomSelect() {
   return (
     <ScreenFrame
       wide
-      kicker={caseFile.title}
       title={t('scenes.title')}
       actions={
         <>

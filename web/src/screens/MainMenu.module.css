@@ -26,14 +26,6 @@
   max-width: 52rem;
   animation: global(fade-in) 1.2s var(--ease-out) both;
 }
-.kicker {
-  font-family: var(--font-type);
-  font-size: var(--fs-sm);
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--lamp-300);
-  margin: 0 0 var(--space-3);
-}
 .title {
   margin: 0;
   display: flex;
@@ -87,20 +79,6 @@
   to { stroke-dashoffset: 0; }
 }
 
-.pitch {
-  font-family: var(--font-body);
-  font-style: italic;
-  font-size: var(--fs-lg);
-  line-height: 1.5;
-  color: var(--text);
-  max-width: 40ch;
-  margin: 0;
-  text-shadow: var(--text-halo);
-}
-.pitchTail {
-  display: inline-block;
-}
-
 /* Menu */
 .nav {
   width: min(30rem, 100%);
@@ -123,7 +101,7 @@
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
-  min-height: 52px;
+  min-height: 44px;
   padding: 0.45rem 1rem 0.45rem 2.5rem;
   border: 0;
   border-radius: var(--radius-md);
@@ -154,13 +132,6 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
-.itemSub {
-  font-family: var(--font-type);
-  font-size: var(--fs-xs);
-  letter-spacing: 0.06em;
-  color: var(--text-faint);
-}
-
 .item:hover:not(:disabled),
 .item:focus-visible {
   background: linear-gradient(90deg, rgba(232, 181, 74, 0.1), rgba(232, 181, 74, 0));
@@ -169,10 +140,6 @@
 .item:hover:not(:disabled) .itemLabel,
 .item:focus-visible .itemLabel {
   text-shadow: 0 0 14px var(--lamp-glow-strong);
-}
-.item:hover:not(:disabled) .itemSub,
-.item:focus-visible .itemSub {
-  color: var(--text-muted);
 }
 .item:hover:not(:disabled)::before,
 .item:focus-visible::before {
@@ -209,29 +176,12 @@
 .item:focus-visible .itemLabel {
   transform: translateX(0.35rem);
 }
-.itemLabel,
-.itemSub {
+.itemLabel {
   transition: transform var(--dur-med) var(--ease-out), color var(--dur-fast);
 }
 .item:disabled {
   cursor: not-allowed;
   color: var(--text-faint);
-}
-.item:disabled .itemSub {
-  color: var(--ink-300);
-}
-
-.footer {
-  font-family: var(--font-type);
-  font-size: var(--fs-xs);
-  letter-spacing: 0.06em;
-  color: var(--text-faint);
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-1) var(--space-5);
-}
-.footer p {
-  margin: 0;
 }
 
 @media (max-width: 640px) {
@@ -273,10 +223,6 @@
   text-transform: uppercase;
   color: var(--lamp-200);
 }
-.chipNote {
-  font-size: var(--fs-xs);
-  color: var(--text-muted);
-}
 
 /* Day shift: ink title with a faint warm halo instead of a lamp glow. */
 :global([data-theme='light']) .title {
@@ -314,8 +260,8 @@
   }
 }
 
-/* Short windows (1280 x 720 down to 960 x 560): smaller labels, and the key hints at the bottom make way, so all
-   seven items and the title fit without scrolling. */
+/* Short windows (1280 x 720 down to 960 x 560): smaller labels, so all seven items and the title fit
+   without scrolling. */
 @media (max-height: 780px) {
   .item {
     min-height: 34px;
@@ -329,17 +275,8 @@
     font-size: var(--fs-lg);
     line-height: 1.1;
   }
-  .itemSub {
-    line-height: 1.25;
-  }
   .menu {
     gap: 0;
-  }
-  .pitch {
-    font-size: var(--fs-md);
-  }
-  .footer {
-    display: none;
   }
   .titleBig {
     font-size: clamp(2.6rem, 10vh, 7.4rem);

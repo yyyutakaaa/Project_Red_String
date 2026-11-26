@@ -48,7 +48,7 @@ export function Accusation() {
   };
 
   return (
-    <ScreenFrame wide title={t('accuse.title')} kicker={caseFile.title}>
+    <ScreenFrame wide title={t('accuse.title')}>
       <p className={styles.lede}>{t('accuse.lede')}</p>
 
       <form
