@@ -143,6 +143,14 @@ export interface CaseProgress {
   playMs?: number;
   /** What the partner already remarked on in this run (keys from engine/partner.ts). */
   partnerSaid?: string[];
+  /** What the partner said in this run, oldest first, in the words the player read: the notebook keeps them. */
+  partnerLog?: PartnerLogEntry[];
+}
+
+export interface PartnerLogEntry {
+  text: string;
+  /** When he said it (ms since epoch). */
+  at: number;
 }
 
 export interface CompletionRecord {

@@ -69,7 +69,9 @@ function Rain({ drops, density = 1, reduced }: { drops: 'far' | 'near'; density?
     };
 
     const resize = () => {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      // One canvas pixel per CSS pixel: thin streaks do not need more, and a window-sized canvas at
+      // retina scale is a lot of GPU memory next to everything else on screen.
+      dpr = 1;
       width = canvas.width = Math.round(canvas.clientWidth * dpr);
       height = canvas.height = Math.round(canvas.clientHeight * dpr);
       const per = near ? 9000 : 3200;
@@ -225,10 +227,11 @@ export function ComicBackdrop({ scene, dim = 'page', fallback = null }: Props) {
   const def = backdropScene(scene);
   const lightning = def?.items.find((i) => i.kind === 'lightning');
 
-  // The layers lean with the pointer, eased; without a pointer they sway a little on their own.
+  // The layers lean with the pointer, eased; without a pointer they sway a little on their own. Only
+  // behind a menu: behind a page the picture holds still (see the CSS), so it stays one flat layer.
   useEffect(() => {
     const root = rootRef.current;
-    if (!root || reduced) return;
+    if (!root || reduced || dim === 'page') return;
     const target = { x: 0, y: 0 };
     const now = { x: 0, y: 0 };
     let moved = 0;
@@ -258,7 +261,7 @@ export function ComicBackdrop({ scene, dim = 'page', fallback = null }: Props) {
       cancelAnimationFrame(raf);
       window.removeEventListener('pointermove', onPointer);
     };
-  }, [reduced]);
+  }, [reduced, dim]);
 
   // Lightning: every so often the sky goes white and a bolt shows at one of the scene's places.
   useEffect(() => {

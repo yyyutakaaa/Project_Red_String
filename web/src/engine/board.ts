@@ -22,8 +22,12 @@ function defaultPosition(kind: PinKind, index: number): { x: number; y: number }
   return { x: 110 + col * 190 + (row % 2) * 60, y: 320 + row * 185 };
 }
 
-/** Ensure every suspect and every found evidence item has a pin; keeps existing positions. */
-export function syncPins(board: BoardState, c: CaseFile, foundEvidence: readonly string[]): BoardState {
+/**
+ * Ensure every suspect and every found evidence item has a pin; keeps existing positions. A new print that
+ * belongs with a suspect (`near`: evidence id to suspect id, from the strings the board ties itself) takes
+ * the free spot closest under that suspect, so its string hangs down instead of across the board.
+ */
+export function syncPins(board: BoardState, c: CaseFile, foundEvidence: readonly string[], near: Readonly<Record<string, string>> = {}): BoardState {
   const existing = new Map(board.pins.map((p) => [p.id, p]));
   const pins: BoardPin[] = [];
   c.suspects.forEach((s, i) => pins.push(existing.get(s.id) ?? { id: s.id, kind: 'suspect', ...defaultPosition('suspect', i) }));
@@ -41,9 +45,21 @@ export function syncPins(board: BoardState, c: CaseFile, foundEvidence: readonly
   }
   for (const id of evidenceIds) {
     if (existing.has(id)) continue;
-    let slot = 0;
-    while (slot < 60 && taken(defaultPosition('evidence', slot))) slot += 1;
-    pins.push({ id, kind: 'evidence', ...defaultPosition('evidence', slot) });
+    const owner = near[id] ? pins.find((p) => p.id === near[id]) : undefined;
+    let best = -1;
+    let bestCost = Infinity;
+    for (let slot = 0; slot < 60; slot++) {
+      const pos = defaultPosition('evidence', slot);
+      if (taken(pos)) continue;
+      // Without an owner: the first free spot. With one: close under them, the top rows first.
+      const cost = owner ? Math.abs(pos.x - owner.x) + Math.floor(slot / 6) * 140 : slot;
+      if (cost < bestCost) {
+        bestCost = cost;
+        best = slot;
+      }
+      if (!owner) break;
+    }
+    pins.push({ id, kind: 'evidence', ...defaultPosition('evidence', Math.max(0, best)) });
   }
   // Keep the case file's order, whatever order the pins were added in.
   const order = new Map<string, number>([...c.suspects.map((s) => s.id), ...evidenceIds].map((id, i) => [id, i]));
@@ -89,42 +105,98 @@ export function removeLink(board: BoardState, id: string): BoardState {
 // to, and evidence that led to more evidence. Whether a string holds is still for the player to test.
 
 const TITLES = new Set(['mr', 'mrs', 'miss', 'ms', 'dr', 'judge', 'doctor', 'sir', 'lady', 'lord']);
+/** Words that, right before a surname, say a person is meant (not a firm, a trust or a house). */
+const TITLES_ANY = ['dr', 'doctor', 'judge', 'inspector', 'sergeant', 'officer', 'nurse', 'professor'];
+const TITLES_HE = ['mr', 'mister', 'herr', 'monsieur'];
+const TITLES_SHE = ['mrs', 'miss', 'ms', 'madame', 'mme', 'frau', 'mlle'];
 
-/** Words that name one suspect and nobody or nothing else in the case (first names, unshared surnames). */
-function nameWords(c: CaseFile): Map<string, string> {
-  const taken = new Set<string>();
-  const words = (text: string) => text.toLowerCase().split(/[^a-z\u00c0-\u024f']+/).filter(Boolean);
-  for (const w of [...words(c.victim.name), ...words(c.title), ...c.rooms.flatMap((r) => words(r.name))]) taken.add(w);
-  const owners = new Map<string, Set<string>>();
-  for (const s of c.suspects) {
-    for (const w of words(s.name)) {
-      if (w.length < 3 || TITLES.has(w) || taken.has(w)) continue;
-      owners.set(w, (owners.get(w) ?? new Set()).add(s.id));
+/** "she" or "he" when the text about a person clearly says which, else null. */
+function genderOf(value: unknown): 'she' | 'he' | null {
+  const text = JSON.stringify(value);
+  const she = (text.match(/\b(she|her|hers|herself)\b/gi) ?? []).length;
+  const he = (text.match(/\b(he|him|his|himself)\b/gi) ?? []).length;
+  if (she >= 2 * he && she >= 2) return 'she';
+  if (he >= 2 * she && he >= 2) return 'he';
+  return null;
+}
+const L = 'a-z\\u00c0-\\u024f';
+const esc = (w: string) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+/**
+ * How each suspect can be named in a text: by their first name when nobody else in the case carries it,
+ * or by their surname. A bare surname ("Pike's coat") counts only when the case never uses it as the name
+ * of something else; otherwise ("the Ashgrove Family Trust", "Ashgrove Shipping") it needs the first name,
+ * an initial or a title in front ("Clara Ashgrove", "C. Ashgrove", "Miss Ashgrove").
+ */
+function namePatterns(c: CaseFile): Array<{ id: string; re: RegExp }> {
+  const words = (text: string) => text.toLowerCase().split(new RegExp(`[^${L}']+`)).filter(Boolean);
+  const taken = new Set<string>([...words(c.victim.name), ...words(c.title), ...c.rooms.flatMap((r) => words(r.name))]);
+  const parts = c.suspects.map((s) => {
+    const ws = words(s.name).filter((w) => !TITLES.has(w));
+    return { id: s.id, first: ws.length > 1 ? ws[0]! : null, surname: ws[ws.length - 1]! };
+  });
+  const count = (w: string) => parts.filter((p) => p.first === w || p.surname === w).length;
+  const all = JSON.stringify(c);
+  /** The surname also names a firm, a house or a trust somewhere in the case: "Ashgrove Shipping". */
+  const namesSomethingElse = (surname: string, first: string | null) => {
+    const cap = surname.charAt(0).toUpperCase() + surname.slice(1);
+    const own = first ? new RegExp(`${esc(first)}\\s+${esc(cap)}\\s+[A-Z]`, 'i') : null;
+    return [...all.matchAll(new RegExp(`(.{0,24})\\b${esc(cap)}\\s+[A-Z][a-z]`, 'g'))].some((m) => !own?.test(`${m[1]!.split(/\\s+/).pop()} ${m[0].slice(m[1]!.length)}`));
+  };
+  return parts.map((p) => {
+    const alts: string[] = [];
+    if (p.first && p.first.length >= 3 && !taken.has(p.first) && count(p.first) === 1) alts.push(esc(p.first));
+    if (count(p.surname) === 1) {
+      const bare = p.surname.length >= 3 && !taken.has(p.surname) && !namesSomethingElse(p.surname, p.first);
+      if (bare) alts.push(esc(p.surname));
+      else {
+        // "Miss Finch", "C. Ashgrove", "Clara Ashgrove": only what cannot be the victim of the same name.
+        const victim = words(c.victim.name);
+        const shared = victim.includes(p.surname);
+        const vFirst = victim.filter((w) => !TITLES.has(w))[0];
+        const titles = TITLES_ANY.filter((t) => !victim.includes(t));
+        const g = genderOf(c.suspects.find((s) => s.id === p.id));
+        const vg = genderOf(c.victim);
+        if (g && (!shared || (vg && vg !== g))) titles.push(...(g === 'she' ? TITLES_SHE : TITLES_HE));
+        const before = [
+          ...(p.first ? [`${esc(p.first)}\\s+`] : []),
+          `(?:${titles.join('|')})\\.?\\s+`,
+          ...(p.first && !(shared && vFirst?.[0] === p.first[0]) ? [`${esc(p.first[0]!)}\\.\\s*`] : []),
+        ];
+        alts.push(`(?:${before.join('|')})${esc(p.surname)}`);
+      }
     }
-  }
-  const out = new Map<string, string>();
-  for (const [w, ids] of owners) if (ids.size === 1) out.set(w, [...ids][0]!);
-  return out;
+    const re = alts.length ? new RegExp(`(?:^|[^${L}])(?:${alts.join('|')})(?:'s)?(?=[^${L}]|$)`) : /(?!)/;
+    return { id: p.id, re };
+  });
 }
 
 /**
- * The suspects a piece of evidence names, by a first name or a surname only they carry. Evidence that
- * names more than two of them (a guest list, a programme) is about everyone and ties nobody.
+ * The suspects a piece of evidence names. Evidence that names more than two of them (a guest list,
+ * a programme) is about everyone and ties nobody.
  */
 export function suspectsNamedIn(c: CaseFile, e: Evidence): string[] {
-  const words = nameWords(c);
   const text = ` ${e.name} ${e.description} `.toLowerCase();
-  const ids = new Set<string>();
-  for (const [w, id] of words) {
-    if (new RegExp(`(^|[^a-z\u00c0-\u024f])${w}('s)?([^a-z\u00c0-\u024f]|$)`).test(text)) ids.add(id);
-  }
-  return ids.size > 2 ? [] : [...ids];
+  const ids = namePatterns(c).filter((p) => p.re.test(text)).map((p) => p.id);
+  return ids.length > 2 ? [] : ids;
 }
 
 export interface AutoLink {
   from: string;
   to: string;
   reason: AutoReason;
+}
+
+/** For each piece of evidence the board ties to exactly one suspect: that suspect (see syncPins). */
+export function pinAnchors(links: readonly AutoLink[], c: CaseFile): Record<string, string> {
+  const suspects = new Set(c.suspects.map((s) => s.id));
+  const owners = new Map<string, Set<string>>();
+  for (const l of links) {
+    const [s, e] = suspects.has(l.from) ? [l.from, l.to] : [l.to, l.from];
+    if (!suspects.has(s) || suspects.has(e)) continue;
+    owners.set(e, (owners.get(e) ?? new Set()).add(s));
+  }
+  return Object.fromEntries([...owners].filter(([, s]) => s.size === 1).map(([e, s]) => [e, [...s][0]!]));
 }
 
 /** Every string the board ties by itself for this run so far. Pass the English case. */

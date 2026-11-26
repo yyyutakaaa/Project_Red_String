@@ -29,17 +29,13 @@
 .backdrop[data-flash] .stage {
   animation: scene-flash 1.1s ease-out;
 }
-/* Behind a page full of text the flash stays gentle. */
+/* Behind a page full of text the flash stays gentle: only the light in the sky, no brightening of the
+   whole picture (a filter on the stage repaints every layer in it). */
 .backdrop[data-dim='page'][data-flash] .stage {
-  animation-name: scene-flash-soft;
+  animation: none;
 }
 .backdrop[data-dim='page'] .lightning {
   --strike: 0.55;
-}
-@keyframes scene-flash-soft {
-  0%, 100% { filter: none; }
-  8% { filter: brightness(1.18); }
-  22% { filter: brightness(1.1); }
 }
 @keyframes scene-flash {
   0%, 100% { filter: none; }
@@ -53,6 +49,23 @@
   position: absolute;
   inset: 0;
   transform: translate3d(calc(var(--mx) * var(--depth, 0) * -46px), calc(var(--my) * var(--depth, 0) * -22px), 0);
+}
+
+/* Behind a page (a room, the board, an interview: panels full of pictures and text) the backdrop holds
+   still and flat. Every leaning, drifting or blended layer is a window-sized GPU layer of its own; with
+   the page's own pictures on top that ran out of GPU memory in the desktop app, and parts of the page
+   were then not drawn at all (the backdrop showed through a room's picture). Rain and lights still move. */
+.backdrop[data-dim='page'] .item {
+  transform: none;
+}
+.backdrop[data-dim='page'] .pan .art,
+.backdrop[data-dim='page'] .fog span {
+  animation: none;
+}
+.backdrop[data-dim='page'] .glow,
+.backdrop[data-dim='page'] .flash,
+.backdrop[data-dim='page'] .bolt {
+  mix-blend-mode: normal;
 }
 
 .art {
@@ -109,7 +122,6 @@
     radial-gradient(ellipse 11% 42% at 44% 45%, rgba(140, 160, 190, 0.4), transparent 70%);
   background-size: 50% 100%;
   background-repeat: repeat-x;
-  filter: blur(6px);
   animation: fog-drift var(--seconds, 80s) linear infinite;
 }
 .fog span + span {
@@ -231,8 +243,8 @@
   inset: 0;
   background-image: radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.32) 0.9px, transparent 1.3px);
   background-size: 4px 4px;
+  /* Black dots: plain blending looks the same as multiply, without a blended layer. */
   opacity: 0.35;
-  mix-blend-mode: multiply;
 }
 
 /* The picture steps back for the screen on top of it. */

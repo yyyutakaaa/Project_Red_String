@@ -352,6 +352,33 @@
   line-height: 1.55;
 }
 
+/* What Doyle said: his face beside each line, like the bubble it came from. */
+.partnerList {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.partnerList li {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: start;
+}
+.partnerList p {
+  margin: 0;
+  font-family: var(--font-type);
+  line-height: 1.55;
+}
+.partnerAvatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 0 2px var(--paper-ink, #2a2118);
+}
+
 @media (max-width: 640px) {
   .tabs { padding: 8px var(--space-2) 0; }
   .sheet { padding: var(--space-4) var(--space-3) var(--space-5) calc(var(--space-5) + 0.5rem); }

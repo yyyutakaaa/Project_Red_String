@@ -11,7 +11,8 @@ import {
 } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import type { CaseFile, Evidence, RevealableClue, Suspect, TimelineEvent } from '@shared/caseSchema.ts';
-import type { CaseProgress } from '../engine/types.ts';
+import type { CaseProgress, PartnerLogEntry } from '../engine/types.ts';
+import doyleAvatar from '../assets/art/partner/doyle.webp';
 import { ScreenFrame } from '../components/ScreenFrame.tsx';
 import { ButtonLink } from '../components/Button.tsx';
 import { EvidenceCard } from '../components/EvidenceCard.tsx';
@@ -24,15 +25,16 @@ import { sfx } from '../audio/audio.ts';
 import styles from './Notebook.module.css';
 import { t, tn, useT, type MessageKey } from '../i18n/index.ts';
 
-type TabKey = 'evidence' | 'clues' | 'suspects' | 'timeline' | 'notes' | 'hints';
+type TabKey = 'evidence' | 'clues' | 'suspects' | 'timeline' | 'notes' | 'partner' | 'hints';
 
-const TAB_ORDER: readonly TabKey[] = ['evidence', 'clues', 'suspects', 'timeline', 'notes', 'hints'];
+const TAB_ORDER: readonly TabKey[] = ['evidence', 'clues', 'suspects', 'timeline', 'notes', 'partner', 'hints'];
 const TAB_LABEL: Record<TabKey, MessageKey> = {
   evidence: 'notebook.tabEvidence',
   clues: 'notebook.tabClues',
   suspects: 'notebook.tabSuspects',
   timeline: 'notebook.tabTimeline',
   notes: 'notebook.tabNotes',
+  partner: 'notebook.tabPartner',
   hints: 'notebook.tabHints',
 };
 
@@ -357,6 +359,29 @@ function NotesPanel({ caseKey, initial }: { caseKey: string; initial: string }) 
   );
 }
 
+/** What Sergeant Doyle said in this run, so it can be read again after his bubble is gone. */
+function PartnerPanel({ log }: { log: readonly PartnerLogEntry[] }) {
+  return (
+    <>
+      <header className={styles.panelHead}>
+        <h2>{t('notebook.partnerTitle')}</h2>
+      </header>
+      {log.length === 0 ? (
+        <Empty>{t('notebook.noPartner')}</Empty>
+      ) : (
+        <ol className={styles.partnerList}>
+          {log.map((l, i) => (
+            <li key={i}>
+              <img src={doyleAvatar} alt="" className={styles.partnerAvatar} />
+              <p>{l.text}</p>
+            </li>
+          ))}
+        </ol>
+      )}
+    </>
+  );
+}
+
 function HintsPanel({ caseFile, hints }: { caseFile: CaseFile; hints: string[] }) {
   const remaining = caseFile.hints.length - hints.length;
   return (
@@ -441,6 +466,7 @@ export function Notebook() {
     suspects: caseFile.suspects.length,
     timeline: publicEvents.length,
     notes: null,
+    partner: progress.partnerLog?.length ?? 0,
     hints: hints.length,
   };
 
@@ -478,6 +504,7 @@ export function Notebook() {
     suspects: <SuspectsPanel caseFile={caseFile} caseKey={caseKey} progress={progress} groups={clueGroups} />,
     timeline: <TimelinePanel caseFile={caseFile} events={publicEvents} />,
     notes: <NotesPanel key={caseKey} caseKey={caseKey} initial={progress.notes} />,
+    partner: <PartnerPanel log={progress.partnerLog ?? []} />,
     hints: <HintsPanel caseFile={caseFile} hints={hints} />,
   };
 

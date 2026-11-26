@@ -26,9 +26,9 @@ describe('strings the board ties by itself', () => {
     const named = (id: string) => suspectsNamedIn(tutorial, tutorial.evidence.find((e) => e.id === id)!);
     expect(named('finch-diary')).toEqual(['pike']);
     expect(named('buyer-letter')).toEqual(['margaret']);
-    // "Miss Finch" shares the surname with the victim: that ties nobody.
-    expect(named('switchboard-log')).toEqual([]);
-    // Clara Ashgrove shares her surname with the house and the victim, but her first name is hers.
+    // The victim is a Finch too, but "Miss Finch" can only be Margaret; a bare "Finch" would tie nobody.
+    expect(named('switchboard-log')).toEqual(['margaret']);
+    // "E. Ashgrove" on the carton is the victim, not his daughter Clara.
     expect(suspectsNamedIn(ashgrove, ashgrove.evidence.find((e) => e.id === 'empty-shelf')!)).toEqual([]);
   });
 
@@ -40,7 +40,7 @@ describe('strings the board ties by itself', () => {
     });
     const links = autoLinks(tutorial, p).map((l) => `${l.reason}:${linkId(l.from, l.to)}`).sort();
     // The diary both names Pike and broke him: one string, tied for the reaction.
-    expect(links).toEqual(['reacted:bell-note~pike', 'reacted:finch-diary~pike']);
+    expect(links).toEqual(['named:margaret~switchboard-log', 'reacted:bell-note~pike', 'reacted:finch-diary~pike']);
   });
 
   it('never ties more than what was found out, and a string the player cut stays cut', () => {

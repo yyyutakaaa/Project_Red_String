@@ -782,10 +782,10 @@
   "tour.toBoardTitle": "Ab an die Pinnwand",
   "tour.toBoardText": "Du hast beide gehört. Öffne die Pinnwand und setz deine Theorie zusammen, bevor du jemanden anklagst.",
   "tour.boardTitle": "Spann den roten Faden",
-  "tour.boardText": "Die Tafel spannt von selbst einen Faden für jede Verbindung, die du herausgefunden hast. Spann jetzt selbst einen: zieh von Margaret Finch zum Buch der Telefonzentrale.",
+  "tour.boardText": "Zieh einen Faden von der Nadel eines Verdächtigen zu einem Beweisstück, das auf ihn zeigt. Versuch es mit Leonard Pike und dem Zettel aus Zimmer 12.",
   "tour.boardTip": "Ein Faden, der hält, hat an einem Ende einen Beweis und am anderen die richtige Person.",
   "tour.checkTitle": "Prüf deine Theorie",
-  "tour.checkText": "Drück auf Theorie prüfen. Du erfährst, wie viele deiner Fäden halten, aber nicht welche.",
+  "tour.checkText": "Die Tafel spannt von selbst einen Faden für jede Verbindung, die du herausgefunden hast. Spann eigene dazu, schneide durch, was du nicht glaubst, und drück dann auf Theorie prüfen: Du erfährst, wie viele Fäden halten, nicht welche.",
   "tour.toAccuseTitle": "Bereit zur Anklage",
   "tour.toAccuseText": "Wenn du dir sicher bist, öffne Anklagen. Du hast nur einen Versuch.",
   "tour.notebookTitle": "Dein Notizbuch",
@@ -808,5 +808,8 @@
   "partner.dismiss": "Schließen",
   "settings.partnerLegend": "Sergeant Doyle",
   "settings.partnerOn": "Denkt mit",
-  "settings.partnerOff": "Still"
+  "settings.partnerOff": "Still",
+  "notebook.tabPartner": "Doyle",
+  "notebook.partnerTitle": "Was Doyle gesagt hat",
+  "notebook.noPartner": "Doyle hat noch nichts gesagt."
 }

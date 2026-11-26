@@ -842,10 +842,10 @@ export const en = {
   'tour.toBoardTitle': "Put it on the board",
   'tour.toBoardText': "You heard them both. Open the Board to put your theory together before you accuse anyone.",
   'tour.boardTitle': "Tie the red string",
-  'tour.boardText': "The board ties a string by itself for every link you found out. Now tie one yourself: drag from Margaret Finch to the switchboard log.",
+  'tour.boardText': "Drag a string from the pin of a suspect to a piece of evidence that points at them. Try Leonard Pike and the note from room 12.",
   'tour.boardTip': "A string that holds needs evidence on one end and the right person on the other.",
   'tour.checkTitle': "Check your theory",
-  'tour.checkText': "Press Check theory. It tells you how many of your strings hold up, but not which ones.",
+  'tour.checkText': "The board ties a string by itself for every link you found out. Tie your own, cut what you don't believe, then press Check theory: it tells you how many strings hold, not which.",
   'tour.toAccuseTitle': "Ready to accuse",
   'tour.toAccuseText': "When you are sure, open Accuse. You only get one try.",
   'tour.notebookTitle': "Your notebook",
@@ -869,6 +869,9 @@ export const en = {
   'settings.partnerLegend': "Sergeant Doyle",
   'settings.partnerOn': "Thinks along",
   'settings.partnerOff': "Quiet",
+  'notebook.tabPartner': "Doyle",
+  'notebook.partnerTitle': "What Doyle said",
+  'notebook.noPartner': "Doyle hasn't said anything yet.",
 };
 
 export type MessageKey = keyof typeof en;

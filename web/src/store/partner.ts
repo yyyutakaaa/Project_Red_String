@@ -5,7 +5,7 @@
 import { create } from 'zustand';
 import type { CaseFile } from '@shared/caseSchema.ts';
 import { remarkOnClues, remarkOnEvidence, remarkOnReply, type Remark, type RemarkKind } from '../engine/partner.ts';
-import { discoveryEvents, markPartnerSaid, useGame } from './game.ts';
+import { discoveryEvents, logPartnerLine, markPartnerSaid, useGame } from './game.ts';
 import { useSettings } from './settings.ts';
 import { askPartner } from '../lib/api.ts';
 import { englishOf, t, type MessageKey } from '../i18n/index.ts';
@@ -87,7 +87,9 @@ async function speak(p: Pending): Promise<void> {
   });
   // The player may have switched him off or left the case while he was thinking.
   if (!useSettings.getState().partner || progressOf(p.caseKey)?.runId !== progress.runId) return;
-  usePartner.setState({ line: { id: nextId++, caseKey: p.caseKey, text: words ?? fallbackLine(p.c, r), kind: r.kind } });
+  const text = words ?? fallbackLine(p.c, r);
+  usePartner.setState({ line: { id: nextId++, caseKey: p.caseKey, text, kind: r.kind } });
+  logPartnerLine(p.caseKey, text);
 }
 
 function flush(): void {

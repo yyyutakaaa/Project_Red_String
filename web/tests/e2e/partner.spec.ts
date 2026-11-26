@@ -64,6 +64,10 @@ test('Doyle remarks on a find that does not fit what a suspect said, in the play
   await page.getByTestId('hotspot-front-desk').click();
   await page.waitForTimeout(800);
   expect(partnerCalls).toHaveLength(1);
+
+  // What he said stays in the notebook, after the bubble is gone.
+  await page.goto('/case/tutorial/notebook?tab=partner');
+  await expect(page.getByRole('tabpanel')).toContainText('Volgens Pike stond hij de hele tijd aan de balie.');
 });
 
 test('without the partner function Doyle uses the game\'s own line, and the board ties strings by itself', async ({ page }) => {

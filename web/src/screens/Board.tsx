@@ -16,6 +16,7 @@ import {
   hasLink,
   linkId,
   movePin,
+  pinAnchors,
   removeLink,
   syncAutoLinks,
   syncPins,
@@ -452,10 +453,10 @@ export function Board() {
   // Every suspect and every found item gets a pin, and the strings the board ties by itself from what
   // was found out are tied. Saved back when that changed anything.
   const english = englishOf(caseFile);
-  const board = useMemo(
-    () => syncAutoLinks(syncPins(progress.board, caseFile, progress.foundEvidence), autoLinks(english, progress)),
-    [progress, caseFile, english],
-  );
+  const board = useMemo(() => {
+    const auto = autoLinks(english, progress);
+    return syncAutoLinks(syncPins(progress.board, caseFile, progress.foundEvidence, pinAnchors(auto, english)), auto);
+  }, [progress, caseFile, english]);
   useEffect(() => {
     if (board === progress.board) return;
     // A string the board just tied by itself is drawn in like one the player ties.
@@ -488,7 +489,9 @@ export function Board() {
   /** The freshest board from the store (handlers may run between renders). */
   const latestBoard = (): BoardState => {
     const p = useGame.getState().slot?.progress[caseKey];
-    return p ? syncAutoLinks(syncPins(p.board, caseFile, p.foundEvidence), autoLinks(english, p)) : board;
+    if (!p) return board;
+    const auto = autoLinks(english, p);
+    return syncAutoLinks(syncPins(p.board, caseFile, p.foundEvidence, pinAnchors(auto, english)), auto);
   };
 
   useEffect(() => {

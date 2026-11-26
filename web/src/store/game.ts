@@ -2,7 +2,7 @@
 // Every meaningful action autosaves the slot to localStorage (streaming text updates are batched).
 import { create } from 'zustand';
 import type { CaseFile, Hotspot, Mood } from '@shared/caseSchema.ts';
-import { syncPins } from '../engine/board.ts';
+import { autoLinks, pinAnchors, syncPins } from '../engine/board.ts';
 import { discoveredCount, evaluateAccusation, questionsUsed, scoreProgress, totalDiscoverables, totalPatience } from '../engine/scoring.ts';
 import {
   browserStorage,
@@ -20,7 +20,7 @@ import {
 import type { AccusationOutcome, AccusationRecord, BoardState, CaseProgress, CaseSource, ChatMessage, ConversationState, SaveSlotData } from '../engine/types.ts';
 import { sfx } from '../audio/audio.ts';
 import { track } from '../lib/telemetry.ts';
-import { t, tn } from '../i18n/index.ts';
+import { englishOf, t, tn } from '../i18n/index.ts';
 
 export interface Toast {
   id: string;
@@ -236,6 +236,12 @@ export function visitRoom(caseKey: string, roomId: string): void {
   if (before && !before.visitedRooms.includes(roomId)) track('room_open', caseKey, { room: roomId });
 }
 
+/** Pins for every found print; a new one goes under the suspect the board will tie it to. */
+function pinsFor(c: CaseFile, p: CaseProgress): BoardState {
+  const english = englishOf(c);
+  return syncPins(p.board, c, p.foundEvidence, pinAnchors(autoLinks(english, p), english));
+}
+
 /** Examine a hotspot. Returns the evidence id if this examination found new evidence. */
 export function examineHotspot(c: CaseFile, caseKey: string, roomId: string, hotspot: Hotspot): string | null {
   const key = `${roomId}/${hotspot.id}`;
@@ -248,7 +254,7 @@ export function examineHotspot(c: CaseFile, caseKey: string, roomId: string, hot
       foundEvidence = [...p.foundEvidence, hotspot.evidence_id];
     }
     if (examined === p.examinedHotspots && foundEvidence === p.foundEvidence) return p;
-    return { ...p, examinedHotspots: examined, foundEvidence, board: syncPins(p.board, c, foundEvidence) };
+    return { ...p, examinedHotspots: examined, foundEvidence, board: pinsFor(c, { ...p, foundEvidence }) };
   });
   if (found) {
     G().pushToast(t('toast.evidence', { name: evidenceName(c, found) }), 'evidence');
@@ -279,7 +285,7 @@ export function applyRevealedClues(c: CaseFile, caseKey: string, clueIds: readon
       }
     }
     if (added.length === 0) return p;
-    return { ...p, revealedClues: revealed, foundEvidence: found, board: syncPins(p.board, c, found) };
+    return { ...p, revealedClues: revealed, foundEvidence: found, board: pinsFor(c, { ...p, revealedClues: revealed, foundEvidence: found }) };
   });
   if (added.length) {
     G().pushToast(tn('toast.clue', added.length), 'clue');
@@ -351,6 +357,11 @@ export function setBoard(caseKey: string, board: BoardState, save = true): void 
 /** Remember that the partner remarked on this, so he does not say it twice in this run. */
 export function markPartnerSaid(caseKey: string, key: string): void {
   G().update(caseKey, (p) => (p.partnerSaid?.includes(key) ? p : { ...p, partnerSaid: [...(p.partnerSaid ?? []), key] }));
+}
+
+/** Keep what the partner said, so the player can read it back in the notebook. */
+export function logPartnerLine(caseKey: string, text: string): void {
+  G().update(caseKey, (p) => ({ ...p, partnerLog: [...(p.partnerLog ?? []), { text, at: Date.now() }].slice(-60) }));
 }
 
 /** Having the strings on the board marked costs as much as a hint. */

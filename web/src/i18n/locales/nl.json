@@ -782,10 +782,10 @@
   "tour.toBoardTitle": "Zet het op het bord",
   "tour.toBoardText": "Je hebt ze allebei gehoord. Open het Bord om je theorie samen te stellen voor je iemand beschuldigt.",
   "tour.boardTitle": "Span het rode touwtje",
-  "tour.boardText": "Het bord spant zelf een touwtje voor elk verband dat je ontdekt hebt. Span er nu zelf een: sleep van Margaret Finch naar het logboek van de telefooncentrale.",
+  "tour.boardText": "Sleep een touwtje van de speld van een verdachte naar een bewijsstuk dat naar hem wijst. Probeer Leonard Pike en het briefje van kamer 12.",
   "tour.boardTip": "Een touwtje dat houdt, heeft bewijs aan de ene kant en de juiste persoon aan de andere.",
   "tour.checkTitle": "Controleer je theorie",
-  "tour.checkText": "Druk op Controleer theorie. Dan hoor je hoeveel van je touwtjes houden, maar niet welke.",
+  "tour.checkText": "Het bord spant zelf een touwtje voor elk verband dat je ontdekt hebt. Span er zelf bij, knip door wat je niet gelooft en druk dan op Controleer theorie: je hoort hoeveel touwtjes houden, niet welke.",
   "tour.toAccuseTitle": "Klaar om te beschuldigen",
   "tour.toAccuseText": "Ben je zeker? Open dan Beschuldigen. Je krijgt maar één kans.",
   "tour.notebookTitle": "Je notitieboek",
@@ -808,5 +808,8 @@
   "partner.dismiss": "Sluiten",
   "settings.partnerLegend": "Sergeant Doyle",
   "settings.partnerOn": "Denkt mee",
-  "settings.partnerOff": "Stil"
+  "settings.partnerOff": "Stil",
+  "notebook.tabPartner": "Doyle",
+  "notebook.partnerTitle": "Wat Doyle zei",
+  "notebook.noPartner": "Doyle heeft nog niets gezegd."
 }
