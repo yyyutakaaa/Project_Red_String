@@ -1,0 +1,31 @@
+.frame {
+  display: block;
+  flex: none;
+  overflow: hidden;
+  background: var(--comic-fill);
+  border: var(--comic-line);
+  border-radius: 2px;
+}
+.frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 18%;
+}
+.large {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  box-shadow: var(--comic-panel);
+}
+.small {
+  width: 2.6rem;
+  height: 2.6rem;
+  box-shadow: 0 0 0 1px var(--paper-rim), 2px 3px 0 rgba(0, 0, 0, 0.7);
+}
+.empty {
+  display: grid;
+  place-items: center;
+  padding: 12%;
+}
+.small.empty { padding: 4px; }

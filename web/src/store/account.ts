@@ -9,7 +9,13 @@ import type { Session } from '@supabase/supabase-js';
 import { clearSlots, deleteSlot, listSlots, loadSlot, putSlot } from '../engine/save.ts';
 import { parseRemote, planMerge, readSyncRecord, writeSyncRecord, type RemoteRow } from '../engine/cloudSync.ts';
 import type { SaveSlotData } from '../engine/types.ts';
-import { createAccount, signIn as authSignIn, usernameFromEmail } from '../lib/account.ts';
+import {
+  changePassword as authChangePassword,
+  createAccount,
+  renameAccount,
+  signIn as authSignIn,
+  usernameFromEmail,
+} from '../lib/account.ts';
 import { supabase } from '../lib/supabase.ts';
 import { saveEvents, useGame } from './game.ts';
 import { t } from '../i18n/index.ts';
@@ -19,6 +25,8 @@ export type SyncState = 'local' | 'syncing' | 'synced' | 'offline';
 export interface AccountUser {
   id: string;
   username: string;
+  /** When the account was opened (ms since epoch), if known. */
+  createdAt: number | null;
   /** What the account remembers besides saves: the language and the first-start popups. */
   prefs: AccountPrefs;
 }
@@ -29,6 +37,8 @@ export interface AccountPrefs {
   tutorialSeen?: boolean;
   /** The tutorial case was played to the end. */
   tutorialDone?: boolean;
+  /** The portrait the player picked as their own (a key from art/portraits). */
+  avatar?: string;
 }
 
 function prefsFrom(meta: Record<string, unknown> | undefined): AccountPrefs {
@@ -37,6 +47,7 @@ function prefsFrom(meta: Record<string, unknown> | undefined): AccountPrefs {
     language: typeof p.language === 'string' ? p.language : undefined,
     tutorialSeen: p.tutorialSeen === true ? true : undefined,
     tutorialDone: p.tutorialDone === true ? true : undefined,
+    avatar: typeof p.avatar === 'string' && /^[a-z0-9-]{1,40}$/.test(p.avatar) ? p.avatar : undefined,
   };
 }
 
@@ -55,6 +66,10 @@ interface AccountStore {
   syncNow: () => Promise<void>;
   /** Remember preferences on the account (merged with what it has). Does nothing for guests. */
   savePrefs: (patch: AccountPrefs) => Promise<void>;
+  /** A new detective name. Throws AccountError. */
+  rename: (username: string) => Promise<void>;
+  /** A new password, after checking the current one. Throws AccountError. */
+  changePassword: (current: string, next: string) => Promise<void>;
 }
 
 const UPLOAD_DEBOUNCE_MS = 1500;
@@ -67,7 +82,8 @@ function userFromSession(session: Session | null): AccountUser | null {
   if (!u) return null;
   const meta = u.user_metadata as { username?: unknown; prefs?: unknown } | undefined;
   const username = typeof meta?.username === 'string' ? meta.username : usernameFromEmail(u.email);
-  return { id: u.id, username, prefs: prefsFrom(meta) };
+  const created = u.created_at ? Date.parse(u.created_at) : NaN;
+  return { id: u.id, username, createdAt: Number.isFinite(created) ? created : null, prefs: prefsFrom(meta) };
 }
 
 // ---------------------------------------------------------------------------
@@ -312,6 +328,22 @@ export const useAccount = create<AccountStore>((set, get) => ({
     // updateUser merges these keys into the account's metadata; the username stays as it is.
     const { error } = await c.auth.updateUser({ data: { prefs } });
     if (error) console.warn('Could not save preferences on the account', error.message);
+  },
+
+  rename: async (username) => {
+    const c = supabase();
+    if (!c || !get().user) return;
+    await renameAccount(username);
+    // A fresh token carries the new address and name.
+    const { data } = await c.auth.refreshSession();
+    const fresh = userFromSession(data.session);
+    if (fresh) set({ user: { ...fresh, prefs: get().user?.prefs ?? fresh.prefs } });
+  },
+
+  changePassword: async (current, next) => {
+    const user = get().user;
+    if (!user) return;
+    await authChangePassword(user.username, current, next);
   },
 
   syncNow: async () => {

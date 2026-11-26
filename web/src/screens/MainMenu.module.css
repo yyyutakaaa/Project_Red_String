@@ -197,32 +197,43 @@
   right: clamp(1rem, 4vw, 2.5rem);
   z-index: 2;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 2px;
+  align-items: center;
+  gap: var(--space-3);
   max-width: min(22rem, calc(100vw - 2rem));
-  padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--ink-500);
-  border-radius: var(--radius-md);
-  background: var(--glass-bg);
-  backdrop-filter: blur(6px);
+  padding: 6px var(--space-4) 6px 6px;
+  background: var(--comic-dots), linear-gradient(180deg, var(--comic-fill-2), var(--comic-fill));
+  border: var(--comic-line);
+  border-radius: 2px;
+  box-shadow: var(--comic-panel);
   color: var(--text);
   text-decoration: none;
-  text-align: right;
+  rotate: 0.8deg;
+  transition: rotate var(--dur-fast) var(--ease-out);
   animation: global(fade-in) 1.2s var(--ease-out) 0.4s both;
 }
 .accountChip:hover,
 .accountChip:focus-visible {
-  border-color: var(--lamp-400);
-  box-shadow: 0 0 18px var(--lamp-glow);
+  rotate: 0deg;
+  box-shadow: 0 0 0 2px var(--lamp-400), var(--comic-drop);
+}
+.accountChip:focus-visible { outline: none; }
+.chipText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
 }
 .chipName {
-  font-family: var(--font-type);
-  font-size: var(--fs-sm);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
   color: var(--lamp-200);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }
+.chipName:only-child { padding-left: var(--space-2); }
 
 /* Day shift: ink title with a faint warm halo instead of a lamp glow. */
 :global([data-theme='light']) .title {

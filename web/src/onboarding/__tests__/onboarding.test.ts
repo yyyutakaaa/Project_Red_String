@@ -5,7 +5,7 @@ import { firstRunStep, parseOnboarding, type OnboardingState } from '../onboardi
 import { tutorialStep } from '../tutorialSteps.ts';
 
 const fresh: OnboardingState = { languageChosen: false, accountAsked: false, tutorialSeen: false, tutorialDone: false };
-const user = { id: 'u1', username: 'sam', prefs: {} };
+const user = { id: 'u1', username: 'sam', createdAt: null, prefs: {} };
 
 describe('first start', () => {
   it('asks for the language, then an account, then the tutorial', () => {

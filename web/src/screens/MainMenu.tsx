@@ -8,7 +8,8 @@ import { continueSlot, type KeyValueStorage } from '../engine/save.ts';
 import { useGame } from '../store/game.ts';
 import { useAccount } from '../store/account.ts';
 import { useLaunch } from '../boot/launch.ts';
-import { SyncBadge } from './Account.tsx';
+import { SyncStamp } from './Account.tsx';
+import { DetectiveAvatar } from '../components/DetectiveAvatar.tsx';
 import { ShellNotice } from '../desktop/ShellNotice.tsx';
 import { FirstRun } from '../onboarding/FirstRun.tsx';
 import { useStartTutorial } from '../onboarding/useStartTutorial.ts';
@@ -120,8 +121,11 @@ export function MainMenu() {
       <Link to="/account" className={styles.accountChip} data-testid="account-chip" onClick={() => sfx('click')}>
         {user ? (
           <>
-            <span className={styles.chipName}>{user.username}</span>
-            <SyncBadge state={sync} compact />
+            <DetectiveAvatar avatar={user.prefs.avatar} size="small" />
+            <span className={styles.chipText}>
+              <span className={styles.chipName}>{user.username}</span>
+              <SyncStamp state={sync} />
+            </span>
           </>
         ) : (
           <span className={styles.chipName}>{t('menu.guest')}</span>

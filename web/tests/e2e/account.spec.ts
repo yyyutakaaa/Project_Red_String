@@ -54,8 +54,17 @@ async function mockSupabase(page: Page) {
 
   await page.route('**/functions/v1/account', async (route) => {
     if (route.request().method() === 'OPTIONS') return route.fulfill({ status: 204, headers: cors });
-    const { username, password } = JSON.parse(route.request().postData() ?? '{}') as { username: string; password: string };
+    const { username, password, action } = JSON.parse(route.request().postData() ?? '{}') as { username: string; password: string; action?: string };
     const email = `${username}@players.redstring.local`;
+    if (action === 'rename') {
+      const uid = tokenUser(route);
+      const entry = [...accounts.entries()].find(([, a]) => a.id === uid);
+      if (!entry) return reply(route, 401, { error: { code: 'unauthorized', message: 'Sign in again.' } });
+      if (accounts.has(email)) return reply(route, 409, { error: { code: 'username_taken', message: 'That name is already on file. Pick another.' } });
+      accounts.delete(entry[0]);
+      accounts.set(email, entry[1]);
+      return reply(route, 200, { ok: true, username });
+    }
     if (accounts.has(email)) return reply(route, 409, { error: { code: 'username_taken', message: 'That name is already on file. Pick another.' } });
     accounts.set(email, { id: `00000000-0000-4000-8000-00000000000${accounts.size + 1}`, password });
     return reply(route, 200, { ok: true, username });
@@ -65,6 +74,12 @@ async function mockSupabase(page: Page) {
     const req = route.request();
     if (req.method() === 'OPTIONS') return route.fulfill({ status: 204, headers: cors });
     const url = new URL(req.url());
+    if (url.pathname.endsWith('/token') && url.searchParams.get('grant_type') === 'refresh_token') {
+      const { refresh_token } = JSON.parse(req.postData() ?? '{}') as { refresh_token: string };
+      const entry = [...accounts.entries()].find(([, a]) => `r-${a.id}` === refresh_token);
+      if (!entry) return reply(route, 400, { error: 'invalid_grant', error_description: 'Invalid Refresh Token' });
+      return reply(route, 200, session(entry[0], entry[1]));
+    }
     if (url.pathname.endsWith('/token')) {
       const { email, password } = JSON.parse(req.postData() ?? '{}') as { email: string; password: string };
       const acc = accounts.get(email);
@@ -79,8 +94,9 @@ async function mockSupabase(page: Page) {
       if (!entry) return reply(route, 401, { message: 'not signed in' });
       const [email, acc] = entry;
       if (req.method() === 'PUT') {
-        const { data } = JSON.parse(req.postData() ?? '{}') as { data?: { prefs?: Record<string, unknown> } };
+        const { data, password } = JSON.parse(req.postData() ?? '{}') as { data?: { prefs?: Record<string, unknown> }; password?: string };
         if (data?.prefs) acc.prefs = data.prefs;
+        if (password) acc.password = password;
       }
       return reply(route, 200, userOf(email, acc));
     }
@@ -218,4 +234,46 @@ test('the account remembers the language and the tutorial, so another computer s
   // The account's language comes back and the tutorial is not offered again.
   await expect(page.getByTestId('menu-story-cases')).toContainText('Fälle');
   await expect(page.getByTestId('first-run-tutorial')).toHaveCount(0);
+});
+
+test('the badge page shows the record, takes a suspect portrait, a new name and a new password', async ({ page }) => {
+  await quiet(page);
+  const backend = await mockSupabase(page);
+  await page.goto('/account');
+  await page.getByTestId('account-tab-signup').click();
+  await page.getByTestId('account-username').fill('spade');
+  await page.getByTestId('account-password').fill('first-password');
+  await page.getByTestId('account-confirm').fill('first-password');
+  await page.getByTestId('account-submit').click();
+  await expect(page.getByTestId('account-name')).toHaveText('spade');
+  await expect(page.getByTestId('account-stats')).toContainText('0/10');
+
+  // A portrait from the lineup goes on the badge and into the account.
+  await page.getByTestId('account-photo').click();
+  await page.getByTestId('avatar-picker').getByRole('button', { name: 'Irene Brandt' }).click();
+  await expect(page.getByTestId('avatar-picker')).toHaveCount(0);
+  await expect.poll(() => backend.accounts.get('spade@players.redstring.local')?.prefs?.avatar).toBe('irene');
+  await expect(page.getByTestId('account-photo').locator('img')).toHaveAttribute('src', /irene/);
+
+  // A new name: signing in works with it afterwards.
+  await page.getByTestId('account-new-name').fill('Marlowe');
+  await page.getByTestId('account-rename').click();
+  await expect(page.getByTestId('account-name')).toHaveText('marlowe');
+  expect(backend.accounts.has('marlowe@players.redstring.local')).toBe(true);
+
+  // A new password needs the current one.
+  await page.getByLabel('Current password').fill('not-it');
+  await page.getByLabel('New password').fill('second-password');
+  await page.getByLabel('Password again').fill('second-password');
+  await page.getByRole('button', { name: 'Change password' }).click();
+  await expect(page.getByRole('alert')).toContainText('not your current password');
+  await page.getByLabel('Current password').fill('first-password');
+  await page.getByRole('button', { name: 'Change password' }).click();
+  await expect(page.getByLabel('Current password')).toHaveValue('');
+  expect(backend.accounts.get('marlowe@players.redstring.local')?.password).toBe('second-password');
+
+  // The menu shows the portrait and the new name.
+  await page.goto('/');
+  await expect(page.getByTestId('account-chip')).toContainText('marlowe');
+  await expect(page.getByTestId('account-chip').locator('img')).toHaveAttribute('src', /irene/);
 });

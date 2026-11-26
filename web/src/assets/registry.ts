@@ -45,6 +45,11 @@ export function portraitArt(portraitKey: string, suspectId?: string): string | n
   return (suspectId ? p.get(suspectId.toLowerCase()) : undefined) ?? p.get(portraitKey.toLowerCase()) ?? null;
 }
 
+/** Every painted portrait, by key (suspect ids and the stock faces of generated cases). */
+export function portraitKeys(): string[] {
+  return [...byCategory.portraits!.keys()].sort();
+}
+
 /** A real drawing for one layer of a cutscene, if one was dropped in. */
 export function cutsceneArt(cutsceneId: string, layer: string): string | null {
   return cutscenes.get(`${cutsceneId.toLowerCase()}/${layer.toLowerCase()}`) ?? null;

@@ -14,7 +14,7 @@ export const PASSWORD_MAX = 72;
 
 export class AccountError extends Error {
   constructor(
-    public code: 'invalid' | 'taken' | 'wrong_credentials' | 'rate_limited' | 'offline' | 'unavailable',
+    public code: 'invalid' | 'taken' | 'wrong_credentials' | 'rate_limited' | 'offline' | 'unavailable' | 'same_password',
     message: string,
   ) {
     super(message);
@@ -92,4 +92,52 @@ export async function createAccount(username: string, password: string): Promise
     throw new AccountError('unavailable', t('account.errOpenFile'));
   }
   await signIn(username, password);
+}
+
+/** A new detective name for the signed-in player. The account function changes the internal address with it. */
+export async function renameAccount(username: string): Promise<void> {
+  const { data } = await client().auth.getSession();
+  const token = data.session?.access_token;
+  if (!token) throw new AccountError('wrong_credentials', t('account.errSignInAgain'));
+  let res: Response;
+  try {
+    res = await fetch(`${FUNCTIONS_URL}/account`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', apikey: SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ action: 'rename', username: normalizeUsername(username) }),
+    });
+  } catch {
+    throw new AccountError('offline', t('account.errOffline'));
+  }
+  if (res.ok) return;
+  let code = '';
+  try {
+    code = ((await res.json()) as { error?: { code?: string } }).error?.code ?? '';
+  } catch {
+    /* no code: the generic message */
+  }
+  if (code === 'username_taken') throw new AccountError('taken', t('account.errTaken'));
+  if (code === 'rate_limited') throw new AccountError('rate_limited', t('account.errTooManyRenames'));
+  if (code === 'bad_request') throw new AccountError('invalid', t('account.errNameRule'));
+  if (code === 'unauthorized') throw new AccountError('wrong_credentials', t('account.errSignInAgain'));
+  throw new AccountError('unavailable', t('account.errRename'));
+}
+
+/** A new password, after checking the current one. */
+export async function changePassword(username: string, current: string, next: string): Promise<void> {
+  const c = client();
+  const { error: checkError } = await c.auth.signInWithPassword({ email: emailFor(username), password: current });
+  if (checkError) {
+    if (checkError.status === 400 || /invalid login/i.test(checkError.message)) {
+      throw new AccountError('wrong_credentials', t('account.errCurrentPass'));
+    }
+    if (checkError.status === 429) throw new AccountError('rate_limited', t('account.errTooMany'));
+    if (checkError.name === 'AuthRetryableFetchError' || checkError.status === 0) throw new AccountError('offline', t('account.errOffline'));
+    throw new AccountError('unavailable', t('account.errClosed'));
+  }
+  const { error } = await c.auth.updateUser({ password: next });
+  if (!error) return;
+  if (error.code === 'same_password') throw new AccountError('same_password', t('account.errSamePass'));
+  if (error.name === 'AuthRetryableFetchError' || error.status === 0) throw new AccountError('offline', t('account.errOffline'));
+  throw new AccountError('unavailable', t('account.errPassChange'));
 }
