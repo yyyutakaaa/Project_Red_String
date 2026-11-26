@@ -51,9 +51,11 @@ export function portraitKeys(): string[] {
   return [...byCategory.portraits!.keys()].sort();
 }
 
-/** A real drawing for one layer of a cutscene, if one was dropped in. */
+/** A real drawing for one layer of a cutscene, if one was dropped in. A layer named with a folder
+ *  (shared/board-1) is drawn once in that folder and used by several cutscenes. */
 export function cutsceneArt(cutsceneId: string, layer: string): string | null {
-  return cutscenes.get(`${cutsceneId.toLowerCase()}/${layer.toLowerCase()}`) ?? null;
+  const key = layer.includes('/') ? layer : `${cutsceneId}/${layer}`;
+  return cutscenes.get(key.toLowerCase()) ?? null;
 }
 
 /** A painted layer of a screen backdrop: art/backdrops/<scene>/<layer>. */
