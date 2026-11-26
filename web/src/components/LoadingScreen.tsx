@@ -3,6 +3,8 @@
 import { useEffect } from 'react';
 import { LogoEye } from './LogoEye.tsx';
 import { RainBackdrop } from './RainBackdrop.tsx';
+import { ComicBackdrop } from '../backdrop/ComicBackdrop.tsx';
+import { hasBackdrop } from '../backdrop/scenes.ts';
 import styles from './LoadingScreen.module.css';
 import { t } from '../i18n/index.ts';
 
@@ -18,9 +20,11 @@ interface LoadingScreenProps {
   masthead?: boolean;
   /** Given when the player may skip the wait: a click anywhere, or Enter, Space or Escape. */
   onSkip?: () => void;
+  /** The painted scene behind the card; the street when the case has none of its own. */
+  scene?: string;
 }
 
-export function LoadingScreen({ progress, kicker, title, status, leaving = false, masthead = false, onSkip }: LoadingScreenProps) {
+export function LoadingScreen({ progress, kicker, title, status, leaving = false, masthead = false, onSkip, scene = 'street' }: LoadingScreenProps) {
   const pct = Math.round(Math.min(1, Math.max(0, progress)) * 100);
 
   useEffect(() => {
@@ -40,7 +44,7 @@ export function LoadingScreen({ progress, kicker, title, status, leaving = false
       data-testid="loading-screen"
       onClick={onSkip}
     >
-      <RainBackdrop lamp="right" intensity="soft" />
+      <ComicBackdrop scene={hasBackdrop(scene) ? scene : 'street'} dim="page" fallback={<RainBackdrop lamp="right" intensity="soft" />} />
       <div className={styles.card}>
         <div className={styles.logo}>
           <LogoEye progress={progress} />

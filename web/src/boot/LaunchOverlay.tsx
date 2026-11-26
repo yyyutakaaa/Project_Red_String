@@ -7,7 +7,7 @@ const STATUSES: MessageKey[] = ['launch.drawer', 'launch.photos', 'launch.string
 
 /** The loading screen shown by useLaunch(). Lives inside the router, above every screen. */
 export function LaunchOverlay() {
-  const { active, leaving, kicker, title, startedAt, skippable, skipped } = useLaunchState();
+  const { active, leaving, kicker, title, scene, startedAt, skippable, skipped } = useLaunchState();
   const [progress, setProgress] = useState(0);
   const { t } = useT();
 
@@ -29,6 +29,7 @@ export function LaunchOverlay() {
       progress={progress}
       kicker={kicker}
       title={title}
+      scene={scene}
       status={status}
       leaving={leaving}
       onSkip={skippable && !skipped && !leaving ? skipLaunch : undefined}

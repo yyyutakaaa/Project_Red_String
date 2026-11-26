@@ -2,7 +2,6 @@ import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent }
 import { Link, useNavigate } from 'react-router-dom';
 import { RainBackdrop } from '../components/RainBackdrop.tsx';
 import { ComicBackdrop } from '../backdrop/ComicBackdrop.tsx';
-import { hasBackdrop } from '../backdrop/scenes.ts';
 import { useAmbience } from '../hooks/useAmbience.ts';
 import { casePath, resolveCase } from '../hooks/useCase.ts';
 import { continueSlot, type KeyValueStorage } from '../engine/save.ts';
@@ -115,7 +114,7 @@ export function MainMenu() {
 
   return (
     <div className={styles.screen}>
-      {hasBackdrop('street') ? <ComicBackdrop scene="street" dim="menu" /> : <RainBackdrop lamp="right" />}
+      <ComicBackdrop scene="street" dim="menu" fallback={<RainBackdrop lamp="right" />} />
       <ShellNotice />
       <FirstRun />
       <Link to="/account" className={styles.accountChip} data-testid="account-chip" onClick={() => sfx('click')}>

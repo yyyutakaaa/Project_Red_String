@@ -13,13 +13,15 @@ interface LaunchState {
   leaving: boolean;
   kicker: string;
   title: string;
+  /** The painted backdrop behind the loading card: the case's own scene, or the street. */
+  scene: string;
   startedAt: number;
   /** The player has seen this screen before and may skip the wait. */
   skippable: boolean;
   skipped: boolean;
 }
 
-export const useLaunchState = create<LaunchState>(() => ({ active: false, leaving: false, kicker: '', title: '', startedAt: 0, skippable: false, skipped: false }));
+export const useLaunchState = create<LaunchState>(() => ({ active: false, leaving: false, kicker: '', title: '', scene: 'street', startedAt: 0, skippable: false, skipped: false }));
 
 let skipWait: (() => void) | null = null;
 
@@ -68,6 +70,7 @@ export function useLaunch() {
         leaving: false,
         kicker: info.kicker ?? '',
         title: info.title,
+        scene: /^\/case\/([^/]+)/.exec(to)?.[1] ?? 'street',
         startedAt: performance.now(),
         skippable: seenBefore('launch'),
         skipped: false,

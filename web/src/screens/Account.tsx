@@ -2,6 +2,7 @@ import { useEffect, useId, useState, type FormEvent } from 'react';
 import { Button, ButtonLink } from '../components/Button.tsx';
 import { LogoEye } from '../components/LogoEye.tsx';
 import { RainBackdrop } from '../components/RainBackdrop.tsx';
+import { ComicBackdrop } from '../backdrop/ComicBackdrop.tsx';
 import { ScreenFrame } from '../components/ScreenFrame.tsx';
 import { useAmbience } from '../hooks/useAmbience.ts';
 import { listSlots } from '../engine/save.ts';
@@ -239,7 +240,7 @@ export function AccountScreen() {
 
   return (
     <>
-      <RainBackdrop lamp="left" intensity="soft" />
+      <ComicBackdrop scene="rooftop" dim="page" fallback={<RainBackdrop lamp="left" intensity="soft" />} />
       <ScreenFrame
         title={t('account.title')}
         actions={

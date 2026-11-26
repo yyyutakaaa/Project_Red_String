@@ -28,6 +28,41 @@ export interface BackdropScene {
 
 const WARM = 'rgba(255, 196, 110, 0.55)';
 
+type Light = [x: number, y: number, r: number, color?: string, mode?: 'pulse' | 'flicker' | 'steady'];
+
+/**
+ * The usual stack for a painted scene: sky, a middle layer (everything but the sky and the foreground),
+ * a foreground layer, with rain, mist and lightning between them. Lights sit on the layer they belong to.
+ */
+function painted(opts: {
+  focusX?: number;
+  rain?: boolean;
+  /** Rain only behind the middle layer: a scene seen from indoors, through a window. */
+  indoors?: boolean;
+  lightning?: number[];
+  /** Mist bands: [top, height, opacity]. */
+  fog?: Array<[number, number, number]>;
+  midLights?: Light[];
+  frontLights?: Light[];
+}): BackdropScene {
+  const rain = opts.rain ?? true;
+  const glow = (depth: number) => ([x, y, r, color = WARM, mode = 'pulse']: Light): BackdropItem => ({ kind: 'glow', depth, x, y, r, color, mode });
+  const [farFog, ...nearFog] = opts.fog ?? [[46, 26, 0.5], [80, 24, 0.4]];
+  const items: BackdropItem[] = [{ kind: 'art', art: 'sky', depth: 0.05, pan: true }];
+  if (opts.lightning) items.push({ kind: 'lightning', depth: 0.06, at: opts.lightning });
+  if (farFog) items.push({ kind: 'fog', depth: 0.12, top: farFog[0], height: farFog[1], opacity: farFog[2], seconds: 100 });
+  if (rain) items.push({ kind: 'rain', drops: 'far' });
+  items.push({ kind: 'art', art: 'mid', depth: 0.24 }, ...(opts.midLights ?? []).map(glow(0.24)));
+  nearFog.forEach(([top, height, opacity], i) => items.push({ kind: 'fog', depth: 0.4, top, height, opacity, seconds: 70 - i * 12 }));
+  items.push({ kind: 'art', art: 'front', depth: 0.55 }, ...(opts.frontLights ?? []).map(glow(0.55)));
+  if (rain && !opts.indoors) items.push({ kind: 'rain', drops: 'near' });
+  return { focusX: opts.focusX ?? 0.5, items };
+}
+
+const RED = 'rgba(255, 50, 70, 0.55)';
+const BLUE = 'rgba(70, 150, 255, 0.55)';
+const GREEN = 'rgba(120, 230, 150, 0.4)';
+
 export const SCENES: Record<string, BackdropScene> = {
   // The main menu: a street corner in the rain, the detective under the lamp, the hotel's neon.
   street: {
@@ -65,6 +100,80 @@ export const SCENES: Record<string, BackdropScene> = {
       { kind: 'rain', drops: 'near' },
     ],
   },
+
+  // The case files: a detective's office at night, the city through the window.
+  office: painted({
+    indoors: true,
+    lightning: [30, 42],
+    fog: [],
+    midLights: [[64, 25, 9, RED, 'flicker'], [18.8, 9, 9]],
+    frontLights: [[88, 52, 11, GREEN]],
+  }),
+
+  // Settings, account, saves and credits: a rooftop above the city.
+  rooftop: painted({
+    lightning: [20, 40, 55],
+    fog: [[50, 26, 0.55], [84, 20, 0.35]],
+    frontLights: [[89, 35, 20, RED, 'flicker']],
+  }),
+
+  tutorial: painted({
+    lightning: [24, 40],
+    midLights: [[64, 33, 10, RED, 'flicker']],
+    frontLights: [[16, 12, 10], [81, 69, 6]],
+  }),
+
+  'blue-lantern': painted({
+    lightning: [22, 36],
+    midLights: [[69, 22, 14, BLUE, 'flicker'], [86, 54, 8]],
+    frontLights: [[91.7, 10, 9]],
+  }),
+
+  'pier-seventeen': painted({
+    fog: [[36, 30, 0.7], [58, 26, 0.6], [80, 24, 0.45]],
+  }),
+
+  'night-express': painted({
+    lightning: [30, 48],
+    fog: [[44, 26, 0.5], [70, 24, 0.45]],
+    midLights: [[73.4, 16.7, 9]],
+    frontLights: [[12.5, 14, 6, RED]],
+  }),
+
+  'hollis-garden': painted({
+    rain: false,
+    fog: [[58, 22, 0.3], [86, 18, 0.25]],
+    midLights: [[17.2, 19.4, 5], [28.6, 25, 5], [91, 28.7, 5], [66, 48, 9], [74.5, 47, 9]],
+  }),
+
+  'studio-nine': painted({
+    lightning: [8, 66],
+    midLights: [[51.5, 3, 4, RED, 'flicker'], [51.5, 43, 12, RED, 'flicker']],
+    frontLights: [[84.9, 15.7, 9]],
+  }),
+
+  'the-regent': painted({
+    lightning: [10, 70],
+    midLights: [[62, 27, 18], [53, 51, 7]],
+  }),
+
+  'reading-room': painted({
+    lightning: [36, 60],
+    midLights: [[41.7, 46.3, 18]],
+    frontLights: [[94.8, 20.4, 7], [85.9, 22.2, 7]],
+  }),
+
+  'mercers-pharmacy': painted({
+    lightning: [46, 62],
+    midLights: [[28, 32, 12], [27.6, 43.5, 15], [41, 15.7, 6]],
+    frontLights: [[89.1, 12, 9]],
+  }),
+
+  'vance-and-pryor': painted({
+    lightning: [10, 52, 70],
+    fog: [[56, 30, 0.55], [84, 20, 0.35]],
+    midLights: [[44, 3, 4, RED, 'flicker']],
+  }),
 };
 
 /** Whether a scene exists and all its art is in the build. */

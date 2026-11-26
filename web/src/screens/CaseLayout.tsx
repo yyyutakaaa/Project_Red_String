@@ -2,6 +2,7 @@ import { useEffect, useMemo } from 'react';
 import { Navigate, Outlet, useLocation, useParams } from 'react-router-dom';
 import { Hud } from '../components/Hud.tsx';
 import { ComicBackdrop } from '../backdrop/ComicBackdrop.tsx';
+import { hasBackdrop } from '../backdrop/scenes.ts';
 import { ScreenFrame } from '../components/ScreenFrame.tsx';
 import { ButtonLink } from '../components/Button.tsx';
 import { casePath, resolveCase, type CaseContextValue } from '../hooks/useCase.ts';
@@ -84,7 +85,7 @@ export function CaseLayout() {
   const ctx: CaseContextValue = { ...resolved, progress };
   return (
     <>
-      <ComicBackdrop scene={resolved.caseFile.id} dim="page" />
+      <ComicBackdrop scene={hasBackdrop(resolved.caseFile.id) ? resolved.caseFile.id : 'street'} dim="page" />
       <Hud caseFile={resolved.caseFile} caseKey={caseKey} source={resolved.source} progress={progress} />
       <Outlet context={ctx} />
       {isTutorial(caseKey) && <TutorialGuide caseKey={caseKey} progress={progress} />}

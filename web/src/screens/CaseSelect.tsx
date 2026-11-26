@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, ButtonLink } from '../components/Button.tsx';
 import { Modal } from '../components/Modal.tsx';
 import { RainBackdrop } from '../components/RainBackdrop.tsx';
+import { ComicBackdrop } from '../backdrop/ComicBackdrop.tsx';
 import { ScreenFrame } from '../components/ScreenFrame.tsx';
 import { useAmbience } from '../hooks/useAmbience.ts';
 import { casePath, resolveCase } from '../hooks/useCase.ts';
@@ -145,7 +146,7 @@ export function CaseSelect() {
   if (!slot) {
     return (
       <>
-        <RainBackdrop lamp="right" intensity="soft" />
+        <ComicBackdrop scene="office" dim="page" fallback={<RainBackdrop lamp="right" intensity="soft" />} />
         <ScreenFrame title={t('cases.title')} actions={backLink}>
           <p className="muted">{t('cases.pulling')}</p>
         </ScreenFrame>
@@ -178,7 +179,7 @@ export function CaseSelect() {
 
   return (
     <>
-      <RainBackdrop lamp="right" intensity="soft" />
+      <ComicBackdrop scene="office" dim="page" fallback={<RainBackdrop lamp="right" intensity="soft" />} />
       <ScreenFrame wide title={t('cases.title')} actions={backLink}>
         <section aria-labelledby="story-heading" className={styles.section}>
           <h2 id="story-heading" className="visually-hidden">

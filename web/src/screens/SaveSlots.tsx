@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Button, ButtonLink } from '../components/Button.tsx';
 import { Modal } from '../components/Modal.tsx';
 import { RainBackdrop } from '../components/RainBackdrop.tsx';
+import { ComicBackdrop } from '../backdrop/ComicBackdrop.tsx';
 import { ScreenFrame } from '../components/ScreenFrame.tsx';
 import { useAmbience } from '../hooks/useAmbience.ts';
 import { casePath, resolveCase } from '../hooks/useCase.ts';
@@ -104,7 +105,7 @@ export function SaveSlots() {
 
   return (
     <>
-      <RainBackdrop lamp="left" intensity="soft" />
+      <ComicBackdrop scene="rooftop" dim="page" fallback={<RainBackdrop lamp="left" intensity="soft" />} />
       <ScreenFrame
         title={t('slots.title')}
         actions={

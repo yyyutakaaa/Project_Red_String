@@ -2,7 +2,7 @@
 // with rain, mist, lightning and lights between them. The layers lean with the pointer by their depth.
 // Purely decorative (aria-hidden). With reduced motion it is one still frame: no rain falling, no
 // lightning, no drifting mist, no leaning.
-import { useEffect, useRef, type CSSProperties } from 'react';
+import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react';
 import { backdropArt } from '../assets/registry.ts';
 import { useReducedMotion } from '../store/settings.ts';
 import { backdropScene, hasBackdrop, type BackdropItem } from './scenes.ts';
@@ -15,6 +15,8 @@ interface Props {
    * sits; page: the whole picture dimmed, for screens full of panels and reading.
    */
   dim?: 'menu' | 'page';
+  /** Shown instead when the scene or its art is missing. */
+  fallback?: ReactNode;
 }
 
 const depthStyle = (depth: number, extra?: Record<string, string | number>) =>
@@ -217,7 +219,7 @@ function Item({ scene, item, reduced }: { scene: string; item: BackdropItem; red
   }
 }
 
-export function ComicBackdrop({ scene, dim = 'page' }: Props) {
+export function ComicBackdrop({ scene, dim = 'page', fallback = null }: Props) {
   const reduced = useReducedMotion();
   const rootRef = useRef<HTMLDivElement>(null);
   const def = backdropScene(scene);
@@ -284,7 +286,7 @@ export function ComicBackdrop({ scene, dim = 'page' }: Props) {
     };
   }, [reduced, lightning]);
 
-  if (!def || !hasBackdrop(scene)) return null;
+  if (!def || !hasBackdrop(scene)) return <>{fallback}</>;
 
   return (
     <div
