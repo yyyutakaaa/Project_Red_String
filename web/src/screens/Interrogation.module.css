@@ -36,7 +36,8 @@
   font-size: var(--fs-xs);
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: var(--text-faint);
+  color: var(--text-muted);
+  text-shadow: 0 1px 3px #000, 0 0 8px #000;
 }
 
 .othersList {
@@ -54,10 +55,11 @@
   gap: var(--space-2);
   min-height: 44px;
   padding: 0.25rem 0.85rem 0.25rem 0.4rem;
-  border: 1px solid var(--ink-500);
+  border: 2px solid var(--ink-line);
   border-radius: 999px;
-  background: var(--ink-800);
-  color: var(--text-muted);
+  background: var(--comic-fill-2);
+  box-shadow: 3px 3px 0 var(--ink-line);
+  color: var(--text);
   text-decoration: none;
   font-family: var(--font-type);
   font-size: var(--fs-sm);
@@ -78,11 +80,13 @@
   align-items: center;
   gap: var(--space-4);
   padding: var(--space-3) var(--space-4);
-  border: 1px solid var(--lamp-500);
-  border-radius: var(--radius-md);
+  border: var(--comic-line);
+  border-radius: 2px;
   background:
     linear-gradient(90deg, rgba(232, 181, 74, 0.1), transparent 70%),
-    var(--ink-800);
+    var(--comic-fill-2);
+  box-shadow: var(--comic-panel);
+  margin: 2px 8px 6px 2px;
   animation: fade-in var(--dur-slow) var(--ease-out) both;
 }
 .banner p { margin: 0; font-size: var(--fs-sm); }
@@ -115,8 +119,10 @@
 .notice strong { color: var(--text-strong); }
 
 .alert {
-  border: 1px solid var(--lamp-500);
-  border-left: 4px solid var(--warn-400);
+  border: var(--comic-line);
+  border-left: 8px solid var(--warn-400);
+  box-shadow: var(--comic-panel);
+  margin: 2px 8px 6px 2px;
   background:
     linear-gradient(90deg, rgba(232, 181, 74, 0.08), transparent 70%),
     var(--ink-800);
@@ -132,6 +138,8 @@
   grid-template-rows: minmax(0, 1fr);
   gap: var(--space-5);
   align-items: stretch;
+  /* Room for the panels' paper rim and shadow. */
+  padding: 2px 9px 10px 2px;
 }
 
 /* ---------------------------------------------------------------- Dossier */
@@ -141,9 +149,10 @@
   flex-direction: column;
   gap: var(--space-3);
   padding: var(--space-5) var(--space-4) var(--space-4);
-  border: var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--ink-800);
+  border: var(--comic-line);
+  border-radius: 2px;
+  background: var(--comic-dots), linear-gradient(180deg, var(--comic-fill-2), var(--comic-fill));
+  box-shadow: var(--comic-panel);
   /* Beside the transcript; long case notes scroll inside it. */
   min-height: 0;
   overflow-x: hidden;
@@ -319,11 +328,13 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: var(--space-4);
-  border: var(--border);
-  border-radius: var(--radius-lg);
+  border: var(--comic-line);
+  border-radius: 2px;
   background:
     radial-gradient(ellipse at 50% 0%, rgba(232, 181, 74, 0.05), transparent 60%),
-    var(--ink-850);
+    var(--comic-dots),
+    var(--comic-fill);
+  box-shadow: var(--comic-panel);
 }
 
 .logContent {
@@ -519,9 +530,10 @@
   flex-direction: column;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-4) var(--space-4);
-  border: var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--ink-800);
+  border: var(--comic-line);
+  border-radius: 2px;
+  background: var(--comic-dots), linear-gradient(180deg, var(--comic-fill-2), var(--comic-fill));
+  box-shadow: var(--comic-panel);
 }
 
 .refusal {

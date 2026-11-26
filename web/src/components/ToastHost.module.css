@@ -16,11 +16,11 @@
   align-items: flex-start;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius-md);
-  background: var(--ink-700);
-  border: var(--border-strong);
-  border-left: 4px solid var(--lamp-400);
-  box-shadow: var(--shadow-2);
+  border-radius: 2px;
+  background: var(--comic-fill-2);
+  border: 2px solid var(--ink-line);
+  border-left: 6px solid var(--lamp-400);
+  box-shadow: 0 0 0 2px var(--paper-rim), 5px 6px 0 2px rgba(0, 0, 0, 0.7);
   font-family: var(--font-type);
   font-size: var(--fs-sm);
   animation: global(fade-up) var(--dur-med) var(--ease-out);

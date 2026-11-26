@@ -250,7 +250,7 @@ export function AccountScreen() {
         }
       >
         {!BACKEND_CONFIGURED ? (
-          <p className="muted">{t('account.unavailable')}</p>
+          <p className={`comic-panel ${styles.unavailable}`}>{t('account.unavailable')}</p>
         ) : (
           <div className={styles.layout}>
             {user ? <SignedIn /> : <SignInForm />}

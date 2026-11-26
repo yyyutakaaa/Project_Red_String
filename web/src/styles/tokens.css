@@ -355,8 +355,9 @@ textarea {
     repeating-linear-gradient(0deg, transparent 0 27px, rgba(80, 60, 30, 0.08) 27px 28px),
     var(--paper-100);
   color: var(--paper-ink);
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-2);
+  border-radius: 2px;
+  /* Inked round its edge like a panel, with the same hard shadow. */
+  box-shadow: 0 0 0 3px var(--ink-line), 8px 9px 0 3px rgba(0, 0, 0, 0.72);
 }
 .paper a { color: var(--red-700); }
 

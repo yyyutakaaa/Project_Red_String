@@ -558,7 +558,7 @@ function InterrogationRoom({ suspect }: { suspect: Suspect }) {
 
   return (
     <main id="main" tabIndex={-1} className={styles.page}>
-      <nav className={styles.topbar} aria-label={t('interro.room')}>
+      <nav className={`${styles.topbar} on-art`} aria-label={t('interro.room')}>
         <ButtonLink to={casePath(caseKey, 'suspects')} variant="ghost" data-testid="leave-room">
           {t('interro.leave')}
         </ButtonLink>

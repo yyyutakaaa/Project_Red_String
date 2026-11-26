@@ -29,15 +29,16 @@
     linear-gradient(180deg, rgba(255, 255, 255, 0.22), transparent 35%),
     var(--paper-200);
   color: var(--paper-ink);
-  box-shadow: var(--shadow-2);
+  border: var(--comic-line);
+  box-shadow: var(--comic-drop);
 }
 .empty {
-  background: var(--glass-bg);
-  border: 1px dashed var(--ink-400);
+  background: var(--comic-dots), var(--comic-fill);
+  border: 3px dashed var(--ink-400);
   color: var(--text-muted);
 }
 .current {
-  box-shadow: var(--shadow-2), 0 0 0 2px var(--lamp-400), 0 0 28px var(--lamp-glow);
+  box-shadow: 0 0 0 3px var(--caption-bg), var(--comic-drop);
 }
 
 .tab {

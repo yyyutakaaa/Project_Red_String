@@ -19,10 +19,11 @@
   gap: var(--space-2);
   min-height: 44px;
   padding: 0 var(--space-3);
-  border: 1px solid var(--ink-500);
-  border-radius: var(--radius-md);
-  background: var(--ink-800);
-  color: var(--text-muted);
+  border: 2px solid var(--ink-line);
+  border-radius: 2px;
+  background: var(--comic-fill-2);
+  box-shadow: 3px 3px 0 var(--ink-line);
+  color: var(--text);
   font-family: var(--font-type);
   font-size: var(--fs-sm);
   font-weight: 700;
@@ -34,14 +35,19 @@
 
 .tab:hover {
   color: var(--text-strong);
-  border-color: var(--lamp-500);
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--ink-line);
 }
 
+/* The place you are in: a caption box. */
 .tab[aria-current='page'] {
-  color: var(--lamp-200);
-  border-color: var(--lamp-400);
-  background: linear-gradient(180deg, rgba(232, 181, 74, 0.16), rgba(232, 181, 74, 0.03)), var(--ink-800);
-  box-shadow: 0 0 18px var(--lamp-glow);
+  color: var(--caption-ink);
+  background: var(--caption-bg);
+}
+.tab[aria-current='page'] .tabCount {
+  background: var(--caption-ink);
+  color: var(--caption-bg);
+  border-color: var(--caption-ink);
 }
 
 .tabNew .tabName::after {
@@ -86,11 +92,17 @@
   margin-bottom: var(--space-4);
 }
 
+/* The description of the place is a narration box. */
 .lede {
   flex: 1 1 32rem;
   max-width: 72ch;
-  margin: 0;
-  color: var(--text-muted);
+  margin: 2px 8px 8px 2px;
+  padding: var(--space-3) var(--space-4);
+  background: var(--comic-dots), linear-gradient(180deg, var(--comic-fill-2), var(--comic-fill));
+  border: var(--comic-line);
+  border-radius: 2px;
+  box-shadow: var(--comic-panel);
+  color: var(--text);
   font-style: italic;
   line-height: 1.7;
 }
@@ -101,10 +113,13 @@
   align-items: flex-start;
   gap: var(--space-2);
   flex: 0 1 20rem;
-  margin: 0;
+  margin: 2px 8px 8px 2px;
   padding: var(--space-3) var(--space-4);
-  border-left: 2px solid var(--lamp-500);
-  background: rgba(232, 181, 74, 0.05);
+  border: var(--comic-line);
+  border-left: 8px solid var(--lamp-500);
+  border-radius: 2px;
+  background: var(--comic-dots), linear-gradient(180deg, var(--comic-fill-2), var(--comic-fill));
+  box-shadow: var(--comic-panel);
   font-family: var(--font-type);
   font-size: var(--fs-sm);
   color: var(--text);
@@ -129,7 +144,12 @@
 }
 
 .help {
-  margin: var(--space-3) 0 0;
+  display: inline-block;
+  margin: var(--space-5) 0 0;
+  padding: var(--space-1) var(--space-3);
+  background: var(--comic-fill);
+  border: 2px solid var(--ink-line);
+  box-shadow: 3px 3px 0 var(--ink-line);
   font-family: var(--font-type);
   font-size: var(--fs-xs);
   letter-spacing: 0.08em;
@@ -231,9 +251,10 @@
 .tally,
 .bagged {
   padding: var(--space-3) var(--space-4);
-  border: var(--border);
-  border-radius: var(--radius-md);
-  background: var(--panel-bg);
+  border: var(--comic-line);
+  border-radius: 2px;
+  background: var(--comic-dots), linear-gradient(180deg, var(--comic-fill-2), var(--comic-fill));
+  box-shadow: var(--comic-panel);
 }
 
 .tallyTitle {

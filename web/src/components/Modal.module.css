@@ -1,12 +1,12 @@
 .dialog {
-  border: var(--border-strong);
-  border-radius: var(--radius-lg);
-  background: var(--ink-800);
+  border: var(--comic-line);
+  border-radius: 2px;
+  background: var(--comic-dots), var(--comic-fill-2);
   color: var(--text);
   padding: 0;
   width: min(560px, calc(100vw - 2rem));
   max-height: calc(var(--app-h) - 2rem);
-  box-shadow: var(--shadow-2), 0 0 60px var(--scrim);
+  box-shadow: 0 0 0 2px var(--paper-rim), 8px 9px 0 2px rgba(0, 0, 0, 0.75);
 }
 .dialog::backdrop {
   background: var(--scrim);
