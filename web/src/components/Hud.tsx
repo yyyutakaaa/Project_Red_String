@@ -59,6 +59,12 @@ export function Hud({ caseFile, caseKey, source, progress }: HudProps) {
   const discovered = discoveredCount(progress);
   const total = totalDiscoverables(caseFile);
   const remainingHints = caseFile.hints.length - progress.hintsUsed;
+  // The tip just taken is shown on its own above the list, so the list holds only the earlier ones.
+  const earlierHints = hintsShown(caseFile, progress).filter((h) => h !== latestHint);
+  const closeHint = () => {
+    setHintOpen(false);
+    setLatestHint(null);
+  };
   const closed = progress.accusation !== null;
   const headerRef = useRef<HTMLElement>(null);
   const { t } = useT();
@@ -137,13 +143,10 @@ export function Hud({ caseFile, caseKey, source, progress }: HudProps) {
       <Modal
         open={hintOpen}
         title={t('hud.hintTitle')}
-        onClose={() => {
-          setHintOpen(false);
-          setLatestHint(null);
-        }}
+        onClose={closeHint}
         footer={
           <>
-            <Button variant="ghost" onClick={() => setHintOpen(false)}>
+            <Button variant="ghost" onClick={closeHint}>
               {t('common.close')}
             </Button>
             <Button
@@ -163,11 +166,11 @@ export function Hud({ caseFile, caseKey, source, progress }: HudProps) {
         ) : (
           <p>{t('hud.hintCost', { cost: HINT_COST, remaining: remainingHints, total: caseFile.hints.length })}</p>
         )}
-        {hintsShown(caseFile, progress).length > 0 && (
+        {earlierHints.length > 0 && (
           <>
             <h3>{t('hud.hintsSoFar')}</h3>
             <ol className={styles.hintList}>
-              {hintsShown(caseFile, progress).map((h) => (
+              {earlierHints.map((h) => (
                 <li key={h}>{h}</li>
               ))}
             </ol>
