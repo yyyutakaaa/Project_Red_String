@@ -8,6 +8,7 @@ import { ScreenFrame } from '../components/ScreenFrame.tsx';
 import { useAmbience } from '../hooks/useAmbience.ts';
 import { casePath, resolveCase } from '../hooks/useCase.ts';
 import { RoomScene } from '../components/RoomScene.tsx';
+import { backdropArt } from '../assets/registry.ts';
 import type { CaseFile } from '@shared/caseSchema.ts';
 import { useLaunch } from '../boot/launch.ts';
 import { formatDuration } from '../lib/format.ts';
@@ -67,19 +68,22 @@ function CaseActions({ caseKey, source, status, title, onOpen, onVerdict, onRepl
   );
 }
 
-/** The crime scene photograph clipped to the file: the room where the body was found. */
+/**
+ * The photograph clipped to the file: the case's painted backdrop when it has one, otherwise the
+ * room where the body was found.
+ */
 function ScenePhoto({ caseFile, sealed = false }: { caseFile: CaseFile; sealed?: boolean }) {
   const { t } = useT();
   const room = caseFile.rooms.find((r) => r.id === caseFile.victim.found_in) ?? caseFile.rooms[0];
-  if (!room) return null;
+  const painted = backdropArt(caseFile.id, 'thumb');
+  if (!room && !painted) return null;
   return (
     <div className={`${styles.photo} ${sealed ? styles.photoSealed : ''}`} aria-hidden="true">
-      <RoomScene
-        background={room.background}
-        hotspots={room.hotspots}
-        thumbnail
-        place={scenePlaceOf(room, caseFile)}
-      />
+      {painted ? (
+        <img src={painted} alt="" className={styles.painted} loading="lazy" decoding="async" draggable={false} />
+      ) : (
+        room && <RoomScene background={room.background} hotspots={room.hotspots} thumbnail place={scenePlaceOf(room, caseFile)} />
+      )}
       {sealed && (
         <>
           <span className={styles.tape}>{t('cases.sealedTape')}</span>
