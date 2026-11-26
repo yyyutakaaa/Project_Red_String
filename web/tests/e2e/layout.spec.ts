@@ -21,6 +21,8 @@ test.beforeEach(async ({ page }) => {
 test('no screen makes the page scroll; the briefing paper scrolls instead', async ({ page }) => {
   for (const path of SCREENS) {
     await page.goto(path);
+    // The case opens with its comic strip; skip it to reach the briefing.
+    if (path.endsWith('/briefing')) await page.getByTestId('cutscene-skip').click();
     await expect(page.locator('h1').first()).toBeVisible();
     const o = await pageOverflow(page);
     expect(o.page, `page scrolls on ${path}`).toBeLessThanOrEqual(0);

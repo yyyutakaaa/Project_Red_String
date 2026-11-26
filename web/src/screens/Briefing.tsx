@@ -7,7 +7,9 @@ import { ScreenFrame } from '../components/ScreenFrame.tsx';
 import { useAmbience } from '../hooks/useAmbience.ts';
 import { casePath, useCaseContext } from '../hooks/useCase.ts';
 import { STORY_ORDER, isTutorial } from '../engine/caseLoader.ts';
-import { markBriefingSeen } from '../store/game.ts';
+import { markBriefingSeen, markCutsceneSeen } from '../store/game.ts';
+import { CutscenePlayer } from '../cutscene/CutscenePlayer.tsx';
+import { cutsceneFor } from '../cutscene/index.ts';
 import { ambienceForBackground, sfx } from '../audio/audio.ts';
 import styles from './Briefing.module.css';
 import { useT } from '../i18n/index.ts';
@@ -42,6 +44,11 @@ export function Briefing() {
   const { victim } = caseFile;
   const seen = progress.briefingSeen;
   const { t } = useT();
+
+  // A new run opens with the case's comic strip, if it has one.
+  if (cutsceneFor(caseFile.id) && !progress.cutsceneSeen && !seen) {
+    return <CutscenePlayer caseId={caseFile.id} title={caseFile.title} onDone={() => markCutsceneSeen(caseKey)} />;
+  }
 
   return (
     <ScreenFrame title={caseFile.title} kicker={t('briefing.kicker')} fill wide>

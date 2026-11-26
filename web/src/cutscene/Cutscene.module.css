@@ -1,0 +1,320 @@
+/* The comic strip before a case: one panel at a time on a dark page, ink border, halftone print,
+   layers that lean with the pointer (--mx / --my, -1..1) by their depth. */
+.overlay {
+  position: fixed;
+  inset: var(--titlebar-h, 0px) 0 0 0;
+  z-index: 900;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(ellipse 80% 70% at 50% 45%, #10151f 0%, #05070c 75%),
+    var(--ink-950);
+  animation: overlay-in 0.5s ease-out both;
+}
+@keyframes overlay-in {
+  from { opacity: 0; }
+}
+
+.book {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: var(--space-4);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* The comic page: a grid of panels with paper-white gutters between them. */
+.page {
+  --mx: 0;
+  --my: 0;
+  display: grid;
+  gap: clamp(8px, 1.1vw, 16px);
+  width: min(92vw, calc((100vh - var(--titlebar-h, 0px) - 90px) * 16 / 9));
+  aspect-ratio: 16 / 9;
+  padding: clamp(8px, 1.1vw, 16px);
+  background: var(--paper-100);
+  box-shadow: 0 0 0 3px var(--ink-950), 0 30px 80px rgba(0, 0, 0, 0.7);
+  transform: rotate(-0.4deg);
+  animation: page-in 0.5s ease-out both;
+}
+@keyframes page-in {
+  from { opacity: 0; transform: rotate(1.2deg) translateX(4%) scale(0.97); }
+}
+
+/* One panel. Its text is sized to the panel, so small panels get small lettering. */
+.frame {
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+  min-height: 0;
+  container-type: size;
+  background: var(--ink-950);
+  border: 4px solid var(--ink-950);
+  animation: frame-in 0.9s ease-out both;
+}
+.ghost {
+  border: 4px solid rgba(5, 7, 12, 0.14);
+}
+@keyframes frame-in {
+  from { opacity: 0; filter: brightness(2.2) contrast(0.4); }
+  45% { opacity: 1; }
+}
+
+/* The camera's slow drift over the panel. */
+.camera {
+  position: absolute;
+  inset: 0;
+  animation: 14s ease-out both;
+}
+.frame[data-drift='in'] .camera { animation-name: drift-in; }
+.frame[data-drift='out'] .camera { animation-name: drift-out; }
+.frame[data-drift='left'] .camera { animation-name: drift-left; }
+.frame[data-drift='right'] .camera { animation-name: drift-right; }
+@keyframes drift-in { from { transform: scale(1); } to { transform: scale(1.06); } }
+@keyframes drift-out { from { transform: scale(1.08); } to { transform: scale(1); } }
+@keyframes drift-left { from { transform: scale(1.05) translateX(1.5%); } to { transform: scale(1.05) translateX(-1.5%); } }
+@keyframes drift-right { from { transform: scale(1.05) translateX(-1.5%); } to { transform: scale(1.05) translateX(1.5%); } }
+
+/* One layer: a little larger than the panel so its edges never show when it leans. */
+.layer {
+  position: absolute;
+  inset: -4%;
+  transform: translate3d(calc(var(--mx) * var(--depth) * -28px), calc(var(--my) * var(--depth) * -16px), 0);
+  animation: 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) var(--delay, 0s) both;
+}
+.layer > svg,
+.layerImg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+.layer[data-enter='left'] { animation-name: enter-left; }
+.layer[data-enter='right'] { animation-name: enter-right; }
+.layer[data-enter='up'] { animation-name: enter-up; }
+.layer[data-enter='down'] { animation-name: enter-down; }
+.layer[data-enter='zoom'] { animation-name: enter-zoom; }
+.layer[data-enter='fade'] { animation-name: enter-fade; }
+@keyframes enter-left { from { opacity: 0; translate: -9% 0; } }
+@keyframes enter-right { from { opacity: 0; translate: 9% 0; } }
+@keyframes enter-up { from { opacity: 0; translate: 0 8%; } }
+@keyframes enter-down { from { opacity: 0; translate: 0 -8%; } }
+@keyframes enter-zoom { from { opacity: 0; scale: 1.25; } }
+@keyframes enter-fade { from { opacity: 0; } }
+
+/* Light that adds to what is under it (blind stripes, smoke). */
+.layer :global(.cs-screen) {
+  mix-blend-mode: screen;
+}
+.layer :global(.cs-smoke) {
+  animation: smoke 6s ease-in-out infinite alternate;
+  transform-origin: 63% 48%;
+}
+@keyframes smoke {
+  from { transform: translateY(0) skewX(0deg); opacity: 0.18; }
+  to { transform: translateY(-14px) skewX(-6deg); opacity: 0.3; }
+}
+
+/* Lettering inside the drawings. */
+.layer :global(.cs-neon) {
+  font-family: var(--font-display);
+}
+.layer :global(.cs-flicker) {
+  animation: flicker 4.5s steps(1, end) infinite;
+}
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  41% { opacity: 0.15; }
+  43% { opacity: 1; }
+  45% { opacity: 0.25; }
+  47% { opacity: 1; }
+  80% { opacity: 0.4; }
+  81% { opacity: 1; }
+}
+.layer :global(.cs-letter) {
+  font-family: var(--font-display);
+  letter-spacing: 0.08em;
+}
+.layer :global(.cs-type) {
+  font-family: var(--font-type);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+.layer :global(.cs-stamp) {
+  font-family: var(--font-type);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+}
+
+/* Rain in front of everything: two sheets of streaks falling at different speeds. */
+.rain span {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    104deg,
+    transparent 0 22px,
+    rgba(205, 220, 245, 0.28) 22px 23.5px,
+    transparent 23.5px 61px
+  );
+  background-size: 140px 220px;
+  mask-image: repeating-linear-gradient(180deg, #000 0 26px, transparent 26px 70px);
+  animation: rain 0.55s linear infinite;
+}
+.rain span + span {
+  background-size: 90px 160px;
+  opacity: 0.6;
+  animation-duration: 0.8s;
+  mask-image: repeating-linear-gradient(180deg, #000 0 14px, transparent 14px 46px);
+}
+@keyframes rain {
+  from { background-position: 0 0; mask-position: 0 0; }
+  to { background-position: -56px 220px; mask-position: -56px 220px; }
+}
+
+/* Printed dots over the whole panel, like cheap newsprint. */
+.halftone {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(0, 0, 0, 0.22) 1px, transparent 1.4px);
+  background-size: 5px 5px;
+  mix-blend-mode: multiply;
+}
+
+/* Caption boxes and speech balloons. */
+.caption,
+.balloon {
+  position: absolute;
+  z-index: 2;
+  font-family: var(--font-type);
+  font-weight: 700;
+  font-size: clamp(10px, 2.6cqw, 20px);
+  line-height: 1.32;
+  color: #120e08;
+  animation: beat-in 0.32s cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
+}
+.caption {
+  padding: 0.55em 0.8em;
+  background: #f4dc93;
+  border: 3px solid var(--ink-950);
+  box-shadow: 5px 5px 0 rgba(5, 7, 12, 0.85);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.balloon {
+  padding: 0.8em 1.15em;
+  background: #fbf8f0;
+  border: 3px solid var(--ink-950);
+  border-radius: 46% / 42%;
+  text-align: center;
+  box-shadow: 4px 5px 0 rgba(5, 7, 12, 0.6);
+}
+@keyframes beat-in {
+  from { opacity: 0; transform: scale(0.85) translateY(6px); }
+}
+.tails {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  overflow: visible;
+}
+.tail {
+  fill: #fbf8f0;
+  stroke: var(--ink-950);
+  stroke-width: 3px;
+  vector-effect: non-scaling-stroke;
+  stroke-linejoin: round;
+  animation: beat-in 0.32s ease-out both;
+}
+
+/* The title card: the case's name, slammed onto the last panel. */
+.title {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  top: 14%;
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 11cqw;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--red-500);
+  -webkit-text-stroke: 3px var(--ink-950);
+  paint-order: stroke fill;
+  text-shadow: 6px 6px 0 var(--ink-950), 0 0 40px rgba(200, 50, 60, 0.45);
+  animation: title-in 0.7s cubic-bezier(0.2, 0.9, 0.3, 1.25) 0.35s both;
+}
+@keyframes title-in {
+  from { opacity: 0; transform: scale(1.6) rotate(-3deg); }
+}
+
+/* The little arrow that says a click goes on. */
+.next {
+  position: absolute;
+  z-index: 3;
+  right: 2.2%;
+  bottom: 3.2%;
+  width: 0;
+  height: 0;
+  border-left: 16px solid var(--paper-100);
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  filter: drop-shadow(2px 2px 0 var(--ink-950));
+  animation: nudge 1.1s ease-in-out infinite;
+}
+@keyframes nudge {
+  50% { transform: translateX(6px); }
+}
+
+.dots {
+  display: flex;
+  gap: 10px;
+}
+.dots span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--ink-500);
+  transition: background 0.3s;
+}
+.dots span[data-on] {
+  background: var(--red-500);
+}
+
+.skip {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-5);
+  z-index: 4;
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-type);
+  font-size: var(--fs-sm);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: rgba(5, 7, 12, 0.6);
+  border: 1px solid var(--ink-500);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.skip:hover,
+.skip:focus-visible {
+  color: var(--text-strong);
+  border-color: var(--lamp-400);
+}
+
+/* Reduced motion: everything stands still. */
+.overlay[data-still],
+.overlay[data-still] * {
+  animation: none !important;
+}
+.overlay[data-still] .layer {
+  transform: none;
+}

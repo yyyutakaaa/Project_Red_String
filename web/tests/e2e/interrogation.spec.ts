@@ -76,6 +76,7 @@ test('suggested questions, evidence that means nothing, a caught lie and a count
   await page.goto('/');
   await page.getByRole('button', { name: /story cases/i }).or(page.getByRole('link', { name: /story cases/i })).first().click();
   await page.getByTestId(`open-case-${c.id}`).click();
+  await page.getByTestId('cutscene-skip').click();
   await page.getByTestId('begin-investigation').click();
 
   // Find one piece of evidence that points at somebody.

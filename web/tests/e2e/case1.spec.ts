@@ -79,6 +79,8 @@ test('case 1 can be solved end to end with the interrogation mocked', async ({ p
   await expect(page.getByRole('heading', { name: /Project Red String/i })).toBeVisible();
   await page.getByRole('button', { name: /story cases/i }).or(page.getByRole('link', { name: /story cases/i })).first().click();
   await page.getByTestId(`open-case-${c.id}`).click();
+  // The case opens with its comic strip; skip it to reach the briefing.
+  await page.getByTestId('cutscene-skip').click();
   await expect(page.getByText(c.title).first()).toBeVisible();
   await page.getByTestId('begin-investigation').click();
 
@@ -188,6 +190,8 @@ test('a case can be given up to read the solution, and started over from the cas
   await page.getByTestId('case-restart').click();
   await page.getByTestId('confirm-restart').click();
   await expect(page).toHaveURL(new RegExp(`/case/${c.id}/briefing$`));
+  // A fresh run plays the comic strip again.
+  await page.getByTestId('cutscene-skip').click();
   await page.getByTestId('case-menu').click();
   await expect(page.getByTestId('case-give-up')).toBeVisible();
 });
@@ -199,6 +203,7 @@ test('interrogation shows a clear message when the backend is unreachable', asyn
   await page.goto('/');
   await page.getByRole('button', { name: /story cases/i }).or(page.getByRole('link', { name: /story cases/i })).first().click();
   await page.getByTestId(`open-case-${c.id}`).click();
+  await page.getByTestId('cutscene-skip').click();
   await page.getByTestId('begin-investigation').click();
   const s = c.suspects[0]!;
   await page.goto(`/case/${c.id}/interrogate/${s.id}`);
