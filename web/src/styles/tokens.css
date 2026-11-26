@@ -109,6 +109,20 @@
   --titlebar-bg: #0b0f17;
   --titlebar-border: rgba(255, 255, 255, 0.05);
 
+  /* Comic panels: what sits on the painted backdrops is drawn like a panel of the strips. Solid
+     fill, a black ink line, a thin paper rim and a hard offset shadow, square corners. Captions
+     (titles, active tabs) are the strips' yellow narration boxes. */
+  --ink-line: #040508;
+  --paper-rim: rgba(241, 232, 212, 0.9);
+  --comic-fill: #10141c;
+  --comic-fill-2: #161b26;
+  --comic-line: 3px solid var(--ink-line);
+  --comic-drop: 6px 7px 0 rgba(0, 0, 0, 0.72);
+  --comic-panel: 0 0 0 2px var(--paper-rim), var(--comic-drop);
+  --comic-dots: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.035) 0.9px, transparent 1.3px) 0 0 / 5px 5px;
+  --caption-bg: #f3dc9a;
+  --caption-ink: #1b150b;
+
   color-scheme: dark;
 }
 
@@ -169,6 +183,13 @@
   --text-halo: 0 1px 6px rgba(243, 238, 228, 0.9);
   --titlebar-bg: #e9e2d4;
   --titlebar-border: rgba(70, 52, 24, 0.12);
+
+  --ink-line: #2a2218;
+  --paper-rim: rgba(255, 252, 244, 0.95);
+  --comic-fill: #faf6ee;
+  --comic-fill-2: #f1ebdf;
+  --comic-drop: 6px 7px 0 rgba(42, 34, 24, 0.55);
+  --comic-dots: radial-gradient(circle at 1px 1px, rgba(42, 34, 24, 0.05) 0.9px, transparent 1.3px) 0 0 / 5px 5px;
 
   color-scheme: light;
 }
@@ -317,6 +338,14 @@ textarea {
 
 .muted {
   color: var(--text-muted);
+}
+
+/* A comic panel: for any box that sits on the painted backdrop. */
+.comic-panel {
+  background: var(--comic-dots), linear-gradient(180deg, var(--comic-fill-2), var(--comic-fill));
+  border: var(--comic-line);
+  border-radius: 2px;
+  box-shadow: var(--comic-panel);
 }
 
 /* Paper surface for case files and notes */

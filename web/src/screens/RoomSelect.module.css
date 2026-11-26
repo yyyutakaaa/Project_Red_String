@@ -7,12 +7,13 @@
   flex-wrap: wrap;
   margin-bottom: clamp(0.75rem, 2.5vh, 1.5rem);
   padding: clamp(0.6rem, 1.8vh, 1rem) var(--space-5);
-  border: var(--border);
-  border-radius: var(--radius-md);
+  border: var(--comic-line);
+  border-radius: 2px;
   background:
     radial-gradient(ellipse at 0% 50%, rgba(232, 181, 74, 0.08), transparent 60%),
-    linear-gradient(180deg, var(--ink-800), var(--ink-850));
-  box-shadow: var(--shadow-1);
+    var(--comic-dots),
+    linear-gradient(180deg, var(--comic-fill-2), var(--comic-fill));
+  box-shadow: var(--comic-panel);
 }
 
 .victimTag {
@@ -114,26 +115,22 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  border: var(--border);
-  border-radius: var(--radius-md);
-  background: linear-gradient(180deg, var(--ink-800), var(--ink-850));
-  box-shadow: var(--shadow-1);
+  border: var(--comic-line);
+  border-radius: 2px;
+  background: var(--comic-dots), linear-gradient(180deg, var(--comic-fill-2), var(--comic-fill));
+  box-shadow: var(--comic-panel);
   overflow: hidden;
   transition: transform var(--dur-med) var(--ease-out), border-color var(--dur-med), box-shadow var(--dur-med);
 }
 
 .card:hover {
-  transform: translateY(-3px);
-  border-color: var(--lamp-500);
-  box-shadow: var(--shadow-2), 0 0 24px var(--lamp-glow);
-}
-
-.card[data-state='done'] {
-  border-color: var(--ink-400);
+  transform: translate(-2px, -3px);
+  box-shadow: 0 0 0 2px var(--caption-bg), 8px 10px 0 rgba(0, 0, 0, 0.72);
 }
 
 .thumb {
   position: relative;
+  border-bottom: var(--comic-line);
 }
 
 .card .scene {
@@ -146,15 +143,19 @@
   filter: brightness(1.15);
 }
 
+/* The number is a small caption box in the corner of the picture. */
 .number {
   position: absolute;
-  left: var(--space-3);
+  left: var(--space-2);
   bottom: var(--space-2);
+  padding: 0.15em 0.4em 0.05em;
   font-family: var(--font-display);
-  font-size: var(--fs-xl);
+  font-size: var(--fs-lg);
   line-height: 1;
-  color: rgba(250, 246, 236, 0.85);
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+  color: var(--caption-ink);
+  background: var(--caption-bg);
+  border: 2px solid var(--ink-line);
+  box-shadow: 2px 2px 0 var(--ink-line);
 }
 
 .stamp {
@@ -189,7 +190,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: var(--radius-md);
+  border-radius: 2px;
   z-index: 1;
 }
 

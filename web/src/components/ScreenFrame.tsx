@@ -25,7 +25,7 @@ export function ScreenFrame({ title, kicker, actions, children, wide = false, fi
             {kicker && <p className={styles.kicker}>{kicker}</p>}
             <h1>{title}</h1>
           </div>
-          {actions && <div className={styles.actions}>{actions}</div>}
+          {actions && <div className={`${styles.actions} on-art`}>{actions}</div>}
         </header>
         <div className={fill ? styles.fill : `${styles.body} scroll-area`} data-testid="screen-body">
           {children}

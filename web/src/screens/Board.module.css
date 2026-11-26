@@ -23,13 +23,19 @@
     height: 100%;
   }
   /* The column keeps to the board's height and scrolls its own list when many strings are up. */
+  /* On the picture the column is one comic panel, so its notes and legend never sit on the art. */
   .side {
     max-height: 100%;
     overflow-y: auto;
-    padding-right: var(--space-1);
+    padding: var(--space-4);
+    background: var(--comic-dots), linear-gradient(180deg, var(--comic-fill-2), var(--comic-fill));
+    border: var(--comic-line);
+    border-radius: 2px;
+    box-shadow: var(--comic-panel);
+    margin: 2px 8px 9px 2px;
   }
+  .side .connections { border: 0; border-top: 2px solid var(--ink-500); border-radius: 0; background: none; padding: var(--space-3) 0 0; }
   .side .instructions { font-size: var(--fs-xs); }
-  .side .connections { padding: var(--space-3) var(--space-4); }
   .side .legend { flex-direction: column; gap: var(--space-1); font-size: var(--fs-xs); }
 }
 
@@ -114,7 +120,7 @@
   padding: var(--space-3) var(--space-4);
   border: 1px solid var(--ink-500);
   border-left: 4px solid var(--lamp-400);
-  border-radius: var(--radius-md);
+  border-radius: 2px;
   background: var(--ink-800);
 }
 .tip p {
@@ -132,7 +138,7 @@
   max-width: max(560px, calc((100svh - var(--titlebar-h) - var(--hud-height) - 11rem) * 1.58 + 36px));
   margin: 0 auto;
   padding: clamp(10px, 1.5vw, 18px);
-  border-radius: 8px;
+  border-radius: 2px;
   background:
     linear-gradient(180deg, rgba(255, 220, 160, 0.09), rgba(0, 0, 0, 0.28)),
     repeating-linear-gradient(91deg, rgba(0, 0, 0, 0.2) 0 2px, transparent 2px 9px),
@@ -142,8 +148,9 @@
     inset 0 0 0 1px rgba(255, 210, 150, 0.14),
     inset 0 2px 0 rgba(255, 220, 170, 0.12),
     inset 0 -3px 6px rgba(0, 0, 0, 0.5),
-    0 24px 50px rgba(0, 0, 0, 0.65),
-    0 0 110px rgba(232, 181, 74, 0.08);
+    0 0 0 3px var(--ink-line),
+    0 0 0 5px var(--paper-rim),
+    9px 10px 0 3px rgba(0, 0, 0, 0.72);
 }
 
 .cork {

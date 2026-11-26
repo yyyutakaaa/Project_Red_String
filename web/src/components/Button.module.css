@@ -1,57 +1,68 @@
+/* Buttons are lettered blocks from the strips: an ink line, square corners, a hard shadow that the
+   button sinks into when pressed. */
 .btn {
-  --btn-bg: var(--ink-700);
+  --btn-bg: var(--comic-fill-2);
   --btn-fg: var(--text);
-  --btn-border: var(--ink-400);
+  --btn-border: var(--ink-line);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
   min-height: 44px;
   padding: 0.55rem 1.1rem;
-  border: 1px solid var(--btn-border);
-  border-radius: var(--radius-md);
+  border: 2px solid var(--btn-border);
+  border-radius: 2px;
   background: var(--btn-bg);
   color: var(--btn-fg);
+  box-shadow: 3px 3px 0 var(--ink-line);
   font-family: var(--font-type);
   font-size: var(--fs-md);
   font-weight: 700;
   letter-spacing: 0.04em;
   cursor: pointer;
   text-decoration: none;
-  transition: background var(--dur-fast), border-color var(--dur-fast), transform var(--dur-fast), box-shadow var(--dur-fast);
+  transition: background var(--dur-fast), color var(--dur-fast), transform var(--dur-fast), box-shadow var(--dur-fast);
   white-space: nowrap;
 }
 .btn:hover:not(:disabled) {
-  border-color: var(--lamp-400);
-  box-shadow: 0 0 0 1px var(--lamp-glow), 0 0 18px var(--lamp-glow);
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--ink-line), 0 0 0 1px var(--lamp-glow);
+  --btn-fg: var(--text-strong);
 }
-.btn:active:not(:disabled) { transform: translateY(1px); }
+.btn:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink-line); }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .primary {
   --btn-bg: var(--red-600);
   --btn-fg: #fff;
-  --btn-border: var(--red-500);
 }
 .primary:hover:not(:disabled) {
   --btn-bg: var(--red-500);
-  border-color: var(--red-300);
-  box-shadow: 0 0 18px var(--red-glow);
+  --btn-fg: #fff;
 }
 
 .lamp {
-  --btn-bg: var(--lamp-400);
-  --btn-fg: var(--ink-900);
-  --btn-border: var(--lamp-300);
+  --btn-bg: var(--caption-bg);
+  --btn-fg: var(--caption-ink);
 }
-.lamp:hover:not(:disabled) { --btn-bg: var(--lamp-300); }
+.lamp:hover:not(:disabled) { --btn-bg: #f8e6b0; --btn-fg: var(--caption-ink); }
 
+/* Quiet: no block of its own, until the pointer is on it. */
 .ghost {
   --btn-bg: transparent;
   --btn-border: transparent;
   --btn-fg: var(--text-muted);
+  box-shadow: none;
 }
-.ghost:hover:not(:disabled) { --btn-fg: var(--text-strong); border-color: var(--ink-400); box-shadow: none; }
+.ghost:hover:not(:disabled) { --btn-bg: var(--comic-fill-2); --btn-border: var(--ink-line); --btn-fg: var(--text-strong); }
+
+/* On the picture itself a quiet button still needs its block, or it floats on the art. */
+:global(.on-art) .ghost {
+  --btn-bg: var(--comic-fill-2);
+  --btn-border: var(--ink-line);
+  --btn-fg: var(--text);
+  box-shadow: 3px 3px 0 var(--ink-line);
+}
 
 .small { min-height: 36px; padding: 0.3rem 0.7rem; font-size: var(--fs-sm); }
 .large { min-height: 52px; padding: 0.75rem 1.6rem; font-size: var(--fs-lg); }
@@ -59,10 +70,12 @@
 
 /* Day shift: a deeper gold so the button text stays readable. */
 :global([data-theme='light']) .lamp {
-  --btn-bg: var(--lamp-500);
-  --btn-fg: #fffaf0;
-  --btn-border: var(--lamp-300);
+  --btn-bg: var(--caption-bg);
+  --btn-fg: var(--caption-ink);
 }
 :global([data-theme='light']) .lamp:hover:not(:disabled) {
-  --btn-bg: var(--lamp-300);
+  --btn-bg: #f8e6b0;
 }
+
+/* On paper (the notebook, case files) a link's ink colour must not override the button's. */
+:global(.paper) .btn { color: var(--btn-fg); }

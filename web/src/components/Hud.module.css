@@ -9,9 +9,10 @@
      and reading it back here would stop the bar from ever shrinking again. */
   min-height: 56px;
   padding: var(--space-2) var(--space-4);
-  background: var(--hud-bg);
-  border-bottom: 1px solid var(--ink-600);
-  box-shadow: var(--shadow-1);
+  /* The strip's top tier: solid ink, a heavy line and a thin paper rule under it. */
+  background: var(--comic-dots), var(--comic-fill);
+  border-bottom: var(--comic-line);
+  box-shadow: 0 2px 0 var(--paper-rim), 0 7px 0 rgba(0, 0, 0, 0.55);
   flex-wrap: wrap;
 }
 .title {
@@ -34,7 +35,7 @@
   align-items: center;
   min-height: 40px;
   padding: 0 var(--space-3);
-  border-radius: var(--radius-md);
+  border-radius: 2px;
   color: var(--text-muted);
   text-decoration: none;
   font-family: var(--font-type);
@@ -45,9 +46,11 @@
   border: 1px solid transparent;
 }
 .link:hover { color: var(--text-strong); border-color: var(--ink-500); }
-.active { color: var(--lamp-300); border-color: var(--ink-500); background: var(--ink-700); }
+/* Where you are: a caption box. */
+.active,
+.active:hover { color: var(--caption-ink); background: var(--caption-bg); border: 2px solid var(--ink-line); box-shadow: 2px 2px 0 var(--ink-line); }
 .accuse { color: var(--red-300); }
-.accuse.active { color: #fff; background: var(--red-700); border-color: var(--red-500); }
+.accuse.active { color: #fff; background: var(--red-600); }
 .tools {
   display: flex;
   align-items: center;
@@ -59,8 +62,8 @@
   align-items: baseline;
   gap: var(--space-1);
   padding: 0.25rem 0.7rem;
-  border-radius: 999px;
-  border: 1px solid var(--lamp-500);
+  border-radius: 2px;
+  border: 2px solid var(--lamp-500);
   color: var(--lamp-300);
   font-family: var(--font-type);
   font-size: var(--fs-sm);
@@ -76,8 +79,8 @@
   gap: 0.35rem;
   min-width: 5.6em;
   padding: 0.25rem 0.7rem;
-  border-radius: 999px;
-  border: 1px solid var(--ink-400);
+  border-radius: 2px;
+  border: 2px solid var(--ink-400);
   color: var(--text);
   font-family: var(--font-type);
   font-size: var(--fs-sm);
