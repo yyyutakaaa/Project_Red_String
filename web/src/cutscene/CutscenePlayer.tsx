@@ -63,7 +63,7 @@ function BeatView({ beat, text, onSize }: { beat: Beat; text: string; onSize: (h
     <div
       ref={ref}
       className={beat.kind === 'caption' ? styles.caption : styles.balloon}
-      style={{ left: `${beat.x}%`, top: `${beat.y}%`, width: `${beat.w}%` }}
+      style={beat.from === 'bottom' ? { left: `${beat.x}%`, bottom: `${100 - beat.y}%`, width: `${beat.w}%` } : { left: `${beat.x}%`, top: `${beat.y}%`, width: `${beat.w}%` }}
     >
       {text}
     </div>
@@ -88,7 +88,10 @@ function Frame({ caseId, panel, art, shown, current, title, language }: FramePro
     setHeights((prev) => (Math.abs((prev[i] ?? 0) - h) < 0.2 ? prev : { ...prev, [i]: h }));
   }, []);
   const focus = panel.focus ?? 'xMidYMid';
-  const beats = panel.beats.slice(0, shown);
+  // Only the part of the telling that is being read: a beat that clears the panel takes the earlier ones away.
+  let first = 0;
+  for (let i = 0; i < shown && i < panel.beats.length; i++) if (panel.beats[i]?.clear) first = i;
+  const beats = panel.beats.slice(0, shown).map((b, i) => ({ b, i })).filter(({ i }) => i >= first);
   const waiting = current && shown >= panel.beats.length;
 
   return (
@@ -110,7 +113,7 @@ function Frame({ caseId, panel, art, shown, current, title, language }: FramePro
 
       {/* Balloon tails sit under the balloons, so only the part outside them shows. */}
       <svg className={styles.tails} viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-        {beats.map((b, i) => {
+        {beats.map(({ b, i }) => {
           if (b.kind !== 'balloon' || !b.tail) return null;
           const cx = b.x + b.w / 2;
           const cy = b.y + (heights[i] ?? 8) / 2;
@@ -123,7 +126,7 @@ function Frame({ caseId, panel, art, shown, current, title, language }: FramePro
         })}
       </svg>
 
-      {beats.map((b, i) => (
+      {beats.map(({ b, i }) => (
         <BeatView key={i} beat={b} text={textIn(b.text, language)} onSize={(h) => setHeight(i, h)} />
       ))}
 

@@ -30,6 +30,10 @@ export interface Beat {
   w: number;
   /** For a balloon: the point (in percent of the panel) the tail points at. */
   tail?: { x: number; y: number };
+  /** y is the box's bottom edge instead of its top, so a long text grows upwards and stays in the panel. */
+  from?: 'bottom';
+  /** When this one comes, the captions and balloons before it leave the panel: the next part of the telling. */
+  clear?: boolean;
 }
 
 /** Which part of a drawing stays in view when the panel is narrower or wider than 16:9. */
