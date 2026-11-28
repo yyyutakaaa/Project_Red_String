@@ -508,11 +508,6 @@ export function Notebook() {
   return (
     <ScreenFrame
       title={t('notebook.title')}
-      actions={
-        <ButtonLink to={casePath(caseKey, 'board')} variant="ghost">
-          {t('notebook.toBoard')}
-        </ButtonLink>
-      }
     >
       <div className={styles.notebook}>
         <div role="tablist" aria-label={t('notebook.sections')} className={styles.tabs}>

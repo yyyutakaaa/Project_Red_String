@@ -20,14 +20,6 @@ export function Suspects() {
     <ScreenFrame
       wide
       title={t('lineup.title')}
-      actions={
-        <>
-          <ButtonLink to={casePath(caseKey, 'rooms')} variant="ghost">
-            {t('nav.scenes')}
-          </ButtonLink>
-          <ButtonLink to={casePath(caseKey, 'board')}>{t('nav.board')}</ButtonLink>
-        </>
-      }
     >
       <ol className={styles.lineup}>
         {caseFile.suspects.map((s, i) => {

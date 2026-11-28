@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import type { CaseFile, Room } from '@shared/caseSchema.ts';
 import { ScreenFrame } from '../components/ScreenFrame.tsx';
-import { ButtonLink } from '../components/Button.tsx';
 import { RoomScene } from '../components/RoomScene.tsx';
 import { casePath, useCaseContext } from '../hooks/useCase.ts';
 import { useAmbience } from '../hooks/useAmbience.ts';
@@ -39,15 +38,6 @@ export function RoomSelect() {
     <ScreenFrame
       wide
       title={t('scenes.title')}
-      actions={
-        <>
-          <ButtonLink to={casePath(caseKey, 'briefing')} variant="ghost">
-            {t('nav.briefing')}
-          </ButtonLink>
-          <ButtonLink to={casePath(caseKey, 'suspects')}>{t('nav.suspects')}</ButtonLink>
-          <ButtonLink to={casePath(caseKey, 'board')}>{t('nav.board')}</ButtonLink>
-        </>
-      }
     >
       <section className={styles.victim} aria-labelledby="victim-heading">
         <div className={styles.victimTag} aria-hidden="true">

@@ -69,22 +69,9 @@ interface RoomViewProps {
  */
 function RoomView({ room, caseFile, caseKey, progress }: RoomViewProps) {
   const bodyHere = caseFile.victim.found_in === room.id;
-  const { t } = useT();
 
   return (
-    <ScreenFrame
-      wide
-      title={room.name}
-      actions={
-        <>
-          <ButtonLink to={casePath(caseKey, 'rooms')} variant="ghost">
-            {t('room.allScenes')}
-          </ButtonLink>
-          <ButtonLink to={casePath(caseKey, 'suspects')}>{t('nav.suspects')}</ButtonLink>
-          <ButtonLink to={casePath(caseKey, 'board')}>{t('nav.board')}</ButtonLink>
-        </>
-      }
-    >
+    <ScreenFrame wide title={room.name}>
       <RoomStrip caseFile={caseFile} caseKey={caseKey} progress={progress} currentId={room.id} />
 
       <RoomSearch key={room.id} room={room} caseFile={caseFile} caseKey={caseKey} progress={progress} bodyHere={bodyHere} />

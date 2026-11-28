@@ -217,7 +217,6 @@ export const en = {
   'credits.foot': "No real people were harmed. The rain was all synthetic.",
 
   // Case navigation
-  'nav.briefing': "Briefing",
   'nav.scenes': "Scenes",
   'nav.suspects': "Suspects",
   'nav.board': "Board",
@@ -239,7 +238,6 @@ export const en = {
   'room.missingKicker': "Dead end",
   'room.missingText': "There is no room by that name in this case file. Somebody gave you a bad address.",
   'room.backToScenes': "Back to the scenes",
-  'room.allScenes': "All scenes",
   'room.bodyHere': "Body found here",
   'room.bodyWhen': "{name}, {when}.",
   'room.searchHeading': "Search the {room}",
@@ -297,7 +295,6 @@ export const en = {
   'notebook.tabTimeline': "Timeline",
   'notebook.tabNotes': "Notes",
   'notebook.tabHints': "Hints",
-  'notebook.toBoard': "To the board",
   'notebook.sections': "Notebook sections",
   'notebook.evidenceTitle': "Evidence bag",
   'notebook.searchScenes': "Search the scenes",
