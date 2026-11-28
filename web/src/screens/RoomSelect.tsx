@@ -105,20 +105,15 @@ export function RoomSelect() {
                   <span className={styles.count}>
                     {t('scenes.searched', { n: searched, total })}
                   </span>
-                  <span className={styles.status}>{state === 'done' ? t('scenes.turnedOver') : visited ? t('scenes.visited') : t('scenes.notVisited')}</span>
                 </div>
                 <div className={styles.meter} aria-hidden="true">
                   <span style={{ width: `${total ? (searched / total) * 100 : 0}%` }} />
                 </div>
-                <p className={styles.found}>
-                  {found.length > 0 ? (
-                    <>
-                      <span className={styles.foundLabel}>{t('scenes.foundHere')}</span> {found.map((id) => evidenceName(caseFile, id)).join(', ')}
-                    </>
-                  ) : (
-                    <span className={styles.foundNone}>{t('scenes.nothingYet')}</span>
-                  )}
-                </p>
+                {found.length > 0 && (
+                  <p className={styles.found}>
+                    <span className={styles.foundLabel}>{t('scenes.foundHere')}</span> {found.map((id) => evidenceName(caseFile, id)).join(', ')}
+                  </p>
+                )}
               </div>
             </li>
           );

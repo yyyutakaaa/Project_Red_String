@@ -6,12 +6,17 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
-  /* Two suspects or four: the panels keep a portrait's shape and the row stays centred. */
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 27rem));
+  /* The whole lineup stands in one row when the window has room for it: two, three or four panels
+     share the width, none wider than a portrait reads well, and the row stays centred. */
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   gap: var(--space-5);
   align-items: stretch;
+}
+.lineup > li {
+  flex: 1 1 15rem;
+  max-width: 27rem;
 }
 
 .card {

@@ -89,7 +89,7 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-3) var(--space-5);
-  margin-bottom: var(--space-4);
+  margin-top: var(--space-4);
 }
 
 /* The description of the place is a narration box. */
@@ -145,7 +145,7 @@
 
 .help {
   display: inline-block;
-  margin: var(--space-5) 0 0;
+  margin: var(--space-3) 0 0;
   padding: var(--space-1) var(--space-3);
   background: var(--comic-fill);
   border: 2px solid var(--ink-line);

@@ -48,8 +48,8 @@ export function Credits() {
               {t('credits.art')}
             </h3>
             <p>{t('credits.artDrawings')}</p>
+            <p>{t('credits.artPainted')}</p>
             <p>{t('credits.artSound')}</p>
-            <p className={styles.emphasis}>{t('credits.artNone')}</p>
           </section>
 
           <section className={styles.block} aria-labelledby="credits-words">

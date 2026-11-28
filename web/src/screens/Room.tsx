@@ -68,14 +68,12 @@ interface RoomViewProps {
  * focus stays on the room tab that was clicked. Only the search area below is keyed by room.
  */
 function RoomView({ room, caseFile, caseKey, progress }: RoomViewProps) {
-  const index = caseFile.rooms.findIndex((r) => r.id === room.id);
   const bodyHere = caseFile.victim.found_in === room.id;
   const { t } = useT();
 
   return (
     <ScreenFrame
       wide
-      kicker={t('room.kicker', { n: index + 1, total: caseFile.rooms.length })}
       title={room.name}
       actions={
         <>
@@ -89,23 +87,13 @@ function RoomView({ room, caseFile, caseKey, progress }: RoomViewProps) {
     >
       <RoomStrip caseFile={caseFile} caseKey={caseKey} progress={progress} currentId={room.id} />
 
-      <div className={styles.intro}>
-        <p className={styles.lede}>{room.description}</p>
-        {bodyHere && (
-          <p className={styles.bodyNote}>
-            <span className={`stamp ${styles.bodyStamp}`}>{t('room.bodyHere')}</span>
-            <span>{t('room.bodyWhen', { name: caseFile.victim.name, when: caseFile.victim.found_at })}</span>
-          </p>
-        )}
-      </div>
-
-      <RoomSearch key={room.id} room={room} caseFile={caseFile} caseKey={caseKey} progress={progress} />
+      <RoomSearch key={room.id} room={room} caseFile={caseFile} caseKey={caseKey} progress={progress} bodyHere={bodyHere} />
     </ScreenFrame>
   );
 }
 
 /** Scene and field notes for one room. Keyed by room id, so the open note resets per room. */
-function RoomSearch({ room, caseFile, caseKey, progress }: RoomViewProps) {
+function RoomSearch({ room, caseFile, caseKey, progress, bodyHere }: RoomViewProps & { bodyHere: boolean }) {
   const [activeId, setActiveId] = useState<string | null>(null);
   // How many times the detective has looked at something that holds nothing (each miss gets its own line).
   const [misses, setMisses] = useState(0);
@@ -118,7 +106,7 @@ function RoomSearch({ room, caseFile, caseKey, progress }: RoomViewProps) {
   const evidenceHere = roomEvidenceIds(caseFile, room).filter((id) => progress.foundEvidence.includes(id));
   const searched = room.hotspots.filter((h) => examined.has(h.id));
   const left = room.hotspots.length - examined.size;
-  const { t, tn } = useT();
+  const { t } = useT();
 
   // On narrow screens the notes sit under the scene; bring them into view without moving focus.
   const showNotes = () => {
@@ -161,6 +149,15 @@ function RoomSearch({ room, caseFile, caseKey, progress }: RoomViewProps) {
           searchAid={searchAid}
           onMiss={onMiss}
         />
+        <div className={styles.intro}>
+          <p className={styles.lede}>{room.description}</p>
+          {bodyHere && (
+            <p className={styles.bodyNote}>
+              <span className={`stamp ${styles.bodyStamp}`}>{t('room.bodyHere')}</span>
+              <span>{t('room.bodyWhen', { name: caseFile.victim.name, when: caseFile.victim.found_at })}</span>
+            </p>
+          )}
+        </div>
         <p className={styles.help}>
           {searchAid
             ? rich(t('room.help'), { tab: <span>{t('room.helpTab')}</span>, enter: <span>{t('room.helpEnter')}</span>, space: <span>{t('room.helpSpace')}</span> })
@@ -193,7 +190,6 @@ function RoomSearch({ room, caseFile, caseKey, progress }: RoomViewProps) {
               <div className={`${styles.noteEntry} fade-up`}>
                 <p className={styles.noteKicker}>{t('room.fieldNotes')}</p>
                 <h2 className={styles.noteTitle}>{t('room.nothingInHand')}</h2>
-                <p className={styles.noteText}>{t('room.intro')}</p>
               </div>
             )}
           </div>
@@ -206,9 +202,7 @@ function RoomSearch({ room, caseFile, caseKey, progress }: RoomViewProps) {
           <div className={styles.meter} aria-hidden="true">
             <span style={{ width: `${room.hotspots.length ? (examined.size / room.hotspots.length) * 100 : 0}%` }} />
           </div>
-          <p className={styles.tallyText}>
-            {left === 0 ? t('room.turnedOver') : tn('room.left', left)}
-          </p>
+          {left === 0 && <p className={styles.tallyText}>{t('room.turnedOver')}</p>}
           {searched.length > 0 && (
             <ul className={styles.searched}>
               {searched.map((h) => (
@@ -218,25 +212,21 @@ function RoomSearch({ room, caseFile, caseKey, progress }: RoomViewProps) {
           )}
         </section>
 
-        <section className={styles.bagged} aria-labelledby="room-evidence-heading">
-          <h2 id="room-evidence-heading" className={styles.tallyTitle}>
-            {t('room.bagged')}
-          </h2>
-          {evidenceHere.length > 0 ? (
+        {evidenceHere.length > 0 && (
+          <section className={styles.bagged} aria-labelledby="room-evidence-heading">
+            <h2 id="room-evidence-heading" className={styles.tallyTitle}>
+              {t('room.bagged')}
+            </h2>
             <ul className={styles.evidenceList}>
               {evidenceHere.map((id) => (
                 <li key={id}>{evidenceName(caseFile, id)}</li>
               ))}
             </ul>
-          ) : (
-            <p className={styles.tallyText}>{t('room.nothingBagged')}</p>
-          )}
-          {evidenceHere.length > 0 && (
             <Link className={styles.boardLink} to={casePath(caseKey, 'board')}>
               {t('room.pinIt')}
             </Link>
-          )}
-        </section>
+          </section>
+        )}
       </aside>
     </div>
   );
@@ -258,12 +248,11 @@ function RoomStrip({ caseFile, caseKey, progress, currentId }: RoomStripProps) {
           const done = examinedIn(progress.examinedHotspots, r.id).size;
           const total = r.hotspots.length;
           const current = r.id === currentId;
-          const visited = progress.visitedRooms.includes(r.id);
           return (
             <li key={r.id}>
               <Link
                 to={casePath(caseKey, `room/${r.id}`)}
-                className={[styles.tab, done >= total ? styles.tabDone : '', !visited && !current ? styles.tabNew : ''].filter(Boolean).join(' ')}
+                className={[styles.tab, done >= total ? styles.tabDone : ''].filter(Boolean).join(' ')}
                 aria-current={current ? 'page' : undefined}
                 data-testid={`room-tab-${r.id}`}
                 onClick={() => sfx('click')}

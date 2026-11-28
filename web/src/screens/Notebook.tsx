@@ -82,7 +82,6 @@ function EvidencePanel({ caseFile, caseKey, found, shownTo }: { caseFile: CaseFi
     <>
       <header className={styles.panelHead}>
         <h2>{t('notebook.evidenceTitle')}</h2>
-        <p className={styles.intro}>{t('notebook.evidenceIntro')}</p>
       </header>
       <div data-testid="notebook-evidence">
         {found.length === 0 ? (
@@ -118,7 +117,6 @@ function CluesPanel({ caseFile, groups, uid }: { caseFile: CaseFile; groups: Clu
     <>
       <header className={styles.panelHead}>
         <h2>{t('notebook.cluesTitle')}</h2>
-        <p className={styles.intro}>{t('notebook.cluesIntro')}</p>
       </header>
       <div data-testid="notebook-clues" className={styles.clueGroups}>
         {groups.length === 0 ? (
@@ -168,7 +166,6 @@ function SuspectsPanel({
     <>
       <header className={styles.panelHead}>
         <h2>{t('notebook.peopleTitle')}</h2>
-        <p className={styles.intro}>{t('notebook.peopleIntro')}</p>
       </header>
       <ul className={styles.suspectList}>
         {caseFile.suspects.map((s) => {

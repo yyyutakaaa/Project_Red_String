@@ -257,7 +257,7 @@ export function examineHotspot(c: CaseFile, caseKey: string, roomId: string, hot
     return { ...p, examinedHotspots: examined, foundEvidence, board: pinsFor(c, { ...p, foundEvidence }) };
   });
   if (found) {
-    G().pushToast(t('toast.evidence', { name: evidenceName(c, found) }), 'evidence');
+    // No toast: the field note beside the room names what was bagged, and the room's list keeps it.
     sfx('pickup');
     track('evidence_found', caseKey, { evidence: found, via: 'search', room: roomId });
     const id = found;

@@ -59,9 +59,6 @@
   text-transform: uppercase;
   color: var(--paper-ink-muted);
 }
-.emphasis {
-  font-weight: 700;
-}
 .small {
   font-size: var(--fs-sm);
   color: var(--paper-ink-muted);

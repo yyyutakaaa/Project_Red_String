@@ -10,12 +10,13 @@
   animation: global(fade-up) var(--dur-slow) var(--ease-out) both;
 }
 
+/* Each tab is as wide as its label needs, so a long label stays on one line. */
 .tabs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
   border-bottom: var(--border);
 }
 .tab {
+  flex: 1 1 auto;
   padding: var(--space-3) var(--space-2);
   background: none;
   border: 0;

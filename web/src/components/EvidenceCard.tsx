@@ -36,6 +36,8 @@ export function EvidenceCard({ evidence, caseFile, compact, selected, onToggle, 
         type="button"
         className={`${styles.card} ${compact ? styles.compact : ''} ${selected ? styles.selected : ''}`}
         aria-pressed={selected ?? false}
+        // The compact card leaves the description out; it is still there on hover.
+        title={compact ? evidence.description : undefined}
         onClick={onToggle}
         disabled={disabled}
         data-testid={`evidence-${evidence.id}`}

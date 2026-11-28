@@ -22,12 +22,12 @@ describe('t and tn', () => {
   });
 
   it('picks the plural form by the language rules', () => {
-    expect(tn('room.left', 1)).toBe('One place left to search.');
-    expect(tn('room.left', 3)).toBe('3 places left to search.');
-    useLanguage.setState({ language: 'fr', messages: { 'room.left.one': '{count} endroit', 'room.left.other': '{count} endroits' } });
+    expect(tn('toast.clue', 1)).toBe('New clue noted in your notebook.');
+    expect(tn('toast.clue', 3)).toBe('3 new clues noted in your notebook.');
+    useLanguage.setState({ language: 'fr', messages: { 'toast.clue.one': '{count} indice', 'toast.clue.other': '{count} indices' } });
     // French counts 0 as singular.
-    expect(tn('room.left', 0)).toBe('0 endroit');
-    expect(tn('room.left', 2)).toBe('2 endroits');
+    expect(tn('toast.clue', 0)).toBe('0 indice');
+    expect(tn('toast.clue', 2)).toBe('2 indices');
   });
 
   it('chooses a shipped language from browser preferences', () => {

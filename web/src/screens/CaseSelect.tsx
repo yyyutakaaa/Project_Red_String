@@ -217,23 +217,19 @@ export function CaseSelect() {
               }
               if (!unlocked) {
                 return (
-                  <li key={id} className={styles.storyCell}>
+                  <li key={id} className={`${styles.storyCell} ${styles.sealedCell}`}>
                     <article className={`${styles.file} ${styles.locked}`} aria-labelledby={headingId} data-testid={`case-card-${id}`}>
                       <ScenePhoto caseFile={c} sealed />
                       <p className={styles.number}>{number}</p>
                       <h3 id={headingId} className={styles.fileTitle}>
                         {c.title}
                       </h3>
-                      <div className={styles.redacted} aria-hidden="true">
-                        <span style={{ width: '92%' }} />
-                        <span style={{ width: '70%' }} />
-                        <span style={{ width: '48%' }} />
-                      </div>
-                      <p className={styles.lockNote}>
-                        <span className={styles.sealed} title={t('cases.sealedNote')}>
-                          {t('cases.sealed')}
-                        </span>
-                      </p>
+                      {/* Only the next file says what opens it; the tape on the others says enough. */}
+                      {isStoryUnlocked(index - 1, completed) && (
+                        <p className={styles.lockNote} data-testid="sealed-until">
+                          {t('cases.sealedUntil', { title: titleOf(STORY_ORDER[index - 1]!) })}
+                        </p>
+                      )}
                     </article>
                   </li>
                 );

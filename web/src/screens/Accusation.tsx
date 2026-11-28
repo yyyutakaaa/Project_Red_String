@@ -110,7 +110,7 @@ export function Accusation() {
               <ul className={styles.evidence}>
                 {found.map((e) => (
                   <li key={e.id} data-testid={`accuse-evidence-${e.id}`}>
-                    <EvidenceCard evidence={e} caseFile={caseFile} selected={evidenceIds.includes(e.id)} onToggle={() => toggleEvidence(e.id)} />
+                    <EvidenceCard evidence={e} caseFile={caseFile} compact selected={evidenceIds.includes(e.id)} onToggle={() => toggleEvidence(e.id)} />
                   </li>
                 ))}
               </ul>

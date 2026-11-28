@@ -236,15 +236,7 @@
   font-weight: 700;
 }
 
-.status {
-  color: var(--text-faint);
-}
-
-.card[data-state='new'] .status {
-  color: var(--lamp-300);
-}
-
-.card[data-state='done'] .status {
+.card[data-state='done'] .count {
   color: var(--ok-400);
 }
 
@@ -275,11 +267,6 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--lamp-300);
-}
-
-.foundNone {
-  font-style: italic;
-  color: var(--text-faint);
 }
 
 @media (max-width: 640px) {

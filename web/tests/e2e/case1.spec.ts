@@ -163,7 +163,9 @@ test('later story cases stay sealed until the previous case is closed', async ({
   await page.goto('/case/pier-seventeen/rooms');
   await expect(page.getByRole('heading', { name: 'Case sealed' })).toBeVisible();
   await page.goto('/cases');
-  await expect(page.getByTitle('Solve the previous case to unlock').first()).toBeVisible();
+  // The next file says what opens it; the ones after it are only taped shut.
+  await expect(page.getByTestId('sealed-until')).toHaveCount(1);
+  await expect(page.getByTestId('case-card-blue-lantern').getByTestId('sealed-until')).toHaveText('Solve Ashgrove House first');
   // The tutorial sits with the cases, always open and marked as the tutorial.
   await expect(page.getByTestId('case-card-tutorial').getByTestId('tutorial-mark')).toHaveText('Tutorial');
   await expect(page.getByTestId('open-case-tutorial')).toBeEnabled();
